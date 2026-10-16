@@ -9,8 +9,13 @@ export const DATA = { fr, nl, en } as const;
 export const t = (lang: Lang) => DATA[lang];
 
 export const SITE = 'https://mybubble-beauty.com';
-// Changer ce numéro quand main.js ou motion-pref.js change (servis « immutable » un an).
+// Changer ce numéro quand main.js, motion-pref.js ou stats.js change (servis « immutable » un an).
 export const JS_VERSION = '20261016';
+
+// Mesure d'audience GoatCounter (sans cookie). Vide = désactivée.
+// Mettre le code du site créé sur goatcounter.com, ex. 'mybubble' pour https://mybubble.goatcounter.com
+export const GOATCOUNTER = '';
+export const GOATCOUNTER_ENDPOINT = GOATCOUNTER ? `https://${GOATCOUNTER}.goatcounter.com/count` : '';
 
 export const CONTACT = {
   phone: '+32484118395',

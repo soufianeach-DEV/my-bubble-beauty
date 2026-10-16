@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import Icon from '../components/Icon.astro';
-import { t, LANGS, LANG_META, CONTACT, SITE, JS_VERSION, EXTRA, pagePath, alternates, type Lang, type PageKey } from '../lib/site';
+import { t, LANGS, LANG_META, CONTACT, SITE, JS_VERSION, GOATCOUNTER_ENDPOINT, EXTRA, pagePath, alternates, type Lang, type PageKey } from '../lib/site';
 
 interface Props {
   lang: Lang;
@@ -62,6 +62,7 @@ const year = new Date().getFullYear();
 <meta name="twitter:card" content="summary_large_image">
 <script is:inline src={`/assets/js/motion-pref.js?v=${JS_VERSION}`}></script>
 <script is:inline src={`/assets/js/main.js?v=${JS_VERSION}`} defer></script>
+{GOATCOUNTER_ENDPOINT && !noindex && <script is:inline src={`/assets/js/stats.js?v=${JS_VERSION}`} data-gc={GOATCOUNTER_ENDPOINT} defer></script>}
 {jsonld && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonld)} />}
 </head>
 <body>

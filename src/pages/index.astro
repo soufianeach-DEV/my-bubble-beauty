@@ -1,7 +1,7 @@
 ---
 // Page d'entrée du domaine : choix de la langue (cible x-default des hreflang).
 import '../styles/global.css';
-import { LANGS, LANG_META, SITE, JS_VERSION, pagePath, alternates } from '../lib/site';
+import { LANGS, LANG_META, SITE, JS_VERSION, GOATCOUNTER_ENDPOINT, pagePath, alternates } from '../lib/site';
 const title = 'My Bubble Beauty — Dilbeek';
 const description = 'Centre de beauté et bien-être à Anderlecht, Molenbeek-Saint-Jean, Dilbeek et Berchem-Sainte-Agathe : soins esthétiques, pédicure médicale et massages.';
 ---
@@ -32,6 +32,7 @@ const description = 'Centre de beauté et bien-être à Anderlecht, Molenbeek-Sa
 <meta property="og:locale" content="fr_BE">
 <meta name="twitter:card" content="summary_large_image">
 <script is:inline src={`/assets/js/motion-pref.js?v=${JS_VERSION}`}></script>
+{GOATCOUNTER_ENDPOINT && <script is:inline src={`/assets/js/stats.js?v=${JS_VERSION}`} data-gc={GOATCOUNTER_ENDPOINT} defer></script>}
 </head>
 <body class="chooser">
 <main id="main" class="chooser__main">

@@ -391,8 +391,15 @@ h1,h2,h3{overflow-wrap:anywhere}
 .soins__grid .soin{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-inline:clamp(1.25rem,3vw,3rem)}
 .soin p{margin-inline:auto}
 
-/* Accueil (écran large) : le panneau du hero se cale contre le bord droit de la fenêtre */
+/* Accueil (écran large) : le panneau du hero couvre toute la largeur et la hauteur, photo visible par transparence.
+   Voile à 80 % : en dessous, le texte secondaire passe sous 4,5:1 au-dessus des zones sombres de la photo. */
 @media (min-width:1024px){
-  .hero__wrap{width:auto;margin-inline:0;padding-inline:var(--gutter)}
-  .hero__panel{grid-column:1 / -1;justify-self:end;width:min(620px,100%)}
+  .hero{padding-block:0;align-items:stretch}
+  .hero__wrap{width:auto;margin-inline:0;padding:0}
+  .hero__panel{grid-column:1 / -1;display:flex;flex-direction:column;justify-content:center;border:0;border-radius:0;box-shadow:none;
+    padding-block:clamp(3rem,6vw,5rem);padding-inline:max(var(--gutter),calc((100% - var(--maxw)) / 2));
+    background:rgb(255 251 249 / .8);backdrop-filter:blur(2px)}
+  .hero__panel>*{max-width:760px}
 }
+@media (min-width:1024px) and (prefers-color-scheme:dark){.hero__panel{background:rgb(42 32 30 / .8)}}
+@media (prefers-reduced-transparency:reduce){.hero__panel{background:var(--surface);backdrop-filter:none}}

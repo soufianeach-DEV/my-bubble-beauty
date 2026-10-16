@@ -3,7 +3,8 @@
 import Base from '../../layouts/Base.astro';
 import { LANGS, FOLDER, PAGES, t, langOfFolder } from '../../lib/site';
 import { CGV } from '../../data/cgv';
-import { LEGAL } from '../../data/legal';
+import { LEGAL, AUDIENCE_GC } from '../../data/legal';
+import { GOATCOUNTER } from '../../lib/site';
 
 type Key = 'mentions' | 'privacy' | 'cgv';
 
@@ -18,7 +19,9 @@ const doc = key === 'cgv' ? CGV[lang] : LEGAL[lang][key];
 const title = doc.title;
 const metaTitle = `${doc.title} — My Bubble Beauty`;
 const description = doc.description;
-const body = doc.sections.map((s) => `<h2>${s.h}</h2>${s.html}`).join('');
+// Confidentialité : la 4e rubrique (mesure d'audience) décrit GoatCounter dès qu'il est activé.
+const sections = doc.sections.map((s, i) => (key === 'privacy' && i === 3 && GOATCOUNTER ? { ...s, html: AUDIENCE_GC[lang] } : s));
+const body = sections.map((s) => `<h2>${s.h}</h2>${s.html}`).join('');
 const updated = doc.updated;
 ---
 <Base lang={lang} pageKey={key} title={metaTitle} description={description} mainClass="legal">

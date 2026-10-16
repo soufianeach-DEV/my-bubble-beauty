@@ -7,6 +7,13 @@ export type LegalDoc = { title: string; description: string; updated: string; se
 const MAIL = '<a href="mailto:mybubblebeauty@gmail.com">mybubblebeauty@gmail.com</a>';
 const TEL = '<a href="tel:+32484118395">0484.118.395</a>';
 
+// Rubrique « Mesure d'audience » quand GoatCounter est activé (GOATCOUNTER renseigné dans src/lib/site.ts).
+export const AUDIENCE_GC: Record<Lang, string> = {
+  fr: '<p>Nous mesurons la fréquentation du site avec GoatCounter, un outil de statistiques sans cookie. Il compte les pages vues, la page d\'origine, le type d\'appareil, le navigateur et le pays, sans déposer de cookie et sans identifiant persistant. Les statistiques sont agrégées et ne permettent pas de vous identifier [traitement de l\'adresse IP et lieu d\'hébergement des données : à vérifier dans la politique de GoatCounter].</p><p>Base légale : notre intérêt légitime à connaître la fréquentation du site (art. 6.1.f RGPD). Aucun consentement n\'est demandé, puisqu\'aucun cookie n\'est déposé ni aucune information lue sur votre appareil.</p>',
+  nl: '<p>We meten het bezoek aan de site met GoatCounter, een statistiektool zonder cookies. Het telt de bekeken pagina\'s, de herkomstpagina, het type toestel, de browser en het land, zonder cookies en zonder blijvende identificatie. De statistieken zijn geaggregeerd en laten niet toe je te identificeren [verwerking van het IP-adres en plaats van de gegevens: na te gaan in het beleid van GoatCounter].</p><p>Rechtsgrond: ons gerechtvaardigd belang om het bezoek aan de site te kennen (art. 6.1.f AVG). Er wordt geen toestemming gevraagd, omdat er geen cookies worden geplaatst en geen informatie op je toestel wordt gelezen.</p>',
+  en: '<p>We measure site traffic with GoatCounter, a cookie-free statistics tool. It counts page views, the referring page, device type, browser and country, without cookies or persistent identifiers. Statistics are aggregated and cannot identify you [handling of IP addresses and data location: to be checked in GoatCounter\'s policy].</p><p>Legal basis: our legitimate interest in knowing how the site is visited (Art. 6(1)(f) GDPR). No consent is requested, as no cookie is set and no information is read from your device.</p>',
+};
+
 export const LEGAL: Record<Lang, { mentions: LegalDoc; privacy: LegalDoc }> = {
   fr: {
     mentions: {
