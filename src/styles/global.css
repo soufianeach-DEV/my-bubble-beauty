@@ -387,6 +387,24 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 @media (max-width:767px) and (max-height:500px){.site-header,.callbar{position:static}body{padding-bottom:0}}
 h1,h2,h3{overflow-wrap:anywhere}
 
+/* Logo complet (visage de bulles + texte) dans le pied de page ; l'en-tête garde le texte seul */
+.footer-logo{display:block;line-height:0;flex-basis:100%}
+.footer-logo img{width:120px;height:auto}
+
+/* « Le centre » allégé : accroche plus petite, une seule colonne de texte, citation sous l'accroche */
+.about__lead{font-size:clamp(1.35rem,1.1vw + 1rem,2rem);line-height:1.3;max-width:24ch}
+.about__body{columns:auto;max-width:62ch;font-size:1rem;line-height:1.75}
+.about__body p+p{margin-top:1.1rem}
+.about__quote{border-top:0;padding:0;font-size:clamp(1.1rem,.5vw + 1rem,1.35rem);font-style:italic;color:var(--text-soft)}
+.about__quote::before{content:"";display:block;width:48px;height:1px;background:var(--line);margin-bottom:1rem}
+@media (min-width:1024px){
+  .about__grid{align-items:center;row-gap:1rem}
+  .about .eyebrow{grid-column:1 / span 5;grid-row:1}
+  .about__lead{grid-column:1 / span 5;grid-row:2;margin:0}
+  .about__quote{grid-column:1 / span 5;grid-row:3;align-self:start;margin-top:1.5rem}
+  .about__body{grid-column:7 / -1;grid-row:1 / span 3}
+}
+
 /* Soins : contenu centré dans chaque carte, sur l'axe de la lueur qui apparaît au survol */
 .soins__grid .soin{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-inline:clamp(1.25rem,3vw,3rem)}
 .soin p{margin-inline:auto}

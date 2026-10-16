@@ -69,7 +69,7 @@ const year = new Date().getFullYear();
 <a class="skip" href="#main">{ui.skip}</a>
 <header class="site-header">
 <div class="wrap">
-<a class="brand" href={home}><img src="/assets/img/my-bubble-wordmark.webp" width="331" height="96" alt={ui.brandAlt}></a>
+<a class="brand" href={home}><img src="/assets/img/my-bubble-wordmark.webp?v=2" width="836" height="192" alt={ui.brandAlt}></a>
 <nav class="nav" aria-label={ui.navLabel}><ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul></nav>
 <details class="langsel">
 <summary><span class="visually-hidden">{ui.langPrefix} </span><span aria-hidden="true">{LANG_META[lang].code}</span><span class="visually-hidden">{LANG_META[lang].name}</span><Icon name="chevron" /></summary>
@@ -86,6 +86,7 @@ const year = new Date().getFullYear();
 </main>
 <footer class="site-footer">
 <div class="wrap">
+<a class="footer-logo" href={home}><img src="/assets/img/my-bubble-logo-480.webp" srcset="/assets/img/my-bubble-logo-480.webp 480w, /assets/img/my-bubble-logo.webp 960w" sizes="140px" width="960" height="828" alt={ui.brandAlt} loading="lazy" decoding="async"></a>
 <p>{ui.rights.replace(/\d{4}/, String(year))}</p>
 <ul>{footerLinks.map((f) => <li><a href={f.href}>{f.label}</a></li>)}</ul>
 <button class="motion-toggle" type="button" data-off={ui.pauseOff} data-on={ui.pauseOn}><Icon name="pause" /><span>{ui.pauseOff}</span></button>
