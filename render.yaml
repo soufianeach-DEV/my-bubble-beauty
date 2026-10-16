@@ -22,6 +22,10 @@ services:
       - type: redirect
         source: /eng
         destination: /eng/index.html
+      # Les navigateurs demandent /favicon.ico d'office : on sert l'icône PNG
+      - type: rewrite
+        source: /favicon.ico
+        destination: /assets/img/favicon.png
       # Anciennes pages légales à la racine (v1) -> versions FR
       - type: redirect
         source: /mentions-legales.html
