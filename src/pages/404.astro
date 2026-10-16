@@ -1,0 +1,12 @@
+---
+// Servie par Apache (ErrorDocument 404) depuis n'importe quelle profondeur : chemins absolus uniquement.
+import Base from '../layouts/Base.astro';
+import { pagePath } from '../lib/site';
+---
+<Base lang="fr" pageKey="home" canonicalPath="/404.html" title="Page introuvable — My Bubble Beauty" description="Cette page n'existe pas ou a été déplacée." noindex mainClass="legal">
+<div class="wrap"><article>
+<h1>Page introuvable</h1>
+<p>Cette page n'existe pas ou a été déplacée. <span lang="nl-BE">Deze pagina bestaat niet.</span> <span lang="en">This page does not exist.</span></p>
+<p><a class="btn btn--solid" href={pagePath('fr', 'home')}>Retour à l'accueil</a></p>
+</article></div>
+</Base>

@@ -1,0 +1,70 @@
+# My Bubble — configuration Apache
+Options -Indexes
+AddDefaultCharset UTF-8
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+# Notes internes et fichiers de travail : jamais servis (Apache 2.4 et 2.2)
+<FilesMatch "^LISEZMOI\.txt$|\.(jsonl|md|zip|bak|log|py)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# HTTPS + domaine sans www, en une seule redirection.
+# Le domaine est écrit en dur : on ne renvoie jamais vers l'en-tête Host fourni par le client.
+# X-Forwarded-Proto évite une boucle si l'hébergeur termine le TLS sur un proxy ou un CDN.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://mybubble-beauty.com%{REQUEST_URI} [L,R=301]
+  RewriteCond %{HTTP_HOST} !^mybubble-beauty\.com$ [NC]
+  RewriteRule ^ https://mybubble-beauty.com%{REQUEST_URI} [L,R=301]
+  # Anciennes pages légales à la racine -> versions FR
+  RewriteRule ^mentions-legales\.html$ /fr/mentions-legales.html [L,R=301]
+  RewriteRule ^confidentialite\.html$ /fr/confidentialite.html [L,R=301]
+  # /fr/, /nl/, /eng/ -> page d'accueil de la langue (URL d'origine conservées)
+  RewriteRule ^(fr|nl|eng)/?$ /$1/index.html [L,R=301]
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType font/woff2 .woff2
+  AddType image/webp .webp
+  AddType image/svg+xml .svg
+</IfModule>
+
+# Sécurité — la CSP n'autorise que 'self' (aucun script ni style inline)
+<IfModule mod_headers.c>
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+  # Sans includeSubDomains : les sous-domaines de l'hébergeur (webmail, cpanel…) ne sont pas garantis en HTTPS.
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+  Header always set X-Frame-Options "DENY"
+  Header always set Cross-Origin-Resource-Policy "same-origin"
+  # CSS de /_astro/ : nom haché par Astro. JS de /assets/js/ : ?v= (JS_VERSION dans src/lib/site.ts).
+  # Polices : jamais modifiées. Images : 30 jours, car une photo peut être remplacée sous le même nom.
+  <FilesMatch "\.(css|js|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(webp|svg|png|jpg)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml application/xml text/plain
+</IfModule>
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/css application/javascript image/svg+xml application/xml text/plain
+</IfModule>

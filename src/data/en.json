@@ -1,0 +1,1271 @@
+{
+ "lang": "en",
+ "folder": "eng",
+ "htmlLang": "en",
+ "ogLocale": "en_GB",
+ "ui": {
+  "skip": "Skip to content",
+  "brandAlt": "My Bubble Beauty — home",
+  "navLabel": "Menu",
+  "nav": [
+   {
+    "href": "#services",
+    "label": "Treatments"
+   },
+   {
+    "href": "#package",
+    "label": "Prices"
+   },
+   {
+    "href": "#gallery",
+    "label": "Gallery"
+   },
+   {
+    "href": "#contact",
+    "label": "Contact"
+   }
+  ],
+  "langPrefix": "Language :",
+  "menu": "Menu",
+  "ctaLong": "Book an appointment",
+  "ctaShort": "Book",
+  "rights": "© 2026 My Bubble Beauty · All rights reserved.",
+  "legalLinks": [
+   "Legal notice",
+   "Privacy"
+  ],
+  "pauseOff": "Pause animations",
+  "pauseOn": "Resume animations",
+  "quickContact": "Quick contact",
+  "call": "Call",
+  "moreInfo": "Learn more",
+  "back": "← Back to prices"
+ },
+ "home": {
+  "title": "My Bubble — Beauty and Wellness Centre",
+  "description": "Welcome to My Bubble, your must-visit beauty center located in the heart of Anderlecht, Molenbeek-Saint-Jean, Dilbeek, and Berchem-Sainte-Agathe.",
+  "hero": {
+   "brand": "My Bubble:",
+   "sub": "Your Oasis of Well-being and Beauty in the Heart of Anderlecht, Molenbeek-Saint-Jean, Dilbeek, and Berchem-Sainte-Agathe",
+   "lead": "Facials, medical pedicure, nails and hair removal: our experienced team combines expertise with premium products to reveal and enhance your natural beauty, in a relaxing setting.",
+   "cta": "Make an Appointment",
+   "imgAlt": "Facial treatment with a mask, in a candlelit treatment room"
+  },
+  "infos": {
+   "label": "Phone, Address, Appointments",
+   "items": [
+    {
+     "label": "Phone",
+     "html": "<a href=\"tel:+32484118395\">0484.118.395</a>"
+    },
+    {
+     "label": "Address",
+     "html": "Rue Paloke 146, 1700 Dilbeek"
+    },
+    {
+     "label": "Appointments",
+     "html": "Make an appointment via phone, email, or social media!"
+    }
+   ]
+  },
+  "about": {
+   "eyebrow": "The centre",
+   "lead": "Welcome to My Bubble, your must-visit beauty center located in the heart of Anderlecht, Molenbeek-Saint-Jean, Dilbeek, and Berchem-Sainte-Agathe.",
+   "bodyHtml": "<p>We specialize in high-quality aesthetic treatments and medical pedicures to reveal and enhance your natural beauty. Our team of experienced professionals offers a full range of services, including skincare, nail care, and hair removal. We combine expertise with top-quality products to ensure your comfort and well-being.</p><p>Discover also our selection of premium beauty products designed to maintain and enhance your appearance at home. Whether you’re looking for relaxing treatments, solutions for specific skin issues, or exceptional cosmetic products, we have everything you need. Visit us in the heart of Anderlecht, Molenbeek-Saint-Jean, Dilbeek, and Berchem-Sainte-Agathe and see how we can help you achieve radiant beauty.</p>",
+   "quote": "My Bubble: the perfect blend of quality, well-being, and aesthetics."
+  },
+  "soins": {
+   "title": "Treatments",
+   "intro": "Discover our quality treatments for an unparalleled wellness experience.",
+   "cards": [
+    {
+     "title": "Face",
+     "text": "Get radiant skin with our customized facial treatments.",
+     "href": "#tarif-soin-visage",
+     "link": "See prices"
+    },
+    {
+     "title": "Massage",
+     "text": "Deeply relax with our therapeutic and relaxing massages.",
+     "href": "#tarif-rituel-douceur",
+     "link": "See prices"
+    },
+    {
+     "title": "Hair Removal",
+     "text": "Opt for smooth and silky skin with our advanced hair removal techniques.",
+     "href": "#tarif-epilation",
+     "link": "See prices"
+    },
+    {
+     "title": "Body/Hands/Feet",
+     "text": "Experience comprehensive treatments for total relaxation.",
+     "href": "#tarif-beaute-des-pieds",
+     "link": "See prices"
+    },
+    {
+     "title": "Manicure",
+     "text": "Highlight your hands with our professional manicure services.",
+     "href": "#tarif-beaute-des-mains",
+     "link": "See prices"
+    },
+    {
+     "title": "Teeth Whitening",
+     "text": "Get a radiant smile with our teeth whitening procedures.",
+     "href": "#tarif-blanchiment-des-dents",
+     "link": "See prices"
+    }
+   ]
+  },
+  "tarifs": {
+   "title": "Prices",
+   "intro": "We also offer subscriptions for specific treatments.",
+   "filtersLabel": "Filter prices by category",
+   "filters": [
+    {
+     "key": "all",
+     "label": "All",
+     "status": "Showing: All"
+    },
+    {
+     "key": "visage",
+     "label": "Face",
+     "status": "Showing: Face"
+    },
+    {
+     "key": "corps",
+     "label": "Body & slimming",
+     "status": "Showing: Body & slimming"
+    },
+    {
+     "key": "sourire",
+     "label": "Smile & lips",
+     "status": "Showing: Smile & lips"
+    },
+    {
+     "key": "epilation",
+     "label": "Hair removal & laser",
+     "status": "Showing: Hair removal & laser"
+    },
+    {
+     "key": "regard",
+     "label": "Eyes",
+     "status": "Showing: Eyes"
+    },
+    {
+     "key": "mains",
+     "label": "Hands & feet",
+     "status": "Showing: Hands & feet"
+    }
+   ],
+   "groups": [
+    {
+     "id": "soin-visage",
+     "cat": "visage",
+     "title": "Facial Treatments",
+     "href": null,
+     "items": [
+      {
+       "name": "SOS Purity",
+       "href": "sos",
+       "amount": "35 €"
+      },
+      {
+       "name": "Anti-aging",
+       "href": null,
+       "amount": "70 €"
+      },
+      {
+       "name": "HydraFacial",
+       "href": "hydra",
+       "amount": "110 €"
+      },
+      {
+       "name": "HydraFacial Anti-Aging",
+       "href": null,
+       "amount": "130 €"
+      },
+      {
+       "name": "Mesotherapy",
+       "href": null,
+       "amount": "150 €"
+      },
+      {
+       "name": "Micro Pen",
+       "href": "microneed",
+       "amount": "150 €"
+      },
+      {
+       "name": "Laser Carbon",
+       "href": "charbon",
+       "amount": "150 €"
+      },
+      {
+       "name": "Phototherapy",
+       "href": "photo",
+       "amount": "40 €"
+      },
+      {
+       "name": "BB GLOW",
+       "href": "bbglow",
+       "amount": "120 €"
+      },
+      {
+       "name": "Superficial Peeling",
+       "href": "peeling",
+       "amount": "90 €"
+      }
+     ]
+    },
+    {
+     "id": "beaute-minceur",
+     "cat": "corps",
+     "title": "Beauty Treatments",
+     "href": null,
+     "items": [
+      {
+       "name": "Lipo-laser",
+       "href": "lipolaser",
+       "amount": "50 €"
+      },
+      {
+       "name": "Radiofrequency",
+       "href": "radiofrequence",
+       "amount": "50 €"
+      },
+      {
+       "name": "Vascslim",
+       "href": null,
+       "amount": "50 €"
+      },
+      {
+       "name": "Colombian Lift",
+       "href": null,
+       "amount": "60 €"
+      },
+      {
+       "name": "Maderotherapy",
+       "href": "mado",
+       "amount": "75 €"
+      }
+     ]
+    },
+    {
+     "id": "hifu",
+     "cat": "visage",
+     "title": "Hifu",
+     "href": "hifu",
+     "items": [
+      {
+       "name": "Upper Face",
+       "href": null,
+       "amount": "250 €"
+      },
+      {
+       "name": "Full Face",
+       "href": null,
+       "amount": "500 €"
+      },
+      {
+       "name": "Face + Decolletage",
+       "href": null,
+       "amount": "750 €"
+      },
+      {
+       "name": "Abdomen + Abdomen",
+       "href": null,
+       "amount": "600 €"
+      },
+      {
+       "name": "Saddlebags",
+       "href": null,
+       "amount": "550 €"
+      },
+      {
+       "name": "Intimate Area",
+       "href": null,
+       "amount": "300 €"
+      },
+      {
+       "name": "Buttocks",
+       "href": null,
+       "amount": "300 €"
+      },
+      {
+       "name": "Thighs",
+       "href": null,
+       "amount": "300 €"
+      }
+     ]
+    },
+    {
+     "id": "plasma-lift",
+     "cat": "visage",
+     "title": "Plasma Lift",
+     "href": "plasma",
+     "items": [
+      {
+       "name": "1 Session",
+       "href": null,
+       "amount": "250 €"
+      }
+     ]
+    },
+    {
+     "id": "blanchiment-des-dents",
+     "cat": "sourire",
+     "title": "Teeth Whitening",
+     "href": "dents",
+     "items": [
+      {
+       "name": "1 Session",
+       "href": null,
+       "amount": "90 €"
+      },
+      {
+       "name": "2 Sessions",
+       "href": null,
+       "amount": "120 €"
+      }
+     ]
+    },
+    {
+     "id": "epilation-definitive",
+     "cat": "epilation",
+     "title": "Permanent Hair Removal",
+     "href": "laserepilation",
+     "items": [
+      {
+       "name": "Chin",
+       "href": null,
+       "amount": "50 €"
+      },
+      {
+       "name": "Upper Lip",
+       "href": null,
+       "amount": "50 €"
+      },
+      {
+       "name": "Full Face",
+       "href": null,
+       "amount": "120 €"
+      },
+      {
+       "name": "Underarms",
+       "href": null,
+       "amount": "90 €"
+      },
+      {
+       "name": "Forearms",
+       "href": null,
+       "amount": "110 €"
+      },
+      {
+       "name": "Full Arms",
+       "href": null,
+       "amount": "180 €"
+      },
+      {
+       "name": "Bikini",
+       "href": null,
+       "amount": "100 €"
+      },
+      {
+       "name": "Half Legs",
+       "href": null,
+       "amount": "180 €"
+      },
+      {
+       "name": "Full Legs",
+       "href": null,
+       "amount": "250 €"
+      }
+     ]
+    },
+    {
+     "id": "gloss",
+     "cat": "sourire",
+     "title": "Gloss",
+     "href": null,
+     "items": [
+      {
+       "name": "Argan",
+       "href": null,
+       "amount": "12.50 €"
+      },
+      {
+       "name": "Raspberry",
+       "href": null,
+       "amount": "12.50 €"
+      },
+      {
+       "name": "Aloe Vera",
+       "href": null,
+       "amount": "12.50 €"
+      }
+     ]
+    },
+    {
+     "id": "detatouage",
+     "cat": "epilation",
+     "title": "Tattoo Removal",
+     "href": null,
+     "items": [
+      {
+       "name": "Tattoo Removal XS",
+       "href": null,
+       "amount": "99 €"
+      },
+      {
+       "name": "Tattoo Removal S",
+       "href": null,
+       "amount": "149 €"
+      },
+      {
+       "name": "Tattoo Removal M",
+       "href": null,
+       "amount": "199 €"
+      },
+      {
+       "name": "Tattoo Removal L",
+       "href": null,
+       "amount": "249 €"
+      },
+      {
+       "name": "Tattoo Removal XL",
+       "href": null,
+       "amount": "299 €"
+      },
+      {
+       "name": "Tattoo Removal XXL",
+       "href": null,
+       "amount": "399 €"
+      }
+     ]
+    },
+    {
+     "id": "epilation",
+     "cat": "epilation",
+     "title": "Hair Removal",
+     "href": "cire",
+     "items": [
+      {
+       "name": "Eyebrows",
+       "href": null,
+       "amount": "10 €"
+      },
+      {
+       "name": "Chin",
+       "href": null,
+       "amount": "5 €"
+      },
+      {
+       "name": "Upper Lip",
+       "href": null,
+       "amount": "5 €"
+      },
+      {
+       "name": "Full Face",
+       "href": null,
+       "amount": "25 €"
+      },
+      {
+       "name": "Underarms",
+       "href": null,
+       "amount": "10 €"
+      },
+      {
+       "name": "Forearms",
+       "href": null,
+       "amount": "10 €"
+      },
+      {
+       "name": "Full Arms",
+       "href": null,
+       "amount": "15 €"
+      },
+      {
+       "name": "Bikini",
+       "href": null,
+       "amount": "25 €"
+      },
+      {
+       "name": "Half Legs",
+       "href": null,
+       "amount": "20 €"
+      },
+      {
+       "name": "Full Legs",
+       "href": null,
+       "amount": "25 €"
+      }
+     ]
+    },
+    {
+     "id": "rituel-douceur",
+     "cat": "corps",
+     "title": "Gentle Rituals",
+     "href": null,
+     "items": [
+      {
+       "name": "With Argan Oil",
+       "href": null,
+       "amount": "65 €"
+      },
+      {
+       "name": "With Candles",
+       "href": null,
+       "amount": "70 €"
+      },
+      {
+       "name": "Bamboo Massage",
+       "href": null,
+       "amount": "70 €"
+      },
+      {
+       "name": "Back Massage",
+       "href": null,
+       "amount": "50 €"
+      },
+      {
+       "name": "Pregnancy Massage",
+       "href": null,
+       "amount": "90 €"
+      },
+      {
+       "name": "Hot Stone Massage",
+       "href": null,
+       "amount": "90 €"
+      },
+      {
+       "name": "Essential Oil Massage",
+       "href": null,
+       "amount": "70 €"
+      }
+     ]
+    },
+    {
+     "id": "beaute-des-yeux",
+     "cat": "regard",
+     "title": "Eye Care",
+     "href": null,
+     "items": [
+      {
+       "name": "Lash Lift",
+       "href": null,
+       "amount": "35 €"
+      },
+      {
+       "name": "Lash Tint",
+       "href": null,
+       "amount": "15 €"
+      },
+      {
+       "name": "Brow Tint",
+       "href": null,
+       "amount": "15 €"
+      },
+      {
+       "name": "Quick Lashes",
+       "href": null,
+       "amount": "40 €"
+      },
+      {
+       "name": "Brow Lift",
+       "href": null,
+       "amount": "30 €"
+      }
+     ]
+    },
+    {
+     "id": "beaute-des-mains",
+     "cat": "mains",
+     "title": "Hand Care",
+     "href": null,
+     "items": [
+      {
+       "name": "Esthetics",
+       "href": null,
+       "amount": "25 €"
+      },
+      {
+       "name": "Spa",
+       "href": null,
+       "amount": "35 €"
+      },
+      {
+       "name": "Semi-Permanent Nail Polish",
+       "href": null,
+       "amount": "25 €"
+      }
+     ]
+    },
+    {
+     "id": "beaute-des-pieds",
+     "cat": "mains",
+     "title": "Foot Care",
+     "href": null,
+     "items": [
+      {
+       "name": "Esthetics",
+       "href": null,
+       "amount": "35 €"
+      },
+      {
+       "name": "Spa",
+       "href": null,
+       "amount": "45 €"
+      },
+      {
+       "name": "Semi-Permanent Nail Polish",
+       "href": null,
+       "amount": "25 €"
+      }
+     ]
+    },
+    {
+     "id": "serum",
+     "cat": "visage",
+     "title": "Serum",
+     "href": null,
+     "items": [
+      {
+       "name": "Anti-Aging",
+       "href": null,
+       "amount": "€75"
+      },
+      {
+       "name": "Booster",
+       "href": null,
+       "amount": "€125"
+      },
+      {
+       "name": "Vitamin",
+       "href": null,
+       "amount": "€100"
+      },
+      {
+       "name": "Wellness",
+       "href": null,
+       "amount": "€80"
+      },
+      {
+       "name": "Mesotherapy",
+       "href": null,
+       "amount": "€180"
+      }
+     ]
+    },
+    {
+     "id": "huile-corps",
+     "cat": "corps",
+     "title": "Body Oil",
+     "href": null,
+     "items": [
+      {
+       "name": "Massage",
+       "href": null,
+       "amount": "€50"
+      },
+      {
+       "name": "Anti-Cellulite",
+       "href": null,
+       "amount": "€75"
+      },
+      {
+       "name": "Slimming",
+       "href": null,
+       "amount": "€90"
+      },
+      {
+       "name": "Wellness",
+       "href": null,
+       "amount": "€60"
+      }
+     ]
+    },
+    {
+     "id": "gommage",
+     "cat": "visage",
+     "title": "Exfoliation",
+     "href": null,
+     "items": [
+      {
+       "name": "Facial Scrub",
+       "href": null,
+       "amount": "€35"
+      },
+      {
+       "name": "Body Scrub (according to skin type)",
+       "href": null,
+       "amount": "€25"
+      }
+     ]
+    },
+    {
+     "id": "electrolyse",
+     "cat": "epilation",
+     "title": "Electrolysis",
+     "href": null,
+     "items": [
+      {
+       "name": "5 minutes",
+       "href": null,
+       "amount": "15 €"
+      },
+      {
+       "name": "10 minutes",
+       "href": null,
+       "amount": "25 €"
+      },
+      {
+       "name": "20 minutes",
+       "href": null,
+       "amount": "45 €"
+      },
+      {
+       "name": "25 minutes",
+       "href": null,
+       "amount": "50 €"
+      },
+      {
+       "name": "30 minutes",
+       "href": null,
+       "amount": "60 €"
+      }
+     ]
+    }
+   ]
+  },
+  "gallery": {
+   "title": "Gallery",
+   "dialogLabel": "Gallery",
+   "close": "Close",
+   "items": [
+    {
+     "alt": "The treatment room, with the treatment table and beauty equipment",
+     "ariaLabel": "Enlarge photo : The treatment room, with the treatment table and beauty equipment",
+     "n": "1"
+    },
+    {
+     "alt": "The facial treatment devices in front of the large windows",
+     "ariaLabel": "Enlarge photo : The facial treatment devices in front of the large windows",
+     "n": "2"
+    },
+    {
+     "alt": "The treatment table set with towels, next to the wooden door",
+     "ariaLabel": "Enlarge photo : The treatment table set with towels, next to the wooden door",
+     "n": "3"
+    },
+    {
+     "alt": "Wooden letters spelling “Moment”, “My Bubble” and “Beauty” on the wall",
+     "ariaLabel": "Enlarge photo : Wooden letters spelling “Moment”, “My Bubble” and “Beauty” on the wall",
+     "n": "4"
+    }
+   ]
+  },
+  "contact": {
+   "title": "Contact",
+   "intro": "Make an Appointment by phone, email, or social media!",
+   "labels": [
+    "Address",
+    "Phone",
+    "Email"
+   ],
+   "itinerary": "Directions",
+   "socialTitle": "Social media"
+  }
+ },
+ "legal": {
+  "mentions": {
+   "slug": "legal-notice",
+   "title": "Legal notice",
+   "metaTitle": "Legal notice — My Bubble Beauty",
+   "description": "Legal notice — My Bubble Beauty, Rue Paloke 146, 1700 Dilbeek.",
+   "bodyHtml": "<h2>Publisher</h2><p>My Bubble Beauty — [company or owner name]<br/>Rue Paloke 146, 1700 Dilbeek, Belgium<br/>Company number (BCE/KBO): [to be completed]<br/>Phone: <a href=\"tel:+32484118395\">0484.118.395</a> · Email: <a href=\"mailto:mybubblebeauty@gmail.com\">mybubblebeauty@gmail.com</a></p><h2>Hosting</h2><p>OVH SAS, 2 rue Kellermann, 59100 Roubaix, France — <a href=\"https://www.ovhcloud.com\">ovhcloud.com</a></p><h2>Intellectual property</h2><p>The texts, photographs, logo and graphic elements of this site are the property of My Bubble Beauty. Any reproduction without written permission is prohibited.</p><h2>Prices</h2><p>Prices shown are indicative, VAT included, and may change at any time. The applicable price is the one given when you book.</p><h2>Treatment information</h2><p>Treatment descriptions are for information only and do not replace the advice of a healthcare professional.</p>"
+  },
+  "privacy": {
+   "slug": "privacy",
+   "title": "Privacy policy",
+   "metaTitle": "Privacy policy — My Bubble Beauty",
+   "description": "Privacy policy — My Bubble Beauty, Rue Paloke 146, 1700 Dilbeek.",
+   "bodyHtml": "<h2>Data controller</h2><p>My Bubble Beauty, Rue Paloke 146, 1700 Dilbeek — <a href=\"mailto:mybubblebeauty@gmail.com\">mybubblebeauty@gmail.com</a></p><h2>Data collected</h2><p>This site has no forms, no analytics and uses no cookies. No personal data is collected during your visit.</p><p>The “Pause animations” choice is stored only in your browser (local storage), is never sent anywhere and can be cleared at any time in your browser settings.</p><h2>Appointments</h2><p>When you contact us by phone, email, WhatsApp or social media, we use your details only to manage your appointment (legal basis: pre-contractual measures, Art. 6(1)(b) GDPR). They are kept for up to 3 years after the last contact. WhatsApp, Facebook, Instagram and Snapchat are third-party services with their own privacy policies.</p><h2>External links</h2><p>Links to YouTube, Google Maps and our social media open those services, which apply their own rules. No content from those services is loaded on this site.</p><h2>Your rights</h2><p>You have the right of access, rectification, erasure, restriction and objection. Write to us at the address above. You can also lodge a complaint with the Belgian Data Protection Authority (<a href=\"https://www.dataprotectionauthority.be\" rel=\"noopener\">dataprotectionauthority.be</a>).</p>"
+  }
+ },
+ "treatments": {
+  "bbglow": {
+   "title": "The BB Glow Treatment in Aesthetics",
+   "metaTitle": "The BB Glow Treatment in Aesthetics — My Bubble Beauty",
+   "description": "The BB Glow treatment in aesthetics is a skincare technique aimed at improving the complexion, making the skin tone more even, reducing imperfections, and…",
+   "articleHtml": "<p>The BB Glow treatment in aesthetics is a skincare technique aimed at improving the complexion, making the skin tone more even, reducing imperfections, and giving the skin a radiant and fresh look. This treatment is particularly popular for its \"baby skin\" effect, hence the name.</p><h2>Skin Preparation</h2><p>Prior to the treatment, the skin is thoroughly cleansed to remove impurities, sebum, and dead skin cells. Some procedures may include a mild exfoliation for better product absorption.</p><h2>Application of Serums</h2><p>Specially formulated serums for the BB Glow treatment are applied to the skin. These serums typically contain ingredients such as pigments, hyaluronic acid, peptides, and vitamins. Pigments help even out the skin tone, conceal imperfections, and provide a more radiant complexion.</p><h2>Micro-Needling or Microneedling</h2><p>An essential part of the BB Glow treatment may involve micro-needling or microneedling. This technique entails using a device with fine needles to create micro-perforations in the skin. These micro-perforations facilitate better serum absorption and also stimulate collagen production, contributing to improved skin texture.</p><h2>Application</h2><p>After micro-needling is completed, a soothing mask or additional treatments may be applied to calm the skin and enhance the benefits of the treatment.</p><h2>Masks and Targeted Treatments</h2><p>Cleansing masks or other targeted treatments can be used to soothe the skin, reduce excess sebum, and promote better sebum production regulation.</p><h2>Hydration and Sun Protection</h2><p>The treatment is typically concluded with the application of moisturizing products and sun protection to safeguard the newly treated skin from UV rays.</p><p>The results of the BB Glow treatment can vary from person to person, but generally, patients report an improvement in skin texture, a reduction in the visibility of imperfections, a more even complexion, and a brighter skin tone. The effects of the treatment are temporary and may last for several weeks to a few months, depending on the skin type and aftercare.</p>",
+   "priceTitle": "Price",
+   "prices": [
+    {
+     "name": "BB GLOW",
+     "amount": "120 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "soins/glow.webp",
+     "w": 960,
+     "h": 542,
+     "alt": "Illustrative Image"
+    }
+   ]
+  },
+  "charbon": {
+   "title": "Activated Carbon Laser",
+   "metaTitle": "Activated Carbon Laser — My Bubble Beauty",
+   "description": "Activated carbon is sometimes used in combination with laser treatments for the treatment of certain skin conditions. Laser treatment is known for its…",
+   "articleHtml": "<p>Activated carbon is sometimes used in combination with laser treatments for the treatment of certain skin conditions. Laser treatment is known for its effectiveness in addressing various skin issues, including pigmentation, tattoos, and pigmented lesions. Here's how a laser treatment with activated carbon typically works:</p><h2>Application of Activated Carbon</h2><p>A mask based on activated carbon is applied to the area of the skin to be treated. Activated carbon absorbs laser light, allowing for more targeted treatment of pigmentation or tattoos.</p><h2>Laser Treatment</h2><p>Subsequently, the laser is used to emit pulses of intense light in fractions of a second. This light is selectively absorbed by pigment particles, such as tattoo pigments or melanin in pigmented spots.</p><h2>Pigment Fragmentation</h2><p>When the laser light is absorbed by the pigments, it generates heat, leading to the fragmentation of the pigments into smaller particles.</p><h2>Natural Removal</h2><p>The fragmented pigment particles are then naturally eliminated by the body over time, primarily through the lymphatic system.</p><h2>Results</h2><p>The final outcome depends on the type of skin condition being treated. For tattoos, for example, the laser can help break down tattoo pigments, allowing the body to gradually remove them and reduce the appearance of the tattoo. For pigmented spots, this treatment can help lighten or remove the spots.</p><p>It's important to note that laser treatments, regardless of the specific technique used, should be performed by a qualified aesthetic professional. These professionals can assess your skin, determine the appropriate treatment method, and ensure that the treatment is performed safely to achieve the best results. If you are considering a laser treatment for a specific skin issue, I recommend consulting with an aesthetic professional to discuss your specific needs and obtain detailed information about the treatment.</p>",
+   "priceTitle": "Price",
+   "prices": [
+    {
+     "name": "Laser Carbon",
+     "amount": "150 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "soins/charbon.webp",
+     "w": 743,
+     "h": 782,
+     "alt": "Illustrative Image"
+    }
+   ]
+  },
+  "cire": {
+   "title": "Waxing Unwanted Hair",
+   "metaTitle": "Waxing Unwanted Hair — My Bubble Beauty",
+   "description": "Waxing unwanted hair is a commonly used method for hair removal in the field of beauty care. This technique involves the application of warm or lukewarm wax…",
+   "articleHtml": "<p>Waxing unwanted hair is a commonly used method for hair removal in the field of beauty care. This technique involves the application of warm or lukewarm wax to the skin, allowing it to harden and then swiftly removing it, along with the hair. Here's how waxing typically works in beauty care:</p><h2>Preparation</h2><p>Before waxing begins, the skin is usually thoroughly cleaned to remove dirt, oil, and cosmetic products. It's important for the skin to be clean and dry before the wax is applied.</p><h2>Application</h2><p>The wax is heated to make it liquid but should not be too hot to avoid burns. It is then applied to the area to be depilated using a stick or spatula. The wax adheres to the hair and the skin.</p><h2>Hardening</h2><p>The wax is allowed to harden for a few moments. During this period, the wax adheres to the hair, completely covering them.</p><h2>Removal</h2><p>Once the wax has hardened, a beauty professional quickly pulls an edge of the wax in the direction against hair growth. This action removes the hair from the root, leaving the skin temporarily smooth and hair-free.</p><h2>Aftercare Following Waxing</h2><p>After waxing, it's common to apply a soothing lotion or moisturizing cream to soften the skin and minimize irritation. Hair gradually regrows, usually within a few weeks.</p><p>Waxing can be applied to various parts of the body, including legs, underarms, the bikini line, the face, and other areas with unwanted hair. This hair removal method offers several benefits, such as long-lasting smooth skin since the hair is removed from the root. However, there are also potential downsides, such as the pain associated with hair removal and the possibility of skin irritation.</p><p>There are different types of wax, including hot wax, lukewarm wax, and cold wax, each with its own pros and cons. Some people also choose to wax at home using commercial wax kits, although this may require some practice for good results.</p><p>For waxing, it's recommended to seek an experienced professional, especially for sensitive areas, to reduce the risk of injuries or skin irritation.</p>",
+   "priceTitle": "Price — Hair Removal",
+   "prices": [
+    {
+     "name": "Eyebrows",
+     "amount": "10 €"
+    },
+    {
+     "name": "Chin",
+     "amount": "5 €"
+    },
+    {
+     "name": "Upper Lip",
+     "amount": "5 €"
+    },
+    {
+     "name": "Full Face",
+     "amount": "25 €"
+    },
+    {
+     "name": "Underarms",
+     "amount": "10 €"
+    },
+    {
+     "name": "Forearms",
+     "amount": "10 €"
+    },
+    {
+     "name": "Full Arms",
+     "amount": "15 €"
+    },
+    {
+     "name": "Bikini",
+     "amount": "25 €"
+    },
+    {
+     "name": "Half Legs",
+     "amount": "20 €"
+    },
+    {
+     "name": "Full Legs",
+     "amount": "25 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "soins/cire.webp",
+     "w": 801,
+     "h": 1367,
+     "alt": "Illustrative Image"
+    }
+   ]
+  },
+  "dents": {
+   "title": "Teeth Whitening",
+   "metaTitle": "Teeth Whitening — My Bubble Beauty",
+   "description": "Teeth whitening is a cosmetic procedure designed to brighten the color of teeth, making them whiter and brighter. This procedure is commonly performed in…",
+   "articleHtml": "<p>Teeth whitening is a cosmetic procedure designed to brighten the color of teeth, making them whiter and brighter. This procedure is commonly performed in aesthetic dentistry to enhance the appearance of a smile by removing stains and discolorations on the teeth. Here is how teeth whitening works in aesthetics:</p><h2>Initial Evaluation</h2><p>Before the teeth whitening process begins, a dentist or aesthetic professional conducts an initial evaluation to determine if the patient is a suitable candidate for the procedure. Some individuals may not qualify due to underlying dental issues.</p><h2>Preparation</h2><p>Prior to the teeth whitening procedure, the patient's teeth are cleaned to remove plaque and tartar, which could hinder the bleaching process.</p><h2>Whitening Options</h2><p>At-Home Whitening: The dentist may provide an at-home whitening kit with custom-made trays and a bleaching gel containing a low concentration of hydrogen peroxide or carbamide peroxide. The patient fills the trays with the gel and wears them for a specified period daily over a few weeks. This is a gradual process.</p><p>In-Office Whitening: This method is also known as professional in-chair bleaching. The dentist applies a more concentrated bleaching gel to the patient's teeth and then uses special light or a laser to activate the gel. This process is usually faster and may provide immediate results.</p><h2>Aftercare</h2><p>After whitening, the patient may be advised to avoid certain potentially staining foods and beverages (such as coffee, tea, and red wine) for a while to maintain the results. Good oral care, including regular brushing and flossing, is also essential.</p><h2>Mechanism of Teeth Whitening</h2><p>The fundamental principle of teeth whitening is based on the use of products containing hydrogen peroxide or carbamide peroxide. These chemicals penetrate the tooth enamel and react with the molecules responsible for stains and discolorations, breaking them down to brighten the teeth's color. However, it's important to note that teeth whitening is not permanent, and the results can vary from person to person, depending on various factors, including the type of tooth stains and dietary habits.</p><h2>Pre-Procedure Advice</h2><p>It is highly recommended to consult a dentist or an aesthetic dental professional before considering teeth whitening, as it may not be suitable for everyone, especially those with existing dental issues. Furthermore, teeth whitening should be performed under the supervision of a professional to ensure the safety and effectiveness of the treatment.</p>",
+   "priceTitle": "Price — Teeth Whitening",
+   "prices": [
+    {
+     "name": "1 Session",
+     "amount": "90 €"
+    },
+    {
+     "name": "2 Sessions",
+     "amount": "120 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "soins/dents.webp",
+     "w": 917,
+     "h": 492,
+     "alt": "Illustrative Image"
+    }
+   ]
+  },
+  "hifu": {
+   "title": "High-Intensity Focused Ultrasound (HIFU) in Aesthetics",
+   "metaTitle": "HIFU in Aesthetics — My Bubble Beauty",
+   "description": "High-Intensity Focused Ultrasound (HIFU) is a technology that utilizes high-intensity focused ultrasound waves to heat underlying tissues at specific depths…",
+   "articleHtml": "<p>High-Intensity Focused Ultrasound (HIFU) is a technology that utilizes high-intensity focused ultrasound waves to heat underlying tissues at specific depths without damaging the skin's surface. This heat induces coagulation in the tissues, stimulating collagen production and improving skin firmness.</p><h2>Applications in Aesthetics</h2><p>HIFU is used in aesthetics to address various skin concerns and rejuvenation goals, including skin tightening, reducing wrinkles and fine lines, as well as non-surgical facelifts. It can help reduce sagging skin and improve skin firmness on the face, neck, and other body areas. HIFU can decrease the appearance of wrinkles and fine lines by stimulating collagen production. It is sometimes referred to as the \"HIFU facelift\" due to its tightening effects, similar to surgical facelifts but without surgery and minimal to no downtime.</p><h2>Procedure</h2><p>During an HIFU session, a device delivers intensely focused ultrasound waves at precise depths within the target tissues. This ultrasound energy heats the underlying tissues and stimulates collagen production. Results are typically not immediately visible but gradually improve over weeks and months as collagen regenerates.</p><h2>Safety and Comfort</h2><p>HIFU is considered a non-invasive procedure and generally has few side effects. Patients may experience a warming sensation during the session, but the procedure is generally well-tolerated and usually does not require anesthesia.</p><h2>Number of Sessions</h2><p>The number of sessions required depends on the specific treatment and the patient's goals. Multiple sessions are generally recommended for the best results.</p><h2>Results</h2><p>HIFU results are gradual and can last for several months. The skin becomes firmer, wrinkles reduce, and the face can appear tighter.</p><p>HIFU is a popular choice in aesthetics due to its effectiveness in skin tightening without surgery. However, as with any aesthetic procedure, it's important to consult a qualified healthcare professional to discuss the right options based on your individual needs and ensure that HIFU is the best solution for you.</p><p class=\"video-link\"><a class=\"btn btn--ghost\" href=\"https://www.youtube.com/watch?v=8P2RqfhO8i0\" rel=\"noopener\">Watch the video on YouTube</a> <small>The video opens on YouTube.</small></p>",
+   "priceTitle": "Price — Hifu",
+   "prices": [
+    {
+     "name": "Upper Face",
+     "amount": "250 €"
+    },
+    {
+     "name": "Full Face",
+     "amount": "500 €"
+    },
+    {
+     "name": "Face + Decolletage",
+     "amount": "750 €"
+    },
+    {
+     "name": "Abdomen + Abdomen",
+     "amount": "600 €"
+    },
+    {
+     "name": "Saddlebags",
+     "amount": "550 €"
+    },
+    {
+     "name": "Intimate Area",
+     "amount": "300 €"
+    },
+    {
+     "name": "Buttocks",
+     "amount": "300 €"
+    },
+    {
+     "name": "Thighs",
+     "amount": "300 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "soins/hifu.webp",
+     "w": 800,
+     "h": 800,
+     "alt": "Illustrative Image"
+    }
+   ]
+  },
+  "hydra": {
+   "title": "HydraFacial",
+   "metaTitle": "HydraFacial — My Bubble Beauty",
+   "description": "A HydraFacial is a non-invasive aesthetic treatment designed to improve the appearance of facial skin by combining various techniques, including…",
+   "articleHtml": "<p>A HydraFacial is a non-invasive aesthetic treatment designed to improve the appearance of facial skin by combining various techniques, including exfoliation, deep cleansing, hydration, and protection. It is designed to address various skin issues such as acne, wrinkles, pigmentation, uneven skin texture, and hyperpigmentation.</p><h2>Working Principle</h2><p>Cleansing: The process begins with a deep cleansing of the skin to remove impurities, excess sebum, and dead skin cells.</p><p>Exfoliation: Next, a gentle exfoliating solution is applied to the skin to remove dead skin cells from the skin's surface, resulting in a fresher and smoother complexion.</p><p>Extraction: The HydraFacial system uses gentle suction to remove impurities from the skin pores, which can help reduce acne and unclog pores.</p><p>Hydration: Subsequently, a hydrating solution enriched with antioxidants, peptides, and hyaluronic acid is applied to deeply nourish and moisturize the skin.</p><p>Protection: Finally, sunscreen or sun protection products are often applied to protect the freshly treated skin from harmful UV rays.</p><h2>Results</h2><p>The entire treatment is relatively quick and minimally uncomfortable. Many describe it as enjoyable and relaxing. Results from a HydraFacial can vary from person to person, but many notice immediate improvements in the appearance of their skin, with a brighter, softer complexion and a more even tone.</p><p>source: HydraFacial UK</p>",
+   "priceTitle": "Price",
+   "prices": [
+    {
+     "name": "HydraFacial",
+     "amount": "110 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "soins/hydrafacial.webp",
+     "w": 900,
+     "h": 600,
+     "alt": "Illustrative Image"
+    }
+   ]
+  },
+  "laserepilation": {
+   "title": "Permanent Laser Hair Removal in Aesthetics",
+   "metaTitle": "Permanent Laser Hair Removal in Aesthetics — My Bubble Beauty",
+   "description": "Laser hair removal works by using a specific laser that emits intense light radiation. This light is absorbed by the melanin in the hair follicles. When…",
+   "articleHtml": "<p>Laser hair removal works by using a specific laser that emits intense light radiation. This light is absorbed by the melanin in the hair follicles. When melanin absorbs the laser's energy, it is converted into heat, which damages the hair follicles, inhibiting future hair growth.</p><h2>Types of Lasers</h2><p>Various types of lasers are used for permanent laser hair removal, including Alexandrite lasers, Nd:YAG lasers, and diode lasers. The choice often depends on the patient's skin color and hair type.</p><h2>Laser Hair Removal Session</h2><p>During a laser hair removal session, the aesthetic professional applies the laser to the area being treated. Patients typically wear protective goggles to shield their eyes from the intense light. The session can be somewhat uncomfortable but is generally well-tolerated by most patients.</p><h2>Series of Sessions</h2><p>Laser hair removal is not a one-time procedure. To achieve optimal results, multiple sessions are required at intervals of several weeks, as hair grows in different cycles.</p><h2>Results</h2><p>The results of laser hair removal vary from person to person, but many patients notice a significant reduction in hair growth after several sessions. A substantial portion of the hair can be permanently removed, although occasional touch-ups may be needed to treat any remaining hair.</p><h2>Safety</h2><p>Laser hair removal is generally considered a safe procedure when performed by a qualified professional. Common side effects are temporary and may include redness, warmth, or itching in the treated area.</p><h2>Benefits</h2><p>Laser hair removal offers many benefits, including permanent hair reduction, smooth skin, and a reduced need for shaving or waxing.</p><h2>Pre-Consultation</h2><p>Before undergoing laser hair removal, it is recommended to consult an aesthetic professional to assess your skin type, hair color, and suitability for the procedure.</p><p>Permanent laser hair removal is a popular choice for those looking to get rid of unwanted hair permanently. However, it is essential to consult a qualified professional to discuss expectations, potential results, and precautions before undergoing this treatment.</p><p class=\"video-link\"><a class=\"btn btn--ghost\" href=\"https://www.youtube.com/watch?v=bRvnZGqtHoc\" rel=\"noopener\">Watch the video on YouTube</a> <small>The video opens on YouTube.</small></p>",
+   "priceTitle": "Price — Permanent Hair Removal",
+   "prices": [
+    {
+     "name": "Chin",
+     "amount": "50 €"
+    },
+    {
+     "name": "Upper Lip",
+     "amount": "50 €"
+    },
+    {
+     "name": "Full Face",
+     "amount": "120 €"
+    },
+    {
+     "name": "Underarms",
+     "amount": "90 €"
+    },
+    {
+     "name": "Forearms",
+     "amount": "110 €"
+    },
+    {
+     "name": "Full Arms",
+     "amount": "180 €"
+    },
+    {
+     "name": "Bikini",
+     "amount": "100 €"
+    },
+    {
+     "name": "Half Legs",
+     "amount": "180 €"
+    },
+    {
+     "name": "Full Legs",
+     "amount": "250 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "soins/laser.webp",
+     "w": 877,
+     "h": 357,
+     "alt": "Illustrative Image"
+    },
+    {
+     "src": "soins/laser2.webp",
+     "w": 825,
+     "h": 290,
+     "alt": "Illustrative Image"
+    },
+    {
+     "src": "soins/etape-3-epilation-laser.webp",
+     "w": 894,
+     "h": 344,
+     "alt": "Illustrative Image"
+    },
+    {
+     "src": "soins/etape-4-epilation-laser.webp",
+     "w": 869,
+     "h": 290,
+     "alt": "Illustrative Image"
+    },
+    {
+     "src": "soins/etape-5-epilation-laser.webp",
+     "w": 960,
+     "h": 336,
+     "alt": "Illustrative Image"
+    },
+    {
+     "src": "soins/etape-6-epilation-laser.webp",
+     "w": 960,
+     "h": 334,
+     "alt": "Illustrative Image"
+    }
+   ]
+  },
+  "lipolaser": {
+   "title": "LIPO LASER",
+   "metaTitle": "LIPO LASER — My Bubble Beauty",
+   "description": "Lipo Laser treatment, also known as \"lipo laser,\" is a non-invasive aesthetic procedure aimed at reducing body fat, primarily in target areas such as the…",
+   "articleHtml": "<p>Lipo Laser treatment, also known as \"lipo laser,\" is a non-invasive aesthetic procedure aimed at reducing body fat, primarily in target areas such as the abdomen, thighs, arms, or flanks. Here's how a typical lipo laser treatment usually works:</p><h2>Initial Consultation</h2><p>Prior to a lipo laser treatment, you'll have an initial consultation with an aesthetic professional. During this consultation, your fat loss goals and the areas to be treated are discussed, and basic health and fitness information is taken into consideration.</p><h2>Preparation</h2><p>On the day of the procedure, the treatment area is cleansed. Photos may be taken to track progress over time.</p><h2>Application of Lasers</h2><p>Devices emitting low-level laser diodes are placed directly on the skin of the treatment area. These lasers emit specific wavelengths that are absorbed by the fat cells beneath the skin.</p><h2>Breakdown of Fat Cells</h2><p>The lasers stimulate the fat cells, causing them to break down. This process is known as lipolysis, where fat cells release their triglycerides as fatty acids and glycerol.</p><h2>Removal of Fats</h2><p>The fatty acids and glycerol released during lipolysis are naturally eliminated by the body. This can occur through the lymphatic system and the liver.</p><h2>Post-Treatment</h2><p>After the lipo laser session, it is often recommended to engage in physical activity to help burn the released fats. It is also important to stay well-hydrated to facilitate fat removal.</p><h2>Multiple Sessions</h2><p>One lipo laser treatment may yield slight results, so multiple sessions are usually needed to achieve significant results. These sessions are typically scheduled several weeks apart.</p><p>It's important to note that lipo laser is intended for reducing body fat, but it is not a substitute for a balanced diet and exercise. To maintain the results, it is essential to maintain a healthy lifestyle.</p>",
+   "priceTitle": "Price",
+   "prices": [
+    {
+     "name": "Lipo-laser",
+     "amount": "50 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "soins/lipolaser.webp",
+     "w": 750,
+     "h": 302,
+     "alt": "Illustrative Image"
+    }
+   ]
+  },
+  "mado": {
+   "title": "Maderotherapy",
+   "metaTitle": "Maderotherapy — My Bubble Beauty",
+   "description": "Maderotherapy is a body massage and shaping technique that uses specially designed wooden tools, such as rollers, sticks, and wooden spoons, to improve skin…",
+   "articleHtml": "<p>Maderotherapy is a body massage and shaping technique that uses specially designed wooden tools, such as rollers, sticks, and wooden spoons, to improve skin texture, reduce cellulite, and promote relaxation. The term \"maderotherapy\" is derived from the Spanish word \"madera,\" which means wood, and \"therapy.\"</p><h2>Preparation</h2><p>Before the treatment, the health or beauty specialist discusses the patient's goals and concerns. Then, massage oil or lotion is applied to the skin to facilitate the gliding of the wooden tools.</p><h2>Massage with Wooden Tools</h2><p>The practitioner uses specially designed wooden tools to perform various types of massage techniques. These wooden tools come in various shapes and sizes suitable for different body parts and massage methods. Movements can be kneading, rolling, pressing, or circular, depending on the treatment goals.</p><h2>Effects</h2><p>Maderotherapy aims to stimulate blood circulation and lymphatic drainage, loosen fat deposits, reduce fluid retention, soften the skin, improve skin texture, and promote muscle relaxation. It can also be used to address areas of the body with cellulite.</p><h2>Multiple Sessions</h2><p>To achieve optimal results, multiple maderotherapy sessions are typically required. The frequency of sessions depends on the patient's goals and the condition of the skin.</p><p>Maderotherapy is often considered a non-invasive and relaxing treatment, although the sensations during the treatment may vary depending on the applied pressure and treated areas. The benefits of maderotherapy may include firmer skin, cellulite reduction, and improved blood circulation.</p><p>As with any aesthetic treatment, it is recommended to consult a qualified professional to discuss your specific needs, benefits, and potential risks of maderotherapy, as well as to assess whether this treatment is suitable for your situation.</p>",
+   "priceTitle": "Price",
+   "prices": [
+    {
+     "name": "Maderotherapy",
+     "amount": "75 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "soins/mado.webp",
+     "w": 920,
+     "h": 908,
+     "alt": "Illustrative Image"
+    }
+   ]
+  },
+  "microneed": {
+   "title": "Microneedling/Micropen",
+   "metaTitle": "Microneedling/Micropen — My Bubble Beauty",
+   "description": "Microneedling/Micropen is an aesthetic procedure that utilizes a medical device with fine needles to create controlled, tiny openings in the skin. This…",
+   "articleHtml": "<p>Microneedling/Micropen is an aesthetic procedure that utilizes a medical device with fine needles to create controlled, tiny openings in the skin. This technique is also known as micro-needling therapy or microperforation therapy. Here's how microneedling works:</p><h2>Preparation</h2><p>Prior to the procedure, your aesthetic professional thoroughly cleanses your skin, and a numbing gel may be applied to minimize discomfort. The needle depth is adjusted based on your specific needs and the areas to be treated.</p><h2>Micro-Punctures</h2><p>The microneedling device is gently moved across the skin, creating small punctures. These punctures are so tiny that they are usually barely visible to the naked eye. The device typically features various needle lengths to reach different layers of the skin, depending on the specific issue being treated.</p><h2>Stimulation of Collagen</h2><p>The microperforations stimulate the skin's natural response by promoting the production of collagen and elastin. Collagen is an essential protein that provides firmness and elasticity to the skin, while elastin helps keep the skin smooth. This collagen stimulation helps the skin to repair and regenerate, improving texture and appearance.</p><h2>Aftercare</h2><p>Following the treatment, your aesthetic professional may apply specific topical products, such as moisturizing serums or growth factors, to promote skin healing and hydration. It is also recommended to avoid excessive sun exposure and use sunscreen to protect the freshly treated skin.</p><h2>Benefits</h2><p>Microneedling can be used to address a variety of skin issues, including wrinkles and fine lines, acne scars, pigment spots, loss of skin elasticity, and other skin imperfections. Results are usually not immediately visible, as collagen production takes time. You will notice gradual improvements in skin texture in the weeks following the procedure.</p><h2>Multiple Sessions</h2><p>The number of sessions required depends on your treatment goals and the severity of your skin issues. Your aesthetic professional will create a customized treatment plan to meet your specific needs.</p><h2>Prior Consultation</h2><p>It is important to consult a qualified professional for microneedling, as improper device usage or unsuitable needles can lead to complications. This procedure is typically considered safe when performed by an experienced professional.</p>",
+   "priceTitle": "Price",
+   "prices": [
+    {
+     "name": "Micro Pen",
+     "amount": "150 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "soins/microneed.webp",
+     "w": 800,
+     "h": 650,
+     "alt": "Illustrative Image"
+    },
+    {
+     "src": "soins/microneed2.webp",
+     "w": 800,
+     "h": 650,
+     "alt": "Illustrative Image"
+    },
+    {
+     "src": "soins/microneedling3.webp",
+     "w": 800,
+     "h": 650,
+     "alt": "Illustrative Image"
+    },
+    {
+     "src": "soins/microneedling4.webp",
+     "w": 800,
+     "h": 650,
+     "alt": "Illustrative Image"
+    }
+   ]
+  },
+  "peeling": {
+   "title": "Superficial Peeling",
+   "metaTitle": "Superficial Peeling — My Bubble Beauty",
+   "description": "Superficial peeling is an aesthetic procedure aimed at improving skin texture, creating a more even tone, and reducing certain minor skin issues such as…",
+   "articleHtml": "<p>Superficial peeling is an aesthetic procedure aimed at improving skin texture, creating a more even tone, and reducing certain minor skin issues such as pigmentation, fine lines, and mild acne. This technique uses a mild chemical solution to exfoliate the top layer of the skin, stimulating cell renewal and resulting in smoother and more radiant skin. Here's how a typical superficial peeling in aesthetics usually works:</p><h2>Initial Consultation</h2><p>Prior to a superficial peeling, an aesthetic professional assesses the condition of your skin, discusses your specific concerns, and determines whether the peeling is suitable for your skin type and needs. There are various types of chemical solutions for peels, and the choice depends on your skin type and the treatment's purpose.</p><h2>Skin Cleansing</h2><p>Before applying the peeling solution, the skin is carefully cleansed to remove dirt, makeup, and oils.</p><h2>Application of the Peeling Solution</h2><p>Next, the aesthetic professional applies the peeling solution to the skin, ensuring that the treated area is evenly covered. The solution may contain alpha hydroxy acids (AHAs), beta hydroxy acids (BHAs), or other mild exfoliating ingredients.</p><h2>Exposure Time</h2><p>The peeling solution remains on the skin for a short time determined by the professional, usually for several minutes. The duration depends on the solution's concentration and the patient's skin tolerance.</p><h2>Neutralization</h2><p>After the exposure time has passed, the professional neutralizes the solution by rinsing it off or using a specific product to stop the chemical action.</p><h2>Post-Peeling Care</h2><p>Following the procedure, it's essential to follow the post-peeling instructions provided by the aesthetic professional. This may include applying a moisturizing cream, using specific products, and avoiding excessive sun exposure for some time, as the skin is often more sensitive after a peel.</p><h2>Results</h2><p>The results of a superficial peeling are usually not immediately visible, as the skin needs time to renew itself. However, in the days and weeks following the procedure, the skin should appear brighter, more even, and smoother.</p><p>Superficial peeling is considered a mild procedure and typically doesn't require extended recovery time. However, multiple sessions may be necessary to achieve the desired results, and it's essential to choose a qualified professional to minimize risks and optimize the benefits of the treatment. This procedure can be applied to various body parts, such as the face, neck, décolletage, and hands, depending on the patient's needs.</p>",
+   "priceTitle": "Price",
+   "prices": [
+    {
+     "name": "Superficial Peeling",
+     "amount": "90 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "soins/hydra.webp",
+     "w": 750,
+     "h": 497,
+     "alt": "Illustrative image"
+    },
+    {
+     "src": "soins/hydra2.webp",
+     "w": 750,
+     "h": 497,
+     "alt": "Image illustrative"
+    },
+    {
+     "src": "soins/hydra3.webp",
+     "w": 750,
+     "h": 497,
+     "alt": "Image illustrative"
+    }
+   ]
+  },
+  "photo": {
+   "title": "Phototherapy",
+   "metaTitle": "Phototherapy — My Bubble Beauty",
+   "description": "Phototherapy, also known as light therapy, is a technique used in aesthetics to treat various skin issues and improve skin tone by utilizing different…",
+   "articleHtml": "<p>Phototherapy, also known as light therapy, is a technique used in aesthetics to treat various skin issues and improve skin tone by utilizing different wavelengths of light. Phototherapy can be performed using various devices, including LED lamps or lasers. This is how phototherapy typically works in aesthetics:</p><h2>Wavelength Selection</h2><p>Phototherapy involves using light at a specific wavelength depending on the treatment goal. Different wavelengths target different skin issues. For example, red light is often used to stimulate collagen production and improve skin texture, while blue light is used to treat acne by killing the bacteria responsible for infection.</p><h2>Skin Preparation</h2><p>Prior to phototherapy, the skin must be clean and free from cosmetics. Patients often wear protective eyewear to shield their eyes from intense light.</p><h2>Phototherapy Session</h2><p>The aesthetic professional uses the phototherapy device to expose the skin to light at the specific wavelength for a certain duration. The light is usually evenly applied to the area being treated.</p><h2>Skin Response</h2><p>The light penetrates the skin and interacts with the target cells, which can have various beneficial effects, such as stimulating collagen production, reducing inflammation, destroying bacteria responsible for acne, or reducing excessive pigmentation.</p><h2>Aftercare</h2><p>After the phototherapy session, it may be necessary to apply soothing or moisturizing topical products to calm the skin and minimize irritation. Sun protection is also essential after treatment, as the skin may be more sensitive to sun damage.</p><h2>Results</h2><p>Phototherapy is used to treat a wide range of skin issues, including acne, wrinkles, pigment spots, scars, psoriasis, and other skin conditions. The benefits of phototherapy generally include little to no downtime, gradual results, and fewer side effects compared to more invasive treatments.</p><h2>Duration</h2><p>The duration of the treatment and the number of sessions required vary depending on the condition being treated and the individual skin response. It is important to consult with a qualified aesthetic professional to discuss your specific needs and determine if phototherapy is suitable for you.</p>",
+   "priceTitle": "Price",
+   "prices": [
+    {
+     "name": "Phototherapy",
+     "amount": "40 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "soins/photo.webp",
+     "w": 924,
+     "h": 1364,
+     "alt": "Illustrative Image"
+    }
+   ]
+  },
+  "plasma": {
+   "title": "The Plasma Pen / Micropen",
+   "metaTitle": "The Plasma Pen / Micropen — My Bubble Beauty",
+   "description": "The plasma pen / micropen, also known as a plasma pen, is a relatively recent aesthetic treatment device used to address various skin issues, including…",
+   "articleHtml": "<p>The plasma pen / micropen, also known as a plasma pen, is a relatively recent aesthetic treatment device used to address various skin issues, including sagging skin, wrinkles, scars, stretch marks, and pigmentation spots. This device works by generating a plasma arc on the skin's surface, resulting in controlled micro-injuries. This is how the plasma pen typically works in aesthetics:</p><h2>Basic Principle</h2><p>The plasma pen uses electrical energy to create a thin, hot plasma arc at the tip of the pen. Plasma is ionized gas composed of charged particles, which means it contains both positive and negative ions.</p><h2>Application</h2><p>The aesthetic professional uses the plasma pen to treat specific areas of the skin. When the pen's tip touches the skin, the plasma arc is directed onto the skin's surface, creating extremely small, controlled micro-points on the skin without damaging the surrounding tissues.</p><h2>Skin Tightening</h2><p>The application of plasma results in immediate skin tightening as the generated heat causes contraction of collagen fibers in the treated area. This can help reduce the appearance of sagging skin.</p><h2>Formation of Scabs and Micro-Injuries</h2><p>The micro-points created by the plasma pen also lead to the formation of scabs on the skin. In the days following the procedure, these scabs naturally fall off, revealing new skin underneath. During this healing process, the skin also produces additional collagen, which can improve skin texture and overall appearance.</p><h2>Results</h2><p>The results of the plasma pen can vary depending on the treated skin issue and the depth at which the device is used. Patients may see improvements in the appearance of their skin over time as the effects of collagen become visible. However, multiple sessions may be needed to achieve optimal results.</p><p>It's important to note that the plasma pen is an invasive procedure, albeit less invasive than some other aesthetic procedures. Patients may experience some discomfort during the procedure, but local anesthetics are typically applied to minimize this discomfort.</p><p>The plasma pen should be used by trained and experienced aesthetic professionals, as improper use can lead to complications or scarring. As with any aesthetic procedure, it's recommended to consult with an aesthetic professional to discuss your specific needs and determine if the plasma pen is suitable for you.</p>",
+   "priceTitle": "Price — Plasma Lift",
+   "prices": [
+    {
+     "name": "1 Session",
+     "amount": "250 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "soins/plasma.webp",
+     "w": 916,
+     "h": 1188,
+     "alt": "Illustrative Image"
+    }
+   ]
+  },
+  "radiofrequence": {
+   "title": "Radiofrequency",
+   "metaTitle": "Radiofrequency — My Bubble Beauty",
+   "description": "Radiofrequency is a medical technology that uses electromagnetic waves to gently heat the deep layers of the skin. This heat stimulates collagen production,…",
+   "articleHtml": "<p>Radiofrequency is a medical technology that uses electromagnetic waves to gently heat the deep layers of the skin. This heat stimulates collagen production, improves blood circulation, and promotes skin tightening.</p><h2>Applications in Aesthetics</h2><p>Radiofrequency is used in aesthetics to address various skin issues and rejuvenation, including skin tightening, reducing wrinkles and fine lines, diminishing cellulite, and improving skin texture. It is effective in reducing skin sagging and enhancing firmness. Increased collagen production helps smooth out wrinkles and fine lines. It can aid in reducing the visibility of cellulite by stimulating circulation and promoting lymphatic drainage. Radiofrequency can also improve overall skin texture by reducing acne scars and imperfections.</p><h2>Procedure</h2><p>During a radiofrequency treatment, a device emits electromagnetic waves into the target skin. This energy is converted into heat, warming the underlying tissues without damaging the skin's surface. The heat stimulates collagen production and activates natural skin recovery processes. The results are usually not immediately visible but gradually improve over time as collagen regenerates.</p><h2>Safety and Comfort</h2><p>Radiofrequency is a non-invasive procedure, meaning it doesn't require surgery or incisions. Patients typically experience a warm sensation during the treatment, but the procedure is comfortable and does not require anesthesia.</p><h2>Number of Sessions</h2><p>The number of sessions needed depends on the specific treatment and the patient's goals. In general, multiple sessions may be recommended for the best results.</p><h2>Results</h2><p>The results of radiofrequency in aesthetics are progressive and can last for several months. The skin appears firmer, wrinkles are reduced, and overall skin texture improves.</p><p>Radiofrequency is a popular option in aesthetics due to proven results and its non-invasive nature. It is used to address various skin issues and may be an attractive alternative for some individuals to enhance their appearance without undergoing cosmetic surgery. However, it is always recommended to consult with a qualified aesthetic professional before undergoing an aesthetic procedure to discuss suitable options based on individual needs.</p>",
+   "priceTitle": "Price",
+   "prices": [
+    {
+     "name": "Radiofrequency",
+     "amount": "50 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "soins/radio.webp",
+     "w": 960,
+     "h": 623,
+     "alt": "Illustrative Image"
+    }
+   ]
+  },
+  "sos": {
+   "title": "SOS Purity Treatment",
+   "metaTitle": "SOS Purity Treatment — My Bubble Beauty",
+   "description": "An SOS Purity treatment in aesthetics is a specialized procedure designed for individuals with skin issues related to excess sebum, acne, blackheads, and…",
+   "articleHtml": "<p>An SOS Purity treatment in aesthetics is a specialized procedure designed for individuals with skin issues related to excess sebum, acne, blackheads, and other skin imperfections. This type of treatment aims to deeply cleanse the skin, reduce excess sebum, unclog pores, and promote clearer and healthier skin. Here's how an SOS Purity treatment in aesthetics may work:</p><h2>Deep Cleansing</h2><p>The treatment typically begins with a thorough cleansing of the face to remove impurities, excess sebum, and dead skin cells.</p><h2>Exfoliation</h2><p>Gentle exfoliation may be performed to eliminate dead skin cells, promoting smoother skin.</p><h2>Blackhead Extraction</h2><p>Aestheticians or skin professionals often use manual extraction techniques or extraction devices to remove blackheads and comedones. This helps unclog pores and improve skin texture.</p><h2>Application of Suitable Products</h2><p>Specific products containing ingredients such as salicylic acid or benzoyl peroxide, known for their anti-acne properties, may be applied to the skin to reduce inflammation and prevent future breakouts.</p><h2>Masks and Targeted Treatments</h2><p>Purifying masks or other targeted treatments may be used to soothe the skin, reduce excess sebum, and promote better sebum production regulation.</p><h2>Hydration</h2><p>Even if you have skin issues related to excess sebum, it's essential to maintain proper skin hydration to prevent it from becoming too dry in response to treatments. Lightweight and non-comedogenic moisturizing products can be used.</p><h2>Sun Protection</h2><p>As with many skin treatments, applying sunscreen or sun protection products is important to shield the skin from UV damage.</p>",
+   "priceTitle": "Price",
+   "prices": [
+    {
+     "name": "SOS Purity",
+     "amount": "35 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "soins/sos.webp",
+     "w": 756,
+     "h": 418,
+     "alt": "Illustrative Image"
+    }
+   ]
+  }
+ }
+}

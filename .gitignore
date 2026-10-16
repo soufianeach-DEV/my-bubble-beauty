@@ -1,0 +1,14 @@
+# Dépendances et build (Render reconstruit dist/ à chaque déploiement)
+node_modules/
+dist/
+.astro/
+
+# Journaux d'outils et fichiers locaux
+receipts/
+review-receipts/
+*.jsonl
+*.log
+.env
+.env.*
+.DS_Store
+Thumbs.db

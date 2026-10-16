@@ -1,0 +1,1 @@
+try{localStorage.getItem('mb-motion')==='off'&&(document.documentElement.dataset.motion='off')}catch(e){}

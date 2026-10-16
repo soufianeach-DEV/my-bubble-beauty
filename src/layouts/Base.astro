@@ -1,0 +1,98 @@
+---
+import '../styles/global.css';
+import Icon from '../components/Icon.astro';
+import { t, LANGS, LANG_META, CONTACT, SITE, JS_VERSION, EXTRA, pagePath, alternates, type Lang, type PageKey } from '../lib/site';
+
+interface Props {
+  lang: Lang;
+  pageKey: PageKey;
+  title: string;
+  description: string;
+  ogType?: 'website' | 'article';
+  jsonld?: Record<string, unknown>;
+  noindex?: boolean;
+  isHome?: boolean;
+  mainClass?: string;
+  /** Page hors traduction (404) : canonical fixe, pas de hreflang. */
+  canonicalPath?: string;
+}
+const { lang, pageKey, title, description, ogType = 'website', jsonld, noindex = false, isHome = false, mainClass, canonicalPath } = Astro.props;
+const d = t(lang);
+const ui = d.ui;
+const home = pagePath(lang, 'home');
+const anchor = (hash: string) => (isHome ? hash : home + hash);
+const nav = ui.nav.map((n) => ({ label: n.label, href: anchor(n.href) }));
+const canonical = SITE + (canonicalPath ?? pagePath(lang, pageKey));
+const alts = canonicalPath ? [] : alternates(pageKey);
+const footerLinks = [
+  { href: pagePath(lang, 'mentions'), label: ui.legalLinks[0] },
+  { href: pagePath(lang, 'privacy'), label: ui.legalLinks[1] },
+  { href: pagePath(lang, 'cgv'), label: EXTRA[lang].cgv },
+];
+const year = new Date().getFullYear();
+---
+<!DOCTYPE html>
+<html lang={d.htmlLang}>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{title}</title>
+<meta name="description" content={description}>
+{noindex && <meta name="robots" content="noindex">}
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F6ECE8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1E1615" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href={canonical}>
+{alts.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href}>)}
+{isHome && <link rel="alternate" hreflang="x-default" href={SITE + '/'}>}
+<link rel="preload" href="/assets/fonts/italiana-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<slot name="head" />
+<link rel="icon" href="/assets/img/favicon.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<meta property="og:type" content={ogType}>
+<meta property="og:site_name" content="My Bubble Beauty">
+<meta property="og:title" content={title}>
+<meta property="og:description" content={description}>
+<meta property="og:url" content={canonical}>
+<meta property="og:image" content={SITE + '/assets/img/og-image.jpg'}>
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content={d.ogLocale}>
+<meta name="twitter:card" content="summary_large_image">
+<script is:inline src={`/assets/js/motion-pref.js?v=${JS_VERSION}`}></script>
+<script is:inline src={`/assets/js/main.js?v=${JS_VERSION}`} defer></script>
+{jsonld && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonld)} />}
+</head>
+<body>
+<a class="skip" href="#main">{ui.skip}</a>
+<header class="site-header">
+<div class="wrap">
+<a class="brand" href={home}><img src="/assets/img/my-bubble-wordmark.webp" width="331" height="96" alt={ui.brandAlt}></a>
+<nav class="nav" aria-label={ui.navLabel}><ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul></nav>
+<details class="langsel">
+<summary><span class="visually-hidden">{ui.langPrefix} </span><span aria-hidden="true">{LANG_META[lang].code}</span><span class="visually-hidden">{LANG_META[lang].name}</span><Icon name="chevron" /></summary>
+<ul class="langsel__list">{LANGS.map((l) => (
+  <li><a href={pagePath(l, pageKey)} hreflang={LANG_META[l].hreflang} lang={LANG_META[l].hreflang} aria-current={l === lang ? 'page' : undefined}><span class="langsel__code">{LANG_META[l].code}</span>{LANG_META[l].name}</a></li>
+))}</ul>
+</details>
+<details class="mnav"><summary>{ui.menu}</summary><div class="mnav__panel"><ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul></div></details>
+<a class="btn btn--solid sheen" href={anchor('#contact')}><span class="lbl-long">{ui.ctaLong}</span><span class="lbl-short">{ui.ctaShort}</span></a>
+</div>
+</header>
+<main id="main" class={mainClass}>
+<slot />
+</main>
+<footer class="site-footer">
+<div class="wrap">
+<p>{ui.rights.replace(/\d{4}/, String(year))}</p>
+<ul>{footerLinks.map((f) => <li><a href={f.href}>{f.label}</a></li>)}</ul>
+<button class="motion-toggle" type="button" data-off={ui.pauseOff} data-on={ui.pauseOn}><Icon name="pause" /><span>{ui.pauseOff}</span></button>
+</div>
+</footer>
+<nav class="callbar" aria-label={ui.quickContact}>
+<a class="btn btn--solid" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{ui.call}</a>
+<a class="btn btn--ghost" href={CONTACT.whatsapp}><Icon name="whatsapp" />WhatsApp</a>
+</nav>
+</body>
+</html>

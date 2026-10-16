@@ -1,0 +1,39 @@
+---
+// Pages légales : mentions, confidentialité, conditions générales (3 langues).
+import Base from '../../layouts/Base.astro';
+import { LANGS, FOLDER, PAGES, t, langOfFolder } from '../../lib/site';
+import { CGV } from '../../data/cgv';
+
+type Key = 'mentions' | 'privacy' | 'cgv';
+
+export function getStaticPaths() {
+  // Les constantes doivent vivre ici : Astro isole getStaticPaths du reste de la page.
+  const keys = ['mentions', 'privacy', 'cgv'] as const;
+  return LANGS.flatMap((l) => keys.map((key) => ({ params: { folder: FOLDER[l], page: PAGES[key][l] }, props: { key } })));
+}
+const { key } = Astro.props as { key: Key };
+const lang = langOfFolder(Astro.params.folder!);
+const d = t(lang);
+let title: string, metaTitle: string, description: string, body: string, updated = '';
+if (key === 'cgv') {
+  const c = CGV[lang];
+  title = c.title;
+  metaTitle = `${c.title} — My Bubble Beauty`;
+  description = c.description;
+  body = c.sections.map((s) => `<h2>${s.h}</h2>${s.html}`).join('');
+  updated = c.updated;
+} else {
+  const p = d.legal[key];
+  title = p.title;
+  metaTitle = p.metaTitle;
+  description = p.description;
+  body = p.bodyHtml;
+}
+---
+<Base lang={lang} pageKey={key} title={metaTitle} description={description} mainClass="legal">
+<div class="wrap"><article>
+<h1>{title}</h1>
+<Fragment set:html={body} />
+{updated && <p class="mt-10 text-sm opacity-80"><em>{updated}</em></p>}
+</article></div>
+</Base>

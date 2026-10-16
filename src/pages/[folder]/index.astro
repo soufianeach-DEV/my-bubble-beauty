@@ -1,0 +1,140 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { LANGS, FOLDER, CONTACT, SITE, LANG_META, t, pagePath, langOfFolder } from '../../lib/site';
+
+export function getStaticPaths() {
+  return LANGS.map((l) => ({ params: { folder: FOLDER[l] } }));
+}
+const lang = langOfFolder(Astro.params.folder!);
+const d = t(lang);
+const h = d.home;
+const ui = d.ui;
+const treat = (slug: string) => pagePath(lang, `treatment:${slug}`);
+const jsonld = {
+  '@context': 'https://schema.org', '@type': 'BeautySalon', name: 'My Bubble Beauty',
+  url: SITE + pagePath(lang, 'home'), telephone: CONTACT.phone, email: CONTACT.email,
+  logo: SITE + '/assets/img/my-bubble-logo.png', image: SITE + '/assets/img/galerie-1.webp',
+  address: { '@type': 'PostalAddress', streetAddress: CONTACT.street, postalCode: CONTACT.postal, addressLocality: CONTACT.city, addressCountry: 'BE' },
+  geo: { '@type': 'GeoCoordinates', latitude: 50.8522424, longitude: 4.2847883 },
+  areaServed: ['Anderlecht', 'Molenbeek-Saint-Jean', 'Dilbeek', 'Berchem-Sainte-Agathe'],
+  sameAs: CONTACT.social.map((s) => s.href), priceRange: '€€',
+};
+---
+<Base lang={lang} pageKey="home" title={h.title} description={h.description} jsonld={jsonld} isHome>
+<link slot="head" rel="preload" as="image" href="/assets/img/hero-1200.webp" imagesrcset="/assets/img/hero-800.webp 800w, /assets/img/hero-1200.webp 1200w, /assets/img/hero-1774.webp 1774w" imagesizes="100vw" fetchpriority="high">
+
+<section class="hero" data-loop aria-labelledby="h-hero">
+<div class="hero__media"><img class="hero__img px-far" src="/assets/img/hero-1200.webp" srcset="/assets/img/hero-800.webp 800w, /assets/img/hero-1200.webp 1200w, /assets/img/hero-1774.webp 1774w" sizes="100vw" width="1774" height="887" alt={h.hero.imgAlt} fetchpriority="high" decoding="async"></div>
+<div class="wrap hero__wrap">
+<div class="hero__panel">
+<h1 id="h-hero"><span class="h1-brand">{h.hero.brand}</span> <span class="h1-sub">{h.hero.sub}</span></h1>
+<p class="hero__lead">{h.hero.lead}</p>
+<div class="hero__cta">
+<a class="btn btn--solid sheen" href="#contact">{h.hero.cta}</a>
+<a class="btn btn--ghost" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{CONTACT.phoneLabel}</a>
+</div>
+<hr class="rule">
+</div>
+</div>
+</section>
+
+<section class="infos lit" id="intro" aria-label={h.infos.label}>
+<div class="halo halo--lilas px-halo" aria-hidden="true"></div>
+<div class="wrap"><ul class="infos__list">
+{h.infos.items.map((it) => <li><strong>{it.label}</strong><Fragment set:html={it.html} /></li>)}
+</ul></div>
+</section>
+
+<section class="section about lit" aria-labelledby="h-about">
+<div class="halo halo--lilas" aria-hidden="true"></div>
+<div class="wrap about__grid">
+<h2 class="eyebrow" id="h-about">{h.about.eyebrow}</h2>
+<p class="about__lead">{h.about.lead}</p>
+<div class="about__body" set:html={h.about.bodyHtml} />
+<p class="about__quote">{h.about.quote}</p>
+</div>
+</section>
+
+<section class="section soins lit cursor-zone" id="services" aria-labelledby="h-soins">
+<div class="halo halo--rose" aria-hidden="true"></div>
+<div class="cursor-glow" aria-hidden="true"></div>
+<div class="wrap">
+<div class="section__head"><h2 id="h-soins">{h.soins.title}</h2><p>{h.soins.intro}</p></div>
+<ul class="soins__grid">
+{h.soins.cards.map((c, i) => (
+  <li class="soin"><Icon name={`soin-${i}`} class="soin__icon" /><h3>{c.title}</h3><p>{c.text}</p><a href={c.href}>{c.link}<span class="visually-hidden"> : {c.title}</span></a></li>
+))}
+</ul>
+</div>
+</section>
+
+<section class="section tarifs lit" id="package" aria-labelledby="h-tarifs">
+<div class="halo halo--peche" aria-hidden="true"></div>
+<div class="wrap">
+<div class="section__head"><h2 id="h-tarifs">{h.tarifs.title}</h2><p>{h.tarifs.intro}</p></div>
+<div class="tarifs__panel">
+<ul class="filters" aria-label={h.tarifs.filtersLabel} hidden>
+{h.tarifs.filters.map((f, i) => <li><button class="pill" type="button" data-filter={f.key} aria-pressed={i === 0 ? 'true' : 'false'} data-status={f.status}>{f.label}</button></li>)}
+</ul>
+<p class="visually-hidden" id="filter-status" role="status"></p>
+<div class="price-groups">
+{h.tarifs.groups.map((g) => (
+  <section class="price-group" data-cat={g.cat} id={`tarif-${g.id}`} aria-labelledby={`h-tarif-${g.id}`}>
+    <h3 id={`h-tarif-${g.id}`}>{g.href
+      ? <a href={treat(g.href)}>{g.title}<Icon name="info" class="i-info" /><span class="visually-hidden"> — {ui.moreInfo}</span></a>
+      : g.title}</h3>
+    <ul class="prices">{g.items.map((it) => (
+      <li class="sheen"><span class="name">{it.href
+        ? <a href={treat(it.href)}>{it.name}<Icon name="info" class="i-info" /><span class="visually-hidden"> — {ui.moreInfo}</span></a>
+        : it.name}</span><span class="dots" aria-hidden="true"></span><span class="amount">{it.amount}</span></li>
+    ))}</ul>
+  </section>
+))}
+</div>
+</div>
+</div>
+</section>
+
+<section class="section galerie lit" id="gallery" aria-labelledby="h-galerie">
+<div class="halo halo--lilas" aria-hidden="true"></div>
+<div class="wrap">
+<div class="section__head"><h2 id="h-galerie">{h.gallery.title}</h2></div>
+<ul class="mosaic">
+{h.gallery.items.map((g) => (
+  <li><a class="frame" href={`/assets/img/galerie-${g.n}.webp`} aria-label={g.ariaLabel}><img src={`/assets/img/galerie-${g.n}-800.webp`} srcset={`/assets/img/galerie-${g.n}-800.webp 800w, /assets/img/galerie-${g.n}.webp 1600w`} sizes="(max-width: 767px) 100vw, 50vw" width="800" height="600" data-w="1600" data-h="1200" alt={g.alt} loading="lazy" decoding="async"></a></li>
+))}
+</ul>
+</div>
+<dialog class="lightbox" aria-label={h.gallery.dialogLabel}>
+<figure><img src="/assets/img/galerie-1-800.webp" alt="" width="1600" height="1200" loading="lazy"><figcaption></figcaption></figure>
+<button class="lightbox__close" type="button" aria-label={h.gallery.close}>×</button>
+</dialog>
+</section>
+
+<section class="section contact lit" id="contact" data-loop aria-labelledby="h-contact">
+<div class="halo halo--menthe px-halo" aria-hidden="true"></div>
+<div class="halo halo--rose px-halo" aria-hidden="true"></div>
+<div class="wrap">
+<div class="contact__card">
+<div>
+<h2 id="h-contact">{h.contact.title}</h2>
+<p>{h.contact.intro}</p>
+<dl>
+<div><dt>{h.contact.labels[0]}</dt><dd><address>{CONTACT.street}<br>{CONTACT.postal} {CONTACT.city}<br>{LANG_META[lang].country}</address><a href={CONTACT.maps} rel="noopener">{h.contact.itinerary}</a></dd></div>
+<div><dt>{h.contact.labels[1]}</dt><dd><a href={`tel:${CONTACT.phone}`}>{CONTACT.phoneLabel}</a></dd></div>
+<div><dt>{h.contact.labels[2]}</dt><dd><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></dd></div>
+</dl>
+<div class="contact__cta">
+<a class="btn btn--solid sheen" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{ui.call}</a>
+<a class="btn btn--ghost" href={CONTACT.whatsapp}><Icon name="whatsapp" />WhatsApp</a>
+</div>
+</div>
+<div class="contact__social">
+<h3>{h.contact.socialTitle}</h3>
+<ul class="social">{CONTACT.social.map((s) => <li><a href={s.href} rel="noopener"><Icon name={s.key} /><span>{s.label}</span></a></li>)}</ul>
+</div>
+</div>
+</div>
+</section>
+</Base>

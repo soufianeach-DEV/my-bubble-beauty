@@ -1,0 +1,84 @@
+# Plan de déploiement Render (New > Blueprint) : site statique servi par le CDN de Render.
+# Render ne lit pas le .htaccess d'Apache : en-têtes, cache et redirections sont repris ici.
+# HTTP -> HTTPS est automatique chez Render ; www -> domaine nu se règle dans Custom Domains.
+services:
+  - type: web
+    runtime: static
+    name: my-bubble-beauty
+    branch: main
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+    routes:
+      # /fr, /nl, /eng -> accueil de la langue (URL d'origine conservées)
+      - type: redirect
+        source: /fr
+        destination: /fr/index.html
+      - type: redirect
+        source: /nl
+        destination: /nl/index.html
+      - type: redirect
+        source: /eng
+        destination: /eng/index.html
+      # Anciennes pages légales à la racine (v1) -> versions FR
+      - type: redirect
+        source: /mentions-legales.html
+        destination: /fr/mentions-legales.html
+      - type: redirect
+        source: /confidentialite.html
+        destination: /fr/confidentialite.html
+    headers:
+      # Sécurité : la CSP n'autorise que 'self' (aucun script ni style en ligne)
+      - path: /*
+        name: Content-Security-Policy
+        value: "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+      - path: /*
+        name: Strict-Transport-Security
+        value: max-age=31536000
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(), microphone=(), geolocation=(), interest-cohort=()
+      - path: /*
+        name: Cross-Origin-Opener-Policy
+        value: same-origin
+      - path: /*
+        name: Cross-Origin-Resource-Policy
+        value: same-origin
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      # Cache : CSS haché par Astro, JS versionné par ?v= (JS_VERSION), polices jamais modifiées
+      - path: /_astro/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /assets/js/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /assets/fonts/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      # Images : 30 jours, une photo peut être remplacée sous le même nom
+      - path: /assets/img/*
+        name: Cache-Control
+        value: public, max-age=2592000
+      # Pages HTML : toujours revalidées
+      - path: /index.html
+        name: Cache-Control
+        value: no-cache
+      - path: /fr/*
+        name: Cache-Control
+        value: no-cache
+      - path: /nl/*
+        name: Cache-Control
+        value: no-cache
+      - path: /eng/*
+        name: Cache-Control
+        value: no-cache

@@ -1,0 +1,45 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Icon from '../../../components/Icon.astro';
+import { LANGS, FOLDER, CONTACT, SITE, t, pagePath, langOfFolder } from '../../../lib/site';
+
+export function getStaticPaths() {
+  return LANGS.flatMap((l) =>
+    Object.keys(t(l).treatments).map((slug) => ({ params: { folder: FOLDER[l], slug } })),
+  );
+}
+const lang = langOfFolder(Astro.params.folder!);
+const slug = Astro.params.slug!;
+const d = t(lang);
+const tr = (d.treatments as Record<string, (typeof d.treatments)['hifu']>)[slug];
+const key = `treatment:${slug}` as const;
+const jsonld = {
+  '@context': 'https://schema.org', '@type': 'WebPage', name: tr.title, inLanguage: d.htmlLang,
+  url: SITE + pagePath(lang, key),
+  breadcrumb: { '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'My Bubble Beauty', item: SITE + pagePath(lang, 'home') },
+    { '@type': 'ListItem', position: 2, name: tr.title, item: SITE + pagePath(lang, key) },
+  ] },
+};
+---
+<Base lang={lang} pageKey={key} title={tr.metaTitle} description={tr.description} ogType="article" jsonld={jsonld} mainClass="treatment lit">
+<div class="halo halo--rose" aria-hidden="true"></div>
+<div class="wrap">
+<p class="back"><a href={pagePath(lang, 'home') + '#package'}>{d.ui.back}</a></p>
+<div class="treatment__grid">
+<article class="treatment__article">
+<h1>{tr.title}</h1>
+<Fragment set:html={tr.articleHtml} />
+</article>
+<div class="treatment__side">
+<aside class="pricebox" aria-labelledby="h-price"><h2 id="h-price">{tr.priceTitle}</h2>
+<ul class="prices">{tr.prices.map((p) => <li><span class="name">{p.name}</span><span class="dots" aria-hidden="true"></span><span class="amount">{p.amount}</span></li>)}</ul>
+<div class="pricebox__cta"><a class="btn btn--solid sheen" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{d.ui.call}</a><a class="btn btn--ghost" href={CONTACT.whatsapp}><Icon name="whatsapp" />WhatsApp</a></div>
+</aside>
+<div class="treatment__figs">{tr.figures.map((f) => (
+  <figure><img src={`/assets/img/${f.src}`} width={f.w} height={f.h} alt={f.alt} loading="lazy" decoding="async"></figure>
+))}</div>
+</div>
+</div>
+</div>
+</Base>
