@@ -3,6 +3,7 @@
 import Base from '../../layouts/Base.astro';
 import { LANGS, FOLDER, PAGES, t, langOfFolder } from '../../lib/site';
 import { CGV } from '../../data/cgv';
+import { LEGAL } from '../../data/legal';
 
 type Key = 'mentions' | 'privacy' | 'cgv';
 
@@ -13,22 +14,12 @@ export function getStaticPaths() {
 }
 const { key } = Astro.props as { key: Key };
 const lang = langOfFolder(Astro.params.folder!);
-const d = t(lang);
-let title: string, metaTitle: string, description: string, body: string, updated = '';
-if (key === 'cgv') {
-  const c = CGV[lang];
-  title = c.title;
-  metaTitle = `${c.title} — My Bubble Beauty`;
-  description = c.description;
-  body = c.sections.map((s) => `<h2>${s.h}</h2>${s.html}`).join('');
-  updated = c.updated;
-} else {
-  const p = d.legal[key];
-  title = p.title;
-  metaTitle = p.metaTitle;
-  description = p.description;
-  body = p.bodyHtml;
-}
+const doc = key === 'cgv' ? CGV[lang] : LEGAL[lang][key];
+const title = doc.title;
+const metaTitle = `${doc.title} — My Bubble Beauty`;
+const description = doc.description;
+const body = doc.sections.map((s) => `<h2>${s.h}</h2>${s.html}`).join('');
+const updated = doc.updated;
 ---
 <Base lang={lang} pageKey={key} title={metaTitle} description={description} mainClass="legal">
 <div class="wrap"><article>

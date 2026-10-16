@@ -1,0 +1,113 @@
+// Mentions légales et politique de confidentialité — FR / NL / EN.
+// Les valeurs entre crochets sont à compléter ou à confirmer par My Bubble avant la mise en ligne définitive.
+import type { Lang } from '../lib/site';
+
+export type LegalDoc = { title: string; description: string; updated: string; sections: { h: string; html: string }[] };
+
+const MAIL = '<a href="mailto:mybubblebeauty@gmail.com">mybubblebeauty@gmail.com</a>';
+const TEL = '<a href="tel:+32484118395">0484.118.395</a>';
+
+export const LEGAL: Record<Lang, { mentions: LegalDoc; privacy: LegalDoc }> = {
+  fr: {
+    mentions: {
+      title: 'Mentions légales',
+      description: 'Mentions légales de My Bubble Beauty, institut de soins esthétiques et de bien-être à Dilbeek : éditeur, activité, hébergement, responsabilité.',
+      updated: 'Dernière mise à jour : 16 octobre 2026',
+      sections: [
+        { h: 'Éditeur du site', html: `<p>My Bubble Beauty — [dénomination sociale ou nom de l'exploitant·e], [forme juridique]<br>Rue Paloke 146, 1700 Dilbeek, Belgique<br>Numéro d'entreprise (BCE) : [à compléter]<br>Numéro de TVA : [BE… à compléter, ou « non assujetti à la TVA »]<br>Téléphone : ${TEL} · E-mail : ${MAIL}</p>` },
+        { h: 'Activité', html: '<p>Institut de soins esthétiques et de bien-être : soins du visage et du corps, épilation, onglerie, beauté du regard, soins techniques (épilation définitive, HIFU, radiofréquence, peelings, microneedling, détatouage) et blanchiment dentaire.</p><p>Accès à la profession d\'esthéticien·ne : [référence de l\'attestation ou du diplôme, à compléter].<br>Assurance responsabilité civile professionnelle : [assureur et numéro de police, à compléter].</p>' },
+        { h: 'Soins et réglementation', html: '<p>Certains soins proposés, notamment ceux utilisant un laser, une lumière pulsée, des ultrasons focalisés, des peelings ou des aiguilles, ainsi que le blanchiment dentaire, sont encadrés par une réglementation spécifique en Belgique. Ils sont réalisés dans le respect de cette réglementation[, le cas échéant sous la responsabilité d\'un médecin : à confirmer].</p><p>Les informations publiées sur ce site sont générales. Elles ne constituent ni un diagnostic ni un avis médical et ne remplacent pas la consultation d\'un professionnel de santé.</p>' },
+        { h: 'Hébergement', html: '<p>Render Services, Inc., San Francisco (Californie, États-Unis) — [adresse postale à vérifier] — <a href="https://render.com">render.com</a></p>' },
+        { h: 'Propriété intellectuelle', html: '<p>Les textes, photographies, logo et éléments graphiques de ce site sont la propriété de My Bubble Beauty ou utilisés avec l\'autorisation de leurs auteurs. Toute reproduction sans autorisation écrite est interdite.</p><p>Crédits photos : [à compléter si des photos proviennent d\'une banque d\'images].</p>' },
+        { h: 'Tarifs', html: '<p>Les prix affichés sont indicatifs, TVA comprise, et peuvent être modifiés à tout moment. Le prix applicable est celui confirmé lors de la prise de rendez-vous. Les conditions de nos prestations figurent dans nos <a href="/fr/conditions-generales.html">conditions générales de vente</a>.</p>' },
+        { h: 'Responsabilité', html: '<p>Nous veillons à l\'exactitude des informations publiées, sans pouvoir garantir l\'absence d\'erreur. Les liens vers des sites externes (réseaux sociaux, YouTube, Google Maps) sont fournis pour votre confort : nous ne sommes pas responsables de leur contenu.</p>' },
+        { h: 'Données personnelles et litiges', html: '<p>Le traitement de vos données est décrit dans notre <a href="/fr/confidentialite.html">politique de confidentialité</a>. Le site est soumis au droit belge. En cas de litige de consommation, vous pouvez recourir au Service de médiation pour le consommateur (<a href="https://mediationconsommateur.be">mediationconsommateur.be</a>).</p>' },
+      ],
+    },
+    privacy: {
+      title: 'Politique de confidentialité',
+      description: 'Comment My Bubble Beauty traite vos données : rendez-vous, fiche santé, cookies, mesure d\'audience et vos droits (RGPD).',
+      updated: 'Dernière mise à jour : 16 octobre 2026',
+      sections: [
+        { h: 'Responsable du traitement', html: `<p>My Bubble Beauty, Rue Paloke 146, 1700 Dilbeek, Belgique — ${MAIL} — ${TEL}.</p>` },
+        { h: 'Visite du site', html: '<p>Ce site ne contient aucun formulaire et ne vous demande aucune donnée. Comme tout hébergeur, Render enregistre des journaux techniques (adresse IP, date, page demandée) pour assurer la sécurité et le bon fonctionnement du service. Ces journaux sont conservés pour une durée limitée et ne servent pas à vous identifier.</p><p>Render étant établi aux États-Unis, ces données techniques peuvent y être traitées. Ce transfert est encadré par les garanties prévues par le RGPD [mécanisme exact à vérifier : clauses contractuelles types de Render ou Data Privacy Framework].</p>' },
+        { h: 'Cookies et stockage local', html: '<p>Ce site ne dépose aucun cookie. Seul votre choix « Mettre les animations en pause » est enregistré dans votre navigateur (stockage local), sous le nom <code>mb-motion</code>. Il est strictement nécessaire au service que vous demandez, n\'est jamais transmis et peut être effacé à tout moment dans les réglages de votre navigateur. Il ne nécessite donc pas de consentement.</p>' },
+        { h: 'Mesure d\'audience', html: '<p>Ce site n\'utilise actuellement aucun outil de mesure d\'audience. Si nous en ajoutons un, cette page sera mise à jour avant sa mise en service. Si cet outil devait déposer des cookies ou suivre votre navigation, votre consentement préalable serait demandé et vous pourriez le refuser aussi simplement que l\'accepter.</p>' },
+        { h: 'Prise de rendez-vous et dossier client', html: '<p>Lorsque vous nous contactez par téléphone, e-mail, WhatsApp ou via nos réseaux sociaux, nous utilisons vos coordonnées et l\'historique de vos rendez-vous uniquement pour organiser vos soins (base légale : exécution du contrat et mesures précontractuelles, art. 6.1.b RGPD). Ces données sont conservées au maximum 3 ans après votre dernier rendez-vous, sauf obligation légale de conservation plus longue (comptabilité).</p><p>WhatsApp, Facebook, Instagram et Snapchat sont des services tiers soumis à leur propre politique de confidentialité.</p>' },
+        { h: 'Données de santé', html: '<p>Avant certains soins, nous vous demandons de remplir une fiche ou un questionnaire de santé (allergies, grossesse, traitements, contre-indications). Ces informations sont des données sensibles. Elles ne sont collectées qu\'avec votre consentement explicite (art. 9.2.a RGPD), servent uniquement à réaliser le soin en sécurité, sont accessibles aux seules personnes qui vous soignent et sont conservées [3 ans après votre dernier soin : durée à confirmer]. Vous pouvez retirer votre consentement à tout moment ; certains soins ne pourront alors plus être réalisés.</p>' },
+        { h: 'Photos avant et après', html: '<p>Des photos de suivi peuvent être prises pour évaluer l\'évolution d\'un soin, uniquement avec votre accord. Elles ne sont jamais publiées sans votre consentement écrit et séparé, que vous pouvez retirer à tout moment.</p>' },
+        { h: 'Destinataires', html: '<p>Vos données ne sont ni vendues ni cédées. Elles ne sont communiquées qu\'aux prestataires strictement nécessaires (hébergement, comptabilité) ou aux autorités lorsque la loi l\'exige.</p>' },
+        { h: 'Liens externes', html: '<p>Les liens vers YouTube, Google Maps et nos réseaux sociaux ouvrent ces services, qui appliquent leurs propres règles. Aucun contenu de ces services n\'est chargé sur ce site.</p>' },
+        { h: 'Vos droits', html: `<p>Vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation, d'opposition et de portabilité, ainsi que du droit de retirer votre consentement. Écrivez-nous à ${MAIL}. Vous pouvez aussi introduire une plainte auprès de l'Autorité de protection des données (<a href="https://www.autoriteprotectiondonnees.be">autoriteprotectiondonnees.be</a>).</p>` },
+      ],
+    },
+  },
+  nl: {
+    mentions: {
+      title: 'Juridische informatie',
+      description: 'Juridische informatie van My Bubble Beauty, instituut voor schoonheids- en welzijnsbehandelingen in Dilbeek: uitgever, activiteit, hosting, aansprakelijkheid.',
+      updated: 'Laatst bijgewerkt: 16 oktober 2026',
+      sections: [
+        { h: 'Uitgever van de site', html: `<p>My Bubble Beauty — [benaming of naam van de uitbater], [rechtsvorm]<br>Rue Paloke 146, 1700 Dilbeek, België<br>Ondernemingsnummer (KBO): [in te vullen]<br>Btw-nummer: [BE… in te vullen, of « niet btw-plichtig »]<br>Telefoon: ${TEL} · E-mail: ${MAIL}</p>` },
+        { h: 'Activiteit', html: '<p>Instituut voor schoonheids- en welzijnsbehandelingen: gezichts- en lichaamsverzorging, ontharing, nagelverzorging, wimpers en wenkbrauwen, technische behandelingen (definitieve ontharing, HIFU, radiofrequentie, peelings, microneedling, tatoeageverwijdering) en tandenbleken.</p><p>Toegang tot het beroep van schoonheidsspecialist(e): [referentie van het attest of diploma, in te vullen].<br>Beroepsaansprakelijkheidsverzekering: [verzekeraar en polisnummer, in te vullen].</p>' },
+        { h: 'Behandelingen en regelgeving', html: '<p>Sommige behandelingen, met name die met laser, flitslamp, gefocuste ultrasound, peelings of naalden, evenals tandenbleken, vallen in België onder een specifieke regelgeving. Ze worden uitgevoerd met naleving van die regelgeving[, in voorkomend geval onder verantwoordelijkheid van een arts: te bevestigen].</p><p>De informatie op deze site is algemeen. Ze is geen diagnose of medisch advies en vervangt geen raadpleging van een zorgverlener.</p>' },
+        { h: 'Hosting', html: '<p>Render Services, Inc., San Francisco (Californië, Verenigde Staten) — [postadres te controleren] — <a href="https://render.com">render.com</a></p>' },
+        { h: 'Intellectuele eigendom', html: '<p>De teksten, foto\'s, het logo en de grafische elementen van deze site zijn eigendom van My Bubble Beauty of worden gebruikt met toestemming van hun makers. Elke reproductie zonder schriftelijke toestemming is verboden.</p><p>Fotocredits: [in te vullen als foto\'s uit een beeldbank komen].</p>' },
+        { h: 'Tarieven', html: '<p>De vermelde prijzen zijn indicatief, inclusief btw, en kunnen op elk moment wijzigen. De geldende prijs is die welke bij het maken van de afspraak wordt bevestigd. De voorwaarden van onze behandelingen staan in onze <a href="/nl/algemene-voorwaarden.html">algemene verkoopvoorwaarden</a>.</p>' },
+        { h: 'Aansprakelijkheid', html: '<p>We waken over de juistheid van de informatie, zonder te kunnen garanderen dat ze foutloos is. Links naar externe sites (sociale media, YouTube, Google Maps) zijn er voor je gemak: we zijn niet verantwoordelijk voor hun inhoud.</p>' },
+        { h: 'Persoonsgegevens en geschillen', html: '<p>De verwerking van je gegevens staat beschreven in ons <a href="/nl/privacy.html">privacybeleid</a>. De site valt onder het Belgisch recht. Bij een consumentengeschil kun je terecht bij de Consumentenombudsdienst (<a href="https://consumentenombudsdienst.be">consumentenombudsdienst.be</a>).</p>' },
+      ],
+    },
+    privacy: {
+      title: 'Privacybeleid',
+      description: 'Hoe My Bubble Beauty je gegevens verwerkt: afspraken, gezondheidsfiche, cookies, bezoekersstatistieken en je rechten (AVG).',
+      updated: 'Laatst bijgewerkt: 16 oktober 2026',
+      sections: [
+        { h: 'Verwerkingsverantwoordelijke', html: `<p>My Bubble Beauty, Rue Paloke 146, 1700 Dilbeek, België — ${MAIL} — ${TEL}.</p>` },
+        { h: 'Bezoek aan de site', html: '<p>Deze site bevat geen formulier en vraagt je geen gegevens. Zoals elke hostingprovider houdt Render technische logbestanden bij (IP-adres, datum, opgevraagde pagina) voor de veiligheid en de goede werking van de dienst. Ze worden beperkt bewaard en dienen niet om je te identificeren.</p><p>Omdat Render in de Verenigde Staten gevestigd is, kunnen die technische gegevens daar worden verwerkt. Die doorgifte gebeurt met de waarborgen van de AVG [precies mechanisme te controleren: modelcontractbepalingen van Render of Data Privacy Framework].</p>' },
+        { h: 'Cookies en lokale opslag', html: '<p>Deze site plaatst geen cookies. Alleen je keuze « Animaties pauzeren » wordt in je browser bewaard (lokale opslag), onder de naam <code>mb-motion</code>. Ze is strikt noodzakelijk voor de dienst die je vraagt, wordt nooit doorgestuurd en kan op elk moment via je browserinstellingen worden gewist. Daarvoor is dus geen toestemming nodig.</p>' },
+        { h: 'Bezoekersstatistieken', html: '<p>Deze site gebruikt momenteel geen tool voor bezoekersstatistieken. Voegen we er een toe, dan wordt deze pagina vooraf bijgewerkt. Plaatst die tool cookies of volgt ze je surfgedrag, dan vragen we eerst je toestemming en kun je die even eenvoudig weigeren als geven.</p>' },
+        { h: 'Afspraken en klantendossier', html: '<p>Wanneer je ons per telefoon, e-mail, WhatsApp of via sociale media contacteert, gebruiken we je gegevens en je afsprakengeschiedenis alleen om je behandelingen te organiseren (rechtsgrond: uitvoering van de overeenkomst en precontractuele maatregelen, art. 6.1.b AVG). Ze worden maximaal 3 jaar na je laatste afspraak bewaard, behalve als de wet een langere bewaring oplegt (boekhouding).</p><p>WhatsApp, Facebook, Instagram en Snapchat zijn externe diensten met een eigen privacybeleid.</p>' },
+        { h: 'Gezondheidsgegevens', html: '<p>Vóór sommige behandelingen vragen we je een gezondheidsfiche of -vragenlijst in te vullen (allergieën, zwangerschap, behandelingen, contra-indicaties). Dat zijn gevoelige gegevens. We verzamelen ze alleen met je uitdrukkelijke toestemming (art. 9.2.a AVG), gebruiken ze enkel om de behandeling veilig uit te voeren, ze zijn alleen toegankelijk voor wie je behandelt en worden bewaard [3 jaar na je laatste behandeling: te bevestigen]. Je kunt je toestemming altijd intrekken; sommige behandelingen kunnen dan niet meer worden uitgevoerd.</p>' },
+        { h: 'Foto\'s voor en na', html: '<p>Er kunnen opvolgingsfoto\'s worden genomen om het verloop van een behandeling te beoordelen, alleen met je akkoord. Ze worden nooit gepubliceerd zonder je afzonderlijke schriftelijke toestemming, die je altijd kunt intrekken.</p>' },
+        { h: 'Ontvangers', html: '<p>Je gegevens worden niet verkocht of doorgegeven. Ze worden alleen meegedeeld aan strikt noodzakelijke dienstverleners (hosting, boekhouding) of aan de overheid als de wet dat vereist.</p>' },
+        { h: 'Externe links', html: '<p>Links naar YouTube, Google Maps en onze sociale media openen die diensten, die hun eigen regels toepassen. Er wordt geen inhoud van die diensten op deze site geladen.</p>' },
+        { h: 'Je rechten', html: `<p>Je hebt recht op inzage, verbetering, wissing, beperking, bezwaar en overdraagbaarheid, en het recht om je toestemming in te trekken. Schrijf ons op ${MAIL}. Je kunt ook klacht indienen bij de Gegevensbeschermingsautoriteit (<a href="https://www.gegevensbeschermingsautoriteit.be">gegevensbeschermingsautoriteit.be</a>).</p>` },
+      ],
+    },
+  },
+  en: {
+    mentions: {
+      title: 'Legal notice',
+      description: 'Legal notice of My Bubble Beauty, beauty and wellness salon in Dilbeek: publisher, activity, hosting, liability.',
+      updated: 'Last updated: 16 October 2026',
+      sections: [
+        { h: 'Publisher', html: `<p>My Bubble Beauty — [company or owner name], [legal form]<br>Rue Paloke 146, 1700 Dilbeek, Belgium<br>Company number (BCE/KBO): [to be completed]<br>VAT number: [BE… to be completed, or « not subject to VAT »]<br>Phone: ${TEL} · Email: ${MAIL}</p>` },
+        { h: 'Activity', html: '<p>Beauty and wellness salon: face and body care, hair removal, nail care, lashes and brows, technical treatments (permanent hair removal, HIFU, radiofrequency, peels, microneedling, tattoo removal) and teeth whitening.</p><p>Access to the beautician profession: [certificate or diploma reference, to be completed].<br>Professional liability insurance: [insurer and policy number, to be completed].</p>' },
+        { h: 'Treatments and regulations', html: '<p>Some treatments, in particular those using lasers, intense pulsed light, focused ultrasound, peels or needles, as well as teeth whitening, are subject to specific regulations in Belgium. They are performed in accordance with those regulations[, where applicable under a doctor\'s responsibility: to be confirmed].</p><p>The information on this site is general. It is neither a diagnosis nor medical advice and does not replace consulting a healthcare professional.</p>' },
+        { h: 'Hosting', html: '<p>Render Services, Inc., San Francisco (California, United States) — [postal address to be checked] — <a href="https://render.com">render.com</a></p>' },
+        { h: 'Intellectual property', html: '<p>The texts, photographs, logo and graphic elements of this site belong to My Bubble Beauty or are used with their authors\' permission. Any reproduction without written permission is prohibited.</p><p>Photo credits: [to be completed if photos come from a stock library].</p>' },
+        { h: 'Prices', html: '<p>Prices shown are indicative, VAT included, and may change at any time. The applicable price is the one confirmed when you book. The terms of our services are set out in our <a href="/eng/terms.html">terms and conditions of sale</a>.</p>' },
+        { h: 'Liability', html: '<p>We take care that the information published is accurate, without being able to guarantee it is error-free. Links to external sites (social media, YouTube, Google Maps) are provided for convenience: we are not responsible for their content.</p>' },
+        { h: 'Personal data and disputes', html: '<p>How we process your data is described in our <a href="/eng/privacy.html">privacy policy</a>. This site is governed by Belgian law. For a consumer dispute, you can contact the Consumer Mediation Service (<a href="https://consumerombudsman.be">consumerombudsman.be</a>).</p>' },
+      ],
+    },
+    privacy: {
+      title: 'Privacy policy',
+      description: 'How My Bubble Beauty processes your data: appointments, health form, cookies, audience measurement and your rights (GDPR).',
+      updated: 'Last updated: 16 October 2026',
+      sections: [
+        { h: 'Data controller', html: `<p>My Bubble Beauty, Rue Paloke 146, 1700 Dilbeek, Belgium — ${MAIL} — ${TEL}.</p>` },
+        { h: 'Visiting the site', html: '<p>This site has no forms and asks you for no data. Like any host, Render keeps technical logs (IP address, date, page requested) to keep the service secure and working. They are kept for a limited time and are not used to identify you.</p><p>As Render is based in the United States, this technical data may be processed there. This transfer is covered by the safeguards provided by the GDPR [exact mechanism to be checked: Render\'s standard contractual clauses or the Data Privacy Framework].</p>' },
+        { h: 'Cookies and local storage', html: '<p>This site sets no cookies. Only your « Pause animations » choice is stored in your browser (local storage), under the name <code>mb-motion</code>. It is strictly necessary for the service you request, is never sent anywhere and can be cleared at any time in your browser settings. It therefore does not require consent.</p>' },
+        { h: 'Audience measurement', html: '<p>This site currently uses no audience measurement tool. If we add one, this page will be updated before it goes live. If that tool were to set cookies or track your browsing, your prior consent would be requested and you could refuse as easily as accept.</p>' },
+        { h: 'Appointments and client file', html: '<p>When you contact us by phone, email, WhatsApp or social media, we use your details and appointment history only to organise your treatments (legal basis: performance of the contract and pre-contractual measures, Art. 6(1)(b) GDPR). They are kept for up to 3 years after your last appointment, unless the law requires longer retention (accounting).</p><p>WhatsApp, Facebook, Instagram and Snapchat are third-party services with their own privacy policies.</p>' },
+        { h: 'Health data', html: '<p>Before some treatments, we ask you to fill in a health form or questionnaire (allergies, pregnancy, treatments, contraindications). This is sensitive data. It is collected only with your explicit consent (Art. 9(2)(a) GDPR), used only to perform the treatment safely, accessible only to the people treating you and kept [for 3 years after your last treatment: to be confirmed]. You can withdraw your consent at any time; some treatments can then no longer be performed.</p>' },
+        { h: 'Before and after photos', html: '<p>Follow-up photos may be taken to assess how a treatment is progressing, only with your agreement. They are never published without your separate written consent, which you can withdraw at any time.</p>' },
+        { h: 'Recipients', html: '<p>Your data is neither sold nor transferred. It is shared only with strictly necessary service providers (hosting, accounting) or with authorities where the law requires it.</p>' },
+        { h: 'External links', html: '<p>Links to YouTube, Google Maps and our social media open those services, which apply their own rules. No content from those services is loaded on this site.</p>' },
+        { h: 'Your rights', html: `<p>You have the right of access, rectification, erasure, restriction, objection and portability, and the right to withdraw your consent. Write to us at ${MAIL}. You can also lodge a complaint with the Belgian Data Protection Authority (<a href="https://www.dataprotectionauthority.be">dataprotectionauthority.be</a>).</p>` },
+      ],
+    },
+  },
+};
