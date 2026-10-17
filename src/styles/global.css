@@ -433,20 +433,21 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 .footer-logo{display:block;line-height:0;flex-basis:100%}
 .footer-logo img{width:120px;height:auto}
 
-/* Bandeau d'accueil (écran large) : photo nette à gauche, sans voile ; dégradé au centre ; texte à droite sur fond uni.
-   Le fond devient presque opaque là où commence le texte, pour garder un contraste suffisant. */
+/* Bandeau d'accueil (écran large) : photo nette à gauche, sans voile ; dégradé doux au centre ; texte à droite sur fond uni.
+   Le dégradé suit une courbe douce (lente au début et à la fin) sur 28 % de la largeur et atteint 94 % là où commence le texte. */
 @media (min-width:1024px){
   .hero{padding-block:0;align-items:stretch}
   .hero__media::after{background:none}
   .hero__wrap{width:auto;margin-inline:0;padding:0}
-  .hero__panel{--pl:56%;--pr:var(--gutter);--g0:40%;--g1:54%;--veil:255 251 249;
+  .hero__panel{--pl:56%;--pr:var(--gutter);--g0:30%;--gw:26%;--veil:255 251 249;
     grid-column:1 / -1;display:flex;flex-direction:column;justify-content:center;border:0;border-radius:0;box-shadow:none;
     padding-block:clamp(3rem,6vw,5rem);padding-inline:var(--pl) var(--pr);
-    background:linear-gradient(90deg,rgb(var(--veil) / 0) var(--g0),rgb(var(--veil) / .94) var(--g1));backdrop-filter:none}
+    background:linear-gradient(90deg,rgb(var(--veil) / 0) var(--g0),rgb(var(--veil) / .06) calc(var(--g0) + var(--gw) * .15),rgb(var(--veil) / .2) calc(var(--g0) + var(--gw) * .3),rgb(var(--veil) / .4) calc(var(--g0) + var(--gw) * .45),rgb(var(--veil) / .61) calc(var(--g0) + var(--gw) * .6),rgb(var(--veil) / .79) calc(var(--g0) + var(--gw) * .75),rgb(var(--veil) / .91) calc(var(--g0) + var(--gw) * .9),rgb(var(--veil) / .94) calc(var(--g0) + var(--gw)));backdrop-filter:none}
   .hero__panel>*{max-width:760px}
   :where(:root[data-theme="dark"]) .hero__panel{--veil:42 32 30}
 }
-@media (min-width:1600px){.hero__panel{--pl:62%;--pr:12%;--g0:46%;--g1:60%}}
+@media (min-width:1280px){.hero__panel{--pl:58%;--g0:30%;--gw:28%}}
+@media (min-width:1600px){.hero__panel{--pl:66%;--pr:8%;--g0:38%}}
 @media (min-width:1024px) and (prefers-color-scheme:dark){:where(:root:not([data-theme="light"])) .hero__panel{--veil:42 32 30}}
 @media (prefers-reduced-transparency:reduce){.hero__panel{background:var(--surface);backdrop-filter:none}}
 
