@@ -10,7 +10,7 @@ export const t = (lang: Lang) => DATA[lang];
 
 export const SITE = 'https://mybubble-beauty.com';
 // Changer ce numéro quand main.js, motion-pref.js ou stats.js change (servis « immutable » un an).
-export const JS_VERSION = '20261016';
+export const JS_VERSION = '20261017';
 
 // Mesure d'audience GoatCounter (sans cookie). Vide = désactivée.
 // Mettre le code du site créé sur goatcounter.com, ex. 'mybubble' pour https://mybubble.goatcounter.com
@@ -22,10 +22,10 @@ export const CONTACT = {
   phoneLabel: '0484.118.395',
   whatsapp: 'https://wa.me/32484118395',
   email: 'mybubblebeauty@gmail.com',
-  street: 'Rue Paloke 146',
+  street: 'Palokestraat 146',
   postal: '1700',
   city: 'Dilbeek',
-  maps: 'https://www.google.com/maps/search/?api=1&query=Rue%20Paloke%20146%2C%201700%20Dilbeek',
+  maps: 'https://www.google.com/maps/search/?api=1&query=Palokestraat%20146%2C%201700%20Dilbeek',
   social: [
     { key: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/my.bubblebeauty/' },
     { key: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/my.bubblebeauty/' },
@@ -61,8 +61,21 @@ export const alternates = (key: PageKey) =>
   LANGS.map((l) => ({ lang: l, hreflang: LANG_META[l].hreflang, href: SITE + pagePath(l, key) }));
 
 // Libellés ajoutés en v2 (absents de la v1).
-export const EXTRA: Record<Lang, { cgv: string }> = {
-  fr: { cgv: 'Conditions générales' },
-  nl: { cgv: 'Algemene voorwaarden' },
-  en: { cgv: 'Terms and conditions' },
+export const EXTRA: Record<Lang, { cgv: string; hours: string; closed: string; days: string[] }> = {
+  fr: { cgv: 'Conditions générales', hours: 'Horaires', closed: 'Fermé', days: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'] },
+  nl: { cgv: 'Algemene voorwaarden', hours: 'Openingsuren', closed: 'Gesloten', days: ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'] },
+  en: { cgv: 'Terms and conditions', hours: 'Opening hours', closed: 'Closed', days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] },
 };
+
+// Horaires d'ouverture, à remplir quand la cliente les donne (vide = rien n'est affiché).
+// day : 1 = lundi … 7 = dimanche ; un jour absent est affiché « Fermé ». Exemple :
+// { day: 1, open: '09:30', close: '18:30' }, { day: 6, open: '09:00', close: '16:00' }
+export const HOURS: { day: number; open: string; close: string }[] = [];
+const SCHEMA_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+export const openingHoursSchema = () =>
+  HOURS.map((h) => ({ '@type': 'OpeningHoursSpecification', dayOfWeek: SCHEMA_DAYS[h.day - 1], opens: h.open, closes: h.close }));
+export const hoursRows = (lang: Lang) =>
+  EXTRA[lang].days.map((label, i) => {
+    const slots = HOURS.filter((h) => h.day === i + 1).map((h) => `${h.open}–${h.close}`);
+    return { label, value: slots.length ? slots.join(', ') : EXTRA[lang].closed };
+  });

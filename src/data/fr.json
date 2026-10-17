@@ -43,12 +43,12 @@
  },
  "home": {
   "title": "My Bubble — Centre de beauté et de bien-être",
-  "description": "My Bubble, votre centre de beauté et bien-être à Anderlecht, Molenbeek-Saint-Jean, Dilbeek et Berchem-Sainte-Agathe. Soins esthétiques, pédicure médicale,…",
+  "description": "Centre de beauté et de bien-être à Dilbeek, aux portes d'Anderlecht, de Molenbeek et de Berchem : soins du visage, pédicure médicale, ongles et épilation.",
   "hero": {
    "brand": "My Bubble",
-   "sub": "– Votre Centre de Beauté et de Bien-Être à Anderlecht, Molenbeek-Saint-Jean, Dilbeek et Berchem-Sainte-Agathe",
+   "sub": "– Votre centre de beauté et de bien-être à Dilbeek, aux portes d'Anderlecht, de Molenbeek et de Berchem",
    "lead": "Soins du visage, pédicure médicale, ongles et épilation : notre équipe expérimentée allie expertise et produits haut de gamme pour révéler et sublimer votre beauté naturelle, en toute détente.",
-   "cta": "Prendre Rendez-Vous",
+   "cta": "Prendre rendez-vous",
    "imgAlt": "Soin du visage avec masque, dans une cabine éclairée à la bougie"
   },
   "infos": {
@@ -60,7 +60,7 @@
     },
     {
      "label": "Adresse",
-     "html": "Rue Paloke 146, 1700 Dilbeek"
+     "html": "Palokestraat 146, 1700 Dilbeek"
     },
     {
      "label": "Rendez-vous",
@@ -70,23 +70,32 @@
   },
   "about": {
    "eyebrow": "Le centre",
-   "lead": "Bienvenue chez My Bubble, votre centre de beauté incontournable situé au cœur d’Anderlecht, Molenbeek-Saint-Jean, Dilbeek et Berchem-Sainte-Agathe.",
-   "bodyHtml": "<p>Nous nous spécialisons dans les soins esthétiques de qualité et les traitements de pédicure médicale pour révéler et sublimer votre beauté naturelle. Notre équipe de professionnels expérimentés offre une gamme complète de services, incluant les soins de la peau, les soins des ongles et l’épilation. Nous allions expertise et produits de haute qualité pour garantir votre confort et bien-être.</p><p>Découvrez également notre sélection de produits de beauté haut de gamme, conçus pour entretenir et améliorer votre apparence à domicile. Que vous recherchiez des soins relaxants, des solutions pour des problèmes spécifiques de peau ou des produits cosmétiques d’exception, nous avons tout ce qu’il vous faut. Rendez-nous visite au cœur d’Anderlecht, Molenbeek-Saint-Jean, Dilbeek et Berchem-Sainte-Agathe et découvrez comment nous pouvons vous aider à atteindre une beauté éclatante.</p>",
-   "quote": "My Bubble : l’alliance parfaite entre qualité, bien-être et esthétique."
+   "lead": "Bienvenue chez My Bubble, votre centre de beauté à Dilbeek, à deux pas d'Anderlecht, de Molenbeek-Saint-Jean et de Berchem-Sainte-Agathe.",
+   "bodyHtml": "<p>Nous nous spécialisons dans les soins esthétiques de qualité et les traitements de pédicure médicale pour révéler et sublimer votre beauté naturelle. Notre équipe de professionnels expérimentés offre une gamme complète de services, incluant les soins de la peau, les soins des ongles et l'épilation. Nous allions expertise et produits de haute qualité pour veiller à votre confort et à votre bien-être.</p><p>Découvrez également notre sélection de produits de beauté haut de gamme, conçus pour entretenir et améliorer votre apparence à domicile. Que vous recherchiez des soins relaxants, des solutions pour des problèmes spécifiques de peau ou des produits cosmétiques d'exception, nous avons tout ce qu'il vous faut. Rendez-nous visite à Dilbeek et découvrez comment nous pouvons vous aider à atteindre une beauté éclatante.</p>",
+   "quote": "My Bubble : l'alliance parfaite entre qualité, bien-être et esthétique.",
+   "points": [
+    "Soins esthétiques de qualité",
+    "Pédicure médicale",
+    "Équipe de professionnels expérimentés",
+    "Produits de beauté haut de gamme"
+   ],
+   "more": "Lire la suite",
+   "less": "Réduire",
+   "imgAlt": "La cabine de soins, avec la table de soin et les appareils d'esthétique"
   },
   "soins": {
-   "title": "Nos Soins Esthétiques",
-   "intro": "Retrouvez une peau éclatante avec nos soins personnalisés : hydrafacial, mésothérapie et peeling.",
+   "title": "Nos soins esthétiques",
+   "intro": "Nos soins personnalisés visent à redonner de l'éclat à votre peau : HydraFacial, mésothérapie et peeling.",
    "cards": [
     {
      "title": "Visage",
-     "text": "Retrouvez une peau éclatante grâce à nos soins visage adaptés à vos besoins.",
+     "text": "Découvrez nos soins visage adaptés à vos besoins, pour une peau plus éclatante.",
      "href": "#tarif-soin-visage",
      "link": "Voir les tarifs"
     },
     {
      "title": "Massage",
-     "text": "Détendez-vous profondément avec nos massages thérapeutiques et relaxants.",
+     "text": "Détendez-vous profondément avec nos massages relaxants et de bien-être.",
      "href": "#tarif-rituel-douceur",
      "link": "Voir les tarifs"
     },
@@ -109,12 +118,13 @@
      "link": "Voir les tarifs"
     },
     {
-     "title": "Blanchiment Dentaire",
-     "text": "Retrouvez un sourire éclatant grâce à nos procédures de Blanchiment Dentaire.",
+     "title": "Blanchiment dentaire",
+     "text": "Découvrez nos séances de blanchiment dentaire pour un sourire plus lumineux.",
      "href": "#tarif-blanchiment-des-dents",
      "link": "Voir les tarifs"
     }
-   ]
+   ],
+   "eyebrow": "Nos soins"
   },
   "tarifs": {
    "title": "Tarif",
@@ -161,7 +171,7 @@
     {
      "id": "soin-visage",
      "cat": "visage",
-     "title": "Soin Visage",
+     "title": "Soin visage",
      "href": null,
      "items": [
       {
@@ -180,7 +190,7 @@
        "amount": "110 €"
       },
       {
-       "name": "Hydrafacial Anti-Âge",
+       "name": "HydraFacial anti-âge",
        "href": null,
        "amount": "130 €"
       },
@@ -195,7 +205,7 @@
        "amount": "150 €"
       },
       {
-       "name": "Laser Charbon",
+       "name": "Laser charbon",
        "href": "charbon",
        "amount": "150 €"
       },
@@ -205,12 +215,12 @@
        "amount": "40 €"
       },
       {
-       "name": "BB GLOW",
+       "name": "BB Glow",
        "href": "bbglow",
        "amount": "120 €"
       },
       {
-       "name": "Peeling Superficiel",
+       "name": "Peeling superficiel",
        "href": "peeling",
        "amount": "90 €"
       }
@@ -223,7 +233,7 @@
      "href": null,
      "items": [
       {
-       "name": "Lipo-Laser",
+       "name": "Lipo-laser",
        "href": "lipolaser",
        "amount": "50 €"
       },
@@ -238,7 +248,7 @@
        "amount": "50 €"
       },
       {
-       "name": "Lift Colombien",
+       "name": "Lift colombien",
        "href": null,
        "amount": "60 €"
       },
@@ -252,7 +262,7 @@
     {
      "id": "hifu",
      "cat": "visage",
-     "title": "Hifu",
+     "title": "HIFU",
      "href": "hifu",
      "items": [
       {
@@ -304,7 +314,7 @@
      "href": "plasma",
      "items": [
       {
-       "name": "1 Séance",
+       "name": "1 séance",
        "href": null,
        "amount": "250 €"
       }
@@ -313,16 +323,16 @@
     {
      "id": "blanchiment-des-dents",
      "cat": "sourire",
-     "title": "Blanchiment des Dents",
+     "title": "Blanchiment des dents",
      "href": "dents",
      "items": [
       {
-       "name": "1 Séance",
+       "name": "1 séance",
        "href": null,
        "amount": "90 €"
       },
       {
-       "name": "2 Séances",
+       "name": "2 séances",
        "href": null,
        "amount": "120 €"
       }
@@ -331,7 +341,7 @@
     {
      "id": "epilation-definitive",
      "cat": "epilation",
-     "title": "Épilation définitive",
+     "title": "Épilation laser longue durée",
      "href": "laserepilation",
      "items": [
       {
@@ -370,7 +380,7 @@
        "amount": "100 €"
       },
       {
-       "name": "Demi-Jambes",
+       "name": "Demi-jambes",
        "href": null,
        "amount": "180 €"
       },
@@ -398,7 +408,7 @@
        "amount": "12,50 €"
       },
       {
-       "name": "Aloe Vera",
+       "name": "Aloe vera",
        "href": null,
        "amount": "12,50 €"
       }
@@ -411,32 +421,32 @@
      "href": null,
      "items": [
       {
-       "name": "Détatouages XS",
+       "name": "Détatouage XS",
        "href": null,
        "amount": "99 €"
       },
       {
-       "name": "Détatouages S",
+       "name": "Détatouage S",
        "href": null,
        "amount": "149 €"
       },
       {
-       "name": "Détatouages M",
+       "name": "Détatouage M",
        "href": null,
        "amount": "199 €"
       },
       {
-       "name": "Détatouages L",
+       "name": "Détatouage L",
        "href": null,
        "amount": "249 €"
       },
       {
-       "name": "Détatouages XL",
+       "name": "Détatouage XL",
        "href": null,
        "amount": "299 €"
       },
       {
-       "name": "Détatouages XXL",
+       "name": "Détatouage XXL",
        "href": null,
        "amount": "399 €"
       }
@@ -489,7 +499,7 @@
        "amount": "25 €"
       },
       {
-       "name": "Demi-Jambes",
+       "name": "Demi-jambes",
        "href": null,
        "amount": "20 €"
       },
@@ -512,7 +522,7 @@
        "amount": "65 €"
       },
       {
-       "name": "À La bougie",
+       "name": "À la bougie",
        "href": null,
        "amount": "70 €"
       },
@@ -550,17 +560,17 @@
      "href": null,
      "items": [
       {
-       "name": "Rehaussement Des Cils",
+       "name": "Rehaussement des cils",
        "href": null,
        "amount": "35 €"
       },
       {
-       "name": "Teinture Des Cils",
+       "name": "Teinture des cils",
        "href": null,
        "amount": "15 €"
       },
       {
-       "name": "Teinture Des Sourcils",
+       "name": "Teinture des sourcils",
        "href": null,
        "amount": "15 €"
       },
@@ -593,7 +603,7 @@
        "amount": "35 €"
       },
       {
-       "name": "Vernis Semi-Permanent",
+       "name": "Vernis semi-permanent",
        "href": null,
        "amount": "25 €"
       }
@@ -629,7 +639,7 @@
      "href": null,
      "items": [
       {
-       "name": "Anti-Âge",
+       "name": "Anti-âge",
        "href": null,
        "amount": "75 €"
       },
@@ -639,12 +649,12 @@
        "amount": "125 €"
       },
       {
-       "name": "Vitaminée",
+       "name": "Vitaminé",
        "href": null,
        "amount": "100 €"
       },
       {
-       "name": "Bien-Être",
+       "name": "Bien-être",
        "href": null,
        "amount": "80 €"
       },
@@ -658,7 +668,7 @@
     {
      "id": "huile-corps",
      "cat": "corps",
-     "title": "Huile Corps",
+     "title": "Huile corps",
      "href": null,
      "items": [
       {
@@ -667,17 +677,17 @@
        "amount": "50 €"
       },
       {
-       "name": "Anti-Cellulite",
+       "name": "Anti-cellulite",
        "href": null,
        "amount": "75 €"
       },
       {
-       "name": "Amincissant",
+       "name": "Amincissante",
        "href": null,
        "amount": "90 €"
       },
       {
-       "name": "Bien-Être",
+       "name": "Bien-être",
        "href": null,
        "amount": "60 €"
       }
@@ -690,12 +700,12 @@
      "href": null,
      "items": [
       {
-       "name": "Gommage Visage",
+       "name": "Gommage visage",
        "href": null,
        "amount": "35 €"
       },
       {
-       "name": "Gommage Corps (selon le type de peaux)",
+       "name": "Gommage corps (selon le type de peau)",
        "href": null,
        "amount": "25 €"
       }
@@ -734,7 +744,8 @@
       }
      ]
     }
-   ]
+   ],
+   "eyebrow": "Nos tarifs"
   },
   "gallery": {
    "title": "Galerie",
@@ -757,22 +768,27 @@
      "n": "3"
     },
     {
-     "alt": "Les lettres en bois « Moment », « My Bubble » et « Beauty » au mur",
-     "ariaLabel": "Agrandir la photo : Les lettres en bois « Moment », « My Bubble » et « Beauty » au mur",
+     "alt": "Les lettres en bois « Moment », « My Bubble » et « Beauty » au mur",
+     "ariaLabel": "Agrandir la photo : Les lettres en bois « Moment », « My Bubble » et « Beauty » au mur",
      "n": "4"
     }
-   ]
+   ],
+   "eyebrow": "L'institut"
   },
   "contact": {
    "title": "Contact",
-   "intro": "Prendre Rendez-Vous par téléphone, mail ou réseaux sociaux !",
+   "intro": "Prenez rendez-vous par téléphone, e-mail ou réseaux sociaux !",
    "labels": [
     "Adresse",
     "Téléphone",
     "E-mail"
    ],
    "itinerary": "Itinéraire",
-   "socialTitle": "Réseaux sociaux"
+   "socialTitle": "Réseaux sociaux",
+   "eyebrow": "Rendez-vous"
+  },
+  "cta": {
+   "title": "Envie d'un moment My Bubble ?"
   }
  },
  "legal": {
@@ -795,12 +811,12 @@
   "bbglow": {
    "title": "Le soin BB Glow en esthétique",
    "metaTitle": "Le soin BB Glow en esthétique — My Bubble Beauty",
-   "description": "Le soin BB Glow en esthétique est une technique de traitement de la peau qui vise à améliorer l'apparence du teint, à uniformiser la couleur de la peau, à…",
-   "articleHtml": "<p>Le soin BB Glow en esthétique est une technique de traitement de la peau qui vise à améliorer l'apparence du teint, à uniformiser la couleur de la peau, à réduire les imperfections et à donner à la peau un aspect radieux et frais. Ce traitement est particulièrement populaire pour son effet \"peau de bébé\" d'où son nom.</p><h2>Préparation de la peau</h2><p>Avant de commencer le traitement, la peau est nettoyée en profondeur pour éliminer les impuretés, le sébum et les cellules mortes de la peau. Certaines procédures peuvent inclure une exfoliation légère pour une meilleure absorption des produits.</p><h2>Application de sérums</h2><p>Des sérums spécialement formulés pour le traitement BB Glow sont appliqués sur la peau. Ces sérums contiennent généralement des ingrédients tels que des pigments, de l'acide hyaluronique, des peptides et des vitamines. Les pigments aident à uniformiser la couleur de la peau, à camoufler les imperfections et à donner un aspect plus éclatant.</p><h2>Micro-aiguillage ou microneedling</h2><p>Une partie essentielle du soin BB Glow peut inclure le micro-aiguillage, également appelé microneedling. Cette technique consiste à utiliser un dispositif doté de fines aiguilles pour créer de micro-perforations dans la peau. Ces micro-perforations permettent une meilleure absorption des sérums et stimulent également la production de collagène, contribuant ainsi à améliorer la texture de la peau.</p><h2>Application</h2><p>Après le micro-aiguillage, un masque apaisant ou des traitements supplémentaires peuvent être appliqués pour calmer la peau et renforcer les bienfaits du traitement.</p><h2>Masques et traitements ciblés</h2><p>Des masques purifiants ou d'autres traitements ciblés peuvent être utilisés pour calmer la peau, réduire l'excès de sébum et favoriser une meilleure régulation de la production de sébum.</p><h2>Hydratation et protection solaire</h2><p>Le traitement est généralement complété par l'application de produits hydratants et d'un écran solaire pour protéger la peau nouvellement traitée des rayons UV.</p><p>Les résultats du soin BB Glow peuvent varier d'une personne à l'autre, mais de manière générale, les patients rapportent une amélioration de la texture de la peau, une réduction de l'apparence des imperfections, une coloration plus uniforme et un teint plus lumineux. Les effets du traitement sont temporaires et peuvent durer de quelques semaines à quelques mois, selon le type de peau et les soins après-traitement.</p>",
+   "description": "Le soin BB Glow vise à améliorer l'apparence du teint, à unifier la couleur de la peau et à lui donner un aspect radieux et frais. Déroulement et tarifs.",
+   "articleHtml": "<p>Le soin BB Glow en esthétique est une technique de traitement de la peau qui vise à améliorer l'apparence du teint, à uniformiser la couleur de la peau, à réduire les imperfections et à donner à la peau un aspect radieux et frais. Son nom fait référence à la BB cream (« Blemish Balm »), car ce soin vise lui aussi un teint d'apparence plus uniforme.</p><h2>Préparation de la peau</h2><p>Avant de commencer le traitement, la peau est nettoyée en profondeur pour éliminer les impuretés, le sébum et les cellules mortes de la peau. Le soin peut inclure une exfoliation légère pour une meilleure absorption des produits.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><h2>Application de sérums</h2><p>Des sérums spécialement formulés pour le traitement BB Glow sont appliqués sur la peau. Ces sérums contiennent généralement des ingrédients tels que des pigments, de l'acide hyaluronique, des peptides et des vitamines. Les pigments aident à uniformiser la couleur de la peau, à camoufler les imperfections et à donner un aspect plus éclatant.</p><h2>Microneedling</h2><p>Le microneedling est une étape essentielle du soin BB Glow. Cette technique consiste à utiliser un dispositif doté de fines aiguilles pour créer des micro-perforations dans la peau. Ces micro-perforations permettent une meilleure absorption des sérums et peuvent également stimuler la production de collagène, contribuant ainsi à améliorer la texture de la peau.</p><h2>Application</h2><p>Après le microneedling, un masque apaisant ou des traitements supplémentaires peuvent être appliqués pour calmer la peau et renforcer les bienfaits du traitement.</p><h2>Masques et traitements ciblés</h2><p>Des masques purifiants ou d'autres traitements ciblés peuvent être utilisés pour calmer la peau, réduire l'excès de sébum et favoriser une meilleure régulation de la production de sébum.</p><h2>Hydratation et protection solaire</h2><p>Le traitement est généralement complété par l'application de produits hydratants et d'un écran solaire pour protéger la peau nouvellement traitée des rayons UV.</p><p>Les résultats du soin BB Glow peuvent varier d'une personne à l'autre, mais de manière générale, les clients rapportent une amélioration de la texture de la peau, une réduction de l'apparence des imperfections, une coloration plus uniforme et un teint plus lumineux. Les effets du traitement sont temporaires et peuvent durer de quelques semaines à quelques mois, selon le type de peau et les soins après-traitement.</p>",
    "priceTitle": "Tarif",
    "prices": [
     {
-     "name": "BB GLOW",
+     "name": "BB Glow",
      "amount": "120 €"
     }
    ],
@@ -809,19 +825,19 @@
      "src": "soins/glow.webp",
      "w": 960,
      "h": 542,
-     "alt": "Image illustrative"
+     "alt": "Visage de femme avec des touches de fond de teint BB Glow sur la joue"
     }
    ]
   },
   "charbon": {
    "title": "Le laser charbon actif",
    "metaTitle": "Le laser charbon actif — My Bubble Beauty",
-   "description": "Le charbon actif est parfois utilisé en combinaison avec des traitements au laser, tels que le laser, pour le traitement de certaines affections cutanées.…",
-   "articleHtml": "<p>Le charbon actif est parfois utilisé en combinaison avec des traitements au laser, tels que le laser, pour le traitement de certaines affections cutanées. Le laser est connu pour son efficacité dans le traitement de divers problèmes de peau, notamment les taches pigmentaires, les tatouages et les lésions pigmentaires. Voici comment fonctionne généralement un traitement au laser avec du charbon actif :</p><h2>Application du charbon actif</h2><p>Un masque à base de charbon actif est appliqué sur la peau de la zone à traiter. Le charbon actif absorbe la lumière laser et permet une meilleure ciblage des taches pigmentaires ou des tatouages.</p><h2>Traitement au laser</h2><p>Le laser est ensuite utilisé pour émettre des impulsions de lumière intense en une fraction de seconde. Cette lumière est absorbée sélectivement par les particules de pigments, telles que les pigments de tatouage ou les mélanines dans les taches pigmentaires.</p><h2>Fragmentation des pigments</h2><p>Lorsque la lumière laser est absorbée par les pigments, elle génère de la chaleur, provoquant la fragmentation des pigments en particules plus petites.</p><h2>Élimination naturelle</h2><p>Les particules de pigments fragmentés sont ensuite éliminées naturellement par le corps au fil du temps, principalement par le système lymphatique.</p><h2>Résultats</h2><p>Le résultat final dépend du type de problème cutané traité. Dans le cas des tatouages, par exemple, le laser peut aider à briser les pigments du tatouage, ce qui permet au corps de les éliminer progressivement, réduisant ainsi l'apparence du tatouage. Pour les taches pigmentaires, ce traitement peut aider à éclaircir ou à éliminer les taches.</p><p>Il est important de noter que les traitements au laser, quelle que soit la technique spécifique utilisée, doivent être réalisés par un professionnel de l’esthétique qualifié. Ces professionnels peuvent évaluer votre peau, déterminer la méthode de traitement appropriée et s'assurer que le traitement est effectué en toute sécurité pour obtenir les meilleurs résultats.</p><p>Hollywood Peel : Un peeling doux au charbon actif pour retrouver un teint éclatant - CSHP ParisSi vous envisagez un traitement au laser pour un problème de peau particulier, je vous recommande de consulter un professionnel de l’esthétique pour discuter de vos besoins spécifiques et obtenir des informations détaillées sur le traitement.</p>",
+   "description": "Le laser associé au charbon actif vise à améliorer l'aspect de certaines imperfections de la peau, comme les taches pigmentaires. Déroulement et tarifs.",
+   "articleHtml": "<p>Le charbon actif est parfois utilisé en combinaison avec des traitements au laser pour améliorer l'aspect de certaines imperfections de la peau. Le laser peut aider à atténuer l'apparence de diverses marques sur la peau, notamment les taches pigmentaires et les tatouages. Voici comment fonctionne généralement un traitement au laser avec du charbon actif :</p><h2>Application du charbon actif</h2><p>Un masque à base de charbon actif est appliqué sur la peau de la zone à traiter. Le charbon actif absorbe la lumière laser et permet un meilleur ciblage des taches pigmentaires ou des tatouages.</p><h2>Traitement au laser</h2><p>Le laser est ensuite utilisé pour émettre des impulsions de lumière intense en une fraction de seconde. Cette lumière est absorbée sélectivement par les particules de pigments, telles que les pigments de tatouage ou la mélanine dans les taches pigmentaires.</p><h2>Fragmentation des pigments</h2><p>Lorsque la lumière laser est absorbée par les pigments, son énergie se transforme en chaleur, provoquant la fragmentation des pigments en particules plus petites.</p><h2>Élimination naturelle</h2><p>Les particules de pigments fragmentés sont ensuite éliminées naturellement par le corps au fil du temps, principalement par le système lymphatique.</p><h2>Résultats</h2><p>Le résultat final dépend du type d'imperfection concernée. Dans le cas des tatouages, par exemple, le laser peut aider à briser les pigments du tatouage, ce qui permet au corps de les éliminer progressivement, réduisant ainsi l'apparence du tatouage. Pour les taches pigmentaires, ce traitement peut aider à éclaircir ou à atténuer les taches.</p><p>Il est important de noter que les traitements au laser, quelle que soit la technique spécifique utilisée, doivent être réalisés par un professionnel de l'esthétique qualifié. Ces professionnels peuvent évaluer votre peau, déterminer la méthode de traitement appropriée et s'assurer que le traitement est effectué en limitant les risques, pour un résultat adapté à votre peau.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><p>Si vous envisagez un traitement au laser pour un problème de peau particulier, nous vous recommandons de consulter un professionnel de l'esthétique pour discuter de vos besoins spécifiques et obtenir des informations détaillées sur le traitement.</p>",
    "priceTitle": "Tarif",
    "prices": [
     {
-     "name": "Laser Charbon",
+     "name": "Laser charbon",
      "amount": "150 €"
     }
    ],
@@ -830,15 +846,15 @@
      "src": "soins/charbon.webp",
      "w": 743,
      "h": 782,
-     "alt": "Image illustrative"
+     "alt": "Cliente avec un masque au charbon et des lunettes de protection pendant un soin laser"
     }
    ]
   },
   "cire": {
    "title": "L'épilation à la cire",
    "metaTitle": "L'épilation à la cire — My Bubble Beauty",
-   "description": "L'épilation à la cire est une méthode d'élimination des poils non désirés qui est couramment utilisée en esthétique. Cette technique consiste à appliquer de…",
-   "articleHtml": "<p>L'épilation à la cire est une méthode d'élimination des poils non désirés qui est couramment utilisée en esthétique. Cette technique consiste à appliquer de la cire chaude ou tiède sur la peau, à la laisser durcir, puis à la retirer rapidement, emportant ainsi les poils avec elle. Voici comment fonctionne l'épilation à la cire en esthétique :</p><h2>Préparation</h2><p>Avant de commencer la procédure d'épilation à la cire, la peau est généralement nettoyée pour éliminer toute trace de saleté, d'huile ou de produits cosmétiques. Il est important que la peau soit propre et sèche avant l'application de la cire.</p><h2>Application</h2><p>La cire est chauffée pour la rendre fluide, mais elle ne doit pas être brûlante pour éviter les brûlures. Elle est ensuite appliquée sur la zone à épiler à l'aide d'un bâton ou d'une spatule. La cire adhère aux poils et à la peau.</p><h2>Durcissement</h2><p>La cire est laissée à durcir pendant quelques instants. Pendant cette période, la cire s'accroche aux poils, les enrobant complètement.</p><h2>Retrait</h2><p>Une fois la cire durcie, un professionnel de l'esthétique saisit un bord de la cire et la retire rapidement dans le sens inverse de la pousse des poils. Cette action arrache les poils à la racine, laissant la peau temporairement lisse et sans poils.</p><h2>Soin post-épilation</h2><p>Après l'épilation, il est courant d'appliquer une lotion apaisante ou une crème hydratante pour calmer la peau et minimiser les irritations. Les poils repousseront progressivement, généralement en quelques semaines.</p><p>L'épilation à la cire peut être réalisée sur différentes parties du corps, notamment les jambes, les aisselles, le maillot, le visage et d'autres zones où les poils non désirés sont présents. Cette méthode d'épilation offre plusieurs avantages, notamment une peau lisse qui dure plus longtemps que le rasage, car les poils sont arrachés à la racine. Cependant, il y a aussi des inconvénients potentiels, tels que la douleur associée à l'arrachage des poils et la possibilité d'irritation de la peau.</p><p>Il existe différentes formules de cire, notamment la cire chaude, la cire tiède ou la cire froide, chacune ayant ses propres avantages et inconvénients. Certaines personnes choisissent également de réaliser l'épilation à la cire à la maison à l'aide de kits disponibles dans le commerce, bien que cela puisse nécessiter de la pratique pour obtenir de bons résultats.</p><p>Il est recommandé de faire appel à un professionnel expérimenté pour l'épilation à la cire, en particulier pour les zones sensibles, car cela réduit le risque de blessures ou d'irritations de la peau.</p>",
+   "description": "L'épilation à la cire chaude ou tiède retire les poils à la racine, pour une peau qui reste lisse plus longtemps qu'après un rasage. Déroulement et tarifs.",
+   "articleHtml": "<p>L'épilation à la cire est une méthode d'élimination des poils non désirés qui est couramment utilisée en esthétique. Cette technique consiste à appliquer de la cire chaude ou tiède sur la peau, à la laisser durcir, puis à la retirer rapidement, emportant ainsi les poils avec elle. Voici comment fonctionne l'épilation à la cire en esthétique :</p><h2>Préparation</h2><p>Avant de commencer l'épilation à la cire, la peau est généralement nettoyée pour éliminer toute trace de saleté, d'huile ou de produits cosmétiques. Il est important que la peau soit propre et sèche avant l'application de la cire.</p><h2>Application</h2><p>La cire est chauffée pour la rendre fluide, mais elle ne doit pas être brûlante pour éviter les brûlures. Elle est ensuite appliquée sur la zone à épiler à l'aide d'un bâton ou d'une spatule. La cire adhère aux poils et à la peau.</p><h2>Durcissement</h2><p>La cire est laissée à durcir pendant quelques instants. Pendant cette période, la cire s'accroche aux poils, les enrobant complètement.</p><h2>Retrait</h2><p>Une fois la cire durcie, un professionnel de l'esthétique saisit un bord de la cire et la retire rapidement dans le sens inverse de la pousse des poils. Cette action arrache les poils à la racine, laissant la peau temporairement lisse et sans poils.</p><h2>Soin post-épilation</h2><p>Après l'épilation, il est courant d'appliquer une lotion apaisante ou une crème hydratante pour calmer la peau et minimiser les irritations. Les poils repousseront progressivement, généralement en quelques semaines.</p><p>L'épilation à la cire peut être réalisée sur différentes parties du corps, notamment les jambes, les aisselles, le maillot, le visage et d'autres zones où les poils non désirés sont présents. Cette méthode d'épilation offre plusieurs avantages, notamment une peau qui reste lisse plus longtemps qu'après un rasage, car les poils sont arrachés à la racine. Cependant, il y a aussi des inconvénients potentiels, tels que la douleur associée à l'arrachage des poils et la possibilité d'irritation de la peau.</p><p>Il existe différentes formules de cire, notamment la cire chaude, la cire tiède ou la cire froide, chacune ayant ses propres avantages et inconvénients. Certaines personnes choisissent également de réaliser l'épilation à la cire à la maison à l'aide de kits disponibles dans le commerce, bien que cela puisse nécessiter de la pratique pour obtenir de bons résultats.</p><p>Il est recommandé de faire appel à un professionnel expérimenté pour l'épilation à la cire, en particulier pour les zones sensibles, car cela réduit le risque de blessures ou d'irritations de la peau.</p>",
    "priceTitle": "Tarif — Épilation",
    "prices": [
     {
@@ -874,7 +890,7 @@
      "amount": "25 €"
     },
     {
-     "name": "Demi-Jambes",
+     "name": "Demi-jambes",
      "amount": "20 €"
     },
     {
@@ -887,23 +903,23 @@
      "src": "soins/cire.webp",
      "w": 801,
      "h": 1367,
-     "alt": "Image illustrative"
+     "alt": "Cire épilatoire dorée qui coule d'une spatule"
     }
    ]
   },
   "dents": {
    "title": "Le blanchiment des dents",
    "metaTitle": "Le blanchiment des dents — My Bubble Beauty",
-   "description": "Le blanchiment des dents est une procédure esthétique conçue pour éclaircir la couleur des dents, les rendant plus blanches et plus lumineuses. Cette…",
-   "articleHtml": "<p>Le blanchiment des dents est une procédure esthétique conçue pour éclaircir la couleur des dents, les rendant plus blanches et plus lumineuses. Cette procédure est couramment pratiquée en dentisterie esthétique pour améliorer l'apparence du sourire en éliminant les taches et les décolorations sur les dents. Voici comment fonctionne le blanchiment des dents en esthétique</p><h2>Évaluation initiale</h2><p>Avant de commencer le processus de blanchiment des dents, un dentiste ou un professionnel de l’esthétique effectue une évaluation initiale pour déterminer si le patient est un bon candidat pour la procédure. Certaines personnes peuvent ne pas être éligibles en raison de problèmes dentaires sous-jacents.</p><h2>Préparation</h2><p>Avant de commencer la procédure de blanchiment des dents, les dents du patient sont nettoyées pour éliminer la plaque dentaire et le tartre, ce qui peut interférer avec le blanchiment.</p><h2>Options de blanchiment</h2><p>Blanchiment à domicile : Le dentiste peut fournir un kit de blanchiment à domicile contenant des gouttières personnalisées et un gel de blanchiment à faible concentration en peroxyde d'hydrogène ou en peroxyde de carbamide. Le patient remplit les gouttières avec le gel et les porte pendant une période spécifique chaque jour pendant quelques semaines. C'est un processus graduel.</p><p>Blanchiment en cabinet : Cette méthode est également appelée blanchiment professionnel en chaise. Le dentiste applique un gel de blanchiment plus concentré sur les dents du patient, puis utilise une lumière spéciale ou un laser pour activer le gel. Ce processus est généralement plus rapide et peut offrir des résultats immédiats.</p><h2>Suivi</h2><p>Après la procédure de blanchiment, le patient peut être invité à éviter certains aliments et boissons potentiellement tachantes (comme le café, le thé, le vin rouge) pendant un certain temps pour maintenir les résultats. Un bon entretien bucco-dentaire, y compris le brossage et la soie dentaire réguliers, est également essentiel.</p><h2>Soins post-traitement</h2><p>Le principe de base du blanchiment des dents repose sur l'utilisation de produits contenant du peroxyde d'hydrogène ou du peroxyde de carbamide. Ces substances chimiques pénètrent dans l'émail dentaire et réagissent avec les molécules responsables des taches et des décolorations, les décomposant pour éclaircir la couleur des dents. Cependant, il est important de noter que le blanchiment des dents n'est pas permanent, et les résultats peuvent varier d'une personne à l'autre en fonction de divers facteurs, notamment le type de taches dentaires et les habitudes de consommation.</p><h2>Consultation préalable</h2><p>Il est fortement recommandé de consulter un dentiste ou un professionnel de l’esthétique dentaire avant de procéder à un blanchiment des dents, car cela peut ne pas être approprié pour tout le monde, en particulier pour les personnes ayant des problèmes dentaires préexistants. De plus, le blanchiment des dents doit être effectué sous la supervision d'un professionnel pour garantir la sécurité et l'efficacité du traitement.</p>",
-   "priceTitle": "Tarif — Blanchiment des Dents",
+   "description": "Le blanchiment des dents est un soin esthétique qui vise à éclaircir la couleur des dents et à atténuer les taches. Déroulement, précautions et tarifs.",
+   "articleHtml": "<p>Le blanchiment des dents est un soin esthétique conçu pour éclaircir la couleur des dents, les rendant plus blanches et plus lumineuses. Ce soin est couramment pratiqué en dentisterie esthétique pour améliorer l'apparence du sourire en atténuant les taches et les décolorations sur les dents. Voici comment fonctionne le blanchiment des dents en esthétique :</p><h2>Évaluation initiale</h2><p>Avant de commencer le processus de blanchiment des dents, un dentiste ou un professionnel de l'esthétique effectue une évaluation initiale pour déterminer si le soin vous convient. Certaines personnes peuvent ne pas être éligibles en raison de problèmes dentaires sous-jacents.</p><h2>Préparation</h2><p>Vos dents sont d'abord nettoyées pour éliminer la plaque dentaire et le tartre, qui peuvent interférer avec le blanchiment.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours, des dents sensibles ou des gencives irritées.</p><h2>Options de blanchiment</h2><p>Blanchiment à domicile : le dentiste peut fournir un kit de blanchiment à domicile contenant des gouttières personnalisées et un gel de blanchiment à faible concentration en peroxyde d'hydrogène ou en peroxyde de carbamide. Vous remplissez les gouttières avec le gel et les portez pendant une période spécifique chaque jour pendant quelques semaines. C'est un processus graduel.</p><p>Blanchiment en cabinet : cette méthode est également appelée blanchiment professionnel au fauteuil. Le dentiste applique un gel de blanchiment plus concentré sur vos dents, puis utilise une lumière spéciale ou un laser pour activer le gel. Ce processus est généralement plus rapide et peut offrir des résultats immédiats.</p><h2>Suivi</h2><p>Après le blanchiment, il peut vous être conseillé d'éviter certains aliments et boissons potentiellement tachants (comme le café, le thé, le vin rouge) pendant un certain temps pour maintenir les résultats. Un bon entretien bucco-dentaire, y compris le brossage et la soie dentaire réguliers, est également essentiel.</p><h2>Fonctionnement du blanchiment</h2><p>Le principe de base du blanchiment des dents repose sur l'utilisation de produits contenant du peroxyde d'hydrogène ou du peroxyde de carbamide. Ces substances chimiques pénètrent dans l'émail dentaire et réagissent avec les molécules responsables des taches et des décolorations, les décomposant pour éclaircir la couleur des dents. Cependant, il est important de noter que le blanchiment des dents n'est pas permanent, et les résultats peuvent varier d'une personne à l'autre en fonction de divers facteurs, notamment le type de taches dentaires et les habitudes de consommation.</p><h2>Consultation préalable</h2><p>Il est fortement recommandé de consulter un dentiste ou un professionnel de l'esthétique dentaire avant de procéder à un blanchiment des dents, car cela peut ne pas être approprié pour tout le monde, en particulier pour les personnes ayant des problèmes dentaires préexistants. De plus, le blanchiment des dents doit être effectué sous la supervision d'un professionnel pour favoriser la sécurité et l'efficacité du traitement.</p>",
+   "priceTitle": "Tarif — Blanchiment des dents",
    "prices": [
     {
-     "name": "1 Séance",
+     "name": "1 séance",
      "amount": "90 €"
     },
     {
-     "name": "2 Séances",
+     "name": "2 séances",
      "amount": "120 €"
     }
    ],
@@ -912,16 +928,16 @@
      "src": "soins/dents.webp",
      "w": 917,
      "h": 492,
-     "alt": "Image illustrative"
+     "alt": "Sourire avant et après un blanchiment des dents"
     }
    ]
   },
   "hifu": {
-   "title": "Le HIFU en Esthétique",
-   "metaTitle": "Le HIFU en Esthétique — My Bubble Beauty",
-   "description": "Le HIFU ou High-Intensity Focused Ultrasound est une technologie qui utilise des ultrasons focalisés de haute intensité pour chauffer les tissus…",
-   "articleHtml": "<p>Le HIFU ou High-Intensity Focused Ultrasound est une technologie qui utilise des ultrasons focalisés de haute intensité pour chauffer les tissus sous-cutanés à des profondeurs spécifiques sans endommager la surface de la peau. Cette chaleur induit une réaction de coagulation dans les tissus, stimulant ainsi la production de collagène et améliorant la fermeté de la peau.</p><h2>Applications en Esthétique</h2><p>Le HIFU est utilisé en esthétique pour traiter divers problèmes de peau et de rajeunissement, notamment le raffermissement de la peau, la réduction des rides et ridules, ainsi que le lifting non chirurgical. Il peut aider à réduire le relâchement cutané et à améliorer la fermeté de la peau du visage, du cou et d'autres zones du corps. Le HIFU peut atténuer l'apparence des rides et des ridules en stimulant la production de collagène. Il est parfois appelé \"lifting HIFU\" en raison de ses effets raffermissants similaires à ceux d'un lifting chirurgical, mais sans chirurgie ni temps de récupération significatif.</p><h2>Procédure</h2><p>Pendant une séance de HIFU, un dispositif émet des ultrasons focalisés de haute intensité à des profondeurs précises dans les tissus ciblés. Cette énergie ultrasonore chauffe les tissus sous-cutanés, stimulant la production de collagène. Les résultats ne sont généralement pas immédiats, mais s'améliorent progressivement au fil des semaines et des mois à mesure que le collagène se régénère.</p><h2>Sécurité et Confort</h2><p>Le HIFU est considéré comme une procédure non invasive et présente généralement peu d'effets secondaires. Les patients peuvent ressentir une sensation de chaleur pendant la séance, mais la procédure est bien tolérée et ne nécessite généralement pas d'anesthésie.</p><h2>Nombre de Séances</h2><p>Le nombre de séances nécessaires dépend du traitement spécifique et des objectifs du patient. En général, plusieurs séances peuvent être recommandées pour obtenir les meilleurs résultats.</p><h2>Résultats</h2><p>Les résultats du HIFU sont progressifs et peuvent durer plusieurs mois. La peau devient plus ferme, les rides sont atténuées, et le visage peut paraître plus tonique.</p><p>Le HIFU est une option prisée en esthétique en raison de son efficacité pour le raffermissement de la peau sans chirurgie. Cependant, comme pour toute procédure esthétique, il est important de consulter un professionnel de la santé qualifié pour discuter des options appropriées en fonction de vos besoins individuels et pour vous assurer que le HIFU est la meilleure solution pour vous.</p><p class=\"video-link\"><a class=\"btn btn--ghost\" href=\"https://www.youtube.com/watch?v=8P2RqfhO8i0\" rel=\"noopener\">Voir la vidéo sur YouTube</a> <small>La vidéo s'ouvre sur YouTube.</small></p>",
-   "priceTitle": "Tarif — Hifu",
+   "title": "Le HIFU en esthétique",
+   "metaTitle": "Le HIFU en esthétique — My Bubble Beauty",
+   "description": "Le HIFU, ou High-Intensity Focused Ultrasound, chauffe par ultrasons focalisés les tissus sous la peau et stimule la production de collagène.",
+   "articleHtml": "<p>Le HIFU, ou High-Intensity Focused Ultrasound, est une technologie qui utilise des ultrasons focalisés de haute intensité pour chauffer les tissus sous-cutanés à des profondeurs spécifiques sans endommager, en principe, la surface de la peau. Cette chaleur induit une réaction de coagulation dans les tissus, stimulant ainsi la production de collagène et pouvant améliorer la fermeté de la peau.</p><h2>Applications en esthétique</h2><p>Le HIFU est utilisé en esthétique pour répondre à diverses préoccupations cutanées et à des objectifs de rajeunissement, notamment le raffermissement de la peau, la réduction des rides et ridules, ainsi que le lifting non chirurgical. Il peut aider à réduire le relâchement cutané et à améliorer la fermeté de la peau du visage, du cou et d'autres zones du corps. Le HIFU peut atténuer l'apparence des rides et des ridules en stimulant la production de collagène. Il est parfois appelé « lifting HIFU » en raison de ses effets raffermissants, obtenus sans chirurgie et en général sans temps de récupération significatif. Il ne remplace cependant pas un lifting chirurgical.</p><h2>Déroulement du soin</h2><p>Pendant une séance de HIFU, un dispositif émet des ultrasons focalisés de haute intensité à des profondeurs précises dans les tissus ciblés. Cette énergie ultrasonore chauffe les tissus sous-cutanés, stimulant la production de collagène. Les résultats ne sont généralement pas immédiats, mais s'améliorent progressivement au fil des semaines et des mois à mesure que le collagène se régénère.</p><h2>Sécurité et confort</h2><p>Le HIFU est considéré comme un soin non invasif et présente généralement peu d'effets secondaires. Vous pouvez ressentir une sensation de chaleur pendant la séance, mais le soin est le plus souvent bien toléré et ne nécessite généralement pas d'anesthésie.</p><h2>Nombre de séances</h2><p>Le nombre de séances nécessaires dépend du traitement spécifique et de vos objectifs. En général, plusieurs séances peuvent être recommandées pour obtenir les meilleurs résultats.</p><h2>Résultats</h2><p>Les résultats du HIFU sont progressifs et peuvent durer plusieurs mois. La peau peut gagner en fermeté, les rides peuvent être atténuées, et le visage peut paraître plus tonique.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><p>Le HIFU est une option prisée en esthétique pour qui souhaite raffermir la peau sans chirurgie. Cependant, comme pour tout soin esthétique, il est important de consulter un professionnel de la santé qualifié pour discuter des options appropriées en fonction de vos besoins individuels et pour vous assurer que le HIFU est la meilleure solution pour vous.</p><p class=\"video-link\"><a class=\"btn btn--ghost\" href=\"https://www.youtube.com/watch?v=8P2RqfhO8i0\" rel=\"noopener\">Voir la vidéo sur YouTube</a> <small>La vidéo s'ouvre sur YouTube.</small></p>",
+   "priceTitle": "Tarif — HIFU",
    "prices": [
     {
      "name": "Haut du visage",
@@ -961,15 +977,15 @@
      "src": "soins/hifu.webp",
      "w": 800,
      "h": 800,
-     "alt": "Image illustrative"
+     "alt": "Schéma d'un appareil HIFU et des couches de la peau qu'il cible"
     }
    ]
   },
   "hydra": {
-   "title": "Hydrafacial",
-   "metaTitle": "Hydrafacial — My Bubble Beauty",
-   "description": "Un hydrafacial est un traitement esthétique non invasif qui vise à améliorer l'apparence de la peau du visage en combinant plusieurs techniques, notamment…",
-   "articleHtml": "<p>Un hydrafacial est un traitement esthétique non invasif qui vise à améliorer l'apparence de la peau du visage en combinant plusieurs techniques, notamment l'exfoliation, le nettoyage en profondeur, l'hydratation et la protection. Il est conçu pour traiter divers problèmes de peau, tels que l'acné, les rides, les taches pigmentaires, la texture inégale de la peau et l'hyperpigmentation.</p><h2>Fonctionnement</h2><p>Nettoyage : Le processus commence par un nettoyage en profondeur de la peau pour éliminer les impuretés, l'excès de sébum et les cellules mortes de la peau.</p><p>Exfoliation : Ensuite, une solution d'exfoliation douce est appliquée sur la peau pour éliminer les cellules mortes de la surface, révélant une peau plus fraîche et plus lisse.</p><p>Extraction : Le système d'hydrafacial utilise une aspiration douce pour extraire les impuretés des pores de la peau, ce qui peut contribuer à réduire l'acné et à désobstruer les pores.</p><p>Hydratation : Une solution hydratante enrichie en antioxydants, en peptides et en acides hyaluroniques est ensuite appliquée pour nourrir et hydrater la peau en profondeur.</p><p>Protection : Enfin, un écran solaire ou un produit de protection solaire est souvent appliqué pour protéger la peau fraîchement traitée des rayons UV nocifs.</p><h2>Résultats</h2><p>L'ensemble du traitement est relativement rapide et peu inconfortable. Il est souvent décrit comme agréable et relaxant par les personnes qui le reçoivent. Les résultats d'un hydrafacial peuvent varier en fonction de la personne, mais de nombreuses personnes constatent une amélioration immédiate de l'apparence de leur peau, avec une peau plus lumineuse, plus douce et un teint plus uniforme..</p><p>source: HydraFacial UK</p>",
+   "title": "HydraFacial",
+   "metaTitle": "HydraFacial — My Bubble Beauty",
+   "description": "Un HydraFacial est un soin esthétique non invasif qui vise à améliorer l'apparence de la peau du visage par le nettoyage, l'exfoliation et l'hydratation.",
+   "articleHtml": "<p>Un HydraFacial est un traitement esthétique non invasif qui vise à améliorer l'apparence de la peau du visage en combinant plusieurs techniques, notamment l'exfoliation, le nettoyage en profondeur, l'hydratation et la protection. Il est conçu pour atténuer l'aspect de divers problèmes de peau, tels que les imperfections des peaux à tendance acnéique, les rides, les taches pigmentaires et la texture inégale de la peau.</p><h2>Fonctionnement</h2><p>Nettoyage : Le processus commence par un nettoyage en profondeur de la peau pour éliminer les impuretés, l'excès de sébum et les cellules mortes de la peau.</p><p>Exfoliation : Ensuite, une solution d'exfoliation douce est appliquée sur la peau pour éliminer les cellules mortes de la surface et révéler une peau plus fraîche et plus lisse.</p><p>Extraction : Le système HydraFacial utilise une aspiration douce pour extraire les impuretés des pores de la peau, ce qui peut contribuer à réduire les imperfections et à désobstruer les pores.</p><p>Hydratation : Une solution hydratante enrichie en antioxydants, en peptides et en acide hyaluronique est ensuite appliquée pour nourrir et hydrater la peau en profondeur.</p><p>Protection : Enfin, un écran solaire ou un produit de protection solaire est souvent appliqué pour protéger la peau fraîchement traitée des rayons UV nocifs.</p><h2>Résultats</h2><p>L'ensemble du traitement est relativement rapide et peu inconfortable. Il est souvent décrit comme agréable et relaxant par les personnes qui le reçoivent. Les résultats d'un HydraFacial peuvent varier en fonction de la personne. Le soin vise une amélioration immédiate de l'apparence de la peau, avec une peau plus lumineuse, plus douce et un teint plus uniforme.</p><p>Source : HydraFacial UK</p>",
    "priceTitle": "Tarif",
    "prices": [
     {
@@ -982,16 +998,16 @@
      "src": "soins/hydrafacial.webp",
      "w": 900,
      "h": 600,
-     "alt": "Image illustrative"
+     "alt": "Esthéticienne réalisant un soin HydraFacial sur le visage d'une cliente"
     }
    ]
   },
   "laserepilation": {
-   "title": "L'épilation définitive au laser en esthétique",
-   "metaTitle": "L'épilation définitive au laser en esthétique — My Bubble Beauty",
-   "description": "L'épilation au laser fonctionne en utilisant un laser spécifique qui émet une lumière intense. Cette lumière est absorbée par la mélanine présente dans les…",
-   "articleHtml": "<p>L'épilation au laser fonctionne en utilisant un laser spécifique qui émet une lumière intense. Cette lumière est absorbée par la mélanine présente dans les follicules pileux. Lorsque la mélanine absorbe l'énergie du laser, elle se transforme en chaleur, ce qui endommage le follicule pileux. Cela inhibe la croissance future des poils.</p><h2>Types de lasers</h2><p>Il existe différents types de lasers utilisés en épilation définitive, notamment les lasers Alexandrite, les lasers Nd:YAG, et les lasers diode. Le choix dépend souvent de la couleur de la peau et des poils du patient.</p><h2>Séance d'épilation au laser</h2><p>Pendant une séance d'épilation au laser, le professionnel de l'esthétique applique le laser sur la zone à traiter. Les patients portent généralement des lunettes de protection pour protéger leurs yeux de la lumière intense. La séance peut être légèrement inconfortable, mais elle est généralement bien tolérée par la plupart des patients.</p><h2>Séries de séances</h2><p>L'épilation au laser n'est pas une procédure unique. Pour obtenir des résultats optimaux, plusieurs séances espacées de quelques semaines sont nécessaires, car les poils poussent en différents cycles.</p><h2>Résultats</h2><p>Les résultats de l'épilation au laser varient d'une personne à l'autre, mais de nombreux patients constatent une réduction significative de la croissance des poils après quelques séances. Une grande partie des poils peut être éliminée de manière permanente, bien que des retouches occasionnelles puissent être nécessaires pour traiter les poils résiduels.</p><h2>Sécurité</h2><p>L'épilation au laser est généralement considérée comme une procédure sûre lorsqu'elle est effectuée par un professionnel qualifié. Les effets secondaires courants sont temporaires et peuvent inclure une rougeur, une sensation de chaleur ou des démangeaisons dans la zone traitée.</p><h2>Avantages</h2><p>L'épilation au laser offre de nombreux avantages, notamment une réduction permanente de la croissance des poils, une peau lisse et une diminution du besoin de rasage ou d'épilation à la cire.</p><h2>Consultation préalable</h2><p>Avant de subir une épilation au laser, il est recommandé de consulter un professionnel de l'esthétique pour évaluer votre type de peau, la couleur de vos poils et déterminer si vous êtes un bon candidat pour la procédure.</p><p>L'épilation définitive au laser est une option populaire pour ceux qui souhaitent se débarrasser de manière permanente des poils indésirables. Cependant, il est essentiel de consulter un professionnel qualifié pour discuter des attentes, des résultats possibles et des précautions à prendre avant de subir ce traitement.</p><p class=\"video-link\"><a class=\"btn btn--ghost\" href=\"https://www.youtube.com/watch?v=bRvnZGqtHoc\" rel=\"noopener\">Voir la vidéo sur YouTube</a> <small>La vidéo s'ouvre sur YouTube.</small></p>",
-   "priceTitle": "Tarif — Epilation définitive",
+   "title": "L'épilation au laser longue durée en esthétique",
+   "metaTitle": "Épilation laser longue durée — My Bubble Beauty",
+   "description": "L'épilation laser longue durée utilise une lumière absorbée par la mélanine du poil pour freiner sa repousse. Plusieurs séances espacées sont nécessaires.",
+   "articleHtml": "<p>L'épilation au laser fonctionne en utilisant un laser spécifique qui émet une lumière intense. Cette lumière est absorbée par la mélanine présente dans les follicules pileux. L'énergie absorbée par la mélanine se transforme en chaleur, ce qui endommage le follicule pileux. Cela inhibe la croissance future des poils.</p><h2>Types de lasers</h2><p>Il existe différents types de lasers utilisés pour l'épilation, notamment les lasers Alexandrite, les lasers Nd:YAG et les lasers diode. Le choix dépend souvent de la couleur de votre peau et de vos poils.</p><h2>Séance d'épilation au laser</h2><p>Pendant une séance d'épilation au laser, le professionnel de l'esthétique applique le laser sur la zone à traiter. Vous portez généralement des lunettes de protection pour protéger vos yeux de la lumière intense. La séance peut être légèrement inconfortable, mais elle est généralement bien tolérée par la plupart des clients.</p><h2>Séries de séances</h2><p>L'épilation au laser n'est pas un soin ponctuel. Pour obtenir des résultats optimaux, plusieurs séances espacées de quelques semaines sont nécessaires, car les poils poussent en différents cycles.</p><h2>Résultats</h2><p>Les résultats de l'épilation au laser varient d'une personne à l'autre, mais de nombreux clients constatent une réduction significative de la croissance des poils après quelques séances. Une grande partie des poils peut être éliminée de manière durable, bien que des retouches occasionnelles puissent être nécessaires pour traiter les poils résiduels.</p><h2>Sécurité</h2><p>L'épilation au laser est généralement considérée comme un soin sûr lorsqu'elle est effectuée par un professionnel qualifié. Les effets secondaires courants sont temporaires et peuvent inclure une rougeur, une sensation de chaleur ou des démangeaisons dans la zone traitée.</p><h2>Avantages</h2><p>L'épilation au laser offre de nombreux avantages, notamment une réduction durable de la croissance des poils, une peau lisse et une diminution du besoin de rasage ou d'épilation à la cire.</p><h2>Consultation préalable</h2><p>Avant de subir une épilation au laser, il est recommandé de consulter un professionnel de l'esthétique pour évaluer votre type de peau, la couleur de vos poils et déterminer si vous êtes un bon candidat pour le soin.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><p>L'épilation au laser est une option populaire pour ceux qui souhaitent réduire durablement les poils indésirables. Cependant, il est essentiel de consulter un professionnel qualifié pour discuter des attentes, des résultats possibles et des précautions à prendre avant de subir ce traitement.</p><p class=\"video-link\"><a class=\"btn btn--ghost\" href=\"https://www.youtube.com/watch?v=bRvnZGqtHoc\" rel=\"noopener\">Voir la vidéo sur YouTube</a> <small>La vidéo s'ouvre sur YouTube.</small></p>",
+   "priceTitle": "Tarif — Épilation laser longue durée",
    "prices": [
     {
      "name": "Menton",
@@ -1022,7 +1038,7 @@
      "amount": "100 €"
     },
     {
-     "name": "Demi-Jambes",
+     "name": "Demi-jambes",
      "amount": "180 €"
     },
     {
@@ -1035,49 +1051,49 @@
      "src": "soins/laser.webp",
      "w": 877,
      "h": 357,
-     "alt": "Image illustrative"
+     "alt": "Schéma de la peau avant le traitement, avec des poils à différentes phases de pousse"
     },
     {
      "src": "soins/laser2.webp",
      "w": 825,
      "h": 290,
-     "alt": "Image illustrative"
+     "alt": "Schéma de la peau avant le traitement, poils rasés"
     },
     {
      "src": "soins/etape-3-epilation-laser.webp",
      "w": 894,
      "h": 344,
-     "alt": "Image illustrative"
+     "alt": "Schéma de la peau pendant le traitement : la pièce à main chauffe la zone du poil"
     },
     {
      "src": "soins/etape-4-epilation-laser.webp",
      "w": 869,
      "h": 290,
-     "alt": "Image illustrative"
+     "alt": "Schéma de la peau après le traitement : bulbes atteints et non atteints par la chaleur"
     },
     {
      "src": "soins/etape-5-epilation-laser.webp",
      "w": 960,
      "h": 336,
-     "alt": "Image illustrative"
+     "alt": "Schéma de la peau après le traitement, au moment de la chute du poil"
     },
     {
      "src": "soins/etape-6-epilation-laser.webp",
      "w": 960,
      "h": 334,
-     "alt": "Image illustrative"
+     "alt": "Schéma de la peau quatre à six semaines après le traitement"
     }
    ]
   },
   "lipolaser": {
-   "title": "LIPO LASER",
-   "metaTitle": "LIPO LASER — My Bubble Beauty",
-   "description": "Le traitement de lipolyse laser, communément appelé \"lipo laser\", est une procédure esthétique non invasive qui vise à réduire la graisse corporelle,…",
-   "articleHtml": "<p>Le traitement de lipolyse laser, communément appelé \"lipo laser\", est une procédure esthétique non invasive qui vise à réduire la graisse corporelle, principalement dans des zones ciblées comme l'abdomen, les cuisses, les bras ou les flancs. Voici comment fonctionne généralement un traitement de lipo laser :</p><h2>Consultation initiale</h2><p>Avant de subir un traitement de lipo laser, vous aurez une consultation initiale avec un professionnel de l'esthétique. Lors de cette consultation, vos objectifs de perte de graisse et les zones à traiter seront discutés, et des mesures de base de votre santé et de votre condition physique seront prises en compte.</p><h2>Préparation</h2><p>Le jour de la procédure, la zone à traiter sera nettoyée. Des photographies peuvent être prises pour suivre les progrès au fil du temps.</p><h2>Application des lasers</h2><p>Des appareils émettant des diodes laser à bas niveau sont placés directement sur la peau de la zone à traiter. Ces lasers émettent des longueurs d'onde spécifiques qui sont absorbées par les cellules graisseuses situées sous la peau.</p><h2>Rupture des cellules graisseuses</h2><p>Les lasers stimulent les cellules graisseuses, provoquant leur rupture. Ce processus s'appelle la lipolyse, ce qui signifie que les cellules graisseuses libèrent leurs triglycérides sous forme d'acides gras et de glycérol.</p><h2>Élimination des graisses</h2><p>Les acides gras et le glycérol libérés pendant la lipolyse sont naturellement éliminés par le corps. Cela peut se produire par le système lymphatique et le foie.</p><h2>Après le traitement</h2><p>Après la séance de lipo laser, il est souvent recommandé de faire de l'exercice physique pour aider à brûler les graisses libérées. Il est également important de maintenir une hydratation adéquate pour faciliter l'élimination des graisses.</p><h2>Séances multiples</h2><p>Un seul traitement de lipo laser peut donner des résultats légers, de sorte que plusieurs séances sont généralement nécessaires pour obtenir des résultats significatifs. Ces séances sont généralement espacées de quelques semaines.</p><p>Il est important de noter que la lipo laser est destinée à réduire la graisse corporelle, mais elle n'est pas un substitut à une alimentation équilibrée et à l'exercice physique. Pour maintenir les résultats, il est essentiel de maintenir un mode de vie sain.</p>",
+   "title": "La lipo laser",
+   "metaTitle": "La lipo laser — My Bubble Beauty",
+   "description": "La lipolyse laser, ou « lipo laser », est un soin esthétique non invasif qui vise à réduire la graisse corporelle sur des zones ciblées comme l'abdomen.",
+   "articleHtml": "<p>Le traitement de lipolyse laser, communément appelé « lipo laser », est un soin esthétique non invasif qui vise à réduire la graisse corporelle, principalement dans des zones ciblées comme l'abdomen, les cuisses, les bras ou les flancs. Voici comment fonctionne généralement un traitement de lipo laser :</p><h2>Consultation initiale</h2><p>Avant de subir un traitement de lipo laser, vous aurez une consultation initiale avec un professionnel de l'esthétique. Lors de cette consultation, vos objectifs de perte de graisse et les zones à traiter seront discutés, et des mesures de base de votre santé et de votre condition physique seront prises en compte.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><h2>Préparation</h2><p>Le jour du soin, la zone à traiter sera nettoyée. Des photographies peuvent être prises pour suivre les progrès au fil du temps.</p><h2>Application des lasers</h2><p>Les appareils de lipo laser contiennent des diodes qui émettent une lumière laser de faible intensité. Ils sont placés directement sur la peau de la zone à traiter. Ces lasers émettent des longueurs d'onde spécifiques qui sont absorbées par les cellules graisseuses situées sous la peau.</p><h2>Action sur les cellules graisseuses</h2><p>Les lasers visent à stimuler les cellules graisseuses pour favoriser la libération de leur contenu. Ce processus s'appelle la lipolyse, ce qui signifie que les cellules graisseuses libèrent leurs triglycérides sous forme d'acides gras et de glycérol.</p><h2>Élimination des graisses</h2><p>Les acides gras et le glycérol libérés pendant la lipolyse sont naturellement éliminés par le corps. Cela peut se produire par le système lymphatique et le foie.</p><h2>Après le traitement</h2><p>Après la séance de lipo laser, il est souvent recommandé de faire de l'exercice physique pour aider à brûler les graisses libérées. Il est également important de maintenir une hydratation adéquate pour faciliter l'élimination des graisses.</p><h2>Séances multiples</h2><p>Un seul traitement de lipo laser peut donner des résultats légers, de sorte que plusieurs séances sont généralement nécessaires pour espérer des résultats plus visibles, qui varient d'une personne à l'autre. Ces séances sont généralement espacées de quelques semaines.</p><p>Il est important de noter que la lipo laser est destinée à réduire la graisse corporelle, mais elle n'est pas un substitut à une alimentation équilibrée et à l'exercice physique. Pour conserver les résultats, il est essentiel de maintenir un mode de vie sain.</p>",
    "priceTitle": "Tarif",
    "prices": [
     {
-     "name": "Lipo-Laser",
+     "name": "Lipo-laser",
      "amount": "50 €"
     }
    ],
@@ -1086,15 +1102,15 @@
      "src": "soins/lipolaser.webp",
      "w": 750,
      "h": 302,
-     "alt": "Image illustrative"
+     "alt": "Schéma comparant une peau cellulitique avant et après une cure de lipo laser"
     }
    ]
   },
   "mado": {
    "title": "La maderothérapie",
    "metaTitle": "La maderothérapie — My Bubble Beauty",
-   "description": "La maderothérapie est une technique de massage et de remodelage corporel qui utilise des outils en bois spécialement conçus, tels que des rouleaux, des…",
-   "articleHtml": "<p>La maderothérapie est une technique de massage et de remodelage corporel qui utilise des outils en bois spécialement conçus, tels que des rouleaux, des bâtons et des cuillères en bois, pour améliorer la texture de la peau, réduire la cellulite, et favoriser la relaxation. Le terme \"maderothérapie\" provient du mot espagnol \"madera,\" qui signifie bois, et de \"thérapie.\"</p><h2>Préparation</h2><p>Avant le traitement, le professionnel de la santé ou de l'esthétique discute avec le patient de ses objectifs et de ses préoccupations. Ensuite, une huile de massage ou une lotion est appliquée sur la peau pour faciliter le glissement des outils en bois.</p><h2>Massage avec des outils en bois</h2><p>Le praticien utilise des outils en bois spécialement conçus pour effectuer différents types de mouvements de massage. Ces outils en bois ont des formes et des tailles variées, adaptées à différentes parties du corps et à différentes techniques de massage. Les mouvements peuvent être de type palper-rouler, pétrissage, pression, ou des mouvements circulaires, en fonction des objectifs du traitement.</p><h2>Effets</h2><p>La maderothérapie vise à stimuler la circulation sanguine et lymphatique, à déloger les dépôts graisseux, à réduire la rétention d'eau, à lisser la peau, à améliorer la texture de la peau, et à favoriser la détente musculaire. Elle peut également être utilisée pour cibler des zones du corps sujettes à la cellulite.</p><h2>Séances multiples</h2><p>Pour obtenir des résultats optimaux, il est généralement nécessaire de suivre plusieurs séances de maderothérapie. La fréquence des séances dépend des objectifs du patient et de l'état de la peau.</p><p>La maderothérapie est souvent considérée comme un traitement non invasif et relaxant, bien que les sensations pendant le traitement puissent varier en fonction de la pression exercée et des zones traitées. Les avantages de la maderothérapie peuvent inclure une peau plus ferme et plus tonique, une réduction de l'apparence de la cellulite et une amélioration de la circulation sanguine.</p><p>Comme pour tout traitement esthétique, il est recommandé de consulter un professionnel qualifié pour discuter de vos besoins spécifiques, des avantages et des risques potentiels de la maderothérapie, ainsi que pour déterminer si ce traitement est adapté à votre situation.</p>",
+   "description": "La maderothérapie est un massage aux outils en bois qui vise à lisser la peau et à atténuer l'aspect de la cellulite. Découvrez le déroulement et le tarif.",
+   "articleHtml": "<p>La maderothérapie est une technique de massage et de remodelage corporel qui utilise des outils en bois spécialement conçus, tels que des rouleaux, des bâtons et des cuillères en bois, pour améliorer la texture de la peau, atténuer l'aspect de la cellulite et favoriser la relaxation. Le terme « maderothérapie » provient du mot espagnol « madera », qui signifie bois, et de « thérapie ».</p><h2>Préparation</h2><p>Avant le traitement, le praticien discute avec vous de vos objectifs et de vos préoccupations. Ensuite, une huile de massage ou une lotion est appliquée sur la peau pour faciliter le glissement des outils en bois.</p><h2>Massage avec des outils en bois</h2><p>Le praticien utilise des outils en bois spécialement conçus pour effectuer différents types de mouvements de massage. Ces outils en bois ont des formes et des tailles variées, adaptées à différentes parties du corps et à différentes techniques de massage. Les mouvements peuvent être de type palper-rouler, pétrissage, pression ou des mouvements circulaires, en fonction des objectifs du traitement.</p><h2>Effets</h2><p>La maderothérapie vise à travailler les zones de rondeurs localisées, à lisser la peau, à améliorer sa texture et à favoriser la détente musculaire. Elle peut également être utilisée pour cibler des zones du corps sujettes à la cellulite.</p><h2>Séances multiples</h2><p>Pour obtenir des résultats optimaux, il est généralement nécessaire de suivre plusieurs séances de maderothérapie. La fréquence des séances dépend de vos objectifs et de l'état de votre peau.</p><p>La maderothérapie est souvent considérée comme un traitement non invasif et relaxant, bien que les sensations pendant le traitement puissent varier en fonction de la pression exercée et des zones traitées. Les avantages de la maderothérapie peuvent inclure une peau plus ferme et plus tonique ainsi qu'une réduction de l'apparence de la cellulite.</p><p>Comme pour tout traitement esthétique, il est recommandé de consulter un professionnel qualifié pour discuter de vos besoins spécifiques, des avantages et des risques potentiels de la maderothérapie, ainsi que pour déterminer si ce traitement est adapté à votre situation.</p>",
    "priceTitle": "Tarif",
    "prices": [
     {
@@ -1107,15 +1123,15 @@
      "src": "soins/mado.webp",
      "w": 920,
      "h": 908,
-     "alt": "Image illustrative"
+     "alt": "Massage des jambes avec un rouleau en bois de madérothérapie"
     }
    ]
   },
   "microneed": {
-   "title": "Le microneedling/ micropen",
-   "metaTitle": "Le microneedling/ micropen — My Bubble Beauty",
-   "description": "Le microneedling/ micropen est une procédure esthétique qui consiste à utiliser un appareil médical équipé de fines aiguilles pour créer de minuscules…",
-   "articleHtml": "<p>Le microneedling/ micropen est une procédure esthétique qui consiste à utiliser un appareil médical équipé de fines aiguilles pour créer de minuscules perforations contrôlées dans la peau. Cette technique est également connue sous le nom de thérapie par micro-aiguillage ou thérapie par microperforation. Voici comment fonctionne le microneedling :</p><h2>Préparation</h2><p>Avant la procédure, votre professionnel de l’esthétique nettoie soigneusement votre peau et peut appliquer un gel topique anesthésiant pour minimiser l'inconfort. La profondeur des aiguilles est réglée en fonction de vos besoins spécifiques et des zones à traiter.</p><h2>Micropiqûres</h2><p>L'appareil de microneedling est passé doucement sur la peau, créant de petites piqûres. Ces piqûres sont si petites qu'elles sont généralement à peine visibles à l'œil nu. L'appareil est généralement muni de différentes longueurs d'aiguilles pour cibler différentes profondeurs de peau en fonction du problème spécifique à traiter.</p><h2>Stimulation du collagène</h2><p>Les microperforations stimulent la réponse naturelle de la peau en provoquant la production de collagène et d'élastine. Le collagène est une protéine essentielle qui confère à la peau sa fermeté et son élasticité, tandis que l'élastine contribue à maintenir la peau souple. Cette stimulation du collagène aide à réparer et à régénérer la peau, améliorant ainsi sa texture et son apparence.</p><h2>Soins post-traitement</h2><p>Après la procédure, votre professionnel peut appliquer des produits topiques spécifiques, tels que des sérums hydratants ou des facteurs de croissance, pour favoriser la guérison et l'hydratation de la peau. Il est également recommandé d'éviter une exposition excessive au soleil et d'utiliser un écran solaire pour protéger la peau nouvellement traitée.</p><h2>Avantages</h2><p>Le microneedling peut être utilisé pour traiter une variété de problèmes de peau, notamment les rides et les ridules, les cicatrices d'acné, les taches pigmentaires, la perte de fermeté de la peau et d'autres imperfections cutanées. Les résultats ne sont généralement pas immédiatement visibles, car la production de collagène prend du temps. Vous pouvez constater une amélioration progressive de l'apparence de votre peau au fil des semaines suivant la procédure.</p><h2>Séries de séances</h2><p>Le nombre de séances nécessaires dépend de vos objectifs de traitement et de la gravité de vos problèmes de peau. Votre professionnel d’esthétique élaborera un plan de traitement personnalisé pour répondre à vos besoins spécifiques.</p><h2>Consultation préalable</h2><p>Il est important de consulter un professionnel qualifié pour le microneedling, car une mauvaise utilisation de l'appareil ou des aiguilles inappropriées peut entraîner des complications. Cette procédure est généralement considérée comme sûre lorsqu'elle est réalisée par un professionnel expérimenté.</p>",
+   "title": "Le microneedling/micropen",
+   "metaTitle": "Le microneedling/micropen — My Bubble Beauty",
+   "description": "Le microneedling crée de fines perforations contrôlées dans la peau pour en améliorer la texture et l'apparence. Découvrez le déroulement et le tarif.",
+   "articleHtml": "<p>Le microneedling/micropen est un soin esthétique qui consiste à utiliser un appareil équipé de fines aiguilles pour créer de minuscules perforations contrôlées dans la peau. Cette technique est également connue sous le nom de microperforation. Voici comment fonctionne le microneedling :</p><h2>Préparation</h2><p>Avant le soin, votre professionnel de l'esthétique nettoie soigneusement votre peau et peut appliquer un gel topique anesthésiant pour minimiser l'inconfort. La profondeur des aiguilles est réglée en fonction de vos besoins spécifiques et des zones à traiter.</p><h2>Micropiqûres</h2><p>L'appareil de microneedling est passé doucement sur la peau, créant de petites piqûres. Ces piqûres sont si petites qu'elles sont généralement à peine visibles à l'œil nu. L'appareil est généralement muni de différentes longueurs d'aiguilles pour cibler différentes profondeurs de peau en fonction de l'objectif du soin.</p><h2>Stimulation du collagène</h2><p>Les microperforations visent à stimuler la réponse naturelle de la peau, en particulier la production de collagène et d'élastine. Le collagène est une protéine essentielle qui confère à la peau sa fermeté et son élasticité, tandis que l'élastine contribue à maintenir la peau souple. Cette stimulation du collagène peut contribuer à améliorer la texture et l'apparence de la peau.</p><h2>Soins post-traitement</h2><p>Après le soin, votre professionnel peut appliquer des produits topiques spécifiques, tels que des sérums hydratants ou des facteurs de croissance, pour apaiser et hydrater la peau. Il est également recommandé d'éviter une exposition excessive au soleil et d'utiliser un écran solaire pour protéger la peau nouvellement traitée.</p><h2>Avantages</h2><p>Le microneedling peut être utilisé pour améliorer l'apparence de différents problèmes de peau, notamment les rides et les ridules, les cicatrices d'acné, les taches pigmentaires, la perte de fermeté de la peau et d'autres imperfections cutanées. Les résultats ne sont généralement pas immédiatement visibles, car la production de collagène prend du temps. Vous pouvez constater une amélioration progressive de l'apparence de votre peau au fil des semaines suivant le soin.</p><h2>Séries de séances</h2><p>Le nombre de séances nécessaires dépend de vos objectifs de traitement et de l'état de votre peau. Votre professionnel de l'esthétique élaborera un plan de traitement personnalisé pour répondre à vos besoins spécifiques.</p><h2>Consultation préalable</h2><p>Il est important de consulter un professionnel qualifié pour le microneedling, car une mauvaise utilisation de l'appareil ou des aiguilles inappropriées peut entraîner des complications. Ce soin est généralement considéré comme sûr lorsqu'il est réalisé par un professionnel expérimenté.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
    "priceTitle": "Tarif",
    "prices": [
     {
@@ -1128,37 +1144,37 @@
      "src": "soins/microneed.webp",
      "w": 800,
      "h": 650,
-     "alt": "Image illustrative"
+     "alt": "Schéma de la peau avant le microneedling"
     },
     {
      "src": "soins/microneed2.webp",
      "w": 800,
      "h": 650,
-     "alt": "Image illustrative"
+     "alt": "Schéma de la peau pendant le microneedling : le stylo crée de fines perforations"
     },
     {
      "src": "soins/microneedling3.webp",
      "w": 800,
      "h": 650,
-     "alt": "Image illustrative"
+     "alt": "Schéma de la peau pendant le microneedling : un sérum pénètre par les perforations"
     },
     {
      "src": "soins/microneedling4.webp",
      "w": 800,
      "h": 650,
-     "alt": "Image illustrative"
+     "alt": "Schéma de la peau quatre à six semaines après le microneedling"
     }
    ]
   },
   "peeling": {
-   "title": "La peeling superficiel",
-   "metaTitle": "La peeling superficiel — My Bubble Beauty",
-   "description": "Le peeling superficiel est une procédure d'esthétique qui vise à améliorer la texture de la peau, à uniformiser le teint et à atténuer certains problèmes…",
-   "articleHtml": "<p>Le peeling superficiel est une procédure d'esthétique qui vise à améliorer la texture de la peau, à uniformiser le teint et à atténuer certains problèmes cutanés mineurs, tels que les taches pigmentaires, les ridules et l'acné légère. Cette technique utilise une solution chimique douce pour exfolier la couche superficielle de la peau, ce qui stimule le renouvellement cellulaire et favorise une peau plus lisse et plus éclatante. Voici comment fonctionne généralement un peeling superficiel en esthétique :</p><h2>Consultation initiale</h2><p>Avant de subir un peeling superficiel, un professionnel de l’esthétique évalue l'état de votre peau, discute de vos préoccupations spécifiques et détermine si le peeling est adapté à votre type de peau et à vos besoins. Il existe différents types de solutions chimiques pour le peeling, et le choix dépendra de votre type de peau et de l'objectif du traitement.</p><h2>Nettoyage de la peau</h2><p>Avant l'application de la solution peeling, la peau est soigneusement nettoyée pour éliminer la saleté, le maquillage et les huiles.</p><h2>Application de la solution peeling</h2><p>Le professionnel de l'esthétique applique ensuite la solution peeling sur la peau, en veillant à couvrir uniformément la zone à traiter. La solution peut contenir des acides alpha-hydroxy (AHA), des acides bêta-hydroxy (BHA) ou d'autres ingrédients exfoliants doux.</p><h2>Temps d'exposition</h2><p>La solution peeling est laissée sur la peau pendant une courte période de temps déterminée par le professionnel, généralement quelques minutes. La durée dépend de la concentration de la solution et de la tolérance de la peau du patient.</p><h2>Neutralisation</h2><p>Une fois que le temps d'exposition est écoulé, le professionnel neutralise la solution en la rinçant ou en utilisant un produit spécifique pour arrêter l'action chimique.</p><h2>Soin post-peeling</h2><p>Après la procédure, il est important de suivre les instructions du professionnel de l'esthétique en matière de soins post-peeling. Cela peut inclure l'application d'une crème hydratante, l'utilisation de produits spécifiques et l'évitement du soleil pendant un certain temps, car la peau est souvent plus sensible après un peeling.</p><h2>Résultats</h2><p>Les résultats du peeling superficiel ne sont généralement pas immédiatement visibles, car la peau a besoin de temps pour se renouveler. Cependant, au fil des jours et des semaines suivant la procédure, la peau devrait paraître plus lumineuse, plus uniforme et plus lisse.</p><p>Le peeling superficiel est considéré comme une procédure douce et ne nécessite généralement pas de temps d'arrêt prolongé. Cependant, plusieurs séances peuvent être nécessaires pour obtenir les résultats souhaités, et il est essentiel de choisir un professionnel qualifié pour minimiser les risques et optimiser les avantages du traitement. Cette procédure peut être utilisée sur différentes parties du corps, y compris le visage, le cou, le décolleté et les mains, en fonction des besoins du patient.</p>",
+   "title": "Le peeling superficiel",
+   "metaTitle": "Le peeling superficiel — My Bubble Beauty",
+   "description": "Le peeling superficiel, un soin exfoliant doux, vise à améliorer la texture de la peau et à uniformiser le teint. Découvrez le déroulement et le tarif.",
+   "articleHtml": "<p>Le peeling superficiel est un soin esthétique qui vise à améliorer la texture de la peau, à uniformiser le teint et à atténuer certains problèmes cutanés mineurs, tels que les taches pigmentaires, les ridules et les imperfections des peaux à tendance acnéique. Cette technique utilise une solution chimique douce pour exfolier la couche superficielle de la peau, afin de stimuler le renouvellement cellulaire et de favoriser une peau plus lisse et plus éclatante. Voici comment fonctionne généralement un peeling superficiel en esthétique :</p><h2>Consultation initiale</h2><p>Avant un peeling superficiel, un professionnel de l'esthétique évalue l'état de votre peau, discute de vos préoccupations spécifiques et détermine si le peeling est adapté à votre type de peau et à vos besoins. Il existe différents types de solutions chimiques pour le peeling, et le choix dépendra de votre type de peau et de l'objectif du traitement.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><h2>Nettoyage de la peau</h2><p>Avant l'application de la solution de peeling, la peau est soigneusement nettoyée pour éliminer la saleté, le maquillage et l'excès de sébum.</p><h2>Application de la solution de peeling</h2><p>Le professionnel de l'esthétique applique ensuite la solution de peeling sur la peau, en veillant à couvrir uniformément la zone à traiter. La solution peut contenir des acides alpha-hydroxy (AHA), des acides bêta-hydroxy (BHA) ou d'autres ingrédients exfoliants doux.</p><h2>Temps de pose</h2><p>La solution de peeling est laissée sur la peau pendant une courte période de temps déterminée par le professionnel, généralement quelques minutes. La durée dépend de la concentration de la solution et de la tolérance de votre peau.</p><h2>Neutralisation</h2><p>Une fois le temps de pose écoulé, le professionnel neutralise la solution en la rinçant ou en utilisant un produit spécifique pour arrêter l'action chimique.</p><h2>Soin post-peeling</h2><p>Après le soin, il est important de suivre les instructions du professionnel de l'esthétique en matière de soins post-peeling. Cela peut inclure l'application d'une crème hydratante, l'utilisation de produits spécifiques et l'évitement du soleil pendant un certain temps, car la peau est souvent plus sensible après un peeling.</p><h2>Résultats</h2><p>Les résultats du peeling superficiel ne sont généralement pas immédiatement visibles, car la peau a besoin de temps pour se renouveler. Cependant, au fil des jours et des semaines suivant le soin, la peau devrait paraître plus lumineuse, plus uniforme et plus lisse.</p><p>Le peeling superficiel est considéré comme un soin doux et ne nécessite généralement pas de temps d'arrêt prolongé. Cependant, plusieurs séances peuvent être nécessaires pour obtenir les résultats souhaités, et il est essentiel de choisir un professionnel qualifié pour minimiser les risques et optimiser les avantages du traitement. Ce soin peut être réalisé sur différentes parties du corps, y compris le visage, le cou, le décolleté et les mains, selon vos besoins.</p>",
    "priceTitle": "Tarif",
    "prices": [
     {
-     "name": "Peeling Superficiel",
+     "name": "Peeling superficiel",
      "amount": "90 €"
     }
    ],
@@ -1167,27 +1183,27 @@
      "src": "soins/hydra.webp",
      "w": 750,
      "h": 497,
-     "alt": "Image illustrative"
+     "alt": "Schéma de la peau avant le peeling"
     },
     {
      "src": "soins/hydra2.webp",
      "w": 750,
      "h": 497,
-     "alt": "Image illustrative"
+     "alt": "Schéma de la peau pendant le peeling : la solution est appliquée au coton-tige"
     },
     {
      "src": "soins/hydra3.webp",
      "w": 750,
      "h": 497,
-     "alt": "Image illustrative"
+     "alt": "Schéma de la peau quelques jours après le peeling"
     }
    ]
   },
   "photo": {
    "title": "La photothérapie",
    "metaTitle": "La photothérapie — My Bubble Beauty",
-   "description": "La photothérapie, également connue sous le nom de thérapie par la lumière, est une technique utilisée en esthétique pour traiter divers problèmes de peau et…",
-   "articleHtml": "<p>La photothérapie, également connue sous le nom de thérapie par la lumière, est une technique utilisée en esthétique pour traiter divers problèmes de peau et améliorer l'apparence de la peau en utilisant différentes longueurs d'onde de lumière. La photothérapie peut être réalisée à l'aide de divers dispositifs, notamment des lampes LED ou des lasers. Voici comment fonctionne généralement la photothérapie en esthétique :</p><h2>Sélection de la longueur d'onde</h2><p>La photothérapie implique l'utilisation de lumière à une longueur d'onde spécifique, en fonction de l'objectif du traitement. Différentes longueurs d'onde ciblent différents problèmes de peau. Par exemple, la lumière rouge est souvent utilisée pour stimuler la production de collagène et améliorer la texture de la peau, tandis que la lumière bleue est utilisée pour traiter l'acné en tuant les bactéries responsables de l'infection.</p><h2>Préparation de la peau</h2><p>Avant la photothérapie, la peau doit être propre et exempte de produits cosmétiques. Les patients portent souvent des lunettes de protection pour protéger leurs yeux de la lumière intense.</p><h2>Séance de photothérapie</h2><p>Le professionnel de l’esthétique utilise l'appareil de photothérapie pour exposer la peau à la lumière à la longueur d'onde spécifique pendant une période déterminée. La lumière est généralement appliquée uniformément sur la zone à traiter.</p><h2>Réponse de la peau</h2><p>La lumière pénètre dans la peau et interagit avec les cellules cibles, ce qui peut avoir plusieurs effets bénéfiques, tels que la stimulation de la production de collagène, la réduction de l'inflammation, la destruction des bactéries responsables de l'acné, ou la réduction de la pigmentation excessive.</p><h2>Soin post-traitement</h2><p>Après la séance de photothérapie, il peut être nécessaire d'appliquer des produits topiques apaisants ou hydratants pour calmer la peau et minimiser les irritations. Une protection solaire est également importante après le traitement, car la peau peut être plus sensible aux dommages causés par le soleil.</p><h2>Résultats</h2><p>La photothérapie est utilisée pour traiter un large éventail de problèmes de peau, notamment l'acné, les rides, les taches pigmentaires, les cicatrices, le psoriasis et d'autres affections cutanées. Les avantages de la photothérapie comprennent généralement peu ou pas de temps d'arrêt, des résultats progressifs et une réduction des effets secondaires par rapport à d'autres traitements plus invasifs.</p><h2>Durée</h2><p>La durée du traitement et le nombre de séances nécessaires varient en fonction de la condition traitée et de la réponse individuelle de la peau. Il est important de consulter un professionnel de l’esthétique qualifié pour discuter de vos besoins spécifiques et déterminer si la photothérapie est appropriée pour vous.</p>",
+   "description": "La photothérapie, ou thérapie par la lumière, est utilisée en esthétique pour améliorer l'aspect de la peau. Découvrez le déroulement et le tarif.",
+   "articleHtml": "<p>La photothérapie, également connue sous le nom de thérapie par la lumière, est une technique utilisée en esthétique pour améliorer l'aspect de la peau et atténuer l'apparence de diverses imperfections, en utilisant différentes longueurs d'onde de lumière. La photothérapie peut être réalisée à l'aide de divers dispositifs, notamment des lampes LED ou des lasers. Voici comment fonctionne généralement la photothérapie en esthétique :</p><h2>Sélection de la longueur d'onde</h2><p>La photothérapie repose sur l'utilisation d'une lumière à une longueur d'onde spécifique, en fonction de l'objectif du traitement. Différentes longueurs d'onde ciblent différents problèmes de peau. Par exemple, la lumière rouge est souvent utilisée pour stimuler la production de collagène et améliorer la texture de la peau, tandis que la lumière bleue est utilisée pour aider à purifier les peaux à tendance acnéique.</p><h2>Préparation de la peau</h2><p>Avant la photothérapie, la peau doit être propre et exempte de produits cosmétiques. Les clients portent souvent des lunettes de protection pour protéger leurs yeux de la lumière intense.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><h2>Séance de photothérapie</h2><p>Le professionnel de l'esthétique utilise l'appareil de photothérapie pour exposer la peau à la lumière à la longueur d'onde spécifique pendant une période déterminée. La lumière est généralement appliquée uniformément sur la zone à traiter.</p><h2>Réponse de la peau</h2><p>La lumière pénètre dans la peau et interagit avec les cellules cibles, ce qui peut avoir plusieurs effets bénéfiques, tels que la stimulation de la production de collagène, l'apaisement de la peau, la purification des peaux à tendance acnéique, ou l'atténuation de l'aspect d'une pigmentation excessive.</p><h2>Soin post-traitement</h2><p>Après la séance de photothérapie, il peut être nécessaire d'appliquer des produits topiques apaisants ou hydratants pour calmer la peau et minimiser les irritations. Une protection solaire est également importante après le traitement, car la peau peut être plus sensible aux dommages causés par le soleil.</p><h2>Résultats</h2><p>La photothérapie est utilisée pour améliorer l'aspect de nombreux problèmes de peau, notamment les peaux à tendance acnéique, les rides, les taches pigmentaires et les cicatrices. Les avantages de la photothérapie comprennent généralement un temps de récupération court, voire nul, et des résultats progressifs.</p><h2>Durée</h2><p>La durée du traitement et le nombre de séances nécessaires varient en fonction de l'objectif du soin et de la réaction individuelle de la peau. Il est important de consulter un professionnel de l'esthétique qualifié pour discuter de vos besoins spécifiques et déterminer si la photothérapie est appropriée pour vous.</p>",
    "priceTitle": "Tarif",
    "prices": [
     {
@@ -1200,19 +1216,19 @@
      "src": "soins/photo.webp",
      "w": 924,
      "h": 1364,
-     "alt": "Image illustrative"
+     "alt": "Visage d'une cliente sous un panneau de LED rouges"
     }
    ]
   },
   "plasma": {
-   "title": "Le plasma pen/ micropen",
-   "metaTitle": "Le plasma pen/ micropen — My Bubble Beauty",
-   "description": "Le plasma pen/ micropen, également connu sous le nom de stylo plasma ou stylo à plasma, est un dispositif de traitement esthétique relativement récent…",
-   "articleHtml": "<p>Le plasma pen/ micropen, également connu sous le nom de stylo plasma ou stylo à plasma, est un dispositif de traitement esthétique relativement récent utilisé pour traiter divers problèmes de peau, y compris le relâchement cutané, les rides, les cicatrices, les vergetures et les taches pigmentaires. Ce dispositif fonctionne en générant un arc électrique de plasma à la surface de la peau, ce qui provoque une série de micro-lésions contrôlées. Voici comment fonctionne le plasma pen en esthétique</p><h2>Principe de base</h2><p>Le plasma pen utilise l'énergie électrique pour créer un arc de plasma mince et chaud à la pointe du stylo. Le plasma est un gaz ionisé composé de particules chargées, ce qui signifie qu'il contient à la fois des ions positifs et négatifs.</p><h2>Application</h2><p>Le professionnel de l’esthétique utilise le plasma pen pour cibler spécifiquement les zones de la peau qui nécessitent un traitement. Lorsque la pointe du stylo touche la peau, l'arc de plasma est dirigé vers la surface cutanée. Cela crée des micro-points brûlants extrêmement petits sur la peau, sans endommager les tissus environnants.</p><h2>Rétraction de la peau</h2><p>L'application du plasma provoque une rétraction immédiate de la peau, car la chaleur générée entraîne un resserrement des fibres de collagène dans la zone traitée. Cela peut aider à réduire l'apparence du relâchement cutané.</p><h2>Formation de croûtes et de micro-lésions</h2><p>Les micro-points créés par le plasma pen provoquent également la formation de croûtes sur la peau. Au fil des jours suivant la procédure, ces croûtes finissent par se détacher, laissant place à une nouvelle peau en dessous. Pendant ce processus de guérison, la peau produit également du collagène supplémentaire, ce qui peut améliorer la texture et l'apparence générale de la peau.</p><h2>Résultats</h2><p>Les résultats du plasma pen peuvent varier en fonction du problème de peau traité et de la profondeur à laquelle le dispositif a été utilisé. Les patients peuvent voir une amélioration de l'apparence de leur peau au fil du temps à mesure que les effets du collagène se manifestent. Cependant, plusieurs séances peuvent être nécessaires pour obtenir des résultats optimaux.</p><p>Il est important de noter que le plasma pen est une procédure invasive, bien que moins invasive que certaines autres procédures esthétiques. Les patients peuvent éprouver un certain inconfort pendant la procédure, mais des anesthésiants topiques sont généralement appliqués pour minimiser l'inconfort.</p><p>Le plasma pen doit être utilisé par des professionnels de l’esthétique formés et expérimentés, car une utilisation incorrecte peut entraîner des complications ou des cicatrices. Comme pour toute procédure esthétique, il est conseillé de consulter un professionnel de l’esthétique pour discuter de vos besoins spécifiques et déterminer si le plasma pen est approprié pour vous.</p>",
+   "title": "Le plasma pen / micropen",
+   "metaTitle": "Le plasma pen / micropen — My Bubble Beauty",
+   "description": "Appareil esthétique, le plasma pen / micropen vise à améliorer l'aspect du relâchement cutané, des rides, des cicatrices et des taches pigmentaires.",
+   "articleHtml": "<p>Le plasma pen / micropen, également connu sous le nom de stylo plasma ou stylo à plasma, est un dispositif de traitement esthétique relativement récent utilisé pour améliorer l'aspect de divers problèmes de peau, y compris le relâchement cutané, les rides, les cicatrices, les vergetures et les taches pigmentaires. Ce dispositif fonctionne en générant un arc électrique de plasma à la surface de la peau, ce qui provoque une série de micro-lésions contrôlées. Voici comment fonctionne le plasma pen en esthétique :</p><h2>Principe de base</h2><p>Le plasma pen utilise l'énergie électrique pour créer un arc de plasma mince et chaud à la pointe du stylo. Le plasma est un gaz ionisé composé de particules chargées, ce qui signifie qu'il contient des ions et des électrons libres.</p><h2>Application</h2><p>Le professionnel de l'esthétique utilise le plasma pen pour cibler spécifiquement les zones de la peau qui nécessitent un traitement. Lorsque la pointe du stylo touche la peau, l'arc de plasma est dirigé vers la surface cutanée. Cela crée des micro-points brûlants extrêmement petits sur la peau, en limitant l'impact sur les tissus environnants.</p><h2>Rétraction de la peau</h2><p>L'application du plasma peut provoquer une rétraction immédiate de la peau, car la chaleur générée entraîne un resserrement des fibres de collagène dans la zone traitée. Cela peut aider à réduire l'apparence du relâchement cutané.</p><h2>Formation de croûtes et de micro-lésions</h2><p>Les micro-points créés par le plasma pen provoquent également la formation de croûtes sur la peau. Au fil des jours suivant le soin, ces croûtes finissent par se détacher, laissant place à une nouvelle peau en dessous. Pendant cette phase de récupération, la peau produit également du collagène supplémentaire, ce qui peut améliorer la texture et l'apparence générale de la peau.</p><h2>Résultats</h2><p>Les résultats du plasma pen peuvent varier en fonction du problème de peau ciblé et de la profondeur à laquelle le dispositif a été utilisé. Vous pouvez constater une amélioration de l'apparence de votre peau au fil du temps à mesure que les effets du collagène se manifestent. Cependant, plusieurs séances peuvent être nécessaires pour obtenir des résultats optimaux.</p><p>Il est important de noter que le plasma pen est un soin invasif, bien que moins invasif que certains autres soins esthétiques. Vous pouvez ressentir un certain inconfort pendant le soin, mais des anesthésiants topiques sont généralement appliqués pour minimiser l'inconfort.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><p>Le plasma pen doit être utilisé par des professionnels de l'esthétique formés et expérimentés, car une utilisation incorrecte peut entraîner des complications ou des cicatrices. Comme pour tout soin esthétique, il est conseillé de consulter un professionnel de l'esthétique pour discuter de vos besoins spécifiques et déterminer si le plasma pen est approprié pour vous.</p>",
    "priceTitle": "Tarif — Plasma Lift",
    "prices": [
     {
-     "name": "1 Séance",
+     "name": "1 séance",
      "amount": "250 €"
     }
    ],
@@ -1221,15 +1237,15 @@
      "src": "soins/plasma.webp",
      "w": 916,
      "h": 1188,
-     "alt": "Image illustrative"
+     "alt": "Esthéticienne utilisant un stylo plasma sur le visage d'une cliente"
     }
    ]
   },
   "radiofrequence": {
-   "title": "La Radiofréquence",
-   "metaTitle": "La Radiofréquence — My Bubble Beauty",
-   "description": "La radiofréquence est une technologie médicale qui utilise des ondes électromagnétiques pour chauffer en douceur les couches profondes de la peau. Cette…",
-   "articleHtml": "<p>La radiofréquence est une technologie médicale qui utilise des ondes électromagnétiques pour chauffer en douceur les couches profondes de la peau. Cette chaleur stimule la production de collagène, améliore la circulation sanguine, et favorise le resserrement de la peau.</p><h2>Applications en Esthétique</h2><p>La radiofréquence est utilisée dans l'esthétique pour traiter divers problèmes de peau et de rajeunissement, notamment le raffermissement de la peau, la réduction des rides et ridules, la réduction de la cellulite, ainsi que l'amélioration de la texture de la peau. Elle est efficace pour réduire le relâchement cutané et améliorer la fermeté. La production accrue de collagène aide à lisser les rides et les ridules. Elle peut aider à réduire l'apparence de la cellulite en stimulant la circulation et en favorisant le drainage lymphatique. La radiofréquence peut également améliorer la texture générale de la peau en atténuant les cicatrices d'acné et les imperfections.</p><h2>Procédure</h2><p>Lors d'une séance de radiofréquence, un appareil émet des ondes électromagnétiques dans la peau ciblée. Cette énergie est convertie en chaleur, chauffant les tissus sous-cutanés sans endommager la surface de la peau. La chaleur stimule la production de collagène et active les processus naturels de réparation de la peau. Les résultats ne sont généralement pas immédiats, mais s'améliorent progressivement au fil du temps à mesure que le collagène se régénère.</p><h2>Sécurité et Confort</h2><p>La radiofréquence est une procédure non invasive, ce qui signifie qu'elle ne nécessite pas de chirurgie ni d'incisions. Les patients ressentent généralement une sensation de chaleur pendant la séance, mais la procédure est confortable et ne nécessite pas d'anesthésie.</p><h2>Nombre de Séances</h2><p>Le nombre de séances nécessaires dépend du traitement spécifique et des objectifs du patient. En général, plusieurs séances peuvent être recommandées pour obtenir les meilleurs résultats.</p><h2>Résultats</h2><p>Les résultats de la radiofréquence en esthétique sont progressifs et peuvent durer plusieurs mois. La peau apparaît plus ferme, les rides sont atténuées, et la texture générale de la peau s'améliore.</p><p>La radiofréquence est une option populaire en esthétique en raison de ses résultats probants et de son caractère non invasif. Elle est utilisée pour traiter une variété de problèmes de peau et peut être une alternative intéressante à la chirurgie esthétique pour certaines personnes cherchant à améliorer leur apparence. Cependant, il est toujours recommandé de consulter un professionnel de l’esthétique qualifié avant de subir toute procédure esthétique pour discuter des options appropriées en fonction des besoins individuels.</p>",
+   "title": "La radiofréquence",
+   "metaTitle": "La radiofréquence — My Bubble Beauty",
+   "description": "La radiofréquence est une technologie esthétique qui utilise des ondes électromagnétiques pour chauffer en douceur les couches profondes de la peau.",
+   "articleHtml": "<p>La radiofréquence est une technologie esthétique qui utilise des ondes électromagnétiques pour chauffer en douceur les couches profondes de la peau. Cette chaleur vise à stimuler la production de collagène, à activer la circulation sanguine et à favoriser le resserrement de la peau.</p><h2>Applications en esthétique</h2><p>La radiofréquence est utilisée en esthétique pour répondre à divers problèmes de peau et à des objectifs de rajeunissement, notamment le raffermissement de la peau, la réduction des rides et ridules, l'atténuation de l'aspect de la cellulite, ainsi que l'amélioration de la texture de la peau. Elle peut contribuer à réduire le relâchement cutané et à améliorer la fermeté. La production accrue de collagène aide à lisser les rides et les ridules. Elle peut aider à réduire l'apparence de la cellulite en stimulant la circulation et en favorisant le drainage lymphatique. La radiofréquence peut également améliorer la texture générale de la peau en atténuant l'apparence des cicatrices d'acné et des imperfections.</p><h2>Déroulement du soin</h2><p>Lors d'une séance de radiofréquence, un appareil émet des ondes électromagnétiques dans la peau ciblée. Cette énergie est convertie en chaleur, chauffant les tissus sous-cutanés en préservant autant que possible la surface de la peau. La chaleur vise à stimuler la production de collagène et le renouvellement naturel de la peau. Les résultats ne sont généralement pas immédiats, mais s'améliorent progressivement au fil du temps à mesure que le collagène se régénère.</p><h2>Sécurité et confort</h2><p>La radiofréquence est un soin non invasif, ce qui signifie qu'il ne nécessite pas de chirurgie ni d'incisions. Vous ressentez généralement une sensation de chaleur pendant la séance, mais le soin est le plus souvent bien toléré et ne nécessite pas d'anesthésie.</p><h2>Nombre de séances</h2><p>Le nombre de séances nécessaires dépend du traitement spécifique et de vos objectifs. En général, plusieurs séances peuvent être recommandées pour obtenir les meilleurs résultats.</p><h2>Résultats</h2><p>Les résultats de la radiofréquence en esthétique sont progressifs et peuvent durer plusieurs mois. La peau peut apparaître plus ferme, les rides atténuées et la texture générale de la peau améliorée.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><p>La radiofréquence est une option populaire en esthétique en raison des résultats qu'elle peut offrir et de son caractère non invasif. Elle est utilisée pour répondre à une variété de problèmes de peau et peut être une option non chirurgicale intéressante pour certaines personnes cherchant à améliorer leur apparence. Cependant, il est toujours recommandé de consulter un professionnel de l'esthétique qualifié avant tout soin esthétique pour discuter des options appropriées en fonction des besoins individuels.</p>",
    "priceTitle": "Tarif",
    "prices": [
     {
@@ -1242,15 +1258,15 @@
      "src": "soins/radio.webp",
      "w": 960,
      "h": 623,
-     "alt": "Image illustrative"
+     "alt": "Schéma de la peau avant, pendant et après un soin de radiofréquence"
     }
    ]
   },
   "sos": {
    "title": "SOS Pureté",
    "metaTitle": "SOS Pureté — My Bubble Beauty",
-   "description": "Un soin SOS Pureté en esthétique est un traitement spécialement conçu pour les personnes ayant des problèmes de peau liés à l'excès de sébum, à l'acné, aux…",
-   "articleHtml": "<p>Un soin SOS Pureté en esthétique est un traitement spécialement conçu pour les personnes ayant des problèmes de peau liés à l'excès de sébum, à l'acné, aux points noirs et à d'autres imperfections cutanées. Ce type de soin vise à nettoyer en profondeur la peau, à réduire l'excès de sébum, à désobstruer les pores et à favoriser une peau plus nette et plus saine. Voici comment un soin SOS Pureté en esthétique peut fonctionner :</p><h2>Nettoyage en profondeur</h2><p>Le traitement commence généralement par un nettoyage en profondeur du visage pour éliminer les impuretés, l'excès de sébum et les cellules mortes de la peau.</p><h2>Exfoliation</h2><p>Une exfoliation douce peut être effectuée pour éliminer les cellules mortes de la peau, favorisant ainsi une peau plus lisse.</p><h2>Extraction des comédons</h2><p>Les esthéticiennes ou les professionnels de la peau utilisent souvent des techniques d'extraction manuelle ou des dispositifs d'extraction pour éliminer les points noirs et les comédons. Cela permet de désobstruer les pores et d'améliorer la texture de la peau.</p><h2>Application de produits adaptés</h2><p>Des produits spécifiques contenant des ingrédients tels que l'acide salicylique ou le peroxyde de benzoyle, qui sont connus pour leurs propriétés anti-acné, peuvent être appliqués sur la peau pour réduire l'inflammation et prévenir les futures éruptions.</p><h2>Masques et traitements ciblés</h2><p>Des masques purifiants ou d'autres traitements ciblés peuvent être utilisés pour calmer la peau, réduire l'excès de sébum et favoriser une meilleure régulation de la production de sébum.</p><h2>Hydratation</h2><p>Même si vous avez des problèmes de peau liés à l'excès de sébum, il est essentiel de maintenir une hydratation adéquate de la peau pour éviter qu'elle ne devienne trop sèche en réponse aux traitements. Des produits hydratants légers et non comédogènes peuvent être utilisés.</p><h2>Protection solaire</h2><p>Comme pour de nombreux traitements de la peau, l'application d'un écran solaire ou d'un produit de protection solaire est importante pour protéger la peau des dommages causés par les rayons UV.</p>",
+   "description": "Le soin SOS Pureté vise à nettoyer en profondeur les peaux grasses à tendance acnéique, à réduire l'excès de sébum et à désobstruer les pores.",
+   "articleHtml": "<p>Un soin SOS Pureté en esthétique est un traitement spécialement conçu pour les personnes ayant des problèmes de peau liés à l'excès de sébum, à une tendance acnéique, aux points noirs et à d'autres imperfections cutanées. Ce type de soin vise à nettoyer en profondeur la peau, à réduire l'excès de sébum, à désobstruer les pores et à favoriser une peau plus nette et plus saine. Voici comment un soin SOS Pureté en esthétique peut fonctionner :</p><h2>Nettoyage en profondeur</h2><p>Le traitement commence généralement par un nettoyage en profondeur du visage pour éliminer les impuretés, l'excès de sébum et les cellules mortes de la peau.</p><h2>Exfoliation</h2><p>Une exfoliation douce peut être effectuée pour éliminer les cellules mortes de la peau, favorisant ainsi une peau plus lisse.</p><h2>Extraction des comédons</h2><p>Les esthéticiennes ou les professionnels de la peau utilisent souvent des techniques d'extraction manuelle ou des dispositifs d'extraction pour éliminer les points noirs et les comédons. Cela permet de désobstruer les pores et d'améliorer la texture de la peau.</p><h2>Application de produits adaptés</h2><p>Des produits spécifiques contenant des ingrédients tels que l'acide salicylique, connu pour ses propriétés purifiantes, peuvent être appliqués sur la peau pour aider à apaiser les rougeurs et à limiter l'apparition de nouvelles imperfections.</p><h2>Masques et traitements ciblés</h2><p>Des masques purifiants ou d'autres traitements ciblés peuvent être utilisés pour calmer la peau, réduire l'excès de sébum et favoriser une meilleure régulation de la production de sébum.</p><h2>Hydratation</h2><p>Même si vous avez des problèmes de peau liés à l'excès de sébum, il est essentiel de maintenir une hydratation adéquate de la peau pour éviter qu'elle ne devienne trop sèche en réponse aux traitements. Des produits hydratants légers et non comédogènes peuvent être utilisés.</p><h2>Protection solaire</h2><p>Comme pour de nombreux traitements de la peau, l'application d'un écran solaire ou d'un produit de protection solaire est importante pour protéger la peau des dommages causés par les rayons UV.</p>",
    "priceTitle": "Tarif",
    "prices": [
     {
@@ -1263,7 +1279,7 @@
      "src": "soins/sos.webp",
      "w": 756,
      "h": 418,
-     "alt": "Image illustrative"
+     "alt": "Comparaison entre un nettoyage avec les mains et un nettoyage avec la brosse"
     }
    ]
   }

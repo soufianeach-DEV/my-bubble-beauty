@@ -64,15 +64,21 @@ readK();reduced.addEventListener('change',()=>{readK();px&&px()});
 /* 5. Filtres des tarifs */
 const fl=d.querySelector('.filters');
 if(fl){
-  fl.hidden=false;const groups=d.querySelectorAll('.price-group');
-  fl.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
-    fl.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  fl.hidden=false;const groups=d.querySelectorAll('.price-group'),st=d.getElementById('filter-status');
+  const pick=(b,say)=>{if(!b)return;fl.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
     const f=b.dataset.filter;groups.forEach(g=>g.hidden=f!=='all'&&g.dataset.cat!==f);
-    const st=d.getElementById('filter-status');st&&(st.textContent=b.dataset.status||'')});
-  /* Un lien vers un tarif masqué par le filtre réaffiche tout avant de défiler */
-  const all=fl.querySelector('[data-filter="all"]');
+    say&&st&&(st.textContent=b.dataset.status||'')};
+  /* Le filtre marqué dans le HTML (Visage) s'applique dès le chargement */
+  pick(fl.querySelector('[aria-pressed="true"]')||fl.querySelector('button'));
+  fl.addEventListener('click',e=>pick(e.target.closest('button'),1));
+  /* Arrivée avec un #tarif-… dans l'URL (lien partagé, rechargement, retour) : afficher sa catégorie */
+  const fromHash=()=>{const g=location.hash.startsWith('#tarif-')&&d.getElementById(location.hash.slice(1));
+    if(!g||!g.hidden)return;pick(fl.querySelector(`[data-filter="${g.dataset.cat}"]`)||fl.querySelector('[data-filter="all"]'));g.scrollIntoView()};
+  fromHash();addEventListener('hashchange',fromHash);
+  /* Un lien vers un tarif masqué par le filtre affiche sa catégorie avant de défiler */
   d.addEventListener('click',e=>{const a=e.target.closest('a[href^="#tarif-"]');if(!a)return;
-    const g=d.getElementById(a.getAttribute('href').slice(1));g&&g.hidden&&all&&all.click()});
+    const g=d.getElementById(a.getAttribute('href').slice(1));
+    g&&g.hidden&&pick(fl.querySelector(`[data-filter="${g.dataset.cat}"]`)||fl.querySelector('[data-filter="all"]'),1)});
 }
 
 /* 6. Galerie : agrandissement dans <dialog> */

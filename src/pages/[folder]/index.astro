@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
-import { LANGS, FOLDER, CONTACT, SITE, LANG_META, t, pagePath, langOfFolder } from '../../lib/site';
+import { LANGS, FOLDER, CONTACT, SITE, LANG_META, EXTRA, HOURS, hoursRows, openingHoursSchema, t, pagePath, langOfFolder } from '../../lib/site';
 
 export function getStaticPaths() {
   return LANGS.map((l) => ({ params: { folder: FOLDER[l] } }));
@@ -11,6 +11,8 @@ const d = t(lang);
 const h = d.home;
 const ui = d.ui;
 const treat = (slug: string) => pagePath(lang, `treatment:${slug}`);
+// Photo de chaque carte soin, dans l'ordre de home.soins.cards
+const CARD_IMG = ['visage', 'massage', 'epilation', 'corps', 'onglerie', 'sourire'];
 const jsonld = {
   '@context': 'https://schema.org', '@type': 'BeautySalon', name: 'My Bubble Beauty',
   url: SITE + pagePath(lang, 'home'), telephone: CONTACT.phone, email: CONTACT.email,
@@ -19,6 +21,7 @@ const jsonld = {
   geo: { '@type': 'GeoCoordinates', latitude: 50.8522424, longitude: 4.2847883 },
   areaServed: ['Anderlecht', 'Molenbeek-Saint-Jean', 'Dilbeek', 'Berchem-Sainte-Agathe'],
   sameAs: CONTACT.social.map((s) => s.href), priceRange: '€€',
+  ...(HOURS.length ? { openingHoursSpecification: openingHoursSchema() } : {}),
 };
 ---
 <Base lang={lang} pageKey="home" title={h.title} description={h.description} jsonld={jsonld} isHome>
@@ -49,10 +52,14 @@ const jsonld = {
 <section class="section about lit" aria-labelledby="h-about">
 <div class="halo halo--lilas" aria-hidden="true"></div>
 <div class="wrap about__grid">
-<h2 class="eyebrow" id="h-about">{h.about.eyebrow}</h2>
+<figure class="about__media"><img src="/assets/img/cartes/centre.webp" width="720" height="540" alt={h.about.imgAlt} loading="lazy" decoding="async"></figure>
+<div class="about__content">
+<p class="eyebrow">{h.about.eyebrow}</p>
+<h2 id="h-about">{h.about.quote}</h2>
 <p class="about__lead">{h.about.lead}</p>
-<div class="about__body" set:html={h.about.bodyHtml} />
-<p class="about__quote">{h.about.quote}</p>
+<ul class="about__points">{h.about.points.map((p) => <li><Icon name="check" />{p}</li>)}</ul>
+<details class="about__more"><summary><span class="more">{h.about.more}</span><span class="less">{h.about.less}</span></summary><Fragment set:html={h.about.bodyHtml} /></details>
+</div>
 </div>
 </section>
 
@@ -60,10 +67,10 @@ const jsonld = {
 <div class="halo halo--rose" aria-hidden="true"></div>
 <div class="cursor-glow" aria-hidden="true"></div>
 <div class="wrap">
-<div class="section__head"><h2 id="h-soins">{h.soins.title}</h2><p>{h.soins.intro}</p></div>
+<div class="section__head"><p class="eyebrow">{h.soins.eyebrow}</p><h2 id="h-soins">{h.soins.title}</h2><p>{h.soins.intro}</p></div>
 <ul class="soins__grid">
 {h.soins.cards.map((c, i) => (
-  <li class="soin"><Icon name={`soin-${i}`} class="soin__icon" /><h3>{c.title}</h3><p>{c.text}</p><a href={c.href}>{c.link}<span class="visually-hidden"> : {c.title}</span></a></li>
+  <li class="soin"><div class="soin__media"><img src={`/assets/img/cartes/${CARD_IMG[i]}.webp`} width="720" height="540" alt="" loading="lazy" decoding="async"></div><div class="soin__body"><Icon name={`soin-${i}`} class="soin__icon" /><h3>{c.title}</h3><p>{c.text}</p><a href={c.href}>{c.link}<span class="visually-hidden">{lang === 'fr' ? ' : ' : ': '}{c.title}</span><span aria-hidden="true"> →</span></a></div></li>
 ))}
 </ul>
 </div>
@@ -72,10 +79,10 @@ const jsonld = {
 <section class="section tarifs lit" id="package" aria-labelledby="h-tarifs">
 <div class="halo halo--peche" aria-hidden="true"></div>
 <div class="wrap">
-<div class="section__head"><h2 id="h-tarifs">{h.tarifs.title}</h2><p>{h.tarifs.intro}</p></div>
+<div class="section__head"><p class="eyebrow">{h.tarifs.eyebrow}</p><h2 id="h-tarifs">{h.tarifs.title}</h2><p>{h.tarifs.intro}</p></div>
 <div class="tarifs__panel">
 <ul class="filters" aria-label={h.tarifs.filtersLabel} hidden>
-{h.tarifs.filters.map((f, i) => <li><button class="pill" type="button" data-filter={f.key} aria-pressed={i === 0 ? 'true' : 'false'} data-status={f.status}>{f.label}</button></li>)}
+{h.tarifs.filters.map((f, i) => <li><button class="pill" type="button" data-filter={f.key} aria-pressed={f.key === 'visage' ? 'true' : 'false'} data-status={f.status}>{f.label}</button></li>)}
 </ul>
 <p class="visually-hidden" id="filter-status" role="status"></p>
 <div class="price-groups">
@@ -99,10 +106,10 @@ const jsonld = {
 <section class="section galerie lit" id="gallery" aria-labelledby="h-galerie">
 <div class="halo halo--lilas" aria-hidden="true"></div>
 <div class="wrap">
-<div class="section__head"><h2 id="h-galerie">{h.gallery.title}</h2></div>
+<div class="section__head"><p class="eyebrow">{h.gallery.eyebrow}</p><h2 id="h-galerie">{h.gallery.title}</h2></div>
 <ul class="mosaic">
 {h.gallery.items.map((g) => (
-  <li><a class="frame" href={`/assets/img/galerie-${g.n}.webp`} aria-label={g.ariaLabel}><img src={`/assets/img/galerie-${g.n}-800.webp`} srcset={`/assets/img/galerie-${g.n}-800.webp 800w, /assets/img/galerie-${g.n}.webp 1600w`} sizes="(max-width: 767px) 100vw, 50vw" width="800" height="600" data-w="1600" data-h="1200" alt={g.alt} loading="lazy" decoding="async"></a></li>
+  <li><a class="frame" href={`/assets/img/galerie-${g.n}.webp`} aria-label={g.ariaLabel}><img src={`/assets/img/galerie-${g.n}-800.webp`} srcset={`/assets/img/galerie-${g.n}-800.webp 800w, /assets/img/galerie-${g.n}-1200.webp 1200w, /assets/img/galerie-${g.n}.webp 1600w`} sizes="(max-width: 767px) 100vw, 50vw" width="800" height="600" data-w="1600" data-h="1200" alt={g.alt} loading="lazy" decoding="async"></a></li>
 ))}
 </ul>
 </div>
@@ -112,18 +119,29 @@ const jsonld = {
 </dialog>
 </section>
 
+<section class="cta-band" aria-labelledby="h-cta">
+<img class="cta-band__img" src="/assets/img/galerie-2-800.webp" srcset="/assets/img/galerie-2-800.webp 800w, /assets/img/galerie-2-1200.webp 1200w, /assets/img/galerie-2.webp 1600w" sizes="100vw" width="1600" height="1200" alt="" loading="lazy" decoding="async">
+<div class="wrap cta-band__inner">
+<h2 id="h-cta">{h.cta.title}</h2>
+<p>{h.contact.intro}</p>
+<div class="cta-band__btns"><a class="btn btn--light sheen" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{CONTACT.phoneLabel}</a><a class="btn btn--outline-light" href={CONTACT.whatsapp}><Icon name="whatsapp" />WhatsApp</a></div>
+</div>
+</section>
+
 <section class="section contact lit" id="contact" data-loop aria-labelledby="h-contact">
 <div class="halo halo--menthe px-halo" aria-hidden="true"></div>
 <div class="halo halo--rose px-halo" aria-hidden="true"></div>
 <div class="wrap">
 <div class="contact__card">
 <div>
+<p class="eyebrow">{h.contact.eyebrow}</p>
 <h2 id="h-contact">{h.contact.title}</h2>
 <p>{h.contact.intro}</p>
 <dl>
 <div><dt>{h.contact.labels[0]}</dt><dd><address>{CONTACT.street}<br>{CONTACT.postal} {CONTACT.city}<br>{LANG_META[lang].country}</address><a href={CONTACT.maps} rel="noopener">{h.contact.itinerary}</a></dd></div>
 <div><dt>{h.contact.labels[1]}</dt><dd><a href={`tel:${CONTACT.phone}`}>{CONTACT.phoneLabel}</a></dd></div>
 <div><dt>{h.contact.labels[2]}</dt><dd><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></dd></div>
+{HOURS.length > 0 && <div><dt>{EXTRA[lang].hours}</dt><dd><ul class="hours">{hoursRows(lang).map((r) => <li><span>{r.label}</span> <span>{r.value}</span></li>)}</ul></dd></div>}
 </dl>
 <div class="contact__cta">
 <a class="btn btn--solid sheen" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{ui.call}</a>

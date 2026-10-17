@@ -25,7 +25,7 @@
     "label": "Contact"
    }
   ],
-  "langPrefix": "Taal :",
+  "langPrefix": "Taal:",
   "menu": "Menu",
   "ctaLong": "Afspraak maken",
   "ctaShort": "Afspraak",
@@ -43,12 +43,12 @@
  },
  "home": {
   "title": "My Bubble — Schoonheids- en welzijnscentrum",
-  "description": "Welkom bij My Bubble, uw onmisbare schoonheidssalon gelegen in het hart van Anderlecht, Molenbeek-Saint-Jean, Dilbeek en Berchem-Sainte-Agathe.",
+  "description": "Schoonheids- en welzijnscentrum in Dilbeek, vlak bij Anderlecht, Molenbeek en Berchem: gezichtsverzorging, medische pedicure, nagels en ontharing.",
   "hero": {
    "brand": "My Bubble:",
-   "sub": "Uw Oase van Welzijn en Schoonheid in het Hart van Anderlecht, Molenbeek-Saint-Jean, Dilbeek en Berchem-Sainte-Agathe",
+   "sub": "Uw oase van welzijn en schoonheid in Dilbeek, vlak bij Anderlecht, Molenbeek en Berchem",
    "lead": "Gezichtsverzorging, medische pedicure, nagels en ontharing: ons ervaren team combineert expertise met hoogwaardige producten om uw natuurlijke schoonheid te onthullen en te versterken, in alle rust.",
-   "cta": "Afspraak Maken",
+   "cta": "Afspraak maken",
    "imgAlt": "Gezichtsbehandeling met masker, in een cabine met kaarslicht"
   },
   "infos": {
@@ -60,7 +60,7 @@
     },
     {
      "label": "Adres",
-     "html": "Rue Paloke 146, 1700 Dilbeek"
+     "html": "Palokestraat 146, 1700 Dilbeek"
     },
     {
      "label": "Afspraken",
@@ -70,23 +70,32 @@
   },
   "about": {
    "eyebrow": "Het centrum",
-   "lead": "Welkom bij My Bubble, uw onmisbare schoonheidssalon gelegen in het hart van Anderlecht, Molenbeek-Saint-Jean, Dilbeek en Berchem-Sainte-Agathe.",
-   "bodyHtml": "<p>Wij specialiseren ons in hoogwaardige esthetische behandelingen en medische pedicure om uw natuurlijke schoonheid te onthullen en te versterken. Ons team van ervaren professionals biedt een volledig scala aan diensten, waaronder huidverzorging, nagelverzorging en ontharing. Wij combineren expertise met hoogwaardige producten om uw comfort en welzijn te garanderen.</p><p>Ontdek ook onze selectie van hoogwaardige schoonheidsproducten, ontworpen om uw uiterlijk thuis te onderhouden en te verbeteren. Of u nu op zoek bent naar ontspannende behandelingen, oplossingen voor specifieke huidproblemen of uitzonderlijke cosmetische producten, wij hebben alles wat u nodig heeft. Bezoek ons in het hart van Anderlecht, Molenbeek-Saint-Jean, Dilbeek en Berchem-Sainte-Agathe en ontdek hoe wij u kunnen helpen een stralende schoonheid te bereiken.</p>",
-   "quote": "My Bubble: de perfecte combinatie van kwaliteit, welzijn en esthetiek."
+   "lead": "Welkom bij My Bubble, uw schoonheidssalon in Dilbeek, vlak bij Anderlecht, Sint-Jans-Molenbeek en Sint-Agatha-Berchem.",
+   "bodyHtml": "<p>Wij specialiseren ons in hoogwaardige esthetische behandelingen en medische pedicure om uw natuurlijke schoonheid te onthullen en te versterken. Ons team van ervaren professionals biedt een volledig scala aan diensten, waaronder huidverzorging, nagelverzorging en ontharing. Wij combineren expertise met hoogwaardige producten om voor uw comfort en welzijn te zorgen.</p><p>Ontdek ook onze selectie van hoogwaardige schoonheidsproducten, ontworpen om uw uiterlijk thuis te onderhouden en te verbeteren. Of u nu op zoek bent naar ontspannende behandelingen, oplossingen voor specifieke huidproblemen of uitzonderlijke cosmetische producten, wij hebben alles wat u nodig heeft. Bezoek ons in Dilbeek en ontdek hoe wij u kunnen helpen een stralende schoonheid te bereiken.</p>",
+   "quote": "My Bubble: de perfecte combinatie van kwaliteit, welzijn en esthetiek.",
+   "points": [
+    "Hoogwaardige esthetische behandelingen",
+    "Medische pedicure",
+    "Team van ervaren professionals",
+    "Hoogwaardige schoonheidsproducten"
+   ],
+   "more": "Lees meer",
+   "less": "Minder",
+   "imgAlt": "De behandelruimte met de behandeltafel en de schoonheidstoestellen"
   },
   "soins": {
    "title": "Behandelingen",
-   "intro": "Ontdek onze kwaliteitsbehandelingen voor een ongeëvenaarde welzijnservaring.",
+   "intro": "Onze behandelingen op maat zijn erop gericht uw huid haar glans terug te geven: HydraFacial, mesotherapie en peeling.",
    "cards": [
     {
      "title": "Gezicht",
-     "text": "Krijg een stralende huid met onze op maat gemaakte gezichtsbehandelingen.",
+     "text": "Ontdek onze gezichtsbehandelingen op maat voor een stralendere huid.",
      "href": "#tarif-soin-visage",
      "link": "Bekijk de tarieven"
     },
     {
      "title": "Massage",
-     "text": "Ontspan diep met onze therapeutische en ontspannende massages.",
+     "text": "Ontspan diep met onze ontspannende welzijnsmassages.",
      "href": "#tarif-rituel-douceur",
      "link": "Bekijk de tarieven"
     },
@@ -98,23 +107,24 @@
     },
     {
      "title": "Lichaam/Handen/Voeten",
-     "text": "Onderga complete behandelingen voor een totale ontspanning.",
+     "text": "Gun uzelf complete behandelingen voor een totale ontspanning.",
      "href": "#tarif-beaute-des-pieds",
      "link": "Bekijk de tarieven"
     },
     {
      "title": "Manicure",
-     "text": "Benadruk uw handen met onze professionele manicure-services.",
+     "text": "Zet uw handen in de kijker met onze professionele manicurebehandelingen.",
      "href": "#tarif-beaute-des-mains",
      "link": "Bekijk de tarieven"
     },
     {
      "title": "Tandenbleken",
-     "text": "Krijg een stralende glimlach met onze tandenbleekprocedures.",
+     "text": "Ontdek onze tandenbleeksessies voor een stralendere glimlach.",
      "href": "#tarif-blanchiment-des-dents",
      "link": "Bekijk de tarieven"
     }
-   ]
+   ],
+   "eyebrow": "Onze behandelingen"
   },
   "tarifs": {
    "title": "Tarieven",
@@ -133,8 +143,8 @@
     },
     {
      "key": "corps",
-     "label": "Lichaam & slank",
-     "status": "Weergave: Lichaam & slank"
+     "label": "Lichaam & afslanking",
+     "status": "Weergave: Lichaam & afslanking"
     },
     {
      "key": "sourire",
@@ -165,7 +175,7 @@
      "href": null,
      "items": [
       {
-       "name": "SOS zuiverheid",
+       "name": "SOS Zuiverheid",
        "href": "sos",
        "amount": "35 €"
       },
@@ -195,7 +205,7 @@
        "amount": "150 €"
       },
       {
-       "name": "Laserkoolstof",
+       "name": "Koolstoflaser",
        "href": "charbon",
        "amount": "150 €"
       },
@@ -205,7 +215,7 @@
        "amount": "40 €"
       },
       {
-       "name": "BB GLOW",
+       "name": "BB Glow",
        "href": "bbglow",
        "amount": "120 €"
       },
@@ -219,7 +229,7 @@
     {
      "id": "beaute-minceur",
      "cat": "corps",
-     "title": "Schoonheidsbehandeling",
+     "title": "Afslanking",
      "href": null,
      "items": [
       {
@@ -252,36 +262,36 @@
     {
      "id": "hifu",
      "cat": "visage",
-     "title": "Hifu",
+     "title": "HIFU",
      "href": "hifu",
      "items": [
       {
-       "name": "Bovenste Gezicht",
+       "name": "Bovenste deel van het gezicht",
        "href": null,
        "amount": "250 €"
       },
       {
-       "name": "Volledig Gezicht",
+       "name": "Volledig gezicht",
        "href": null,
        "amount": "500 €"
       },
       {
-       "name": "Gezicht + Decolleté",
+       "name": "Gezicht + decolleté",
        "href": null,
        "amount": "750 €"
       },
       {
-       "name": "Buik + Abdomen",
+       "name": "Buik + abdomen",
        "href": null,
        "amount": "600 €"
       },
       {
-       "name": "Zadeltassen",
+       "name": "Rijbroekzone",
        "href": null,
        "amount": "550 €"
       },
       {
-       "name": "Intieme Zone",
+       "name": "Intieme zone",
        "href": null,
        "amount": "300 €"
       },
@@ -300,11 +310,11 @@
     {
      "id": "plasma-lift",
      "cat": "visage",
-     "title": "Plasma-Lift",
+     "title": "Plasma Lift",
      "href": "plasma",
      "items": [
       {
-       "name": "1 Sessie",
+       "name": "1 sessie",
        "href": null,
        "amount": "250 €"
       }
@@ -317,12 +327,12 @@
      "href": "dents",
      "items": [
       {
-       "name": "1 Sessie",
+       "name": "1 sessie",
        "href": null,
        "amount": "90 €"
       },
       {
-       "name": "2 Sessies",
+       "name": "2 sessies",
        "href": null,
        "amount": "120 €"
       }
@@ -331,7 +341,7 @@
     {
      "id": "epilation-definitive",
      "cat": "epilation",
-     "title": "Permanente ontharing",
+     "title": "Langdurige laserontharing",
      "href": "laserepilation",
      "items": [
       {
@@ -345,7 +355,7 @@
        "amount": "50 €"
       },
       {
-       "name": "Volledig Gezicht",
+       "name": "Volledig gezicht",
        "href": null,
        "amount": "120 €"
       },
@@ -370,12 +380,12 @@
        "amount": "100 €"
       },
       {
-       "name": "Halfbenen",
+       "name": "Halve benen",
        "href": null,
        "amount": "180 €"
       },
       {
-       "name": "Volledige Benen",
+       "name": "Volledige benen",
        "href": null,
        "amount": "250 €"
       }
@@ -398,7 +408,7 @@
        "amount": "12,50 €"
       },
       {
-       "name": "Aloë Vera",
+       "name": "Aloë vera",
        "href": null,
        "amount": "12,50 €"
       }
@@ -407,36 +417,36 @@
     {
      "id": "detatouage",
      "cat": "epilation",
-     "title": "Tatoeage Verwijderen",
+     "title": "Tatoeage verwijderen",
      "href": null,
      "items": [
       {
-       "name": "Tatoeage Verwijderen XS",
+       "name": "Tatoeage verwijderen XS",
        "href": null,
        "amount": "99 €"
       },
       {
-       "name": "Tatoeage Verwijderen S",
+       "name": "Tatoeage verwijderen S",
        "href": null,
        "amount": "149 €"
       },
       {
-       "name": "Tatoeage Verwijderen M",
+       "name": "Tatoeage verwijderen M",
        "href": null,
        "amount": "199 €"
       },
       {
-       "name": "Tatoeage Verwijderen L",
+       "name": "Tatoeage verwijderen L",
        "href": null,
        "amount": "249 €"
       },
       {
-       "name": "Tatoeage Verwijderen XL",
+       "name": "Tatoeage verwijderen XL",
        "href": null,
        "amount": "299 €"
       },
       {
-       "name": "Tatoeage Verwijderen XXL",
+       "name": "Tatoeage verwijderen XXL",
        "href": null,
        "amount": "399 €"
       }
@@ -479,7 +489,7 @@
        "amount": "10 €"
       },
       {
-       "name": "Volledige Armen",
+       "name": "Volledige armen",
        "href": null,
        "amount": "15 €"
       },
@@ -489,12 +499,12 @@
        "amount": "25 €"
       },
       {
-       "name": "Halfbenen",
+       "name": "Halve benen",
        "href": null,
        "amount": "20 €"
       },
       {
-       "name": "Volledige Benen",
+       "name": "Volledige benen",
        "href": null,
        "amount": "25 €"
       }
@@ -507,12 +517,12 @@
      "href": null,
      "items": [
       {
-       "name": "Met Arganolie",
+       "name": "Met arganolie",
        "href": null,
        "amount": "65 €"
       },
       {
-       "name": "Met Kaarsen",
+       "name": "Met kaarsen",
        "href": null,
        "amount": "70 €"
       },
@@ -532,12 +542,12 @@
        "amount": "90 €"
       },
       {
-       "name": "Hotstone Massage",
+       "name": "Hotstonemassage",
        "href": null,
        "amount": "90 €"
       },
       {
-       "name": "Essentiële Olie Massage",
+       "name": "Massage met essentiële oliën",
        "href": null,
        "amount": "70 €"
       }
@@ -555,22 +565,22 @@
        "amount": "35 €"
       },
       {
-       "name": "Wimperverf",
+       "name": "Wimpers verven",
        "href": null,
        "amount": "15 €"
       },
       {
-       "name": "Wenkbrauwverf",
+       "name": "Wenkbrauwen verven",
        "href": null,
        "amount": "15 €"
       },
       {
-       "name": "Snelle Wimpers",
+       "name": "Fast Lashes",
        "href": null,
        "amount": "40 €"
       },
       {
-       "name": "Brauwlift",
+       "name": "Brow Lift",
        "href": null,
        "amount": "30 €"
       }
@@ -583,7 +593,7 @@
      "href": null,
      "items": [
       {
-       "name": "Esthetiek",
+       "name": "Esthetische manicure",
        "href": null,
        "amount": "25 €"
       },
@@ -593,7 +603,7 @@
        "amount": "35 €"
       },
       {
-       "name": "Semi-Permanente Nagellak",
+       "name": "Semipermanente nagellak",
        "href": null,
        "amount": "25 €"
       }
@@ -606,7 +616,7 @@
      "href": null,
      "items": [
       {
-       "name": "Esthetiek",
+       "name": "Esthetische pedicure",
        "href": null,
        "amount": "35 €"
       },
@@ -616,7 +626,7 @@
        "amount": "45 €"
       },
       {
-       "name": "Semi-Permanente Nagellak",
+       "name": "Semipermanente nagellak",
        "href": null,
        "amount": "25 €"
       }
@@ -629,7 +639,7 @@
      "href": null,
      "items": [
       {
-       "name": "Anti-Age",
+       "name": "Anti-aging",
        "href": null,
        "amount": "75 €"
       },
@@ -667,12 +677,12 @@
        "amount": "50 €"
       },
       {
-       "name": "Anti-Cellulitis",
+       "name": "Anti-cellulitis",
        "href": null,
        "amount": "75 €"
       },
       {
-       "name": "Afvallen",
+       "name": "Afslankend",
        "href": null,
        "amount": "90 €"
       },
@@ -704,7 +714,7 @@
     {
      "id": "electrolyse",
      "cat": "epilation",
-     "title": "Electrolyse",
+     "title": "Elektrolyse",
      "href": null,
      "items": [
       {
@@ -734,7 +744,8 @@
       }
      ]
     }
-   ]
+   ],
+   "eyebrow": "Onze tarieven"
   },
   "gallery": {
    "title": "Galerij",
@@ -743,25 +754,26 @@
    "items": [
     {
      "alt": "De behandelruimte met de behandeltafel en de schoonheidstoestellen",
-     "ariaLabel": "Foto vergroten : De behandelruimte met de behandeltafel en de schoonheidstoestellen",
+     "ariaLabel": "Foto vergroten: De behandelruimte met de behandeltafel en de schoonheidstoestellen",
      "n": "1"
     },
     {
      "alt": "De toestellen voor gezichtsverzorging voor de grote ramen",
-     "ariaLabel": "Foto vergroten : De toestellen voor gezichtsverzorging voor de grote ramen",
+     "ariaLabel": "Foto vergroten: De toestellen voor gezichtsverzorging voor de grote ramen",
      "n": "2"
     },
     {
      "alt": "De behandeltafel met handdoeken, naast de houten deur",
-     "ariaLabel": "Foto vergroten : De behandeltafel met handdoeken, naast de houten deur",
+     "ariaLabel": "Foto vergroten: De behandeltafel met handdoeken, naast de houten deur",
      "n": "3"
     },
     {
-     "alt": "De houten letters « Moment », « My Bubble » en « Beauty » aan de muur",
-     "ariaLabel": "Foto vergroten : De houten letters « Moment », « My Bubble » en « Beauty » aan de muur",
+     "alt": "De houten letters “Moment”, “My Bubble” en “Beauty” aan de muur",
+     "ariaLabel": "Foto vergroten: De houten letters “Moment”, “My Bubble” en “Beauty” aan de muur",
      "n": "4"
     }
-   ]
+   ],
+   "eyebrow": "Het instituut"
   },
   "contact": {
    "title": "Contact",
@@ -772,7 +784,11 @@
     "E-mail"
    ],
    "itinerary": "Routebeschrijving",
-   "socialTitle": "Sociale media"
+   "socialTitle": "Sociale media",
+   "eyebrow": "Afspraak"
+  },
+  "cta": {
+   "title": "Zin in een My Bubble-moment?"
   }
  },
  "legal": {
@@ -795,12 +811,12 @@
   "bbglow": {
    "title": "De BB Glow-behandeling in de esthetiek",
    "metaTitle": "De BB Glow-behandeling in de esthetiek — My Bubble Beauty",
-   "description": "De BB Glow-behandeling in de esthetiek is een huidbehandelingstechniek die tot doel heeft de teint te verbeteren, de huidskleur gelijkmatiger te maken,…",
-   "articleHtml": "<p>De BB Glow-behandeling in de esthetiek is een huidbehandelingstechniek die tot doel heeft de teint te verbeteren, de huidskleur gelijkmatiger te maken, onvolkomenheden te verminderen en de huid een stralende en frisse uitstraling te geven. Deze behandeling is bijzonder populair vanwege het \"babyhuid\" -effect, vandaar de naam.</p><h2>Huidvoorbereiding</h2><p>Voor aanvang van de behandeling wordt de huid grondig gereinigd om onzuiverheden, talg en dode huidcellen te verwijderen. Sommige procedures kunnen een lichte exfoliatie bevatten voor een betere opname van producten.</p><h2>Toepassing van serums</h2><p>Speciaal geformuleerde serums voor de BB Glow-behandeling worden op de huid aangebracht. Deze serums bevatten meestal ingrediënten zoals pigmenten, hyaluronzuur, peptiden en vitamines. De pigmenten helpen de huidskleur gelijkmatiger te maken, onvolkomenheden te camoufleren en een stralendere uitstraling te geven.</p><h2>Micro-naalden of microneedling</h2><p>Een essentieel onderdeel van de BB Glow-behandeling kan micro-naalden of microneedling omvatten. Deze techniek houdt in dat een apparaat met fijne naalden wordt gebruikt om microperforaties in de huid te creëren. Deze microperforaties zorgen voor een betere opname van serums en stimuleren ook de collageenproductie, wat bijdraagt aan de verbetering van de huidtextuur.</p><h2>Toepassing</h2><p>Nadat het micro-naalden is voltooid, kan een kalmerend masker of aanvullende behandelingen worden toegepast om de huid te kalmeren en de voordelen van de behandeling te versterken.</p><h2>Maskers en gerichte behandelingen</h2><p>Reinigende maskers of andere gerichte behandelingen kunnen worden gebruikt om de huid te kalmeren, overtollig talg te verminderen en een betere regulatie van talgproductie te bevorderen.</p><h2>Hydratatie en zonbescherming</h2><p>De behandeling wordt meestal afgerond met de toepassing van hydraterende producten en zonbescherming om de pas behandelde huid te beschermen tegen UV-stralen.</p><p>De resultaten van de BB Glow-behandeling kunnen variëren van persoon tot persoon, maar over het algemeen melden patiënten een verbetering van de huidtextuur, een vermindering van de zichtbaarheid van onvolkomenheden, een egalere teint en een helderdere huidskleur. De effecten van de behandeling zijn tijdelijk en kunnen enkele weken tot enkele maanden aanhouden, afhankelijk van het huidtype en de nazorg.</p>",
+   "description": "De BB Glow-behandeling wil de teint verfraaien, de huidskleur egaliseren en de huid een stralende, frisse uitstraling geven. Verloop en tarieven.",
+   "articleHtml": "<p>De BB Glow-behandeling in de esthetiek is een huidbehandelingstechniek die tot doel heeft de teint te verbeteren, de huidskleur gelijkmatiger te maken, onvolkomenheden te verminderen en de huid een stralende en frisse uitstraling te geven. De naam verwijst naar BB-cream (Blemish Balm), want ook deze behandeling streeft naar een egaler ogende teint.</p><h2>Huidvoorbereiding</h2><p>Voor aanvang van de behandeling wordt de huid grondig gereinigd om onzuiverheden, talg en dode huidcellen te verwijderen. De behandeling kan een lichte exfoliatie omvatten voor een betere opname van producten.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><h2>Toepassing van serums</h2><p>Speciaal geformuleerde serums voor de BB Glow-behandeling worden op de huid aangebracht. Deze serums bevatten meestal ingrediënten zoals pigmenten, hyaluronzuur, peptiden en vitamines. De pigmenten helpen de huidskleur gelijkmatiger te maken, onvolkomenheden te camoufleren en een stralendere uitstraling te geven.</p><h2>Microneedling</h2><p>Microneedling is een essentieel onderdeel van de BB Glow-behandeling. Deze techniek houdt in dat een apparaat met fijne naalden wordt gebruikt om microperforaties in de huid te creëren. Deze microperforaties zorgen voor een betere opname van serums en kunnen ook de collageenproductie stimuleren, wat kan bijdragen aan de verbetering van de huidtextuur.</p><h2>Toepassing</h2><p>Na de microneedling kunnen een kalmerend masker of aanvullende behandelingen worden toegepast om de huid te kalmeren en de voordelen van de behandeling te versterken.</p><h2>Maskers en gerichte behandelingen</h2><p>Reinigende maskers of andere gerichte behandelingen kunnen worden gebruikt om de huid te kalmeren, overtollige talg te verminderen en een betere regulatie van talgproductie te bevorderen.</p><h2>Hydratatie en zonnebescherming</h2><p>De behandeling wordt meestal afgerond met de toepassing van hydraterende producten en zonnebescherming om de pas behandelde huid te beschermen tegen UV-stralen.</p><p>De resultaten van de BB Glow-behandeling kunnen variëren van persoon tot persoon, maar over het algemeen melden klanten een verbetering van de huidtextuur, een vermindering van de zichtbaarheid van onvolkomenheden, een egalere teint en een helderdere huidskleur. De effecten van de behandeling zijn tijdelijk en kunnen enkele weken tot enkele maanden aanhouden, afhankelijk van het huidtype en de nazorg.</p>",
    "priceTitle": "Tarief",
    "prices": [
     {
-     "name": "BB GLOW",
+     "name": "BB Glow",
      "amount": "120 €"
     }
    ],
@@ -809,19 +825,19 @@
      "src": "soins/glow.webp",
      "w": 960,
      "h": 542,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Vrouwengezicht met stalen van BB Glow-foundation op de wang"
     }
    ]
   },
   "charbon": {
    "title": "Actieve koolstoflaser",
    "metaTitle": "Actieve koolstoflaser — My Bubble Beauty",
-   "description": "Actieve koolstof wordt soms gebruikt in combinatie met laserbehandelingen voor de behandeling van bepaalde huidaandoeningen. Laserbehandeling staat bekend…",
-   "articleHtml": "<p>Actieve koolstof wordt soms gebruikt in combinatie met laserbehandelingen voor de behandeling van bepaalde huidaandoeningen. Laserbehandeling staat bekend om zijn effectiviteit bij de behandeling van verschillende huidproblemen, waaronder pigmentvlekken, tatoeages en pigmentlaesies. Dit is hoe een laserbehandeling met actieve koolstof doorgaans werkt:</p><h2>Toepassing van actieve koolstof</h2><p>Op het te behandelen huidgebied wordt een masker op basis van actieve koolstof aangebracht. Actieve koolstof absorbeert laserlicht en maakt een gerichtere behandeling van pigmentvlekken of tatoeages mogelijk.</p><h2>Laserbehandeling</h2><p>Vervolgens wordt de laser gebruikt om pulsen van intens licht in fracties van een seconde uit te zenden. Dit licht wordt selectief geabsorbeerd door pigmentdeeltjes, zoals tatoeagepigmenten of melanine in pigmentvlekken.</p><h2>Pigmentfragmentatie</h2><p>Wanneer het laserlicht wordt geabsorbeerd door de pigmenten, genereert het warmte, wat leidt tot de fragmentatie van de pigmenten in kleinere deeltjes.</p><h2>Natuurlijke verwijdering</h2><p>De gefragmenteerde pigmentdeeltjes worden vervolgens in de loop van de tijd natuurlijk door het lichaam geëlimineerd, voornamelijk via het lymfestelsel.</p><h2>Resultaten</h2><p>Het uiteindelijke resultaat hangt af van het type huidaandoening dat wordt behandeld. In het geval van tatoeages kan de laser bijvoorbeeld helpen om de tatoeagepigmenten af te breken, waardoor het lichaam ze geleidelijk kan verwijderen en zo het uiterlijk van de tatoeage kan verminderen. Voor pigmentvlekken kan deze behandeling helpen om de vlekken op te helderen of te verwijderen.</p><p>Het is belangrijk op te merken dat laserbehandelingen, ongeacht de specifieke techniek die wordt gebruikt, moeten worden uitgevoerd door een gekwalificeerde esthetisch professional. Deze professionals kunnen uw huid beoordelen, de juiste behandelingsmethode bepalen en ervoor zorgen dat de behandeling veilig wordt uitgevoerd om de beste resultaten te behalen. Als u overweegt een laserbehandeling voor een specifiek huidprobleem, raad ik u aan een esthetisch professional te raadplegen om uw specifieke behoeften te bespreken en gedetailleerde informatie over de behandeling te verkrijgen.</p>",
+   "description": "Een laserbehandeling met actieve koolstof wil het uiterlijk van bepaalde huidonvolkomenheden, zoals pigmentvlekken, verbeteren. Verloop en tarieven.",
+   "articleHtml": "<p>Actieve koolstof wordt soms gebruikt in combinatie met laserbehandelingen om het uiterlijk van bepaalde huidonvolkomenheden te verbeteren. Laserbehandeling kan helpen om de zichtbaarheid van verschillende huidonvolkomenheden te verminderen, waaronder pigmentvlekken en tatoeages. Zo werkt een laserbehandeling met actieve koolstof doorgaans:</p><h2>Toepassing van actieve koolstof</h2><p>Op het te behandelen huidgebied wordt een masker op basis van actieve koolstof aangebracht. Actieve koolstof absorbeert laserlicht en maakt een gerichtere behandeling van pigmentvlekken of tatoeages mogelijk.</p><h2>Laserbehandeling</h2><p>Vervolgens wordt de laser gebruikt om pulsen van intens licht in fracties van een seconde uit te zenden. Dit licht wordt selectief geabsorbeerd door pigmentdeeltjes, zoals tatoeagepigmenten of melanine in pigmentvlekken.</p><h2>Pigmentfragmentatie</h2><p>Wanneer het laserlicht wordt geabsorbeerd door de pigmenten, wordt de energie ervan omgezet in warmte, wat leidt tot de fragmentatie van de pigmenten in kleinere deeltjes.</p><h2>Natuurlijke verwijdering</h2><p>De gefragmenteerde pigmentdeeltjes worden vervolgens in de loop van de tijd op natuurlijke wijze door het lichaam geëlimineerd, voornamelijk via het lymfestelsel.</p><h2>Resultaten</h2><p>Het uiteindelijke resultaat hangt af van het type huidonvolkomenheid. In het geval van tatoeages kan de laser bijvoorbeeld helpen om de tatoeagepigmenten af te breken, waardoor het lichaam ze geleidelijk kan verwijderen en zo het uiterlijk van de tatoeage kan verminderen. Voor pigmentvlekken kan deze behandeling helpen om de vlekken lichter te maken of te laten vervagen.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><p>Het is belangrijk op te merken dat laserbehandelingen, ongeacht de specifieke techniek die wordt gebruikt, moeten worden uitgevoerd door een gekwalificeerde schoonheidsspecialist. Deze specialisten kunnen uw huid beoordelen, de juiste behandelingsmethode bepalen en ervoor zorgen dat de behandeling met zo weinig mogelijk risico wordt uitgevoerd, voor een resultaat dat bij uw huid past. Als u een laserbehandeling voor een specifiek huidprobleem overweegt, raden we u aan een schoonheidsspecialist te raadplegen om uw specifieke behoeften te bespreken en gedetailleerde informatie over de behandeling te verkrijgen.</p>",
    "priceTitle": "Tarief",
    "prices": [
     {
-     "name": "Laserkoolstof",
+     "name": "Koolstoflaser",
      "amount": "150 €"
     }
    ],
@@ -830,15 +846,15 @@
      "src": "soins/charbon.webp",
      "w": 743,
      "h": 782,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Klant met een koolstofmasker en een veiligheidsbril tijdens een laserbehandeling"
     }
    ]
   },
   "cire": {
    "title": "Het waxen van ongewenst haar",
    "metaTitle": "Het waxen van ongewenst haar — My Bubble Beauty",
-   "description": "Het waxen van ongewenst haar is een veelgebruikte methode voor het verwijderen van lichaamshaar in de schoonheidsverzorging. Deze techniek omvat het…",
-   "articleHtml": "<p>Het waxen van ongewenst haar is een veelgebruikte methode voor het verwijderen van lichaamshaar in de schoonheidsverzorging. Deze techniek omvat het aanbrengen van warme of lauwe was op de huid, het laten stollen en vervolgens het snel verwijderen, waarbij het haar wordt meegetrokken. Hier is hoe waxen in de schoonheidsverzorging doorgaans werkt:</p><h2>Voorbereiding</h2><p>Voordat het waxen begint, wordt de huid meestal grondig gereinigd om vuil, olie en cosmetische producten te verwijderen. Het is belangrijk dat de huid schoon en droog is voordat de was wordt aangebracht.</p><h2>Aanbrengen</h2><p>De was wordt verwarmd om deze vloeibaar te maken, maar mag niet te heet zijn om brandwonden te voorkomen. Vervolgens wordt het op het te ontharen gebied aangebracht met een stokje of spatel. De was hecht zich aan de haren en de huid.</p><h2>Uitharden</h2><p>De was wordt enkele ogenblikken laten uitharden. Tijdens deze periode hecht de was zich aan de haren, waarbij ze volledig worden bedekt.</p><h2>Verwijdering</h2><p>Zodra de was is uitgehard, trekt een schoonheidsprofessional snel een rand van de was weg in de richting tegen de haargroei. Deze handeling trekt de haren uit de wortel en laat de huid tijdelijk glad en haarvrij achter.</p><h2>Nazorg na het waxen</h2><p>Na het waxen is het gebruikelijk om een kalmerende lotion of vochtinbrengende crème aan te brengen om de huid te verzachten en irritatie te minimaliseren. De haren groeien geleidelijk terug, meestal binnen enkele weken.</p><p>Waxen kan worden toegepast op verschillende delen van het lichaam, waaronder benen, oksels, de bikinilijn, het gezicht en andere gebieden met ongewenst haar. Deze ontharingsmethode biedt verschillende voordelen, zoals een langdurig gladde huid, omdat de haren vanaf de wortel worden verwijderd. Er zijn echter ook potentiële nadelen, zoals de pijn die gepaard gaat met het uittrekken van de haren en de mogelijkheid van huidirritatie.</p><p>Er zijn verschillende soorten was, waaronder hete was, lauwe was en koude was, elk met zijn eigen voor- en nadelen. Sommige mensen kiezen er ook voor om zelf thuis te waxen met behulp van commerciële waxkits, hoewel dit wat oefening kan vereisen voor goede resultaten.</p><p>Voor waxen wordt aanbevolen om een ervaren professional in te schakelen, vooral voor gevoelige gebieden, om het risico op verwondingen of huidirritatie te verminderen.</p>",
+   "description": "Waxen met warme of lauwe was trekt de haren met wortel en al uit, voor een huid die langer glad blijft dan na het scheren. Verloop en tarieven.",
+   "articleHtml": "<p>Het waxen van ongewenst haar is een veelgebruikte methode voor het verwijderen van lichaamshaar in de schoonheidsverzorging. Deze techniek omvat het aanbrengen van warme of lauwe was op de huid, het laten stollen en vervolgens het snel verwijderen, waarbij het haar wordt meegetrokken. Zo werkt waxen doorgaans in de schoonheidsverzorging:</p><h2>Voorbereiding</h2><p>Voordat het waxen begint, wordt de huid meestal grondig gereinigd om vuil, olie en cosmetische producten te verwijderen. Het is belangrijk dat de huid schoon en droog is voordat de was wordt aangebracht.</p><h2>Aanbrengen</h2><p>De was wordt verwarmd om deze vloeibaar te maken, maar mag niet te heet zijn om brandwonden te voorkomen. Vervolgens wordt hij op het te ontharen gebied aangebracht met een stokje of spatel. De was hecht zich aan de haren en de huid.</p><h2>Uitharden</h2><p>Men laat de was enkele ogenblikken uitharden. Tijdens deze periode hecht de was zich aan de haren, waarbij ze volledig worden bedekt.</p><h2>Verwijdering</h2><p>Zodra de was is uitgehard, neemt een schoonheidsspecialist een rand van de was vast en trekt hem snel weg, tegen de haargroei in. Deze handeling trekt de haren met wortel en al uit en laat de huid tijdelijk glad en haarvrij achter.</p><h2>Nazorg</h2><p>Na het waxen is het gebruikelijk om een kalmerende lotion of vochtinbrengende crème aan te brengen om de huid te kalmeren en irritatie te minimaliseren. De haren groeien geleidelijk terug, meestal binnen enkele weken.</p><p>Waxen kan worden toegepast op verschillende delen van het lichaam, waaronder benen, oksels, de bikinilijn, het gezicht en andere gebieden met ongewenst haar. Deze ontharingsmethode biedt verschillende voordelen, zoals een huid die langer glad blijft dan na het scheren, omdat de haren met wortel en al worden uitgetrokken. Er zijn echter ook potentiële nadelen, zoals de pijn die gepaard gaat met het uittrekken van de haren en de mogelijkheid van huidirritatie.</p><p>Er zijn verschillende soorten was, waaronder hete was, lauwe was en koude was, elk met zijn eigen voor- en nadelen. Sommige mensen kiezen er ook voor om zelf thuis te waxen met behulp van in de handel verkrijgbare waxkits, hoewel dit wat oefening kan vereisen voor goede resultaten.</p><p>Voor waxen wordt aanbevolen om een ervaren professional in te schakelen, vooral voor gevoelige gebieden, om het risico op verwondingen of huidirritatie te verminderen.</p>",
    "priceTitle": "Tarief — Ontharing",
    "prices": [
     {
@@ -866,7 +882,7 @@
      "amount": "10 €"
     },
     {
-     "name": "Volledige Armen",
+     "name": "Volledige armen",
      "amount": "15 €"
     },
     {
@@ -874,11 +890,11 @@
      "amount": "25 €"
     },
     {
-     "name": "Halfbenen",
+     "name": "Halve benen",
      "amount": "20 €"
     },
     {
-     "name": "Volledige Benen",
+     "name": "Volledige benen",
      "amount": "25 €"
     }
    ],
@@ -887,23 +903,23 @@
      "src": "soins/cire.webp",
      "w": 801,
      "h": 1367,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Goudkleurige ontharingswas die van een spatel druipt"
     }
    ]
   },
   "dents": {
-   "title": "Tanden bleken",
-   "metaTitle": "Tanden bleken — My Bubble Beauty",
-   "description": "Tanden bleken is een cosmetische procedure die is ontworpen om de kleur van de tanden op te helderen, waardoor ze witter en helderder worden. Deze procedure…",
-   "articleHtml": "<p>Tanden bleken is een cosmetische procedure die is ontworpen om de kleur van de tanden op te helderen, waardoor ze witter en helderder worden. Deze procedure wordt veelvuldig uitgevoerd in de esthetische tandheelkunde om de uitstraling van een glimlach te verbeteren door vlekken en verkleuringen op de tanden te verwijderen. Dit is hoe het tanden bleken in esthetiek werkt:</p><h2>Initiële evaluatie</h2><p>Voordat het tanden bleken proces begint, voert een tandarts of esthetisch professional een initiële evaluatie uit om te bepalen of de patiënt een geschikte kandidaat is voor de procedure. Sommige mensen komen mogelijk niet in aanmerking vanwege onderliggende tandproblemen.</p><h2>Voorbereiding</h2><p>Voordat de tandenbleekprocedure begint, worden de tanden van de patiënt gereinigd om tandplak en tandsteen te verwijderen, wat de bleekprocedure kan belemmeren.</p><h2>Bleekopties</h2><p>Thuisbleken: De tandarts kan een thuisbleekkit verstrekken met op maat gemaakte bitjes en een bleekgel met een lage concentratie waterstofperoxide of carbamideperoxide. De patiënt vult de bitjes met de gel en draagt ze gedurende een bepaalde periode elke dag gedurende enkele weken. Dit is een geleidelijk proces.</p><p>Praktijkbleken: Deze methode wordt ook wel professioneel in de behandelstoel bleken genoemd. De tandarts brengt een meer geconcentreerde bleekgel aan op de tanden van de patiënt en gebruikt vervolgens speciaal licht of een laser om de gel te activeren. Dit proces is meestal sneller en kan onmiddellijke resultaten opleveren.</p><h2>Nazorg</h2><p>Na het bleken kan van de patiënt worden gevraagd om bepaalde mogelijk verkleurende voedingsmiddelen en dranken (zoals koffie, thee en rode wijn) een tijdje te vermijden om de resultaten te behouden. Goede mondverzorging, waaronder regelmatig poetsen en flossen, is ook essentieel.</p><h2>Nazorg</h2><p>Het basisprincipe van tanden bleken is gebaseerd op het gebruik van producten die waterstofperoxide of carbamideperoxide bevatten. Deze chemische stoffen dringen door in het tandglazuur en reageren met de moleculen die verantwoordelijk zijn voor vlekken en verkleuringen, waarbij ze worden afgebroken om de kleur van de tanden op te helderen. Het is echter belangrijk op te merken dat tanden bleken niet permanent is en de resultaten kunnen variëren van persoon tot persoon, afhankelijk van verschillende factoren, waaronder het type tandvlekken en eetgewoonten.</p><h2>Voorafgaand advies</h2><p>Het is ten zeerste aanbevolen om een tandarts of een esthetische tandheelkundige professional te raadplegen voordat u tanden bleken overweegt, aangezien dit mogelijk niet geschikt is voor iedereen, vooral voor mensen met bestaande tandproblemen. Bovendien moet het tanden bleken worden uitgevoerd onder toezicht van een professional om de veiligheid en effectiviteit van de behandeling te waarborgen.</p>",
+   "title": "Tandenbleken",
+   "metaTitle": "Tandenbleken — My Bubble Beauty",
+   "description": "Tandenbleken is een cosmetische behandeling die de kleur van de tanden lichter wil maken en vlekken wil verminderen. Verloop, voorzorgen en tarieven.",
+   "articleHtml": "<p>Tandenbleken is een cosmetische behandeling die is ontworpen om de kleur van de tanden lichter te maken, waardoor ze witter en helderder worden. Deze behandeling wordt veelvuldig uitgevoerd in de esthetische tandheelkunde om de uitstraling van een glimlach te verbeteren door vlekken en verkleuringen op de tanden te verminderen. Zo werkt tandenbleken in de esthetiek:</p><h2>Initiële evaluatie</h2><p>Voordat het tandenbleekproces begint, voert een tandarts of schoonheidsspecialist een initiële evaluatie uit om te bepalen of de behandeling voor u geschikt is. Sommige mensen komen mogelijk niet in aanmerking vanwege onderliggende tandproblemen.</p><h2>Voorbereiding</h2><p>Eerst worden uw tanden gereinigd om tandplak en tandsteen te verwijderen, die het bleken kunnen belemmeren.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling, gevoelige tanden of geïrriteerd tandvlees.</p><h2>Bleekopties</h2><p>Thuisbleken: De tandarts kan een thuisbleekkit verstrekken met op maat gemaakte bitjes en een bleekgel met een lage concentratie waterstofperoxide of carbamideperoxide. U vult de bitjes met de gel en draagt ze gedurende een bepaalde periode elke dag gedurende enkele weken. Dit is een geleidelijk proces.</p><p>Praktijkbleken: Deze methode wordt ook wel professioneel in de behandelstoel bleken genoemd. De tandarts brengt een meer geconcentreerde bleekgel aan op uw tanden en gebruikt vervolgens speciaal licht of een laser om de gel te activeren. Dit proces is meestal sneller en kan onmiddellijke resultaten opleveren.</p><h2>Nazorg</h2><p>Na het bleken kan u worden aangeraden om bepaalde mogelijk verkleurende voedingsmiddelen en dranken (zoals koffie, thee en rode wijn) een tijdje te vermijden om de resultaten te behouden. Goede mondverzorging, waaronder regelmatig poetsen en flossen, is ook essentieel.</p><h2>Werking van tandenbleken</h2><p>Het basisprincipe van tandenbleken is gebaseerd op het gebruik van producten die waterstofperoxide of carbamideperoxide bevatten. Deze chemische stoffen dringen door in het tandglazuur en reageren met de moleculen die verantwoordelijk zijn voor vlekken en verkleuringen, waarbij ze worden afgebroken om de kleur van de tanden lichter te maken. Het is echter belangrijk op te merken dat tandenbleken niet permanent is en de resultaten kunnen variëren van persoon tot persoon, afhankelijk van verschillende factoren, waaronder het type tandvlekken en eetgewoonten.</p><h2>Voorafgaand advies</h2><p>Het is ten zeerste aanbevolen om een tandarts of een esthetische tandheelkundige professional te raadplegen voordat u tandenbleken overweegt, aangezien dit mogelijk niet geschikt is voor iedereen, vooral voor mensen met bestaande tandproblemen. Bovendien moet het tandenbleken worden uitgevoerd onder toezicht van een professional om de veiligheid en effectiviteit van de behandeling te bevorderen.</p>",
    "priceTitle": "Tarief — Tandenbleken",
    "prices": [
     {
-     "name": "1 Sessie",
+     "name": "1 sessie",
      "amount": "90 €"
     },
     {
-     "name": "2 Sessies",
+     "name": "2 sessies",
      "amount": "120 €"
     }
    ],
@@ -912,39 +928,39 @@
      "src": "soins/dents.webp",
      "w": 917,
      "h": 492,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Glimlach voor en na het tandenbleken"
     }
    ]
   },
   "hifu": {
-   "title": "High-Intensity Focused Ultrasound (HIFU) in Esthetiek",
+   "title": "High-Intensity Focused Ultrasound (HIFU) in de esthetiek",
    "metaTitle": "HIFU in de esthetiek — My Bubble Beauty",
-   "description": "High-Intensity Focused Ultrasound (HIFU), of Hoog Intensiteit Gefocuste Ultrageluid, is een technologie die gebruikmaakt van gefocust ultrasone golven met…",
-   "articleHtml": "<p>High-Intensity Focused Ultrasound (HIFU), of Hoog Intensiteit Gefocuste Ultrageluid, is een technologie die gebruikmaakt van gefocust ultrasone golven met hoge intensiteit om de onderliggende weefsels op specifieke dieptes te verwarmen zonder het huidoppervlak te beschadigen. Deze warmte veroorzaakt coagulatie in de weefsels, wat de productie van collageen stimuleert en de stevigheid van de huid verbetert.</p><h2>Toepassingen in de Esthetiek</h2><p>HIFU wordt in de esthetiek gebruikt om verschillende huidproblemen en verjongingsdoelen aan te pakken, waaronder het verstrakken van de huid, het verminderen van rimpels en fijne lijntjes, evenals niet-chirurgische facelifts. Het kan helpen bij het verminderen van een slappe huid en het verbeteren van de stevigheid van de huid in het gezicht, de hals en andere delen van het lichaam. HIFU kan de verschijning van rimpels en fijne lijntjes verminderen door de productie van collageen te stimuleren. Het wordt soms \"HIFU facelift\" genoemd vanwege de verstrakkende effecten die vergelijkbaar zijn met een chirurgische facelift, maar zonder chirurgie en met weinig tot geen hersteltijd.</p><h2>Procedure</h2><p>Tijdens een HIFU-sessie geeft een apparaat intensief gefocuste ultrasone golven af op precieze dieptes in de doelweefsels. Deze ultrasone energie verwarmt de onderliggende weefsels en stimuleert de collageenproductie. De resultaten zijn meestal niet onmiddellijk zichtbaar, maar verbeteren geleidelijk in de loop van weken en maanden naarmate het collageen regenereert.</p><h2>Veiligheid en Comfort</h2><p>HIFU wordt beschouwd als een niet-invasieve procedure en veroorzaakt over het algemeen weinig bijwerkingen. Patiënten kunnen een warmtesensatie ervaren tijdens de sessie, maar de procedure is over het algemeen goed te verdragen en vereist meestal geen verdoving.</p><h2>Aantal Sessies</h2><p>Het aantal benodigde sessies hangt af van de specifieke behandeling en de doelen van de patiënt. Over het algemeen worden meerdere sessies aanbevolen voor de beste resultaten.</p><h2>Resultaten</h2><p>De resultaten van HIFU zijn geleidelijk en kunnen meerdere maanden aanhouden. De huid wordt steviger, rimpels verminderen en het gezicht kan er strakker uitzien.</p><p>HIFU is een populaire keuze in de esthetiek vanwege de effectiviteit bij het verstrakken van de huid zonder chirurgie. Echter, zoals bij elke esthetische procedure, is het belangrijk om een gekwalificeerde zorgprofessional te raadplegen om de juiste opties te bespreken op basis van uw individuele behoeften en ervoor te zorgen dat HIFU de beste oplossing voor u is.</p><p class=\"video-link\"><a class=\"btn btn--ghost\" href=\"https://www.youtube.com/watch?v=8P2RqfhO8i0\" rel=\"noopener\">Bekijk de video op YouTube</a> <small>De video opent op YouTube.</small></p>",
-   "priceTitle": "Tarief — Hifu",
+   "description": "HIFU (High-Intensity Focused Ultrasound) verwarmt met gefocuste ultrasone golven de weefsels onder de huid en stimuleert zo de collageenproductie.",
+   "articleHtml": "<p>High-Intensity Focused Ultrasound (HIFU), of hoogintensief gefocust ultrageluid, is een technologie die gebruikmaakt van gefocuste ultrasone golven met hoge intensiteit om de onderliggende weefsels op specifieke dieptes te verwarmen, waarbij het huidoppervlak in principe gespaard blijft. Deze warmte veroorzaakt coagulatie in de weefsels, wat de productie van collageen stimuleert en de stevigheid van de huid kan verbeteren.</p><h2>Toepassingen in de esthetiek</h2><p>HIFU wordt in de esthetiek gebruikt om verschillende huidproblemen en verjongingsdoelen aan te pakken, waaronder het verstrakken van de huid, het verminderen van rimpels en fijne lijntjes, evenals niet-chirurgische facelifts. Het kan helpen bij het verminderen van een slappe huid en het verbeteren van de stevigheid van de huid in het gezicht, de hals en andere delen van het lichaam. HIFU kan de zichtbaarheid van rimpels en fijne lijntjes verminderen door de productie van collageen te stimuleren. Het wordt soms \"HIFU-facelift\" genoemd vanwege de verstrakkende effecten, die zonder chirurgie en meestal met weinig tot geen hersteltijd worden bereikt. Het vervangt echter geen chirurgische facelift.</p><h2>Verloop van de behandeling</h2><p>Tijdens een HIFU-sessie geeft een apparaat intensief gefocuste ultrasone golven af op precieze dieptes in de doelweefsels. Deze ultrasone energie verwarmt de onderliggende weefsels en stimuleert de collageenproductie. De resultaten zijn meestal niet onmiddellijk zichtbaar, maar verbeteren geleidelijk in de loop van weken en maanden naarmate het collageen regenereert.</p><h2>Veiligheid en comfort</h2><p>HIFU wordt beschouwd als een niet-invasieve behandeling en veroorzaakt over het algemeen weinig bijwerkingen. U kunt tijdens de sessie een warmtegevoel ervaren, maar de behandeling is over het algemeen goed te verdragen en vereist meestal geen verdoving.</p><h2>Aantal sessies</h2><p>Het aantal benodigde sessies hangt af van de specifieke behandeling en uw doelen. Over het algemeen kunnen meerdere sessies worden aanbevolen voor de beste resultaten.</p><h2>Resultaten</h2><p>De resultaten van HIFU zijn geleidelijk en kunnen meerdere maanden aanhouden. De huid kan steviger worden, rimpels kunnen verminderen en het gezicht kan er strakker uitzien.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><p>HIFU is een populaire keuze in de esthetiek voor wie de huid zonder chirurgie wil verstrakken. Zoals bij elke esthetische behandeling is het echter belangrijk om een gekwalificeerde zorgprofessional te raadplegen om de juiste opties te bespreken op basis van uw individuele behoeften en ervoor te zorgen dat HIFU de beste oplossing voor u is.</p><p class=\"video-link\"><a class=\"btn btn--ghost\" href=\"https://www.youtube.com/watch?v=8P2RqfhO8i0\" rel=\"noopener\">Bekijk de video op YouTube</a> <small>De video opent op YouTube.</small></p>",
+   "priceTitle": "Tarief — HIFU",
    "prices": [
     {
-     "name": "Bovenste Gezicht",
+     "name": "Bovenste deel van het gezicht",
      "amount": "250 €"
     },
     {
-     "name": "Volledig Gezicht",
+     "name": "Volledig gezicht",
      "amount": "500 €"
     },
     {
-     "name": "Gezicht + Decolleté",
+     "name": "Gezicht + decolleté",
      "amount": "750 €"
     },
     {
-     "name": "Buik + Abdomen",
+     "name": "Buik + abdomen",
      "amount": "600 €"
     },
     {
-     "name": "Zadeltassen",
+     "name": "Rijbroekzone",
      "amount": "550 €"
     },
     {
-     "name": "Intieme Zone",
+     "name": "Intieme zone",
      "amount": "300 €"
     },
     {
@@ -961,15 +977,15 @@
      "src": "soins/hifu.webp",
      "w": 800,
      "h": 800,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Schema van een HIFU-toestel en de huidlagen die het bereikt"
     }
    ]
   },
   "hydra": {
    "title": "HydraFacial",
    "metaTitle": "HydraFacial — My Bubble Beauty",
-   "description": "Een HydraFacial is een niet-invasieve esthetische behandeling die tot doel heeft de uitstraling van de gezichtshuid te verbeteren door verschillende…",
-   "articleHtml": "<p>Een HydraFacial is een niet-invasieve esthetische behandeling die tot doel heeft de uitstraling van de gezichtshuid te verbeteren door verschillende technieken te combineren, waaronder exfoliatie, dieptereiniging, hydratatie en bescherming. Het is ontworpen om verschillende huidproblemen aan te pakken, zoals acne, rimpels, pigmentvlekken, een oneffen huidtextuur en hyperpigmentatie.</p><h2>Werkingsprincipe</h2><p>Reiniging: Het proces begint met een dieptereiniging van de huid om onzuiverheden, overtollig talg en dode huidcellen te verwijderen.</p><p>Exfoliatie: Vervolgens wordt een zachte exfoliërende oplossing op de huid aangebracht om dode huidcellen van het huidoppervlak te verwijderen, wat resulteert in een frissere en gladdere huid.</p><p>Extractie: Het HydraFacial-systeem maakt gebruik van zachte zuigkracht om onzuiverheden uit de huidporiën te verwijderen, wat kan helpen bij het verminderen van acne en het ontstoppen van poriën.</p><p>Hydratatie: Vervolgens wordt een hydraterende oplossing verrijkt met antioxidanten, peptiden en hyaluronzuur aangebracht om de huid diep te voeden en te hydrateren.</p><p>Bescherming: Ten slotte wordt vaak een zonnebrandcrème of zonbeschermingsproduct aangebracht om de vers behandelde huid te beschermen tegen schadelijke UV-stralen.</p><h2>Resultaten</h2><p>De hele behandeling is relatief snel en weinig ongemakkelijk. Velen beschrijven het als plezierig en ontspannend. De resultaten van een HydraFacial kunnen variëren per persoon, maar velen merken onmiddellijke verbeteringen in de uitstraling van hun huid, met een helderdere, zachtere huid en een egalere teint.</p><p>source: HydraFacial UK</p>",
+   "description": "Een HydraFacial is een niet-invasieve behandeling die de uitstraling van de gezichtshuid wil verbeteren met reiniging, exfoliatie en hydratatie.",
+   "articleHtml": "<p>Een HydraFacial is een niet-invasieve esthetische behandeling die tot doel heeft de uitstraling van de gezichtshuid te verbeteren door verschillende technieken te combineren, waaronder exfoliatie, dieptereiniging, hydratatie en bescherming. Het is ontworpen om verschillende huidproblemen minder zichtbaar te maken, zoals onzuiverheden bij een acnegevoelige huid, rimpels, pigmentvlekken en een oneffen huidtextuur.</p><h2>Werkingsprincipe</h2><p>Reiniging: Het proces begint met een dieptereiniging van de huid om onzuiverheden, overtollige talg en dode huidcellen te verwijderen.</p><p>Exfoliatie: Vervolgens wordt een zachte exfoliërende oplossing op de huid aangebracht om dode huidcellen van het huidoppervlak te verwijderen voor een frissere en gladdere huid.</p><p>Extractie: Het HydraFacial-systeem maakt gebruik van zachte zuigkracht om onzuiverheden uit de huidporiën te verwijderen, wat kan helpen bij het verminderen van huidimperfecties en het ontstoppen van poriën.</p><p>Hydratatie: Vervolgens wordt een hydraterende oplossing verrijkt met antioxidanten, peptiden en hyaluronzuur aangebracht om de huid diep te voeden en te hydrateren.</p><p>Bescherming: Ten slotte wordt vaak een zonnebrandcrème of zonnebeschermingsproduct aangebracht om de vers behandelde huid te beschermen tegen schadelijke UV-stralen.</p><h2>Resultaten</h2><p>De hele behandeling is relatief snel en weinig ongemakkelijk. Velen beschrijven het als plezierig en ontspannend. De resultaten van een HydraFacial kunnen variëren per persoon. De behandeling beoogt een onmiddellijke verbetering van de uitstraling van de huid, met een helderdere, zachtere huid en een egalere teint.</p><p>Bron: HydraFacial UK</p>",
    "priceTitle": "Tarief",
    "prices": [
     {
@@ -982,16 +998,16 @@
      "src": "soins/hydrafacial.webp",
      "w": 900,
      "h": 600,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Schoonheidsspecialiste voert een HydraFacial-behandeling uit op het gezicht van een klant"
     }
    ]
   },
   "laserepilation": {
-   "title": "Permanente Laserontharing in Esthetiek",
-   "metaTitle": "Permanente Laserontharing in Esthetiek — My Bubble Beauty",
-   "description": "Laserontharing werkt door gebruik te maken van een specifieke laser die intense lichtstraling uitzendt. Dit licht wordt geabsorbeerd door het melanine in de…",
-   "articleHtml": "<p>Laserontharing werkt door gebruik te maken van een specifieke laser die intense lichtstraling uitzendt. Dit licht wordt geabsorbeerd door het melanine in de haarzakjes. Wanneer melanine de energie van de laser absorbeert, wordt deze omgezet in warmte, wat de haarzakjes beschadigt. Dit remt de toekomstige haargroei.</p><h2>Soorten lasers</h2><p>Er zijn verschillende soorten lasers die worden gebruikt voor permanente laserontharing, waaronder Alexandrite-lasers, Nd:YAG-lasers en diodelasers. De keuze is vaak afhankelijk van de huidskleur en het haartype van de patiënt.</p><h2>Laserontharingssessie</h2><p>Tijdens een laserontharingssessie brengt de esthetisch professional de laser aan op het te behandelen gebied. Patiënten dragen meestal beschermende brillen om hun ogen te beschermen tegen het intense licht. De sessie kan enigszins ongemakkelijk zijn, maar wordt over het algemeen goed verdragen door de meeste patiënten.</p><h2>Reeksen sessies</h2><p>Laserontharing is geen eenmalige procedure. Om optimale resultaten te behalen, zijn meerdere sessies nodig met tussenpozen van enkele weken, omdat haren in verschillende cycli groeien.</p><h2>Resultaten</h2><p>De resultaten van laserontharing variëren van persoon tot persoon, maar veel patiënten merken na enkele sessies een aanzienlijke afname van haargroei op. Een groot deel van de haren kan permanent worden verwijderd, hoewel af en toe bijwerken nodig kan zijn om resterende haren te behandelen.</p><h2>Veiligheid</h2><p>Laserontharing wordt over het algemeen beschouwd als een veilige procedure wanneer uitgevoerd door een gekwalificeerde professional. Gangbare bijwerkingen zijn tijdelijk en kunnen roodheid, warmtegevoel of jeuk op het behandelde gebied omvatten.</p><h2>Voordelen</h2><p>Laserontharing heeft veel voordelen, waaronder permanente vermindering van haargroei, een gladde huid en verminderde behoefte aan scheren of harsen.</p><h2>Voorafgaand consult</h2><p>Voordat u laserontharing ondergaat, wordt aanbevolen om een esthetisch professional te raadplegen om uw huidtype, haarkleur en geschiktheid voor de procedure te beoordelen.</p><p>Permanente laserontharing is een populaire keuze voor degenen die permanent van ongewenst haar af willen. Het is echter essentieel om een gekwalificeerde professional te raadplegen om de verwachtingen, mogelijke resultaten en voorzorgsmaatregelen te bespreken voordat u deze behandeling ondergaat.</p><p class=\"video-link\"><a class=\"btn btn--ghost\" href=\"https://www.youtube.com/watch?v=bRvnZGqtHoc\" rel=\"noopener\">Bekijk de video op YouTube</a> <small>De video opent op YouTube.</small></p>",
-   "priceTitle": "Tarief — Permanente ontharing",
+   "title": "Langdurige laserontharing in de esthetiek",
+   "metaTitle": "Langdurige laserontharing in de esthetiek — My Bubble Beauty",
+   "description": "Langdurige laserontharing gebruikt licht dat door de melanine in het haar wordt geabsorbeerd om de haargroei te remmen. Meerdere sessies zijn nodig.",
+   "articleHtml": "<p>Laserontharing werkt door gebruik te maken van een specifieke laser die intense lichtstraling uitzendt. Dit licht wordt geabsorbeerd door de melanine in de haarzakjes. De door de melanine geabsorbeerde energie van de laser wordt omgezet in warmte, wat de haarzakjes beschadigt. Dit remt de toekomstige haargroei.</p><h2>Soorten lasers</h2><p>Er zijn verschillende soorten lasers die worden gebruikt voor laserontharing, waaronder Alexandrite-lasers, Nd:YAG-lasers en diodelasers. De keuze is vaak afhankelijk van uw huidskleur en haarkleur.</p><h2>Laserontharingssessie</h2><p>Tijdens een laserontharingssessie brengt de schoonheidsspecialist de laser aan op het te behandelen gebied. U draagt meestal een beschermende bril om uw ogen te beschermen tegen het intense licht. De sessie kan enigszins ongemakkelijk zijn, maar wordt over het algemeen goed verdragen door de meeste klanten.</p><h2>Meerdere sessies</h2><p>Laserontharing is geen eenmalige behandeling. Om optimale resultaten te behalen, zijn meerdere sessies nodig met tussenpozen van enkele weken, omdat haren in verschillende cycli groeien.</p><h2>Resultaten</h2><p>De resultaten van laserontharing variëren van persoon tot persoon, maar veel klanten merken na enkele sessies een aanzienlijke afname van haargroei op. Een groot deel van de haren kan duurzaam worden verwijderd, hoewel af en toe bijwerken nodig kan zijn om resterende haren te behandelen.</p><h2>Veiligheid</h2><p>Laserontharing wordt over het algemeen beschouwd als een veilige behandeling wanneer ze wordt uitgevoerd door een gekwalificeerde professional. Gangbare bijwerkingen zijn tijdelijk en kunnen roodheid, warmtegevoel of jeuk op het behandelde gebied omvatten.</p><h2>Voordelen</h2><p>Laserontharing heeft veel voordelen, waaronder duurzame vermindering van haargroei, een gladde huid en verminderde behoefte aan scheren of harsen.</p><h2>Voorafgaand consult</h2><p>Voordat u laserontharing ondergaat, wordt het aanbevolen om een schoonheidsspecialist te raadplegen om uw huidtype, haarkleur en geschiktheid voor de behandeling te beoordelen.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><p>Laserontharing is een populaire keuze voor degenen die ongewenst haar duurzaam willen verminderen. Het is echter essentieel om een gekwalificeerde professional te raadplegen om de verwachtingen, mogelijke resultaten en voorzorgsmaatregelen te bespreken voordat u deze behandeling ondergaat.</p><p class=\"video-link\"><a class=\"btn btn--ghost\" href=\"https://www.youtube.com/watch?v=bRvnZGqtHoc\" rel=\"noopener\">Bekijk de video op YouTube</a> <small>De video opent op YouTube.</small></p>",
+   "priceTitle": "Tarief — Langdurige laserontharing",
    "prices": [
     {
      "name": "Kin",
@@ -1002,7 +1018,7 @@
      "amount": "50 €"
     },
     {
-     "name": "Volledig Gezicht",
+     "name": "Volledig gezicht",
      "amount": "120 €"
     },
     {
@@ -1022,11 +1038,11 @@
      "amount": "100 €"
     },
     {
-     "name": "Halfbenen",
+     "name": "Halve benen",
      "amount": "180 €"
     },
     {
-     "name": "Volledige Benen",
+     "name": "Volledige benen",
      "amount": "250 €"
     }
    ],
@@ -1035,45 +1051,45 @@
      "src": "soins/laser.webp",
      "w": 877,
      "h": 357,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Schema van de huid vóór de behandeling, met haren in verschillende groeifasen"
     },
     {
      "src": "soins/laser2.webp",
      "w": 825,
      "h": 290,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Schema van de huid vóór de behandeling, met geschoren haren"
     },
     {
      "src": "soins/etape-3-epilation-laser.webp",
      "w": 894,
      "h": 344,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Schema van de huid tijdens de behandeling: het handstuk verwarmt de zone rond de haar"
     },
     {
      "src": "soins/etape-4-epilation-laser.webp",
      "w": 869,
      "h": 290,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Schema van de huid na de behandeling: haarzakjes die wel en niet door de warmte zijn bereikt"
     },
     {
      "src": "soins/etape-5-epilation-laser.webp",
      "w": 960,
      "h": 336,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Schema van de huid na de behandeling, wanneer de haar uitvalt"
     },
     {
      "src": "soins/etape-6-epilation-laser.webp",
      "w": 960,
      "h": 334,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Schema van de huid vier tot zes weken na de behandeling"
     }
    ]
   },
   "lipolaser": {
-   "title": "LIPO LASER",
-   "metaTitle": "LIPO LASER — My Bubble Beauty",
-   "description": "Lipo Laser-behandeling, ook wel bekend als \"lipo laser\", is een niet-invasieve esthetische procedure die tot doel heeft lichaamsvet te verminderen,…",
-   "articleHtml": "<p>Lipo Laser-behandeling, ook wel bekend als \"lipo laser\", is een niet-invasieve esthetische procedure die tot doel heeft lichaamsvet te verminderen, voornamelijk in doelgebieden zoals de buik, dijen, armen of flanken. Hier is hoe een typische lipo laser-behandeling doorgaans werkt:</p><h2>Initiële consultatie</h2><p>Voorafgaand aan een lipo laser-behandeling heeft u een eerste consultatie met een esthetisch professional. Tijdens deze consultatie worden uw vetverliesdoelen en te behandelen gebieden besproken, en worden basisgegevens over uw gezondheid en conditie in overweging genomen.</p><h2>Voorbereiding</h2><p>Op de dag van de procedure wordt het te behandelen gebied gereinigd. Foto's kunnen worden genomen om de voortgang in de loop van de tijd te volgen.</p><h2>Toepassing van lasers</h2><p>Apparaten die lage-niveau laserdiodes uitzenden, worden rechtstreeks op de huid van het te behandelen gebied geplaatst. Deze lasers zenden specifieke golflengtes uit die worden geabsorbeerd door de vetcellen onder de huid.</p><h2>Afbraak van vetcellen</h2><p>De lasers stimuleren de vetcellen, waardoor ze afbreken. Dit proces staat bekend als lipolyse, waarbij vetcellen hun triglyceriden vrijgeven als vetzuren en glycerol.</p><h2>Verwijdering van vetten</h2><p>De vetzuren en glycerol die vrijkomen tijdens lipolyse worden op natuurlijke wijze door het lichaam geëlimineerd. Dit kan plaatsvinden via het lymfestelsel en de lever.</p><h2>Na de behandeling</h2><p>Na de lipo laser-sessie wordt vaak aanbevolen om lichaamsbeweging te doen om te helpen bij het verbranden van de vrijgekomen vetten. Het is ook belangrijk om voldoende gehydrateerd te blijven om de vetverwijdering te vergemakkelijken.</p><h2>Meerdere sessies</h2><p>Eén lipo laser-behandeling kan lichte resultaten opleveren, dus meerdere sessies zijn meestal nodig om significante resultaten te behalen. Deze sessies worden doorgaans enkele weken uit elkaar gepland.</p><p>Het is belangrijk op te merken dat lipo laser is bedoeld om lichaamsvet te verminderen, maar het is geen vervanging voor een evenwichtige voeding en lichaamsbeweging. Om de resultaten te behouden, is het essentieel om een gezonde levensstijl te handhaven.</p>",
+   "title": "Lipo laser",
+   "metaTitle": "Lipo laser — My Bubble Beauty",
+   "description": "Laserlipolyse, ook wel \"lipo laser\" genoemd, is een niet-invasieve esthetische behandeling die lichaamsvet wil verminderen in zones zoals buik en dijen.",
+   "articleHtml": "<p>Laserlipolyse, ook wel bekend als \"lipo laser\", is een niet-invasieve esthetische behandeling die tot doel heeft lichaamsvet te verminderen, voornamelijk in doelgebieden zoals de buik, dijen, armen of flanken. Zo werkt een lipo laser-behandeling doorgaans:</p><h2>Initiële consultatie</h2><p>Voorafgaand aan een lipo laser-behandeling heeft u een eerste consultatie met een schoonheidsspecialist. Tijdens deze consultatie worden uw vetverliesdoelen en te behandelen gebieden besproken, en worden basisgegevens over uw gezondheid en conditie in overweging genomen.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><h2>Voorbereiding</h2><p>Op de dag van de behandeling wordt het te behandelen gebied gereinigd. Foto's kunnen worden genomen om de voortgang in de loop van de tijd te volgen.</p><h2>Toepassing van lasers</h2><p>Lipo laser-apparaten bevatten diodes die laserlicht met een lage intensiteit uitzenden. Ze worden rechtstreeks op de huid van het te behandelen gebied geplaatst. Deze lasers zenden specifieke golflengtes uit die worden geabsorbeerd door de vetcellen onder de huid.</p><h2>Werking op de vetcellen</h2><p>De lasers zijn bedoeld om de vetcellen te stimuleren en zo het vrijkomen van hun inhoud te bevorderen. Dit proces staat bekend als lipolyse, waarbij vetcellen hun triglyceriden vrijgeven als vetzuren en glycerol.</p><h2>Verwijdering van vetten</h2><p>De vetzuren en glycerol die vrijkomen tijdens lipolyse worden op natuurlijke wijze door het lichaam geëlimineerd. Dit kan plaatsvinden via het lymfestelsel en de lever.</p><h2>Na de behandeling</h2><p>Na de lipo laser-sessie wordt het vaak aanbevolen om lichaamsbeweging te doen om te helpen bij het verbranden van de vrijgekomen vetten. Het is ook belangrijk om voldoende gehydrateerd te blijven om de vetverwijdering te vergemakkelijken.</p><h2>Meerdere sessies</h2><p>Eén lipo laser-behandeling kan lichte resultaten opleveren, dus meerdere sessies zijn meestal nodig om meer zichtbare resultaten te kunnen verwachten, die van persoon tot persoon verschillen. Deze sessies worden doorgaans enkele weken uit elkaar gepland.</p><p>Het is belangrijk op te merken dat lipo laser is bedoeld om lichaamsvet te verminderen, maar het is geen vervanging voor een evenwichtige voeding en lichaamsbeweging. Om de resultaten te behouden, is het essentieel om een gezonde levensstijl te handhaven.</p>",
    "priceTitle": "Tarief",
    "prices": [
     {
@@ -1086,15 +1102,15 @@
      "src": "soins/lipolaser.webp",
      "w": 750,
      "h": 302,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Schema dat een huid met cellulitis vergelijkt vóór en na een lipolaserkuur"
     }
    ]
   },
   "mado": {
-   "title": "De Maderotherapie",
-   "metaTitle": "De Maderotherapie — My Bubble Beauty",
-   "description": "Maderotherapie is een techniek voor lichaamsmassage en -vorming die gebruikmaakt van speciaal ontworpen houten gereedschappen, zoals rollen, stokken en…",
-   "articleHtml": "<p>Maderotherapie is een techniek voor lichaamsmassage en -vorming die gebruikmaakt van speciaal ontworpen houten gereedschappen, zoals rollen, stokken en houten lepels, om de huidtextuur te verbeteren, cellulitis te verminderen en ontspanning te bevorderen. De term \"maderotherapie\" is afgeleid van het Spaanse woord \"madera,\" wat hout betekent, en \"therapie.\"</p><h2>Voorbereiding</h2><p>Vóór de behandeling bespreekt de gezondheids- of schoonheidsspecialist de doelen en zorgen van de patiënt. Vervolgens wordt er massageolie of lotion op de huid aangebracht om het glijden van de houten gereedschappen te vergemakkelijken.</p><h2>Massage met houten gereedschappen</h2><p>De behandelaar gebruikt speciaal ontworpen houten gereedschappen om verschillende soorten massagemethoden uit te voeren. Deze houten gereedschappen hebben diverse vormen en afmetingen die geschikt zijn voor verschillende lichaamsdelen en massagetechnieken. De bewegingen kunnen kneden, rollen, drukken of cirkelvormig zijn, afhankelijk van de behandeldoelen.</p><h2>Effecten</h2><p>Maderotherapie heeft tot doel de bloedsomloop en lymfedrainage te stimuleren, vetophopingen los te maken, vochtophoping te verminderen, de huid te verzachten, de huidtextuur te verbeteren en spierontspanning te bevorderen. Het kan ook worden gebruikt om gebieden van het lichaam met cellulitis aan te pakken.</p><h2>Meerdere sessies</h2><p>Om optimale resultaten te behalen, zijn doorgaans meerdere maderotherapiesessies nodig. De frequentie van de sessies is afhankelijk van de doelen van de patiënt en de conditie van de huid.</p><p>Maderotherapie wordt vaak beschouwd als een niet-invasieve en ontspannende behandeling, hoewel de sensaties tijdens de behandeling kunnen variëren afhankelijk van de toegepaste druk en behandelde gebieden. De voordelen van maderotherapie kunnen een strakkere huid, een vermindering van cellulitis en een verbeterde bloedsomloop omvatten.</p><p>Zoals bij elke esthetische behandeling wordt aanbevolen om een gekwalificeerde professional te raadplegen om uw specifieke behoeften, voordelen en mogelijke risico's van maderotherapie te bespreken, evenals om te beoordelen of deze behandeling geschikt is voor uw situatie.</p>",
+   "title": "De maderotherapie",
+   "metaTitle": "De maderotherapie — My Bubble Beauty",
+   "description": "Maderotherapie is een massage met houten instrumenten voor een betere huidtextuur en minder zichtbare cellulitis. Ontdek het verloop en het tarief.",
+   "articleHtml": "<p>Maderotherapie is een techniek voor lichaamsmassage en -modellering die gebruikmaakt van speciaal ontworpen houten instrumenten, zoals rollen, stokken en houten lepels, om de huidtextuur te verbeteren, de zichtbaarheid van cellulitis te verminderen en ontspanning te bevorderen. De term \"maderotherapie\" is afgeleid van het Spaanse woord \"madera\", wat hout betekent, en \"therapie\".</p><h2>Voorbereiding</h2><p>Vóór de behandeling bespreekt de behandelaar met u uw doelen en zorgen. Vervolgens wordt er massageolie of lotion op de huid aangebracht om het glijden van de houten instrumenten te vergemakkelijken.</p><h2>Massage met houten instrumenten</h2><p>De behandelaar gebruikt speciaal ontworpen houten instrumenten om verschillende soorten massagemethoden uit te voeren. Deze houten instrumenten hebben diverse vormen en afmetingen die geschikt zijn voor verschillende lichaamsdelen en massagetechnieken. De bewegingen kunnen knedend, rollend, drukkend of cirkelvormig zijn, afhankelijk van de behandeldoelen.</p><h2>Effecten</h2><p>Maderotherapie heeft tot doel zones met plaatselijke rondingen te behandelen, de huid gladder te maken, de huidtextuur te verbeteren en spierontspanning te bevorderen. Ze kan ook worden gebruikt om gebieden van het lichaam met cellulitis aan te pakken.</p><h2>Meerdere sessies</h2><p>Om optimale resultaten te behalen, zijn doorgaans meerdere maderotherapiesessies nodig. De frequentie van de sessies is afhankelijk van uw doelen en de conditie van uw huid.</p><p>Maderotherapie wordt vaak beschouwd als een niet-invasieve en ontspannende behandeling, hoewel het gevoel tijdens de behandeling kan variëren afhankelijk van de toegepaste druk en de behandelde zones. De voordelen van maderotherapie kunnen een stevigere en strakkere huid en minder zichtbare cellulitis omvatten.</p><p>Zoals bij elke esthetische behandeling wordt aanbevolen om een gekwalificeerde professional te raadplegen om uw specifieke behoeften, voordelen en mogelijke risico's van maderotherapie te bespreken, en om te beoordelen of deze behandeling geschikt is voor uw situatie.</p>",
    "priceTitle": "Tarief",
    "prices": [
     {
@@ -1107,15 +1123,15 @@
      "src": "soins/mado.webp",
      "w": 920,
      "h": 908,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Beenmassage met een houten roller voor maderotherapie"
     }
    ]
   },
   "microneed": {
    "title": "Microneedling/Micropen",
    "metaTitle": "Microneedling/Micropen — My Bubble Beauty",
-   "description": "Microneedling/Micropen is een esthetische procedure waarbij gebruik wordt gemaakt van een medisch apparaat met fijne naalden om gecontroleerde, minuscule…",
-   "articleHtml": "<p>Microneedling/Micropen is een esthetische procedure waarbij gebruik wordt gemaakt van een medisch apparaat met fijne naalden om gecontroleerde, minuscule openingen in de huid te creëren. Deze techniek staat ook bekend als micro-needling-therapie of microperforatietherapie. Zo werkt microneedling:</p><h2>Voorbereiding</h2><p>Voorafgaand aan de procedure reinigt uw esthetisch professional uw huid grondig en kan een verdovende gel worden aangebracht om ongemak te minimaliseren. De naalddiepte wordt aangepast op basis van uw specifieke behoeften en de te behandelen gebieden.</p><h2>Micro-prikken</h2><p>Het microneedling-apparaat wordt zachtjes over de huid bewogen, waarbij kleine prikjes worden gemaakt. Deze prikjes zijn zo klein dat ze meestal nauwelijks met het blote oog zichtbaar zijn. Het apparaat is doorgaans voorzien van verschillende naaldlengtes om verschillende huidlagen te bereiken, afhankelijk van het specifieke probleem dat wordt behandeld.</p><h2>Stimulatie van collageen</h2><p>De microperforaties stimuleren de natuurlijke reactie van de huid door de productie van collageen en elastine te bevorderen. Collageen is een essentieel eiwit dat de huid stevigheid en elasticiteit geeft, terwijl elastine helpt om de huid soepel te houden. Deze collageenstimulatie helpt de huid te herstellen en te regenereren, waardoor de textuur en het uiterlijk verbeteren.</p><h2>Nazorg</h2><p>Na de behandeling kan uw esthetisch professional specifieke topische producten aanbrengen, zoals hydraterende serums of groeifactoren, om genezing en hydratatie van de huid te bevorderen. Het wordt ook aanbevolen om overmatige blootstelling aan de zon te vermijden en zonnebrandcrème te gebruiken om de pas behandelde huid te beschermen.</p><h2>Voordelen</h2><p>Microneedling kan worden gebruikt om een verscheidenheid aan huidproblemen aan te pakken, waaronder rimpels en fijne lijntjes, acne littekens, pigmentvlekken, verlies van huidelasticiteit en andere huidonvolkomenheden. De resultaten zijn meestal niet onmiddellijk zichtbaar, aangezien de productie van collageen tijd kost. U zult geleidelijke verbeteringen in de huidtextuur in de weken na de procedure opmerken.</p><h2>Meerdere sessies</h2><p>Het aantal benodigde sessies is afhankelijk van uw behandelingsdoelen en de ernst van uw huidproblemen. Uw esthetisch professional zal een aangepast behandelingsplan opstellen om aan uw specifieke behoeften te voldoen.</p><h2>Voorafgaande consultatie</h2><p>Het is belangrijk om een gekwalificeerde professional te raadplegen voor microneedling, omdat onjuist gebruik van het apparaat of ongeschikte naalden complicaties kan veroorzaken. Deze procedure wordt doorgaans als veilig beschouwd wanneer deze wordt uitgevoerd door een ervaren professional.</p>",
+   "description": "Microneedling maakt met fijne naalden minuscule openingen in de huid om de textuur en het uiterlijk te verbeteren. Ontdek het verloop en het tarief.",
+   "articleHtml": "<p>Microneedling/Micropen is een esthetische behandeling waarbij gebruik wordt gemaakt van een apparaat met fijne naalden om gecontroleerde, minuscule openingen in de huid te creëren. Deze techniek staat ook bekend als microperforatie. Zo werkt microneedling:</p><h2>Voorbereiding</h2><p>Voorafgaand aan de behandeling reinigt uw schoonheidsspecialist uw huid grondig en kan een verdovende gel worden aangebracht om ongemak te minimaliseren. De naalddiepte wordt aangepast op basis van uw specifieke behoeften en de te behandelen gebieden.</p><h2>Microprikken</h2><p>Het microneedlingapparaat wordt zachtjes over de huid bewogen, waarbij kleine prikjes worden gemaakt. Deze prikjes zijn zo klein dat ze meestal nauwelijks met het blote oog zichtbaar zijn. Het apparaat is doorgaans voorzien van verschillende naaldlengtes om verschillende huidlagen te bereiken, afhankelijk van het doel van de behandeling.</p><h2>Stimulatie van collageen</h2><p>De microperforaties zijn bedoeld om de natuurlijke reactie van de huid te stimuleren, met name de aanmaak van collageen en elastine. Collageen is een essentieel eiwit dat de huid stevigheid en elasticiteit geeft, terwijl elastine helpt om de huid soepel te houden. Deze collageenstimulatie kan bijdragen aan een betere textuur en een mooier uiterlijk van de huid.</p><h2>Nazorg</h2><p>Na de behandeling kan uw schoonheidsspecialist specifieke topische producten aanbrengen, zoals hydraterende serums of groeifactoren, om de huid te kalmeren en te hydrateren. Het wordt ook aanbevolen om overmatige blootstelling aan de zon te vermijden en zonnebrandcrème te gebruiken om de pas behandelde huid te beschermen.</p><h2>Voordelen</h2><p>Microneedling kan worden gebruikt om het uiterlijk van verschillende huidproblemen te verbeteren, waaronder rimpels en fijne lijntjes, acnelittekens, pigmentvlekken, verlies van huidstevigheid en andere huidonvolkomenheden. De resultaten zijn meestal niet onmiddellijk zichtbaar, aangezien de productie van collageen tijd kost. U kunt geleidelijke verbeteringen in het uiterlijk van uw huid in de weken na de behandeling opmerken.</p><h2>Meerdere sessies</h2><p>Het aantal benodigde sessies is afhankelijk van uw behandelingsdoelen en de toestand van uw huid. Uw schoonheidsspecialist zal een aangepast behandelingsplan opstellen om aan uw specifieke behoeften te voldoen.</p><h2>Voorafgaande consultatie</h2><p>Het is belangrijk om een gekwalificeerde professional te raadplegen voor microneedling, omdat onjuist gebruik van het apparaat of ongeschikte naalden complicaties kan veroorzaken. Deze behandeling wordt doorgaans als veilig beschouwd wanneer ze wordt uitgevoerd door een ervaren professional.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p>",
    "priceTitle": "Tarief",
    "prices": [
     {
@@ -1128,33 +1144,33 @@
      "src": "soins/microneed.webp",
      "w": 800,
      "h": 650,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Schema van de huid vóór de microneedling"
     },
     {
      "src": "soins/microneed2.webp",
      "w": 800,
      "h": 650,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Schema van de huid tijdens de microneedling: de pen maakt kleine perforaties"
     },
     {
      "src": "soins/microneedling3.webp",
      "w": 800,
      "h": 650,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Schema van de huid tijdens de microneedling: een serum dringt via de perforaties binnen"
     },
     {
      "src": "soins/microneedling4.webp",
      "w": 800,
      "h": 650,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Schema van de huid vier tot zes weken na de microneedling"
     }
    ]
   },
   "peeling": {
    "title": "De oppervlakkige peeling",
    "metaTitle": "De oppervlakkige peeling — My Bubble Beauty",
-   "description": "De oppervlakkige peeling is een esthetische procedure die tot doel heeft de huidtextuur te verbeteren, de teint gelijkmatiger te maken en bepaalde kleine…",
-   "articleHtml": "<p>De oppervlakkige peeling is een esthetische procedure die tot doel heeft de huidtextuur te verbeteren, de teint gelijkmatiger te maken en bepaalde kleine huidproblemen, zoals pigmentvlekken, fijne lijntjes en lichte acne, te verminderen. Deze techniek maakt gebruik van een milde chemische oplossing om de bovenste laag van de huid te exfoliëren, wat de celvernieuwing stimuleert en zorgt voor een gladdere en stralendere huid. Zo werkt doorgaans een oppervlakkige peeling in de esthetiek:</p><h2>Initiële consultatie</h2><p>Voorafgaand aan een oppervlakkige peeling evalueert een esthetisch professional de toestand van uw huid, bespreekt uw specifieke zorgen en bepaalt of de peeling geschikt is voor uw huidtype en behoeften. Er zijn verschillende soorten chemische oplossingen voor peelings, en de keuze hangt af van uw huidtype en het doel van de behandeling.</p><h2>Reiniging van de huid</h2><p>Voor het aanbrengen van de peelingoplossing wordt de huid zorgvuldig gereinigd om vuil, make-up en oliën te verwijderen.</p><h2>Toepassing van de peelingoplossing</h2><p>Vervolgens brengt de esthetisch professional de peelingoplossing op de huid aan en zorgt ervoor dat het te behandelen gebied gelijkmatig wordt bedekt. De oplossing kan alfahydroxyzuren (AHA's), bètahydroxyzuren (BHA's) of andere milde exfoliërende ingrediënten bevatten.</p><h2>Belichtingstijd</h2><p>De peelingoplossing blijft gedurende een korte, door de professional bepaalde tijd op de huid, meestal enkele minuten. De duur hangt af van de concentratie van de oplossing en de tolerantie van de huid van de patiënt.</p><h2>Neutralisatie</h2><p>Nadat de belichtingstijd is verstreken, neutraliseert de professional de oplossing door deze af te spoelen of door een specifiek product te gebruiken om de chemische werking te stoppen.</p><h2>Verzorging na de peeling</h2><p>Na de procedure is het belangrijk om de instructies voor nazorg van de esthetisch professional op te volgen. Dit kan het aanbrengen van een vochtinbrengende crème, het gebruik van specifieke producten en het vermijden van overmatige blootstelling aan de zon gedurende enige tijd omvatten, omdat de huid vaak gevoeliger is na een peeling.</p><h2>Resultaten</h2><p>De resultaten van een oppervlakkige peeling zijn meestal niet onmiddellijk zichtbaar, omdat de huid tijd nodig heeft om zich te vernieuwen. In de dagen en weken na de procedure moet de huid er echter stralender, egaler en gladder uitzien.</p><p>Een oppervlakkige peeling wordt beschouwd als een milde procedure en vereist meestal geen langdurige hersteltijd. Meerdere sessies kunnen echter nodig zijn om de gewenste resultaten te bereiken, en het is essentieel om een gekwalificeerde professional te kiezen om de risico's te minimaliseren en de voordelen van de behandeling te optimaliseren. Deze procedure kan worden toegepast op verschillende delen van het lichaam, zoals het gezicht, de nek, het decolleté en de handen, afhankelijk van de behoeften van de patiënt.</p>",
+   "description": "Een oppervlakkige peeling is een milde exfoliatie om de huidtextuur te verbeteren en de teint te egaliseren. Ontdek het verloop en het tarief.",
+   "articleHtml": "<p>De oppervlakkige peeling is een esthetische behandeling die tot doel heeft de huidtextuur te verbeteren, de teint gelijkmatiger te maken en bepaalde kleine huidproblemen, zoals pigmentvlekken, fijne lijntjes en onzuiverheden bij een huid met neiging tot acne, te verminderen. Deze techniek maakt gebruik van een milde chemische oplossing om de bovenste laag van de huid te exfoliëren, met als doel de celvernieuwing te stimuleren en bij te dragen aan een gladdere en stralendere huid. Zo werkt doorgaans een oppervlakkige peeling in de esthetiek:</p><h2>Eerste consultatie</h2><p>Voorafgaand aan een oppervlakkige peeling evalueert een schoonheidsspecialist de toestand van uw huid, bespreekt uw specifieke zorgen en bepaalt of de peeling geschikt is voor uw huidtype en behoeften. Er zijn verschillende soorten chemische oplossingen voor peelings, en de keuze hangt af van uw huidtype en het doel van de behandeling.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><h2>Reiniging van de huid</h2><p>Voor het aanbrengen van de peelingoplossing wordt de huid zorgvuldig gereinigd om vuil, make-up en overtollige talg te verwijderen.</p><h2>Toepassing van de peelingoplossing</h2><p>Vervolgens brengt de schoonheidsspecialist de peelingoplossing op de huid aan en zorgt ervoor dat het te behandelen gebied gelijkmatig wordt bedekt. De oplossing kan alfahydroxyzuren (AHA's), bètahydroxyzuren (BHA's) of andere milde exfoliërende ingrediënten bevatten.</p><h2>Inwerktijd</h2><p>De peelingoplossing blijft gedurende een korte, door de professional bepaalde tijd op de huid, meestal enkele minuten. De duur hangt af van de concentratie van de oplossing en de tolerantie van uw huid.</p><h2>Neutralisatie</h2><p>Nadat de inwerktijd is verstreken, neutraliseert de professional de oplossing door deze af te spoelen of door een specifiek product te gebruiken om de chemische werking te stoppen.</p><h2>Verzorging na de peeling</h2><p>Na de behandeling is het belangrijk om de nazorginstructies van de schoonheidsspecialist op te volgen. Dit kan het aanbrengen van een vochtinbrengende crème, het gebruik van specifieke producten en het vermijden van blootstelling aan de zon gedurende enige tijd omvatten, omdat de huid vaak gevoeliger is na een peeling.</p><h2>Resultaten</h2><p>De resultaten van een oppervlakkige peeling zijn meestal niet onmiddellijk zichtbaar, omdat de huid tijd nodig heeft om zich te vernieuwen. In de dagen en weken na de behandeling zou de huid er echter stralender, egaler en gladder moeten uitzien.</p><p>Een oppervlakkige peeling wordt beschouwd als een milde behandeling en vereist meestal geen langdurige hersteltijd. Meerdere sessies kunnen echter nodig zijn om de gewenste resultaten te bereiken, en het is essentieel om een gekwalificeerde professional te kiezen om de risico's te minimaliseren en de voordelen van de behandeling te optimaliseren. Deze behandeling kan worden toegepast op verschillende delen van het lichaam, zoals het gezicht, de hals, het decolleté en de handen, afhankelijk van uw behoeften.</p>",
    "priceTitle": "Tarief",
    "prices": [
     {
@@ -1167,27 +1183,27 @@
      "src": "soins/hydra.webp",
      "w": 750,
      "h": 497,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Schema van de huid vóór de peeling"
     },
     {
      "src": "soins/hydra2.webp",
      "w": 750,
      "h": 497,
-     "alt": "Image illustrative"
+     "alt": "Schema van de huid tijdens de peeling: de oplossing wordt met een wattenstaafje aangebracht"
     },
     {
      "src": "soins/hydra3.webp",
      "w": 750,
      "h": 497,
-     "alt": "Image illustrative"
+     "alt": "Schema van de huid enkele dagen na de peeling"
     }
    ]
   },
   "photo": {
    "title": "Fototherapie",
    "metaTitle": "Fototherapie — My Bubble Beauty",
-   "description": "Fototherapie, ook bekend als lichttherapie, is een techniek die in de esthetiek wordt gebruikt om verschillende huidproblemen te behandelen en de huidskleur…",
-   "articleHtml": "<p>Fototherapie, ook bekend als lichttherapie, is een techniek die in de esthetiek wordt gebruikt om verschillende huidproblemen te behandelen en de huidskleur te verbeteren door gebruik te maken van verschillende golflengtes van licht. Fototherapie kan worden uitgevoerd met verschillende apparaten, waaronder LED-lampen of lasers. Dit is hoe fototherapie in de esthetiek doorgaans werkt:</p><h2>Selectie van de golflengte</h2><p>Fototherapie omvat het gebruik van licht bij een specifieke golflengte, afhankelijk van het behandeldoel. Verschillende golflengtes richten zich op verschillende huidproblemen. Bijvoorbeeld, rood licht wordt vaak gebruikt om de productie van collageen te stimuleren en de huidtextuur te verbeteren, terwijl blauw licht wordt gebruikt om acne te behandelen door de bacteriën die verantwoordelijk zijn voor infectie te doden.</p><h2>Voorbereiding van de huid</h2><p>Voorafgaand aan fototherapie moet de huid schoon en vrij van cosmetica zijn. Patiënten dragen vaak beschermende brillen om hun ogen te beschermen tegen intens licht.</p><h2>Fototherapiesessie</h2><p>De esthetisch professional gebruikt het fototherapie-apparaat om de huid bloot te stellen aan licht bij de specifieke golflengte gedurende een bepaalde tijd. Het licht wordt meestal gelijkmatig aangebracht op het te behandelen gebied.</p><h2>Huidreactie</h2><p>Het licht dringt de huid binnen en interageert met de doelcellen, wat verschillende gunstige effecten kan hebben, zoals het stimuleren van de productie van collageen, het verminderen van ontstekingen, het vernietigen van bacteriën die verantwoordelijk zijn voor acne, of het verminderen van overmatige pigmentatie.</p><h2>Nazorg</h2><p>Na de fototherapiesessie kan het nodig zijn om kalmerende of hydraterende topische producten aan te brengen om de huid te kalmeren en irritaties te minimaliseren. Zonbescherming is ook belangrijk na de behandeling, omdat de huid gevoeliger kan zijn voor zonneschade.</p><h2>Resultaten</h2><p>Fototherapie wordt gebruikt om een breed scala aan huidproblemen te behandelen, waaronder acne, rimpels, pigmentvlekken, littekens, psoriasis en andere huidaandoeningen. De voordelen van fototherapie omvatten over het algemeen weinig tot geen hersteltijd, geleidelijke resultaten en minder bijwerkingen in vergelijking met meer invasieve behandelingen.</p><h2>Duur</h2><p>De duur van de behandeling en het aantal benodigde sessies variëren afhankelijk van de aandoening die wordt behandeld en de individuele reactie van de huid. Het is belangrijk om een gekwalificeerde esthetisch professional te raadplegen om uw specifieke behoeften te bespreken en te bepalen of fototherapie geschikt is voor u.</p>",
+   "description": "Fototherapie, ook lichttherapie genoemd, wordt in de esthetiek gebruikt om het uiterlijk van de huid te verbeteren. Ontdek het verloop en het tarief.",
+   "articleHtml": "<p>Fototherapie, ook bekend als lichttherapie, is een techniek die in de esthetiek wordt gebruikt om het uiterlijk van de huid te verbeteren en verschillende onvolkomenheden minder zichtbaar te maken, door gebruik te maken van verschillende golflengtes van licht. Fototherapie kan worden uitgevoerd met verschillende apparaten, waaronder LED-lampen of lasers. Zo werkt fototherapie in de esthetiek doorgaans:</p><h2>Selectie van de golflengte</h2><p>Fototherapie maakt gebruik van licht met een specifieke golflengte, afhankelijk van het behandeldoel. Verschillende golflengtes richten zich op verschillende huidproblemen. Rood licht wordt bijvoorbeeld vaak gebruikt om de productie van collageen te stimuleren en de huidtextuur te verbeteren, terwijl blauw licht wordt gebruikt om een acnegevoelige huid te helpen zuiveren.</p><h2>Voorbereiding van de huid</h2><p>Voorafgaand aan fototherapie moet de huid schoon en vrij van cosmetica zijn. Klanten dragen vaak beschermende brillen om hun ogen te beschermen tegen intens licht.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><h2>Fototherapiesessie</h2><p>De schoonheidsspecialist gebruikt het fototherapie-apparaat om de huid gedurende een bepaalde tijd bloot te stellen aan licht met de gekozen golflengte. Het licht wordt meestal gelijkmatig op het te behandelen gebied gericht.</p><h2>Huidreactie</h2><p>Het licht dringt de huid binnen en interageert met de doelcellen, wat verschillende gunstige effecten kan hebben, zoals het stimuleren van de productie van collageen, het kalmeren van de huid, het zuiveren van een acnegevoelige huid, of het minder zichtbaar maken van overmatige pigmentatie.</p><h2>Nazorg</h2><p>Na de fototherapiesessie kan het nodig zijn om kalmerende of hydraterende topische producten aan te brengen om de huid te kalmeren en irritaties te minimaliseren. Zonnebescherming is ook belangrijk na de behandeling, omdat de huid gevoeliger kan zijn voor zonneschade.</p><h2>Resultaten</h2><p>Fototherapie wordt gebruikt om het uiterlijk van een breed scala aan huidproblemen te verbeteren, waaronder een acnegevoelige huid, rimpels, pigmentvlekken en littekens. De voordelen van fototherapie zijn over het algemeen weinig tot geen hersteltijd en geleidelijke resultaten.</p><h2>Duur</h2><p>De duur van de behandeling en het aantal benodigde sessies variëren afhankelijk van het behandeldoel en de individuele reactie van de huid. Het is belangrijk om een gekwalificeerde schoonheidsspecialist te raadplegen om uw specifieke behoeften te bespreken en te bepalen of fototherapie voor u geschikt is.</p>",
    "priceTitle": "Tarief",
    "prices": [
     {
@@ -1200,19 +1216,19 @@
      "src": "soins/photo.webp",
      "w": 924,
      "h": 1364,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Gezicht van een klant onder een paneel met rode leds"
     }
    ]
   },
   "plasma": {
    "title": "De plasma pen / micropen",
    "metaTitle": "De plasma pen / micropen — My Bubble Beauty",
-   "description": "De plasma pen / micropen, ook wel bekend als plasmapen of plasmapen, is een relatief recent esthetisch behandelingsapparaat dat wordt gebruikt om…",
-   "articleHtml": "<p>De plasma pen / micropen, ook wel bekend als plasmapen of plasmapen, is een relatief recent esthetisch behandelingsapparaat dat wordt gebruikt om verschillende huidproblemen aan te pakken, waaronder een verslapte huid, rimpels, littekens, striae en pigmentvlekken. Dit apparaat werkt door een boog van plasma aan het huidoppervlak te genereren, wat resulteert in gecontroleerde microletsels. Dit is hoe de plasma pen doorgaans werkt in de esthetiek:</p><h2>Basisprincipe</h2><p>De plasma pen gebruikt elektrische energie om een dunne, hete plasmaboog aan het uiteinde van de pen te creëren. Plasma is een geïoniseerd gas dat bestaat uit geladen deeltjes, wat betekent dat het zowel positieve als negatieve ionen bevat.</p><h2>Toepassing</h2><p>De esthetisch professional gebruikt de plasma pen om specifieke gebieden van de huid te behandelen. Wanneer de penpunt de huid raakt, wordt de plasmaboog naar het huidoppervlak gericht. Dit creëert uiterst kleine, brandende micropunten op de huid zonder de omliggende weefsels te beschadigen.</p><h2>Huidverstrakking</h2><p>De toepassing van plasma resulteert in onmiddellijke huidverstrakking, doordat de gegenereerde warmte leidt tot samentrekking van de collageenvezels in het behandelde gebied. Dit kan helpen om de verschijning van een verslapte huid te verminderen.</p><h2>Vorming van korstjes en microletsels</h2><p>De micropunten die door de plasma pen worden gecreëerd, leiden ook tot de vorming van korstjes op de huid. In de dagen na de procedure vallen deze korstjes vanzelf af en laten nieuwe huid eronder zien. Tijdens dit genezingsproces produceert de huid ook extra collageen, wat de textuur en algehele uitstraling van de huid kan verbeteren.</p><h2>Resultaten</h2><p>De resultaten van de plasma pen kunnen variëren, afhankelijk van het behandelde huidprobleem en de diepte waarop het apparaat is gebruikt. Patiënten kunnen na verloop van tijd verbeteringen zien in de uitstraling van hun huid naarmate de effecten van collageen zichtbaar worden. Meerdere sessies kunnen echter nodig zijn om optimale resultaten te behalen.</p><p>Het is belangrijk op te merken dat de plasma pen een invasieve procedure is, zij het minder invasief dan sommige andere esthetische ingrepen. Patiënten kunnen tijdens de procedure enig ongemak ervaren, maar doorgaans worden plaatselijke verdovingsmiddelen aangebracht om dit ongemak te minimaliseren.</p><p>De plasma pen moet worden gebruikt door getrainde en ervaren esthetische professionals, aangezien onjuist gebruik complicaties of littekens kan veroorzaken. Zoals bij elke esthetische procedure wordt aanbevolen om een esthetisch professional te raadplegen om uw specifieke behoeften te bespreken en te bepalen of de plasma pen geschikt is voor u.</p>",
-   "priceTitle": "Tarief — Plasma-Lift",
+   "description": "De plasma pen / micropen is een esthetisch apparaat om het uiterlijk van een verslapte huid, rimpels, littekens en pigmentvlekken te verbeteren.",
+   "articleHtml": "<p>De plasma pen / micropen, ook wel bekend als plasmapen, is een relatief recent esthetisch behandelingsapparaat dat wordt gebruikt om het uiterlijk van verschillende huidproblemen te verbeteren, waaronder een verslapte huid, rimpels, littekens, striae en pigmentvlekken. Dit apparaat werkt door een boog van plasma aan het huidoppervlak te genereren, wat resulteert in gecontroleerde microletsels. Zo werkt de plasma pen doorgaans in de esthetiek:</p><h2>Basisprincipe</h2><p>De plasma pen gebruikt elektrische energie om een dunne, hete plasmaboog aan het uiteinde van de pen te creëren. Plasma is een geïoniseerd gas dat bestaat uit geladen deeltjes, wat betekent dat het ionen en vrije elektronen bevat.</p><h2>Toepassing</h2><p>De schoonheidsspecialist gebruikt de plasma pen om specifieke gebieden van de huid te behandelen. Wanneer de penpunt de huid raakt, wordt de plasmaboog naar het huidoppervlak gericht. Dit creëert uiterst kleine, brandende micropunten op de huid, waarbij de omliggende weefsels zoveel mogelijk worden gespaard.</p><h2>Huidverstrakking</h2><p>De toepassing van plasma kan resulteren in onmiddellijke huidverstrakking, doordat de gegenereerde warmte leidt tot samentrekking van de collageenvezels in het behandelde gebied. Dit kan helpen om de zichtbaarheid van een verslapte huid te verminderen.</p><h2>Vorming van korstjes en microletsels</h2><p>De micropunten die door de plasma pen worden gecreëerd, leiden ook tot de vorming van korstjes op de huid. In de dagen na de behandeling vallen deze korstjes vanzelf af en laten nieuwe huid eronder zien. Tijdens deze herstelfase produceert de huid ook extra collageen, wat de textuur en algehele uitstraling van de huid kan verbeteren.</p><h2>Resultaten</h2><p>De resultaten van de plasma pen kunnen variëren, afhankelijk van het huidprobleem waarop de behandeling gericht is en van de diepte waarop het apparaat is gebruikt. U kunt na verloop van tijd verbeteringen zien in de uitstraling van uw huid naarmate de effecten van collageen zichtbaar worden. Meerdere sessies kunnen echter nodig zijn om optimale resultaten te behalen.</p><p>Het is belangrijk op te merken dat de plasma pen een invasieve behandeling is, zij het minder invasief dan sommige andere esthetische behandelingen. U kunt tijdens de behandeling enig ongemak ervaren, maar doorgaans worden plaatselijke verdovingsmiddelen aangebracht om dit ongemak te minimaliseren.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><p>De plasma pen moet worden gebruikt door opgeleide en ervaren schoonheidsspecialisten, aangezien onjuist gebruik complicaties of littekens kan veroorzaken. Zoals bij elke esthetische behandeling wordt aanbevolen om een schoonheidsspecialist te raadplegen om uw specifieke behoeften te bespreken en te bepalen of de plasma pen voor u geschikt is.</p>",
+   "priceTitle": "Tarief — Plasma Lift",
    "prices": [
     {
-     "name": "1 Sessie",
+     "name": "1 sessie",
      "amount": "250 €"
     }
    ],
@@ -1221,15 +1237,15 @@
      "src": "soins/plasma.webp",
      "w": 916,
      "h": 1188,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Schoonheidsspecialiste gebruikt een plasmapen op het gezicht van een klant"
     }
    ]
   },
   "radiofrequence": {
    "title": "Radiofrequentie",
    "metaTitle": "Radiofrequentie — My Bubble Beauty",
-   "description": "Radiofrequentie is een medische technologie die elektromagnetische golven gebruikt om zachtjes de diepe lagen van de huid te verwarmen. Deze warmte…",
-   "articleHtml": "<p>Radiofrequentie is een medische technologie die elektromagnetische golven gebruikt om zachtjes de diepe lagen van de huid te verwarmen. Deze warmte stimuleert de productie van collageen, verbetert de bloedcirculatie en bevordert het aanspannen van de huid.</p><h2>Toepassingen in de Esthetiek</h2><p>Radiofrequentie wordt in de esthetiek gebruikt om verschillende huidproblemen en verjonging aan te pakken, waaronder het verstevigen van de huid, het verminderen van rimpels en fijne lijntjes, het verminderen van cellulitis en het verbeteren van de huidtextuur. Het is effectief bij het verminderen van huidverslapping en het verbeteren van de stevigheid. De verhoogde collageenproductie helpt bij het gladstrijken van rimpels en fijne lijntjes. Het kan helpen bij het verminderen van de zichtbaarheid van cellulitis door de circulatie te stimuleren en lymfedrainage te bevorderen. Radiofrequentie kan ook de algehele huidtextuur verbeteren door acne littekens en onvolkomenheden te verminderen.</p><h2>Procedure</h2><p>Tijdens een radiofrequentiebehandeling zendt een apparaat elektromagnetische golven uit in de doelhuid. Deze energie wordt omgezet in warmte, waardoor de onderliggende weefsels worden verwarmd zonder het huidoppervlak te beschadigen. De warmte stimuleert de productie van collageen en activeert natuurlijke huidherstelprocessen. De resultaten zijn meestal niet direct zichtbaar, maar verbeteren geleidelijk na verloop van tijd naarmate collageen zich regenereert.</p><h2>Veiligheid en Comfort</h2><p>Radiofrequentie is een niet-invasieve procedure, wat betekent dat deze geen chirurgie of incisies vereist. Patiënten ervaren meestal een warmtesensatie tijdens de behandeling, maar de procedure is comfortabel en vereist geen verdoving.</p><h2>Aantal Sessies</h2><p>Het aantal benodigde sessies is afhankelijk van de specifieke behandeling en de doelen van de patiënt. Over het algemeen kunnen meerdere sessies worden aanbevolen voor de beste resultaten.</p><h2>Resultaten</h2><p>De resultaten van radiofrequentie in de esthetiek zijn progressief en kunnen enkele maanden aanhouden. De huid lijkt steviger, rimpels worden verminderd en de algehele huidtextuur verbetert.</p><p>Radiofrequentie is een populaire optie in de esthetiek vanwege bewezen resultaten en het niet-invasieve karakter. Het wordt gebruikt om verschillende huidproblemen aan te pakken en kan voor sommige mensen een interessant alternatief zijn voor cosmetische chirurgie om hun uiterlijk te verbeteren. Het wordt echter altijd aanbevolen om een gekwalificeerde esthetisch professional te raadplegen voordat u een esthetische procedure ondergaat om de geschikte opties op basis van individuele behoeften te bespreken.</p>",
+   "description": "Radiofrequentie is een esthetische technologie die elektromagnetische golven gebruikt om zachtjes de diepe lagen van de huid te verwarmen.",
+   "articleHtml": "<p>Radiofrequentie is een esthetische technologie die elektromagnetische golven gebruikt om zachtjes de diepe lagen van de huid te verwarmen. Deze warmte is bedoeld om de productie van collageen en de bloedcirculatie te stimuleren en het verstrakken van de huid te bevorderen.</p><h2>Toepassingen in de esthetiek</h2><p>Radiofrequentie wordt in de esthetiek gebruikt om verschillende huidproblemen aan te pakken en een jeugdigere uitstraling te bevorderen, waaronder het verstevigen van de huid, het verminderen van rimpels en fijne lijntjes, het minder zichtbaar maken van cellulitis en het verbeteren van de huidtextuur. Het kan bijdragen aan het verminderen van huidverslapping en het verbeteren van de stevigheid. De verhoogde collageenproductie helpt bij het gladstrijken van rimpels en fijne lijntjes. Het kan helpen bij het verminderen van de zichtbaarheid van cellulitis door de circulatie te stimuleren en lymfedrainage te bevorderen. Radiofrequentie kan ook de algehele huidtextuur verbeteren door acnelittekens en onvolkomenheden minder zichtbaar te maken.</p><h2>Verloop van de behandeling</h2><p>Tijdens een radiofrequentiebehandeling zendt een apparaat elektromagnetische golven uit in de te behandelen huid. Deze energie wordt omgezet in warmte, waardoor de onderliggende weefsels worden verwarmd terwijl het huidoppervlak zoveel mogelijk wordt ontzien. De warmte is bedoeld om de productie van collageen en de natuurlijke vernieuwing van de huid te stimuleren. De resultaten zijn meestal niet direct zichtbaar, maar verbeteren geleidelijk na verloop van tijd naarmate collageen zich regenereert.</p><h2>Veiligheid en comfort</h2><p>Radiofrequentie is een niet-invasieve behandeling, wat betekent dat deze geen chirurgie of incisies vereist. U ervaart meestal een warmtesensatie tijdens de sessie, maar de behandeling wordt doorgaans goed verdragen en vereist geen verdoving.</p><h2>Aantal sessies</h2><p>Het aantal benodigde sessies is afhankelijk van de specifieke behandeling en van uw doelen. Over het algemeen kunnen meerdere sessies worden aanbevolen voor de beste resultaten.</p><h2>Resultaten</h2><p>De resultaten van radiofrequentie in de esthetiek zijn progressief en kunnen enkele maanden aanhouden. De huid kan steviger lijken, rimpels kunnen vervagen en de algehele huidtextuur kan verbeteren.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><p>Radiofrequentie is een populaire optie in de esthetiek vanwege de resultaten die het kan bieden en het niet-invasieve karakter. Het wordt gebruikt om verschillende huidproblemen aan te pakken en kan voor sommige mensen een interessante niet-chirurgische optie zijn om hun uiterlijk te verbeteren. Het wordt echter altijd aanbevolen om een gekwalificeerde schoonheidsspecialist te raadplegen voordat u een esthetische behandeling ondergaat om de geschikte opties op basis van individuele behoeften te bespreken.</p>",
    "priceTitle": "Tarief",
    "prices": [
     {
@@ -1242,19 +1258,19 @@
      "src": "soins/radio.webp",
      "w": 960,
      "h": 623,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Schema van de huid vóór, tijdens en na een radiofrequentiebehandeling"
     }
    ]
   },
   "sos": {
    "title": "SOS Zuiverheid",
    "metaTitle": "SOS Zuiverheid — My Bubble Beauty",
-   "description": "Een SOS Zuiverheid-behandeling is speciaal ontwikkeld voor wie last heeft van overtollig talg, acne, mee-eters en andere huidonzuiverheden.",
-   "articleHtml": "<p>Een SOS Zuiverheid-behandeling in de schoonheidszorg is speciaal ontwikkeld voor mensen met huidproblemen door overtollig talg, acne, mee-eters en andere onzuiverheden. Deze behandeling reinigt de huid grondig, vermindert overtollig talg, ontstopt de poriën en zorgt voor een zuiverdere, gezondere huid. Zo verloopt een SOS Zuiverheid-behandeling:</p><h2>Grondige reiniging</h2><p>De behandeling begint meestal met een grondige reiniging van het gezicht om onzuiverheden, overtollig talg en dode huidcellen te verwijderen.</p><h2>Exfoliatie</h2><p>Een zachte exfoliatie kan dode huidcellen verwijderen, waardoor de huid gladder wordt.</p><h2>Verwijderen van comedonen</h2><p>Schoonheidsspecialisten of huidprofessionals gebruiken vaak manuele technieken of extractie-instrumenten om mee-eters en comedonen te verwijderen. Zo worden de poriën ontstopt en verbetert de huidtextuur.</p><h2>Aangepaste producten</h2><p>Specifieke producten met ingrediënten zoals salicylzuur of benzoylperoxide, bekend om hun werking tegen acne, kunnen op de huid worden aangebracht om ontstekingen te verminderen en nieuwe uitbraken te voorkomen.</p><h2>Maskers en gerichte behandelingen</h2><p>Zuiverende maskers of andere gerichte behandelingen kunnen de huid kalmeren, overtollig talg verminderen en de talgproductie beter helpen regelen.</p><h2>Hydratatie</h2><p>Ook bij een vette huid blijft voldoende hydratatie essentieel, zodat de huid niet te droog wordt door de behandelingen. Daarvoor kunnen lichte, niet-comedogene hydraterende producten worden gebruikt.</p><h2>Zonbescherming</h2><p>Zoals bij veel huidbehandelingen is een zonnecrème of een ander beschermend product belangrijk om de huid te beschermen tegen schade door uv-stralen.</p>",
+   "description": "Een SOS Zuiverheid-behandeling is speciaal ontwikkeld voor wie last heeft van overtollige talg, een neiging tot acne, mee-eters en andere onzuiverheden.",
+   "articleHtml": "<p>Een SOS Zuiverheid-behandeling in de schoonheidszorg is speciaal ontwikkeld voor mensen met huidproblemen door overtollige talg, een neiging tot acne, mee-eters en andere onzuiverheden. Deze behandeling is bedoeld om de huid grondig te reinigen, overtollige talg te verminderen, de poriën te ontstoppen en bij te dragen tot een zuiverdere, gezondere huid. Zo verloopt een SOS Zuiverheid-behandeling:</p><h2>Grondige reiniging</h2><p>De behandeling begint meestal met een grondige reiniging van het gezicht om onzuiverheden, overtollige talg en dode huidcellen te verwijderen.</p><h2>Exfoliatie</h2><p>Een zachte exfoliatie kan dode huidcellen verwijderen, waardoor de huid gladder wordt.</p><h2>Verwijderen van comedonen</h2><p>Schoonheidsspecialisten of huidprofessionals gebruiken vaak manuele technieken of extractie-instrumenten om mee-eters en comedonen te verwijderen. Zo worden de poriën ontstopt en verbetert de huidtextuur.</p><h2>Aangepaste producten</h2><p>Specifieke producten met ingrediënten zoals salicylzuur, bekend om zijn zuiverende werking, kunnen op de huid worden aangebracht om roodheid te helpen kalmeren en nieuwe onzuiverheden te helpen beperken.</p><h2>Maskers en gerichte behandelingen</h2><p>Zuiverende maskers of andere gerichte behandelingen kunnen de huid kalmeren, overtollige talg verminderen en de talgproductie beter helpen regelen.</p><h2>Hydratatie</h2><p>Ook bij een vette huid blijft voldoende hydratatie essentieel, zodat de huid niet te droog wordt door de behandelingen. Daarvoor kunnen lichte, niet-comedogene hydraterende producten worden gebruikt.</p><h2>Zonnebescherming</h2><p>Zoals bij veel huidbehandelingen is een zonnecrème of een ander beschermend product belangrijk om de huid te beschermen tegen schade door uv-stralen.</p>",
    "priceTitle": "Tarief",
    "prices": [
     {
-     "name": "SOS zuiverheid",
+     "name": "SOS Zuiverheid",
      "amount": "35 €"
     }
    ],
@@ -1263,7 +1279,7 @@
      "src": "soins/sos.webp",
      "w": 756,
      "h": 418,
-     "alt": "Illustratieve afbeelding"
+     "alt": "Vergelijking tussen reinigen met de handen en reinigen met de borstel"
     }
    ]
   }
