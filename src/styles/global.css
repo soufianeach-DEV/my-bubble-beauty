@@ -481,8 +481,8 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 @supports not ((-webkit-mask-image:none) or (mask-image:none)){
   @media (max-width:1023px){.hero .hero__wrap{margin-top:1rem}}
 }
-@media (max-width:767px){
-  /* Cadrage demandé : photo presque carrée (environ 6:5), visage et mains au centre, bougies en haut à gauche ; fondu limité au bas de l'image */
+@media (max-width:1023px){
+  /* Mobile et tablette, cadrage demandé : photo presque carrée (environ 6:5), visage et mains au centre, bougies en haut à gauche ; fondu limité au bas de l'image */
   .hero .hero__media{height:auto;aspect-ratio:131 / 111;
     -webkit-mask-image:linear-gradient(180deg,#000 80%,rgb(0 0 0 / .7) 88%,rgb(0 0 0 / .3) 95%,transparent);
             mask-image:linear-gradient(180deg,#000 80%,rgb(0 0 0 / .7) 88%,rgb(0 0 0 / .3) 95%,transparent)}
