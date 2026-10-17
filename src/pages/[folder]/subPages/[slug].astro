@@ -29,6 +29,7 @@ const jsonld = {
 <div class="treatment__grid">
 <article class="treatment__article">
 <h1>{tr.title}</h1>
+<p class="treatment__jump" hidden><a href="#h-price">{tr.priceTitle}<span aria-hidden="true"> ↓</span></a></p>
 <Fragment set:html={tr.articleHtml} />
 </article>
 <div class="treatment__side">
