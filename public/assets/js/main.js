@@ -6,7 +6,7 @@ const off=()=>root.dataset.motion==='off'||reduced.matches;
 let K=1;const readK=()=>{K=parseFloat(getComputedStyle(root).getPropertyValue('--k'))||0};
 
 /* 1. Bouton pause des animations (WCAG 2.2.2) */
-const tg=d.querySelector('.motion-toggle:not(.theme-toggle)');
+const tg=d.querySelector('.motion-toggle');
 if(tg){
   /* Le libellé dit l'action ; pas d'aria-pressed en plus, sinon « Relancer… enfoncé » est ambigu */
   tg.removeAttribute('aria-pressed');
@@ -21,11 +21,12 @@ if(tg){
 }
 
 /* 1 bis. Thème clair ou sombre : le choix du visiteur (mémorisé) prime sur le réglage de l'appareil */
-const th=d.querySelector('.theme-toggle');
+const th=d.querySelector('.theme-btn');
 if(th){
-  const dark=mm('(prefers-color-scheme: dark)'),metas=d.querySelectorAll('meta[name="theme-color"]'),lbl=th.querySelector('span');
+  const dark=mm('(prefers-color-scheme: dark)'),metas=d.querySelectorAll('meta[name="theme-color"]');
   const cur=()=>root.dataset.theme||(dark.matches?'dark':'light');
-  const sync=()=>{const t=cur();lbl.textContent=t==='dark'?th.dataset.light:th.dataset.dark;
+  /* Bouton icône : le nom accessible et l'info-bulle disent l'action */
+  const sync=()=>{const t=cur(),l=t==='dark'?th.dataset.light:th.dataset.dark;th.setAttribute('aria-label',l);th.title=l;
     root.dataset.theme&&metas.forEach(m=>m.content=t==='dark'?'#1E1615':'#F6ECE8')};
   th.hidden=false;sync();
   th.addEventListener('click',()=>{const t=cur()==='dark'?'light':'dark';root.dataset.theme=t;

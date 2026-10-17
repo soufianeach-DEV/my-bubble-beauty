@@ -254,9 +254,6 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 .site-footer a,.motion-toggle{display:inline-block;padding-block:.6rem}
 .motion-toggle{display:inline-flex;align-items:center;gap:.5rem;min-height:44px;padding:.5rem 1rem;border-radius:999px;border:1px solid var(--line-soft);background:var(--surface);color:var(--text);font:400 .875rem/1 var(--f-text);cursor:pointer}
 .motion-toggle svg{width:16px;height:16px}
-/* Pied de page : bouton du thème clair/sombre à côté de la pause des animations */
-.footer-tools{display:flex;flex-wrap:wrap;gap:.5rem}
-.theme-toggle[hidden]{display:none}
 
 /* ---------- Pages légales ---------- */
 .legal{padding-block:clamp(3rem,7vw,6rem)}
@@ -296,6 +293,11 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 .langsel__list a[aria-current="page"]{background:var(--bg);font-weight:500}
 .langsel__list a[aria-current="page"]::after{content:"";width:6px;height:6px;margin-left:auto;border-radius:50%;background:var(--accent)}
 .langsel__code{min-width:1.8em;font-size:.75rem;letter-spacing:.12em;color:var(--text-soft)}
+/* Bouton clair/sombre du header, à côté du choix de langue : même pastille que le sélecteur */
+.theme-btn{flex:none;display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border:1px solid var(--line-soft);border-radius:999px;background:transparent;color:var(--text);cursor:pointer;transition:background-color var(--dur-ui)}
+.theme-btn:hover{background:var(--surface)}
+.theme-btn svg{width:18px;height:18px}
+.theme-btn[hidden]{display:none}
 @media (max-width:479px){.site-header .btn{display:none}.langsel summary,.mnav summary{padding:.5rem .7rem}}
 
 /* ---------- Le centre ---------- */
@@ -430,3 +432,29 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 /* Logo complet (visage de bulles + texte) dans le pied de page ; l'en-tête garde le texte seul */
 .footer-logo{display:block;line-height:0;flex-basis:100%}
 .footer-logo img{width:120px;height:auto}
+
+/* Bandeau d'accueil (écran large) : photo nette à gauche, sans voile ; dégradé au centre ; texte à droite sur fond uni.
+   Le fond devient presque opaque là où commence le texte, pour garder un contraste suffisant. */
+@media (min-width:1024px){
+  .hero{padding-block:0;align-items:stretch}
+  .hero__media::after{background:none}
+  .hero__wrap{width:auto;margin-inline:0;padding:0}
+  .hero__panel{--pl:56%;--pr:var(--gutter);--g0:40%;--g1:54%;--veil:255 251 249;
+    grid-column:1 / -1;display:flex;flex-direction:column;justify-content:center;border:0;border-radius:0;box-shadow:none;
+    padding-block:clamp(3rem,6vw,5rem);padding-inline:var(--pl) var(--pr);
+    background:linear-gradient(90deg,rgb(var(--veil) / 0) var(--g0),rgb(var(--veil) / .94) var(--g1));backdrop-filter:none}
+  .hero__panel>*{max-width:760px}
+  :where(:root[data-theme="dark"]) .hero__panel{--veil:42 32 30}
+}
+@media (min-width:1600px){.hero__panel{--pl:62%;--pr:12%;--g0:46%;--g1:60%}}
+@media (min-width:1024px) and (prefers-color-scheme:dark){:where(:root:not([data-theme="light"])) .hero__panel{--veil:42 32 30}}
+@media (prefers-reduced-transparency:reduce){.hero__panel{background:var(--surface);backdrop-filter:none}}
+
+/* Header : bouton clair/sombre à côté du choix de langue. Seul le logo rétrécit, sans se déformer. */
+.brand{min-width:0;flex:0 1 auto}
+.brand img{height:auto;width:100%;max-width:172px}
+.langsel,.theme-btn,.mnav,.site-header .btn{flex:none}
+@media (max-width:639px){.brand img{max-width:120px}}
+@media (max-width:559px){.site-header .btn{display:none}}
+@media (max-width:374px){.site-header .wrap{gap:.45rem}.brand img{max-width:103px}.theme-btn{width:40px;height:40px}.langsel summary,.mnav summary{padding:.5rem .6rem}}
+@media (max-width:339px){.site-header .wrap{gap:.35rem}.theme-btn{width:36px;height:36px}.langsel summary,.mnav summary{padding:.45rem .5rem}}

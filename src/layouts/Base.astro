@@ -77,6 +77,7 @@ const year = new Date().getFullYear();
   <li><a href={pagePath(l, pageKey)} hreflang={LANG_META[l].hreflang} lang={LANG_META[l].hreflang} aria-current={l === lang ? 'page' : undefined}><span class="langsel__code">{LANG_META[l].code}</span>{LANG_META[l].name}</a></li>
 ))}</ul>
 </details>
+<button class="theme-btn" type="button" data-dark={EXTRA[lang].toDark} data-light={EXTRA[lang].toLight} aria-label={EXTRA[lang].toDark} title={EXTRA[lang].toDark} hidden><Icon name="theme" /></button>
 <details class="mnav"><summary>{ui.menu}</summary><div class="mnav__panel"><ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul></div></details>
 <a class="btn btn--solid sheen" href={anchor('#contact')}><span class="lbl-long">{ui.ctaLong}</span><span class="lbl-short">{ui.ctaShort}</span></a>
 </div>
@@ -89,10 +90,7 @@ const year = new Date().getFullYear();
 <a class="footer-logo" href={home}><img src="/assets/img/my-bubble-logo-480.webp" srcset="/assets/img/my-bubble-logo-480.webp 480w, /assets/img/my-bubble-logo.webp 960w" sizes="140px" width="960" height="828" alt={ui.brandAlt} loading="lazy" decoding="async"></a>
 <p>{ui.rights.replace(/\d{4}/, String(year))}</p>
 <ul>{footerLinks.map((f) => <li><a href={f.href}>{f.label}</a></li>)}</ul>
-<div class="footer-tools">
-<button class="motion-toggle theme-toggle" type="button" data-dark={EXTRA[lang].toDark} data-light={EXTRA[lang].toLight} hidden><Icon name="theme" /><span>{EXTRA[lang].toDark}</span></button>
 <button class="motion-toggle" type="button" data-off={ui.pauseOff} data-on={ui.pauseOn}><Icon name="pause" /><span>{ui.pauseOff}</span></button>
-</div>
 </div>
 </footer>
 <nav class="callbar" aria-label={ui.quickContact}>
