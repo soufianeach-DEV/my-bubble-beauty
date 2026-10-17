@@ -6,7 +6,7 @@ const off=()=>root.dataset.motion==='off'||reduced.matches;
 let K=1;const readK=()=>{K=parseFloat(getComputedStyle(root).getPropertyValue('--k'))||0};
 
 /* 1. Bouton pause des animations (WCAG 2.2.2) */
-const tg=d.querySelector('.motion-toggle');
+const tg=d.querySelector('.motion-toggle:not(.theme-toggle)');
 if(tg){
   /* Le libellé dit l'action ; pas d'aria-pressed en plus, sinon « Relancer… enfoncé » est ambigu */
   tg.removeAttribute('aria-pressed');
@@ -18,6 +18,19 @@ if(tg){
     try{localStorage.setItem('mb-motion',p?'off':'on')}catch(e){}
     sync();readK();px&&px();
   });
+}
+
+/* 1 bis. Thème clair ou sombre : le choix du visiteur (mémorisé) prime sur le réglage de l'appareil */
+const th=d.querySelector('.theme-toggle');
+if(th){
+  const dark=mm('(prefers-color-scheme: dark)'),metas=d.querySelectorAll('meta[name="theme-color"]'),lbl=th.querySelector('span');
+  const cur=()=>root.dataset.theme||(dark.matches?'dark':'light');
+  const sync=()=>{const t=cur();lbl.textContent=t==='dark'?th.dataset.light:th.dataset.dark;
+    root.dataset.theme&&metas.forEach(m=>m.content=t==='dark'?'#1E1615':'#F6ECE8')};
+  th.hidden=false;sync();
+  th.addEventListener('click',()=>{const t=cur()==='dark'?'light':'dark';root.dataset.theme=t;
+    try{localStorage.setItem('mb-theme',t)}catch(e){}sync()});
+  dark.addEventListener('change',sync);
 }
 
 /* 2. Halos de section + pause hors écran */

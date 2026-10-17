@@ -1,1 +1,1 @@
-try{localStorage.getItem('mb-motion')==='off'&&(document.documentElement.dataset.motion='off')}catch(e){}
+try{const s=localStorage,r=document.documentElement,t=s.getItem('mb-theme');s.getItem('mb-motion')==='off'&&(r.dataset.motion='off');if(t==='light'||t==='dark'){r.dataset.theme=t;document.querySelectorAll('meta[name="theme-color"]').forEach(m=>m.content=t==='dark'?'#1E1615':'#F6ECE8')}}catch(e){}

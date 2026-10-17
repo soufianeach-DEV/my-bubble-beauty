@@ -89,7 +89,10 @@ const year = new Date().getFullYear();
 <a class="footer-logo" href={home}><img src="/assets/img/my-bubble-logo-480.webp" srcset="/assets/img/my-bubble-logo-480.webp 480w, /assets/img/my-bubble-logo.webp 960w" sizes="140px" width="960" height="828" alt={ui.brandAlt} loading="lazy" decoding="async"></a>
 <p>{ui.rights.replace(/\d{4}/, String(year))}</p>
 <ul>{footerLinks.map((f) => <li><a href={f.href}>{f.label}</a></li>)}</ul>
+<div class="footer-tools">
+<button class="motion-toggle theme-toggle" type="button" data-dark={EXTRA[lang].toDark} data-light={EXTRA[lang].toLight} hidden><Icon name="theme" /><span>{EXTRA[lang].toDark}</span></button>
 <button class="motion-toggle" type="button" data-off={ui.pauseOff} data-on={ui.pauseOn}><Icon name="pause" /><span>{ui.pauseOff}</span></button>
+</div>
 </div>
 </footer>
 <nav class="callbar" aria-label={ui.quickContact}>

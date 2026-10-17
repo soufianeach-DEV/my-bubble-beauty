@@ -10,7 +10,7 @@ export const t = (lang: Lang) => DATA[lang];
 
 export const SITE = 'https://mybubble-beauty.com';
 // Changer ce numéro quand main.js, motion-pref.js ou stats.js change (servis « immutable » un an).
-export const JS_VERSION = '20261017';
+export const JS_VERSION = '20261017b';
 
 // Mesure d'audience GoatCounter (sans cookie). Vide = désactivée.
 // Mettre le code du site créé sur goatcounter.com, ex. 'mybubble' pour https://mybubble.goatcounter.com
@@ -61,10 +61,10 @@ export const alternates = (key: PageKey) =>
   LANGS.map((l) => ({ lang: l, hreflang: LANG_META[l].hreflang, href: SITE + pagePath(l, key) }));
 
 // Libellés ajoutés en v2 (absents de la v1).
-export const EXTRA: Record<Lang, { cgv: string; hours: string; closed: string; days: string[] }> = {
-  fr: { cgv: 'Conditions générales', hours: 'Horaires', closed: 'Fermé', days: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'] },
-  nl: { cgv: 'Algemene voorwaarden', hours: 'Openingsuren', closed: 'Gesloten', days: ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'] },
-  en: { cgv: 'Terms and conditions', hours: 'Opening hours', closed: 'Closed', days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] },
+export const EXTRA: Record<Lang, { cgv: string; hours: string; closed: string; days: string[]; toDark: string; toLight: string }> = {
+  fr: { cgv: 'Conditions générales', hours: 'Horaires', closed: 'Fermé', days: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'], toDark: 'Passer en mode sombre', toLight: 'Passer en mode clair' },
+  nl: { cgv: 'Algemene voorwaarden', hours: 'Openingsuren', closed: 'Gesloten', days: ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'], toDark: 'Donkere modus inschakelen', toLight: 'Lichte modus inschakelen' },
+  en: { cgv: 'Terms and conditions', hours: 'Opening hours', closed: 'Closed', days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], toDark: 'Switch to dark mode', toLight: 'Switch to light mode' },
 };
 
 // Horaires d'ouverture, à remplir quand la cliente les donne (vide = rien n'est affiché).
