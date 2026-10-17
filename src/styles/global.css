@@ -257,7 +257,7 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 
 /* ---------- Pages légales ---------- */
 .legal{padding-block:clamp(3rem,7vw,6rem)}
-.legal article{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);padding:clamp(1.5rem,5vw,4rem);max-width:820px}
+.legal article{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);padding:clamp(1.5rem,5vw,4rem);max-width:820px;margin-inline:auto}
 .legal h2{font-size:1.9rem;margin-top:2rem}
 .legal h1{font-size:clamp(2.4rem,4vw + 1rem,3.75rem)}
 
@@ -618,3 +618,9 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
   .chooser__langs .btn{width:100%;justify-content:center}
 }
 
+/* Bandeau d'accueil, téléphone et tablette : texte centré sous la photo (l'ordinateur garde le texte à droite) */
+@media (max-width:1023px){
+  .hero .hero__panel{margin-inline:auto;text-align:center}
+  .hero .hero__lead{margin-inline:auto}
+  .hero .hero__cta{justify-content:center}
+}
