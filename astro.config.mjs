@@ -1,6 +1,5 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import tailwindcss from '@tailwindcss/vite';
 
 // Site statique déposé chez OVH (Apache) : aucune exécution côté serveur.
 export default defineConfig({
@@ -12,8 +11,5 @@ export default defineConfig({
     format: 'preserve',
     // La CSP n'autorise que 'self' : jamais de <style> en ligne
     inlineStylesheets: 'never',
-  },
-  vite: {
-    plugins: [tailwindcss()],
   },
 });

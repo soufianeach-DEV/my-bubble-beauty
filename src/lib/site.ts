@@ -1,4 +1,6 @@
 // Données communes du site et correspondance des URL entre les trois langues.
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import fr from '../data/fr.json';
 import nl from '../data/nl.json';
 import en from '../data/en.json';
@@ -9,8 +11,8 @@ export const DATA = { fr, nl, en } as const;
 export const t = (lang: Lang) => DATA[lang];
 
 export const SITE = 'https://mybubble-beauty.com';
-// Changer ce numéro quand main.js, motion-pref.js ou stats.js change (servis « immutable » un an).
-export const JS_VERSION = '20261017b';
+// Empreinte des scripts : servis « immutable » un an, ils changent d'URL dès que leur contenu change.
+export const JS_VERSION = createHash('sha1').update(['main', 'motion-pref', 'stats'].map((f) => readFileSync(`public/assets/js/${f}.js`, 'utf8')).join('\n')).digest('hex').slice(0, 8);
 
 // Mesure d'audience GoatCounter (sans cookie). Vide = désactivée.
 // Mettre le code du site créé sur goatcounter.com, ex. 'mybubble' pour https://mybubble.goatcounter.com
