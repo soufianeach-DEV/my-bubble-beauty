@@ -69,7 +69,7 @@ const year = new Date().getFullYear();
 <a class="skip" href="#main">{ui.skip}</a>
 <header class="site-header">
 <div class="wrap">
-<a class="brand" href={home}><img src="/assets/img/my-bubble-wordmark-80.webp" srcset="/assets/img/my-bubble-wordmark-40.webp 1x, /assets/img/my-bubble-wordmark-80.webp 2x, /assets/img/my-bubble-wordmark-120.webp 3x" width="344" height="80" alt={ui.brandAlt}></a>
+<a class="brand" href={home}><img src="/assets/img/my-bubble-wordmark-80.webp" srcset="/assets/img/my-bubble-wordmark-80.webp 344w, /assets/img/my-bubble-wordmark-120.webp 516w" sizes="(max-width: 374px) 103px, (max-width: 639px) 120px, 172px" width="344" height="80" alt={ui.brandAlt}></a>
 <nav class="nav" aria-label={ui.navLabel}><ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul></nav>
 <details class="langsel">
 <summary><span class="visually-hidden">{ui.langPrefix} </span><span aria-hidden="true">{LANG_META[lang].code}</span><span class="visually-hidden">{LANG_META[lang].name}</span><Icon name="chevron" /></summary>

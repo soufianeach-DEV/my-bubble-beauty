@@ -69,7 +69,10 @@ services:
       - path: /assets/img/*
         name: Cache-Control
         value: public, max-age=2592000
-      # Pages HTML : toujours revalidées
+      # Pages HTML : toujours revalidées (/ et /index.html sont deux chemins distincts pour Render)
+      - path: /
+        name: Cache-Control
+        value: no-cache
       - path: /index.html
         name: Cache-Control
         value: no-cache

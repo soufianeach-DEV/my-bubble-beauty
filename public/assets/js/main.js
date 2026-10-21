@@ -80,6 +80,8 @@ const fl=d.querySelector('.filters');
 if(fl){
   fl.hidden=false;const groups=d.querySelectorAll('.price-group'),st=d.getElementById('filter-status');
   const pick=(b,say)=>{if(!b)return;fl.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+    /* Rangée défilante sur mobile : la puce choisie revient au centre si elle est hors de vue */
+    const r=b.getBoundingClientRect(),q=fl.getBoundingClientRect();(r.left<q.left||r.right>q.right)&&(fl.scrollLeft+=r.left-q.left-(q.width-r.width)/2);
     const f=b.dataset.filter;groups.forEach(g=>g.hidden=f!=='all'&&g.dataset.cat!==f);
     say&&st&&(st.textContent=b.dataset.status||'')};
   /* Le filtre marqué dans le HTML (Visage) s'applique dès le chargement */

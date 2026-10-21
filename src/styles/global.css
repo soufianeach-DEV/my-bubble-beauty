@@ -63,6 +63,7 @@
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-padding-top:calc(var(--header-h) + 1rem)}
 @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+:root[data-motion="off"]{scroll-behavior:auto}
 body{margin:0;background:var(--bg) var(--grain);color:var(--text);font:400 1.0625rem/1.65 var(--f-text);overflow-x:clip;text-rendering:optimizeLegibility}
 img,svg{display:block;max-width:100%}
 a{color:var(--link);text-underline-offset:.2em;text-decoration-thickness:1px}
@@ -251,6 +252,8 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 .site-footer a,.motion-toggle{display:inline-block;padding-block:.6rem}
 .motion-toggle{display:inline-flex;align-items:center;gap:.5rem;min-height:44px;padding:.5rem 1rem;border-radius:999px;border:1px solid var(--line-soft);background:var(--surface);color:var(--text);font:400 .875rem/1 var(--f-text);cursor:pointer}
 .motion-toggle svg{width:16px;height:16px}
+/* L'appareil coupe déjà les animations : le bouton n'aurait rien à mettre en pause */
+@media (prefers-reduced-motion:reduce){.motion-toggle{display:none}}
 
 /* ---------- Pages légales ---------- */
 .legal{padding-block:clamp(3rem,7vw,6rem)}
@@ -606,6 +609,7 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
   .legal h1{font-size:clamp(2rem,4vw + 1rem,2.4rem);text-wrap:balance}
   .legal h2{font-size:1.5rem;margin-top:2.25rem;text-wrap:balance}
   body:has(> main.legal){padding-bottom:0}
+  body.chooser{padding-bottom:0}
 }
 
 /* Choix de la langue : une consigne par ligne, trois boutons de même largeur */

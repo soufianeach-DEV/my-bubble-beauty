@@ -13,6 +13,8 @@ const slug = Astro.params.slug!;
 const d = t(lang);
 const tr = (d.treatments as Record<string, (typeof d.treatments)['hifu']>)[slug];
 const key = `treatment:${slug}` as const;
+// Le retour vise le groupe de tarifs du soin : main.js affiche alors son filtre
+const grp = d.home.tarifs.groups.find((g) => g.href === slug || g.items.some((it) => it.href === slug));
 const jsonld = {
   '@context': 'https://schema.org', '@type': 'WebPage', name: tr.title, inLanguage: d.htmlLang,
   url: SITE + pagePath(lang, key),
@@ -25,7 +27,7 @@ const jsonld = {
 <Base lang={lang} pageKey={key} title={tr.metaTitle} description={tr.description} ogType="article" jsonld={jsonld} mainClass="treatment lit">
 <div class="halo halo--rose" aria-hidden="true"></div>
 <div class="wrap">
-<p class="back"><a href={pagePath(lang, 'home') + '#package'}>{d.ui.back}</a></p>
+<p class="back"><a href={pagePath(lang, 'home') + (grp ? `#tarif-${grp.id}` : '#package')}>{d.ui.back}</a></p>
 <div class="treatment__grid">
 <article class="treatment__article">
 <h1>{tr.title}</h1>

@@ -7,6 +7,6 @@ import { pagePath } from '../lib/site';
 <div class="wrap"><article>
 <h1>Page introuvable</h1>
 <p>Cette page n'existe pas ou a été déplacée. <span lang="nl-BE">Deze pagina bestaat niet.</span> <span lang="en">This page does not exist.</span></p>
-<p><a class="btn btn--solid" href={pagePath('fr', 'home')}>Retour à l'accueil</a></p>
+<p class="contact__cta"><a class="btn btn--solid" href={pagePath('fr', 'home')}>Retour à l'accueil</a><a class="btn btn--ghost" href={pagePath('nl', 'home')} hreflang="nl-BE" lang="nl-BE">Naar de startpagina</a><a class="btn btn--ghost" href={pagePath('en', 'home')} hreflang="en" lang="en">Back to home</a></p>
 </article></div>
 </Base>
