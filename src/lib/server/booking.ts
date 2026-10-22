@@ -17,6 +17,8 @@ export const MAX_UPCOMING = 2;
 
 const DEPOSIT_LABEL: Record<Lang, string> = { fr: 'Acompte', nl: 'Voorschot', en: 'Deposit' };
 const isOverlap = (e: unknown) => (e as { code?: string })?.code === '23P01';
+// Deux INSERT simultanés sur le même créneau s'attendent dans l'index d'exclusion : Postgres en abandonne un en 40P01 au lieu de 23P01
+const isTaken = (e: unknown) => isOverlap(e) || (e as { code?: string })?.code === '40P01';
 
 // Paiements abandonnés (> 35 min) et, pour une cliente, ses propres paiements en cours : ils ne bloquent plus l'exclusion.
 // Seules les sessions encore ouvertes chez Stripe (< 30 min) sont à expirer ensuite.
@@ -103,7 +105,7 @@ export async function createBooking(input: { userId: number; serviceId: number; 
       return { ok: true, id: b.id as number, deposit: m.deposit_cents, label: `${DEPOSIT_LABEL[lang]} — ${s.name}` } as const;
     });
   } catch (e) {
-    if (isOverlap(e)) return { ok: false, error: 'unavailable' };
+    if (isTaken(e)) return { ok: false, error: 'unavailable' };
     throw e;
   }
   expireAtStripe(stale);
@@ -231,6 +233,7 @@ export async function cancelByClient(userId: number, bookingId: number): Promise
     RETURNING id, deposit_cents, stripe_payment_intent`;
   if (!b) {
     const [later] = await sql`SELECT 1 FROM bookings WHERE id = ${bookingId} AND user_id = ${userId} AND status = 'confirmed' AND starts_at > now()`;
+    log('booking_cancel_refused', { booking_id: bookingId, user_id: userId, too_late: !!later });
     return { ok: false, error: later ? 'too_late' : 'not_found' };
   }
   log('booking_cancelled', { booking_id: b.id, user_id: userId, by: 'client' });
@@ -273,7 +276,7 @@ export async function createAdminBooking(input: { serviceId: number; startsAt: D
     log('admin_booking', { booking_id: b.id });
     return { ok: true, id: b.id };
   } catch (e) {
-    if (isOverlap(e)) return { ok: false, error: 'unavailable' };
+    if (isTaken(e)) return { ok: false, error: 'unavailable' };
     throw e;
   }
 }

@@ -85,8 +85,8 @@ export async function signIn(cookies: AstroCookies, email: string, password: str
 }
 
 // Code de l'appli d'authentification (anti-rejeu par totp_last_step) ; la session est tournée et porte mfa_at
-export async function verifyAdminTotp(cookies: AstroCookies, user: SessionUser, code: string, userAgent: string | null): Promise<boolean> {
-  if (!user.isAdmin || !(await checkAdminCode(user.id, code.trim()))) return false;
+export async function verifyAdminTotp(cookies: AstroCookies, user: SessionUser, code: string, userAgent: string | null, ip: string): Promise<boolean> {
+  if (!user.isAdmin || !(await checkAdminCode(user.id, code.trim(), ip))) return false;
   await openSession(cookies, user.id, userAgent, true);
   return true;
 }
@@ -133,10 +133,12 @@ export async function resetPassword(token: string, password: string): Promise<'o
 // Mot de passe actuel redemandé, essais comptés comme la connexion (100 par heure et par compte)
 async function checkCurrent(userId: number, password: string) {
   const [u] = await sql<{ email: string; locale: Lang; password_hash: string }[]>`SELECT email, locale, password_hash FROM users WHERE id = ${userId}`;
-  if (u && !blocked('loginEmail', u.email) && (await verifyPassword(u.password_hash, password))) return u;
-  if (u) hit('loginEmail', u.email);
-  log('password_check_failed', { user_id: userId });
-  return null;
+  // Essai compté avant l'await : une rafale concurrente ne passe plus entre lecture et incrément
+  if (!u || hit('loginEmail', u.email) || !(await verifyPassword(u.password_hash, password))) {
+    log('password_check_failed', { user_id: userId });
+    return null;
+  }
+  return u;
 }
 
 // Changement depuis le compte : les autres appareils sont déconnectés, un avis part par e-mail. keep = Astro.locals.session.hash

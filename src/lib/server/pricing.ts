@@ -39,9 +39,9 @@ export function promoProblem(p: Promo, c: { today: string; serviceId: number; us
 // Jour civil à Bruxelles ('AAAA-MM-JJ'), jamais celui du fuseau du serveur
 export const todayBrussels = (now = new Date()) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Brussels' }).format(now);
 
-// Date saisie (formulaire, URL) : format strict et jour réel (pas de 30 février)
+// Date saisie (formulaire, URL) : format strict et jour réel (pas de 30 février). Années 2000 à 2999 : Postgres refuse l'an 0 que JS accepte (500)
 export function isDay(s: unknown): s is string {
-  if (typeof s !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+  if (typeof s !== 'string' || !/^2\d{3}-\d{2}-\d{2}$/.test(s)) return false;
   const d = new Date(`${s}T00:00:00Z`);
   return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === s;
 }

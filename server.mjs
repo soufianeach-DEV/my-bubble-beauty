@@ -28,7 +28,7 @@ const { handler } = await import('./dist/server/entry.mjs');
 // CSP du site ; form-action autorise la redirection 303 vers Stripe Checkout après le formulaire de réservation
 const SECURITY = {
   'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://*.goatcounter.com; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' https://checkout.stripe.com; frame-ancestors 'none'; upgrade-insecure-requests",
-  // Sans includeSubDomains : les autres sous-domaines du nom ne sont pas garantis en HTTPS
+  // Sans includeSubDomains : mail. (CNAME OVH, inventaire DNS du 22/10/2026) n'a pas de certificat à son nom, le navigateur le bloquerait un an
   'Strict-Transport-Security': 'max-age=31536000',
   'X-Content-Type-Options': 'nosniff',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
@@ -69,6 +69,12 @@ const server = http.createServer((req, res) => {
     }
     return writeHead.call(this, status, ...rest);
   };
+  // ASVS 14.5.1 : le site n'emploie que GET, HEAD et POST ; TRACE faisait un 500 et une pile complète dans le journal
+  if (!['GET', 'HEAD', 'POST'].includes(req.method)) {
+    log('method_refused', { method: req.method });
+    res.writeHead(405, { Allow: 'GET, HEAD, POST' });
+    return res.end();
+  }
   // /fr, /nl, /eng -> accueil de la langue (URL d'origine conservées)
   const home = /^\/(fr|nl|eng)\/?$/.exec(path);
   const to = home ? `/${home[1]}/index.html` : REDIRECTS.get(path);

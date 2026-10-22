@@ -43,18 +43,17 @@ export async function login(email: string, password: string, ip: string, device?
     return null;
   }
   const pair = `${email}\n${ip}`;
-  // Cookie d'appareil plafonné lui aussi : 10 échecs sous ce cookie et il ne dispense plus du verrou par e-mail
-  const trusted = isDevice(PASSWORD_PEPPER, email, device) && !blocked('loginDevice', email);
-  if (blocked('loginPair', pair) || (!trusted && blocked('loginEmail', email))) {
+  // Essais comptés avant tout await : une rafale concurrente ne passe plus entre lecture et incrément. Un succès efface le couple.
+  // Cookie d'appareil plafonné lui aussi : 10 essais sous ce cookie et il ne dispense plus du verrou par e-mail
+  const trusted = isDevice(PASSWORD_PEPPER, email, device) && !hit('loginDevice', email);
+  const overPair = hit('loginPair', pair), overEmail = hit('loginEmail', email);
+  if (overPair || (!trusted && overEmail)) {
     log('login_locked', { ip });
     return null;
   }
   const [u] = await sql`SELECT id, email, locale, password_hash, email_verified_at FROM users WHERE email = ${email}`;
   const ok = await verifyPassword(u?.password_hash, password);
   if (!ok) {
-    hit('loginPair', pair);
-    hit('loginEmail', email);
-    if (trusted) hit('loginDevice', email);
     log('login_failed', { user_id: u?.id ?? null, ip });
     return null;
   }
@@ -76,20 +75,21 @@ export function clearLoginLimits(email: string) {
 }
 
 // Code de l'appli d'authentification : ±1 pas, rejeu refusé (le pas doit dépasser le dernier accepté), essais limités comme la connexion
-export async function checkAdminCode(userId: number, code: string): Promise<boolean> {
+// ip : celle de la requête, pour remonter une attaque sur le second facteur (le login_ok de la session peut venir d'ailleurs)
+export async function checkAdminCode(userId: number, code: string, ip: string): Promise<boolean> {
   const id = String(userId);
   if (blocked('totp', id)) {
-    log('totp_locked', { user_id: userId });
+    log('totp_locked', { user_id: userId, ip });
     return false;
   }
   const step = verifyTotp(ADMIN_TOTP_SECRET, code);
   const [row] = step === null ? [] : await sql`UPDATE users SET totp_last_step = ${step} WHERE id = ${userId} AND totp_last_step < ${step} RETURNING id`;
   if (!row) {
     hit('totp', id);
-    log('totp_failed', { user_id: userId });
+    log('totp_failed', { user_id: userId, ip });
     return false;
   }
   forget('totp', id);
-  log('totp_ok', { user_id: userId });
+  log('totp_ok', { user_id: userId, ip });
   return true;
 }

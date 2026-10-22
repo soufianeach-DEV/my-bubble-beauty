@@ -48,7 +48,7 @@ test('jour à Bruxelles, pas en UTC', () => {
 test('date saisie stricte', () => {
   assert.equal(isDay('2026-10-25'), true);
   assert.equal(isDay('2028-02-29'), true);
-  for (const bad of ['2026-02-30', '2026-13-01', '2026-1-05', '26-10-25', '2026-10-25T00:00', '', null, 20261025]) assert.equal(isDay(bad), false, String(bad));
+  for (const bad of ['2026-02-30', '2026-13-01', '2026-1-05', '26-10-25', '2026-10-25T00:00', '0000-01-01', '1999-12-31', '', null, 20261025]) assert.equal(isDay(bad), false, String(bad));
 });
 
 test('montants affichés comme les tarifs du site', () => {

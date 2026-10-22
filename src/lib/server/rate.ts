@@ -6,14 +6,14 @@ const MIN = 60_000;
 const HOUR = 60 * MIN;
 // keys : plafond d'entrées de la règle, pour borner la mémoire de l'instance de 512 Mo
 export const RULES = {
-  loginPair: { max: 5, ms: 15 * MIN, keys: 10_000 }, // échecs par couple (e-mail, IP) : depuis sa propre IP, un tiers ne verrouille pas la gérante
-  loginEmail: { max: 100, ms: HOUR, keys: 10_000 }, // échecs par e-mail, toutes IP confondues (ASVS 2.2.1) ; un appareil déjà connecté (cookie d'appareil) n'y est pas soumis
+  loginPair: { max: 5, ms: 15 * MIN, keys: 10_000 }, // essais par couple (e-mail, IP), effacés au succès : depuis sa propre IP, un tiers ne verrouille pas la gérante
+  loginEmail: { max: 100, ms: HOUR, keys: 10_000 }, // essais par e-mail, toutes IP confondues (ASVS 2.2.1) ; un appareil déjà connecté (cookie d'appareil) n'y est pas soumis
   loginIp: { max: 30, ms: 15 * MIN, keys: 10_000 }, // tentatives de connexion par IP
   totp: { max: 5, ms: 15 * MIN, keys: 100 }, // codes admin faux, par compte (un seul admin)
   mailTo: { max: 3, ms: HOUR, keys: 10_000 }, // e-mails d'inscription ou d'oubli par adresse destinataire
   mailIp: { max: 20, ms: HOUR, keys: 10_000 }, // mêmes e-mails par IP
   promo: { max: 10, ms: HOUR, keys: 10_000 }, // codes promo invalides par cliente
-  loginDevice: { max: 10, ms: 15 * MIN, keys: 10_000 }, // échecs sous cookie d'appareil, par e-mail : au-delà, le cookie ne dispense plus de loginEmail
+  loginDevice: { max: 10, ms: 15 * MIN, keys: 10_000 }, // essais sous cookie d'appareil, par e-mail : au-delà, le cookie ne dispense plus de loginEmail
 } as const;
 export type Rule = keyof typeof RULES;
 type Counter = { n: number; until: number };

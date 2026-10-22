@@ -14,7 +14,7 @@ if (Astro.request.method === 'POST') {
   const form = await readForm(Astro.request);
   if (!form) return new Response(null, { status: 413 });
   const p = totpForm.safeParse(Object.fromEntries(form));
-  if (p.success && (await verifyAdminTotp(Astro.cookies, user, p.data.code, Astro.request.headers.get('user-agent')))) return Astro.redirect('/admin', 303);
+  if (p.success && (await verifyAdminTotp(Astro.cookies, user, p.data.code, Astro.request.headers.get('user-agent'), Astro.locals.ip))) return Astro.redirect('/admin', 303);
   // Même message pour un code faux, rejoué ou bloqué : rien n'indique où en est le compteur
   error = "Code refusé. Saisissez le code affiché maintenant par l'application d'authentification. Après 5 erreurs, attendez 15 minutes.";
   Astro.response.status = 400;
