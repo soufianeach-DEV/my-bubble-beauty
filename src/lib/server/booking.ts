@@ -127,6 +127,23 @@ export async function createBooking(input: { userId: number; serviceId: number; 
 
 export type PaymentOutcome = 'confirmed' | 'already' | 'refunded' | 'unpaid' | 'unknown';
 
+// Paiement d'une réservation déjà expirée (remplacée par une autre de la cliente, ou payée tard) : les règles de createBooking valent
+// encore au moment de confirmer, sinon payer deux sessions ouvertes dépasserait les 2 rendez-vous ou l'usage unique d'un code promo.
+async function stillAllowed(tx: Sql, id: number, b: { user_id: number | null; promo_code_id: number | null; starts_at: Date }) {
+  if (b.starts_at <= new Date()) return false;
+  if (b.user_id) {
+    const [{ n }] = await tx`SELECT count(*) AS n FROM bookings WHERE user_id = ${b.user_id} AND id <> ${id} AND status IN ('pending_payment', 'confirmed') AND starts_at > now()`;
+    if (n >= MAX_UPCOMING) return false;
+  }
+  if (b.promo_code_id) {
+    const [p] = await tx`SELECT max_uses, once_per_user FROM promo_codes WHERE id = ${b.promo_code_id} FOR UPDATE`;
+    const [u] = await tx`SELECT count(*) AS uses, count(*) FILTER (WHERE user_id = ${b.user_id}) AS mine FROM bookings
+      WHERE promo_code_id = ${b.promo_code_id} AND id <> ${id} AND status IN ('pending_payment', 'confirmed')`;
+    if ((p.max_uses !== null && u.uses >= p.max_uses) || (p.once_per_user && u.mine > 0)) return false;
+  }
+  return true;
+}
+
 // Seule voie de confirmation d'un acompte (webhook et page de retour). Un paiement n'est jugé qu'une fois, par l'appel qui le rattache
 // à la réservation : ensuite tout rejeu (relivraison, success_url rouverte) répond 'already' quel que soit le statut, même après une
 // annulation où l'admin garde l'acompte ; l'état se lit dans la liste des réservations. Un paiement qui ne peut plus donner de rendez-vous
@@ -143,8 +160,15 @@ export async function confirmPayment(s: CheckoutSession): Promise<PaymentOutcome
   let row;
   if (s.amount_total === b.deposit_cents && s.currency === 'eur') {
     try {
-      [row] = await sql`UPDATE bookings SET status = 'confirmed', stripe_payment_intent = ${pi}
-        WHERE id = ${b.id} AND status IN ('pending_payment', 'expired') AND stripe_payment_intent IS NULL RETURNING id`;
+      row = await sql.begin(async (tx) => {
+        // Mêmes verrous et même ordre que createBooking (cliente, puis code promo)
+        const [cur] = await tx`SELECT status, user_id, promo_code_id, starts_at FROM bookings WHERE id = ${b.id}`;
+        if (cur.user_id) await tx`SELECT id FROM users WHERE id = ${cur.user_id} FOR UPDATE`;
+        if (cur.status === 'expired' && !(await stillAllowed(tx, b.id, cur))) return null;
+        const [r] = await tx`UPDATE bookings SET status = 'confirmed', stripe_payment_intent = ${pi}
+          WHERE id = ${b.id} AND status IN ('pending_payment', 'expired') AND stripe_payment_intent IS NULL RETURNING id`;
+        return r ?? null;
+      });
     } catch (e) {
       if (!isOverlap(e)) throw e;
     }
