@@ -6,9 +6,15 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "start": "node server.mjs",
+    "test": "node --test \"src/**/*.test.ts\"",
+    "admin:totp": "node scripts/admin-totp.mjs"
   },
   "dependencies": {
-    "astro": "^7.4.0"
+    "@astrojs/node": "^11.1.9",
+    "@node-rs/argon2": "^2.2.2",
+    "astro": "^7.4.0",
+    "postgres": "^3.4.9"
   }
 }
