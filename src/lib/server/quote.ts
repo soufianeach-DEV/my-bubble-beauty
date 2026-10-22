@@ -29,20 +29,23 @@ export async function quote(input: { userId: number; serviceId: number; startsAt
   if (!s || !(await isFree(sql, serviceId, startsAt, userId))) return { ok: false, error: 'unavailable' };
   let promo: Promo | null = null;
   if (code) {
-    // Le devis est aussi un moyen de deviner un code : mêmes compteurs que la réservation
-    if (blocked('promo', String(userId))) return { ok: false, error: 'promo', promo: 'blocked' };
-    const [p] = /^[A-Z0-9-]{3,32}$/.test(code)
-      ? await sql<(Promo & { id: number; today: string })[]>`SELECT id, kind, value, starts_on::text, ends_on::text, max_uses, once_per_user, service_ids, active, current_date::text AS today
-          FROM promo_codes WHERE code = ${code}`
-      : [];
-    const [use] = p ? await sql`SELECT count(*) AS uses, count(*) FILTER (WHERE user_id = ${userId}) AS mine FROM bookings
-          WHERE promo_code_id = ${p.id} AND status IN ('pending_payment', 'confirmed')` : [];
-    const problem = p ? promoProblem(p, { today: p.today, serviceId, uses: use.uses, usesByUser: use.mine }) : 'unknown';
-    if (problem) {
-      hit('promo', String(userId));
-      return { ok: false, error: 'promo', promo: problem };
-    }
-    promo = p;
+    // Le devis est aussi un moyen de deviner un code : mêmes compteurs que la réservation, lus et comptés sous le verrou de la cliente
+    // (même verrou que createBooking) pour qu'une rafale ne dépasse pas la limite
+    const r = await sql.begin(async (tx) => {
+      await tx`SELECT id FROM users WHERE id = ${userId} FOR UPDATE`;
+      if (blocked('promo', String(userId))) return { problem: 'blocked' as const };
+      const [p] = /^[A-Z0-9-]{3,32}$/.test(code)
+        ? await tx<(Promo & { id: number; today: string })[]>`SELECT id, kind, value, starts_on::text, ends_on::text, max_uses, once_per_user, service_ids, active, current_date::text AS today
+            FROM promo_codes WHERE code = ${code}`
+        : [];
+      const [use] = p ? await tx`SELECT count(*) AS uses, count(*) FILTER (WHERE user_id = ${userId}) AS mine FROM bookings
+            WHERE promo_code_id = ${p.id} AND status IN ('pending_payment', 'confirmed')` : [];
+      const problem = p ? promoProblem(p, { today: p.today, serviceId, uses: use.uses, usesByUser: use.mine }) : 'unknown';
+      if (problem) hit('promo', String(userId));
+      return problem ? { problem } : { p };
+    });
+    if ('problem' in r) return { ok: false, error: 'promo', promo: r.problem };
+    promo = r.p;
   }
   return { ok: true, quote: { ...amounts(s.price_cents, s.deposit_cents, promo), name: s.name, duration_min: s.duration_min, code: promo && code } };
 }

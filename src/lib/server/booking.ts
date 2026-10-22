@@ -67,13 +67,14 @@ export async function createBooking(input: { userId: number; serviceId: number; 
   const { userId, serviceId, startsAt, lang } = input;
   const code = input.promoCode?.trim().toUpperCase() || null;
   if (!Number.isInteger(serviceId) || Number.isNaN(startsAt.getTime())) return { ok: false, error: 'unavailable' };
-  if (code && blocked('promo', String(userId))) return { ok: false, error: 'promo', promo: 'blocked' };
   let stale: string[] = [];
   let r;
   try {
     r = await sql.begin(async (tx) => {
       // Verrous toujours dans cet ordre (cliente, puis code promo) : deux réservations simultanées ne s'interbloquent pas
       await tx`SELECT id FROM users WHERE id = ${userId} FOR UPDATE`;
+      // Lu sous le verrou de la cliente : en rafale, chaque essai voit les échecs comptés par le précédent
+      if (code && blocked('promo', String(userId))) return { ok: false, error: 'promo', promo: 'blocked' } as const;
       stale = await expirePending(tx, userId);
       const [{ n }] = await tx`SELECT count(*) AS n FROM bookings WHERE user_id = ${userId} AND status IN ('pending_payment', 'confirmed') AND starts_at > now()`;
       if (n >= MAX_UPCOMING) return { ok: false, error: 'limit' } as const;

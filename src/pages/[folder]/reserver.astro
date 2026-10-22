@@ -43,7 +43,8 @@ const Id = z.string().regex(/^\d{1,9}$/).transform(Number);
 const Post = z.object({
   etape: z.enum(['choisir', 'appliquer', 'reserver']),
   service: Id,
-  debut: z.iso.datetime(),
+  // Années 2000 à 2099 seulement : une date forgée en l'an 0000 faisait échouer Postgres (500)
+  debut: z.iso.datetime().regex(/^20\d\d-/),
   // Le format du code est contrôlé par le devis et la réservation : même réponse qu'un code inconnu, essai compté
   code: z.string().max(64).default('').transform((s) => s.trim().toUpperCase()),
   cgv: z.literal('on').optional(),
