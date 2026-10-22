@@ -12,7 +12,7 @@ services:
     name: my-bubble-beauty-app
     region: frankfurt
     plan: free
-    branch: main
+    # Pas de branch : le service suit la branche du Blueprint (feat/reservation pour la recette, main ensuite)
     buildCommand: npm ci && npm run build
     startCommand: node server.mjs
     healthCheckPath: /fr/index.html
