@@ -1,0 +1,120 @@
+---
+export const prerender = false;
+// Codes promo : création, modification, activation ; jamais supprimés (les réservations passées y renvoient)
+import Admin from './_layout.astro';
+import { adminId, byCategory, listPromos, listServices, readForm, savePromo, togglePromo } from '../../lib/server/admin.ts';
+import { centsInput } from '../../lib/server/admin-form.ts';
+import { euros } from '../../lib/server/pricing.ts';
+
+const me = adminId(Astro.locals);
+if (!me) return new Response(null, { status: 404 });
+const DONE: Record<string, string> = { save: 'Code enregistré.', toggle: 'État du code modifié.' };
+let error = '';
+// État du formulaire : saisie refusée, code en cours de modification (?id=) ou nouveau code
+let f: Record<string, string> = { kind: 'percent', active: 'on' };
+let picked = new Set<string>();
+if (Astro.request.method === 'POST') {
+  const form = await readForm(Astro.request);
+  if (!form) return new Response(null, { status: 413 });
+  const toggle = form.get('action') === 'toggle';
+  const r = toggle ? await togglePromo(me, form) : await savePromo(me, form);
+  if (r.ok) return Astro.redirect(`/admin/codes-promo?ok=${toggle ? 'toggle' : 'save'}#c-${r.id}`, 303);
+  error = r.error;
+  if (!toggle) {
+    f = Object.fromEntries([...form].map(([k, x]) => [k, String(x)]));
+    picked = new Set(form.getAll('services').map(String));
+  }
+  Astro.response.status = 400;
+}
+const done = DONE[Astro.url.searchParams.get('ok') ?? ''];
+const [promos, services] = await Promise.all([listPromos(), listServices()]);
+const edit = Astro.request.method === 'GET' ? promos.find((p) => String(p.id) === Astro.url.searchParams.get('id')) : undefined;
+if (edit) {
+  f = {
+    id: String(edit.id), code: edit.code, kind: edit.kind, value: edit.kind === 'percent' ? String(edit.value) : centsInput(edit.value),
+    starts_on: edit.starts_on ?? '', ends_on: edit.ends_on ?? '', max_uses: edit.max_uses ? String(edit.max_uses) : '',
+    once_per_user: edit.once_per_user ? 'on' : '', active: edit.active ? 'on' : '',
+  };
+  picked = new Set((edit.service_ids ?? []).map(String));
+}
+const day = (d: string) => d.split('-').reverse().join('/');
+const period = (p: (typeof promos)[number]) =>
+  p.starts_on && p.ends_on ? `du ${day(p.starts_on)} au ${day(p.ends_on)}` : p.starts_on ? `dès le ${day(p.starts_on)}` : p.ends_on ? `jusqu'au ${day(p.ends_on)}` : 'sans limite';
+---
+<Admin title="Codes promo">
+{done && <p class="notice" role="status">{done}</p>}
+{error && <p class="notice notice--error" role="alert">{error}</p>}
+<p>Les dates portent sur le jour où la cliente réserve (le jour de fin compris). La remise est figée à la réservation. Un code utilisé = une réservation en attente de paiement ou confirmée qui le porte.</p>
+{promos.length === 0 ? <p>Aucun code pour l'instant.</p> : (
+  <div class="table-wrap"><table class="data-table">
+    <thead><tr><th scope="col">Code</th><th scope="col">Remise</th><th scope="col">Période</th><th scope="col">Utilisations</th><th scope="col">Règles</th><th scope="col">État</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>
+    <tbody>{promos.map((p) => (
+      <tr id={`c-${p.id}`}>
+        <td><strong>{p.code}</strong></td>
+        <td>{p.kind === 'percent' ? `${p.value} %` : euros(p.value)}</td>
+        <td>{period(p)}</td>
+        <td>{p.uses}{p.max_uses !== null && ` / ${p.max_uses}`}</td>
+        <td>{p.service_ids ? `${p.service_ids.length} prestation${p.service_ids.length > 1 ? 's' : ''}` : 'Toutes les prestations'}{p.once_per_user && <><br>Une fois par cliente</>}</td>
+        <td>{p.active ? 'Actif' : 'Désactivé'}</td>
+        <td class="cell">
+          <a class="btn btn--ghost" href={`/admin/codes-promo?id=${p.id}#code-form`}>Modifier<span class="visually-hidden"> {p.code}</span></a>
+          <form class="inline-form" method="post">
+            <input type="hidden" name="action" value="toggle"><input type="hidden" name="id" value={p.id}>
+            {!p.active && <input type="hidden" name="active" value="on">}
+            <button class="btn btn--ghost" type="submit">{p.active ? 'Désactiver' : 'Activer'}<span class="visually-hidden"> {p.code}</span></button>
+          </form>
+        </td>
+      </tr>
+    ))}</tbody>
+  </table></div>
+)}
+
+<section aria-labelledby="code-form">
+<h2 id="code-form">{f.id ? `Modifier le code ${f.code}` : 'Nouveau code'}</h2>
+{f.id && <p><a href="/admin/codes-promo#code-form">Créer plutôt un nouveau code</a></p>}
+<form class="form" method="post" action="/admin/codes-promo#code-form">
+  <input type="hidden" name="action" value="save">
+  {f.id && <input type="hidden" name="id" value={f.id}>}
+  <div class="field">
+    <label for="code">Code</label>
+    <input id="code" name="code" value={f.code} maxlength="32" pattern="[A-Za-z0-9\-]{3,32}" required autocomplete="off" aria-describedby="code-hint">
+    <span class="hint" id="code-hint">3 à 32 caractères : lettres, chiffres ou tirets, mis en majuscules.</span>
+  </div>
+  <fieldset class="group">
+    <legend>Type de remise</legend>
+    <label class="check"><input type="radio" name="kind" value="percent" checked={f.kind !== 'amount'}><span>Pourcentage (1 à 100)</span></label>
+    <label class="check"><input type="radio" name="kind" value="amount" checked={f.kind === 'amount'}><span>Montant en euros</span></label>
+  </fieldset>
+  <div class="field"><label for="value">Valeur (20 pour 20 %, ou 7,50 pour 7,50 €)</label><input id="value" name="value" value={f.value} inputmode="decimal" maxlength="9" required></div>
+  <div class="field"><label for="starts_on">Valable à partir du (facultatif)</label><input id="starts_on" name="starts_on" type="date" value={f.starts_on}></div>
+  <div class="field"><label for="ends_on">Jusqu'au, inclus (facultatif)</label><input id="ends_on" name="ends_on" type="date" value={f.ends_on}></div>
+  <div class="field"><label for="max_uses">Utilisations maximum (vide = sans limite)</label><input id="max_uses" name="max_uses" type="number" min="1" max="100000" step="1" value={f.max_uses}></div>
+  <label class="check"><input type="checkbox" name="once_per_user" checked={!!f.once_per_user}><span>Une seule fois par cliente</span></label>
+  <details open={picked.size > 0}>
+    <summary>Prestations concernées ({picked.size ? `${picked.size} cochée${picked.size > 1 ? 's' : ''}` : 'toutes'})</summary>
+    <p class="hint">Aucune case cochée = toutes les prestations.</p>
+    {byCategory(services).map((g) => (
+      <fieldset class="group">
+        <legend>{g.label}</legend>
+        {g.items.map((s) => <label class="check"><input type="checkbox" name="services" value={s.id} checked={picked.has(String(s.id))}><span>{s.name_fr}{!s.active && ' (hors ligne)'}</span></label>)}
+      </fieldset>
+    ))}
+  </details>
+  <label class="check"><input type="checkbox" name="active" checked={!!f.active}><span>Actif</span></label>
+  <button class="btn btn--solid" type="submit">{f.id ? 'Enregistrer les modifications' : 'Créer le code'}</button>
+</form>
+</section>
+</Admin>
+
+<style>
+  .cell .btn{min-height:44px;padding:.5rem 1rem;margin:0 .5rem .5rem 0}
+  details{border:1px solid var(--line-soft);border-radius:12px;padding:.75rem 1rem;background:var(--bg)}
+  summary{cursor:pointer;font-weight:500}
+  details .group{margin-top:1rem}
+  /* Pas de .field ici : sa règle d'input (44 px de haut, pleine largeur) déformerait cases et boutons radio */
+  .group{border:0;padding:0;margin:0;display:grid;gap:.5rem}
+  .group legend{font-weight:500;padding:0;margin-bottom:.5rem}
+  details .check{font-size:.9375rem}
+  .hint{color:var(--text-soft);font-size:.875rem}
+  section{margin-top:2.5rem}
+</style>
