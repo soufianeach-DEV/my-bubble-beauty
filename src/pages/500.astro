@@ -1,0 +1,12 @@
+---
+// Servie par l'adaptateur Node à la place d'une page qui échoue, depuis n'importe quel chemin : chemins absolus, aucun détail de l'erreur.
+import Base from '../layouts/Base.astro';
+import { pagePath } from '../lib/site';
+---
+<Base lang="fr" pageKey="home" canonicalPath="/500.html" title="Erreur momentanée — My Bubble Beauty" description="Une erreur est survenue de notre côté." noindex mainClass="legal">
+<div class="wrap"><article>
+<h1>Erreur momentanée</h1>
+<p>Une erreur est survenue de notre côté. Réessayez dans quelques instants ou appelez l'institut. <span lang="nl-BE">Er is een fout opgetreden. Probeer het later opnieuw.</span> <span lang="en">Something went wrong. Please try again later.</span></p>
+<p class="contact__cta"><a class="btn btn--solid" href={pagePath('fr', 'home')}>Retour à l'accueil</a><a class="btn btn--ghost" href={pagePath('nl', 'home')} hreflang="nl-BE" lang="nl-BE">Naar de startpagina</a><a class="btn btn--ghost" href={pagePath('en', 'home')} hreflang="en" lang="en">Back to home</a></p>
+</article></div>
+</Base>

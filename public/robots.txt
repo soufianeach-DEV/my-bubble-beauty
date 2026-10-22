@@ -1,4 +1,12 @@
 User-agent: *
 Allow: /
+# Compte, réservation et administration : pages personnelles, rien à explorer pour un moteur
+Disallow: /admin
+Disallow: /fr/compte
+Disallow: /nl/compte
+Disallow: /eng/compte
+Disallow: /fr/reserver
+Disallow: /nl/reserver
+Disallow: /eng/reserver
 
 Sitemap: https://mybubble-beauty.com/sitemap.xml

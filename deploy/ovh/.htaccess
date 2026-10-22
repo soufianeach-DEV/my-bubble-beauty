@@ -1,3 +1,4 @@
+# OBSOLÈTE depuis la réservation en ligne : copie statique qui ne sert ni compte ni réservation, le site exige désormais Node (render.yaml).
 # My Bubble — configuration Apache
 Options -Indexes
 AddDefaultCharset UTF-8

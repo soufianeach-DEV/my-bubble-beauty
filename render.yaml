@@ -1,87 +1,56 @@
-# Plan de déploiement Render (New > Blueprint) : site statique servi par le CDN de Render.
-# Render ne lit pas le .htaccess d'Apache : en-têtes, cache et redirections sont repris ici.
+# Plan de déploiement Render (New > Blueprint) : service web Node (pages du site, compte, réservation, admin) et base Postgres, tous deux à Francfort.
+# En-têtes, cache et redirections sont posés par server.mjs : les réglages headers/routes de Render ne valent que pour les sites statiques.
+# Offre gratuite = recette seulement : la base expire 30 jours après sa création, puis est supprimée 14 jours plus tard, sans aucune sauvegarde.
+# Passer la base et le service en payant avant d'ouvrir l'inscription à une vraie cliente.
+# Nouveau nom : l'ancien site statique « my-bubble-beauty » ne peut pas devenir un service Node (type figé à la création) ; le supprimer une fois celui-ci validé.
+# L'URL https://my-bubble-beauty-app.onrender.com doit figurer dans security.allowedDomains (astro.config.mjs) ; si Render y ajoute un suffixe, reporter l'URL réelle.
+# region, postgresMajorVersion, databaseName et user sont figés à la création.
 # HTTP -> HTTPS est automatique chez Render ; www -> domaine nu se règle dans Custom Domains.
 services:
   - type: web
-    runtime: static
-    name: my-bubble-beauty
+    runtime: node
+    name: my-bubble-beauty-app
+    region: frankfurt
+    plan: free
     branch: main
     buildCommand: npm ci && npm run build
-    staticPublishPath: dist
+    startCommand: node server.mjs
+    healthCheckPath: /fr/index.html
     envVars:
       - key: NODE_VERSION
         value: "22"
-    routes:
-      # /fr, /nl, /eng -> accueil de la langue (URL d'origine conservées)
-      - type: redirect
-        source: /fr
-        destination: /fr/index.html
-      - type: redirect
-        source: /nl
-        destination: /nl/index.html
-      - type: redirect
-        source: /eng
-        destination: /eng/index.html
-      # Anciennes pages légales à la racine (v1) -> versions FR
-      - type: redirect
-        source: /mentions-legales.html
-        destination: /fr/mentions-legales.html
-      - type: redirect
-        source: /confidentialite.html
-        destination: /fr/confidentialite.html
-    headers:
-      # Sécurité : la CSP n'autorise que 'self' (aucun script ni style en ligne)
-      - path: /*
-        name: Content-Security-Policy
-        value: "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://*.goatcounter.com; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
-      - path: /*
-        name: Strict-Transport-Security
-        value: max-age=31536000
-      - path: /*
-        name: X-Content-Type-Options
-        value: nosniff
-      - path: /*
-        name: Referrer-Policy
-        value: strict-origin-when-cross-origin
-      - path: /*
-        name: Permissions-Policy
-        value: camera=(), microphone=(), geolocation=(), interest-cohort=()
-      - path: /*
-        name: Cross-Origin-Opener-Policy
-        value: same-origin
-      - path: /*
-        name: Cross-Origin-Resource-Policy
-        value: same-origin
-      - path: /*
-        name: X-Frame-Options
-        value: DENY
-      # Cache : CSS haché par Astro, JS versionné par ?v= (JS_VERSION), polices jamais modifiées
-      - path: /_astro/*
-        name: Cache-Control
-        value: public, max-age=31536000, immutable
-      - path: /assets/js/*
-        name: Cache-Control
-        value: public, max-age=31536000, immutable
-      - path: /assets/fonts/*
-        name: Cache-Control
-        value: public, max-age=31536000, immutable
-      # Images : 30 jours, une photo peut être remplacée sous le même nom
-      - path: /assets/img/*
-        name: Cache-Control
-        value: public, max-age=2592000
-      # Pages HTML : toujours revalidées (/ et /index.html sont deux chemins distincts pour Render)
-      - path: /
-        name: Cache-Control
-        value: no-cache
-      - path: /index.html
-        name: Cache-Control
-        value: no-cache
-      - path: /fr/*
-        name: Cache-Control
-        value: no-cache
-      - path: /nl/*
-        name: Cache-Control
-        value: no-cache
-      - path: /eng/*
-        name: Cache-Control
-        value: no-cache
+      # Adresse interne : la base n'accepte aucune connexion venue d'Internet (ipAllowList vide)
+      - key: DATABASE_URL
+        fromDatabase:
+          name: my-bubble-beauty-db
+          property: connectionString
+      # Secrets saisis à la création du Blueprint, jamais écrits ici ; Render ne les redemande plus aux synchronisations suivantes
+      - key: SITE_URL
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      # npm run admin:totp
+      - key: ADMIN_TOTP_SECRET
+        sync: false
+      # À garder aussi hors de Render : le perdre invalide tous les mots de passe
+      - key: PASSWORD_PEPPER
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+
+databases:
+  - name: my-bubble-beauty-db
+    region: frankfurt
+    plan: free
+    # Version des tests locaux
+    postgresMajorVersion: "16"
+    databaseName: mybubble
+    user: mybubble
+    # Réseau privé de Render seulement
+    ipAllowList: []
