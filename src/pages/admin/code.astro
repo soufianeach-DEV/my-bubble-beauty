@@ -1,0 +1,33 @@
+---
+export const prerender = false;
+// Second facteur de l'admin : seule page d'admin ouverte avant le code ; un code valide ouvre une nouvelle session marquée mfa
+import Admin from './_layout.astro';
+import { verifyAdminTotp } from '../../lib/server/accounts.ts';
+import { readForm } from '../../lib/server/admin.ts';
+import { totpForm } from '../../lib/server/admin-form.ts';
+
+const user = Astro.locals.user;
+if (!user?.isAdmin) return new Response(null, { status: 404 });
+if (Astro.locals.session?.mfaAt) return Astro.redirect('/admin');
+let error = '';
+if (Astro.request.method === 'POST') {
+  const form = await readForm(Astro.request);
+  if (!form) return new Response(null, { status: 413 });
+  const p = totpForm.safeParse(Object.fromEntries(form));
+  if (p.success && (await verifyAdminTotp(Astro.cookies, user, p.data.code, Astro.request.headers.get('user-agent')))) return Astro.redirect('/admin', 303);
+  // Même message pour un code faux, rejoué ou bloqué : rien n'indique où en est le compteur
+  error = "Code refusé. Saisissez le code affiché maintenant par l'application d'authentification. Après 5 erreurs, attendez 15 minutes.";
+  Astro.response.status = 400;
+}
+---
+<Admin title="Code de connexion" nav={false}>
+<p>Ouvrez l'application d'authentification de votre téléphone et saisissez le code à 6 chiffres de My Bubble Beauty.</p>
+{error && <p class="notice notice--error" role="alert">{error}</p>}
+<form class="form" method="post">
+  <div class="field">
+    <label for="code">Code à 6 chiffres</label>
+    <input id="code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{6,7}" maxlength="7" required autofocus aria-invalid={error ? 'true' : undefined}>
+  </div>
+  <button class="btn btn--solid" type="submit">Valider</button>
+</form>
+</Admin>

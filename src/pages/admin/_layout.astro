@@ -1,0 +1,46 @@
+---
+// Gabarit des pages d'admin (hors routage : préfixe _) ; la ligne suivante satisfait le test des routes gardées
+export const prerender = false;
+import Base from '../../layouts/Base.astro';
+import '../../styles/forms.css';
+
+interface Props {
+  title: string;
+  nav?: boolean;
+}
+const { title, nav = true } = Astro.props;
+const here = Astro.url.pathname.replace(/\/+$/, '') || '/admin';
+const LINKS = [
+  ['/admin', 'Agenda'],
+  ['/admin/reservations/nouvelle', 'Nouveau rendez-vous'],
+  ['/admin/prestations', 'Prestations'],
+  ['/admin/horaires', 'Horaires'],
+  ['/admin/codes-promo', 'Codes promo'],
+];
+// À la fusion : /fr/compte/deconnexion si elle existe (elle sert aussi avant le code, que la garde /admin refuse ici)
+const LOGOUT = '/admin/deconnexion';
+---
+<Base lang="fr" pageKey="home" canonicalPath={here} title={`${title} — Admin My Bubble Beauty`} description="Administration des rendez-vous." noindex mainClass="legal">
+<div class="wrap"><article class="admin">
+{nav && (
+  <nav class="admin-nav" aria-label="Administration">
+    <ul>{LINKS.map(([href, label]) => <li><a href={href} aria-current={href === here ? 'page' : undefined}>{label}</a></li>)}</ul>
+    <form method="post" action={LOGOUT}><button class="btn btn--ghost" type="submit">Se déconnecter</button></form>
+  </nav>
+)}
+<h1>{title}</h1>
+<slot />
+</article></div>
+</Base>
+
+<style>
+  :global(.legal) article.admin{max-width:1240px}
+  .admin h1{font-size:clamp(2rem,2vw + 1.25rem,2.75rem)}
+  /* Les textes .visually-hidden (position absolue) des tableaux restent dans le défilement du tableau, sinon la page déborde sur mobile */
+  .admin :global(.table-wrap){position:relative}
+  .admin-nav{display:flex;flex-wrap:wrap;gap:1rem 1.5rem;align-items:center;justify-content:space-between;margin:0 0 1.5rem;padding:0 0 1rem;border-bottom:1px solid var(--line-soft)}
+  .admin-nav ul{display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;list-style:none;margin:0;padding:0}
+  .admin-nav a{color:var(--link)}
+  .admin-nav a[aria-current="page"]{color:var(--text);font-weight:500;text-decoration:none}
+  .admin-nav .btn{min-height:44px;padding:.55rem 1.1rem}
+</style>

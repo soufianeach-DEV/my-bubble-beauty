@@ -1,0 +1,105 @@
+---
+export const prerender = false;
+// Horaires d'ouverture (plusieurs plages par jour) et fermetures (congés, créneaux bloqués), en heure de Bruxelles
+import Admin from './_layout.astro';
+import { addClosure, addHours, adminId, deleteClosure, deleteHours, fmtDateTime, listClosures, listHours, readForm } from '../../lib/server/admin.ts';
+import { EXTRA } from '../../lib/site';
+
+const me = adminId(Astro.locals);
+if (!me) return new Response(null, { status: 404 });
+const ACTIONS = { 'add-hours': addHours, 'del-hours': deleteHours, 'add-closure': addClosure, 'del-closure': deleteClosure };
+const DONE: Record<string, string> = { 'add-hours': 'Plage ajoutée.', 'del-hours': 'Plage supprimée.', 'add-closure': 'Fermeture ajoutée.', 'del-closure': 'Fermeture supprimée.' };
+let error = '';
+// Saisie gardée après un refus
+let v: Record<string, string> = {};
+if (Astro.request.method === 'POST') {
+  const form = await readForm(Astro.request);
+  if (!form) return new Response(null, { status: 413 });
+  const action = String(form.get('action'));
+  const r = Object.hasOwn(ACTIONS, action) ? await ACTIONS[action as keyof typeof ACTIONS](me, form) : { ok: false as const, error: 'Action inconnue.' };
+  if (r.ok) return Astro.redirect(`/admin/horaires?ok=${action}`, 303);
+  error = r.error;
+  v = Object.fromEntries([...form].map(([k, x]) => [k, String(x)]));
+  Astro.response.status = 400;
+}
+const done = DONE[Astro.url.searchParams.get('ok') ?? ''];
+const [hours, closures] = await Promise.all([listHours(), listClosures()]);
+const days = EXTRA.fr.days.map((label, i) => ({ label, ranges: hours.filter((h) => h.weekday === i + 1) }));
+---
+<Admin title="Horaires et fermetures">
+{done && <p class="notice" role="status">{done}</p>}
+{error && <p class="notice notice--error" role="alert">{error}</p>}
+
+<section aria-labelledby="plages">
+<h2 id="plages">Plages d'ouverture</h2>
+<p>Les créneaux proposés en ligne tiennent dans ces plages. Un jour sans plage est fermé. Deux plages qui se touchent (9:00–12:00 et 12:00–18:00) se comportent comme une seule.</p>
+<div class="table-wrap"><table class="data-table">
+  <thead><tr><th scope="col">Jour</th><th scope="col">Plages</th></tr></thead>
+  <tbody>{days.map((d) => (
+    <tr>
+      <th scope="row">{d.label}</th>
+      <td>{d.ranges.length === 0 ? 'Fermé' : (
+        <ul class="ranges">{d.ranges.map((h) => (
+          <li>{h.opens}–{h.closes}
+            <form class="inline-form" method="post"><input type="hidden" name="action" value="del-hours"><input type="hidden" name="id" value={h.id}>
+              <button class="btn btn--ghost" type="submit">Supprimer<span class="visually-hidden"> la plage {h.opens}–{h.closes} du {d.label.toLowerCase()}</span></button></form>
+          </li>
+        ))}</ul>
+      )}</td>
+    </tr>
+  ))}</tbody>
+</table></div>
+<form class="form row" method="post">
+  <input type="hidden" name="action" value="add-hours">
+  <div class="field"><label for="weekday">Jour</label>
+    <select id="weekday" name="weekday" required>{EXTRA.fr.days.map((label, i) => <option value={i + 1} selected={v.action === 'add-hours' && v.weekday === String(i + 1)}>{label}</option>)}</select>
+  </div>
+  <div class="field"><label for="opens">Ouverture</label><input id="opens" name="opens" type="time" required value={v.action === 'add-hours' ? v.opens : undefined}></div>
+  <div class="field"><label for="closes">Fermeture</label><input id="closes" name="closes" type="time" required value={v.action === 'add-hours' ? v.closes : undefined}></div>
+  <button class="btn btn--solid" type="submit">Ajouter la plage</button>
+</form>
+</section>
+
+<section aria-labelledby="fermetures">
+<h2 id="fermetures">Fermetures</h2>
+<p>Congés ou créneau bloqué : aucun rendez-vous en ligne n'y est proposé. Les rendez-vous déjà pris ne sont pas annulés (voir l'agenda).</p>
+{closures.length === 0 ? <p>Aucune fermeture à venir.</p> : (
+  <div class="table-wrap"><table class="data-table">
+    <thead><tr><th scope="col">Début</th><th scope="col">Fin</th><th scope="col">Motif</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>
+    <tbody>{closures.map((c) => (
+      <tr>
+        <td>{fmtDateTime(c.starts_at)}</td>
+        <td>{fmtDateTime(c.ends_at)}</td>
+        <td>{c.reason || '—'}</td>
+        <td><form class="inline-form" method="post"><input type="hidden" name="action" value="del-closure"><input type="hidden" name="id" value={c.id}>
+          <button class="btn btn--ghost" type="submit">Supprimer<span class="visually-hidden"> la fermeture du {fmtDateTime(c.starts_at)}</span></button></form></td>
+      </tr>
+    ))}</tbody>
+  </table></div>
+)}
+<form class="form" method="post">
+  <input type="hidden" name="action" value="add-closure">
+  <p class="hint">Heure vide : journée entière (début à 00:00, fin à minuit le jour de fin).</p>
+  <div class="row">
+    <div class="field"><label for="start_day">Début : date</label><input id="start_day" name="start_day" type="date" required value={v.start_day}></div>
+    <div class="field"><label for="start_time">Début : heure</label><input id="start_time" name="start_time" type="time" value={v.start_time}></div>
+  </div>
+  <div class="row">
+    <div class="field"><label for="end_day">Fin : date</label><input id="end_day" name="end_day" type="date" required value={v.end_day}></div>
+    <div class="field"><label for="end_time">Fin : heure</label><input id="end_time" name="end_time" type="time" value={v.end_time}></div>
+  </div>
+  <div class="field"><label for="reason">Motif (facultatif, visible ici seulement)</label><input id="reason" name="reason" maxlength="200" value={v.reason}></div>
+  <button class="btn btn--solid" type="submit">Ajouter la fermeture</button>
+</form>
+</section>
+</Admin>
+
+<style>
+  .ranges{list-style:none;margin:0;padding:0;display:grid;gap:.5rem}
+  .ranges li{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+  .data-table .btn{min-height:44px;padding:.5rem 1rem}
+  .row{display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end;max-width:none}
+  .row .field{flex:1 1 10rem}
+  .hint{margin:0;color:var(--text-soft);font-size:.875rem}
+  section + section{margin-top:2.5rem}
+</style>

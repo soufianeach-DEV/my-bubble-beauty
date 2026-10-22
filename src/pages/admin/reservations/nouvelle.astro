@@ -1,0 +1,51 @@
+---
+export const prerender = false;
+// Rendez-vous pris par téléphone ou WhatsApp : confirmé sans acompte, hors horaires et délais, jamais sur un autre rendez-vous
+import Admin from '../_layout.astro';
+import { adminId, byCategory, listServices, newBooking, readForm } from '../../../lib/server/admin.ts';
+import { todayBrussels } from '../../../lib/server/pricing.ts';
+
+const me = adminId(Astro.locals);
+if (!me) return new Response(null, { status: 404 });
+let error = '';
+// Valeurs gardées après un refus : seule l'heure est souvent à changer
+let v: Record<string, string> = { day: todayBrussels() };
+if (Astro.request.method === 'POST') {
+  const form = await readForm(Astro.request);
+  if (!form) return new Response(null, { status: 413 });
+  const r = await newBooking(me, form);
+  if (r.ok) return Astro.redirect(`/admin?jour=${r.day}&vue=jour&ok=cree#r-${r.id}`, 303);
+  error = r.error;
+  v = Object.fromEntries([...form].map(([k, x]) => [k, String(x)]));
+  Astro.response.status = 400;
+}
+const groups = byCategory((await listServices()).filter((s) => s.duration_min !== null)).filter((g) => g.items.length);
+---
+<Admin title="Nouveau rendez-vous">
+<p>Pour un rendez-vous pris par téléphone ou WhatsApp. Il est confirmé tout de suite, sans acompte, même en dehors des horaires d'ouverture. Seul un chevauchement avec un autre rendez-vous est refusé.</p>
+{error && <p class="notice notice--error" role="alert">{error}</p>}
+{groups.length === 0 ? (
+  <p class="notice">Aucune prestation n'a encore de durée. Complétez d'abord les durées dans <a href="/admin/prestations">Prestations</a>.</p>
+) : (
+  <form class="form" method="post">
+    <div class="field">
+      <label for="service">Prestation</label>
+      <select id="service" name="service" required>
+        <option value="">Choisir…</option>
+        {groups.map((g) => (
+          <optgroup label={g.label}>{g.items.map((s) => <option value={s.id} selected={String(s.id) === v.service}>{s.name_fr} ({s.duration_min} min){!s.active && ' — non proposée en ligne'}</option>)}</optgroup>
+        ))}
+      </select>
+    </div>
+    <div class="field"><label for="day">Date</label><input id="day" name="day" type="date" value={v.day} required></div>
+    <div class="field"><label for="time">Heure de début (Bruxelles)</label><input id="time" name="time" type="time" value={v.time} required></div>
+    <div class="field"><label for="name">Nom de la cliente</label><input id="name" name="name" maxlength="100" autocomplete="off" value={v.name} required></div>
+    <div class="field">
+      <label for="phone">Téléphone (facultatif)</label>
+      <input id="phone" name="phone" type="tel" maxlength="30" autocomplete="off" value={v.phone} aria-describedby="phone-hint">
+      <span class="hint" id="phone-hint">Effacé automatiquement 3 ans après le rendez-vous.</span>
+    </div>
+    <button class="btn btn--solid" type="submit">Enregistrer le rendez-vous</button>
+  </form>
+)}
+</Admin>
