@@ -34,7 +34,7 @@ const jsonld = {
 <h1 id="h-hero"><span class="h1-brand">{h.hero.brand}</span> <span class="h1-sub">{h.hero.sub}</span></h1>
 <p class="hero__lead">{h.hero.lead}</p>
 <div class="hero__cta">
-<a class="btn btn--solid sheen" href="#contact">{h.hero.cta}</a>
+<a class="btn btn--solid sheen" href={`/${FOLDER[lang]}/reserver`}>{h.hero.cta}</a>
 <a class="btn btn--ghost" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{CONTACT.phoneLabel}</a>
 </div>
 <hr class="rule">
