@@ -1,0 +1,49 @@
+---
+// Mot de passe oublié : même réponse que l'adresse ait un compte ou non ; l'e-mail part sans être attendu (délai identique).
+export const prerender = false;
+import { z } from 'astro/zod';
+import Base from '../../../layouts/Base.astro';
+import '../../../styles/forms.css';
+import { COMPTE } from '../../../data/i18n/compte.ts';
+import { FOLDER, langOfFolder } from '../../../lib/site';
+import { requestReset } from '../../../lib/server/accounts.ts';
+import { EMAIL, readForm } from '../../../lib/server/compte.ts';
+
+const lang = langOfFolder(Astro.params.folder!);
+const d = FOLDER[lang];
+const tx = COMPTE[lang];
+const t = tx.forgot;
+
+let sent = false;
+let invalid = false;
+let email = '';
+if (Astro.request.method === 'POST') {
+  const { data, raw } = await readForm(Astro.request, z.object({ email: EMAIL }));
+  if (data) {
+    await requestReset(data.email, lang, Astro.locals.ip);
+    sent = true;
+  } else {
+    invalid = true;
+    email = (raw.email ?? '').slice(0, 254);
+  }
+}
+---
+<Base lang={lang} pageKey="home" canonicalPath={`/${d}/compte/mot-de-passe-oublie`} title={`${t.title} — My Bubble Beauty`} description={t.description} noindex mainClass="legal">
+<div class="wrap"><article>
+<h1>{t.title}</h1>
+{sent ? <p class="notice" role="status">{t.sent}</p> : (
+<Fragment>
+{invalid && <p class="notice notice--error" role="alert">{tx.invalid}</p>}
+<p>{t.intro}</p>
+<form class="form" method="post">
+<div class="field">
+<label for="email">{tx.email}</label>
+<input id="email" name="email" type="email" required maxlength="254" autocomplete="email" value={email} aria-invalid={invalid ? 'true' : undefined}>
+</div>
+<button class="btn btn--solid" type="submit">{t.submit}</button>
+</form>
+</Fragment>
+)}
+<p><a href={`/${d}/compte/connexion`}>{t.back}</a></p>
+</article></div>
+</Base>
