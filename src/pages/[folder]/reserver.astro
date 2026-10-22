@@ -1,0 +1,231 @@
+---
+// Prise de rendez-vous en trois étapes : prestation, jour et créneau, puis récapitulatif (code promo, CGV) et acompte chez Stripe.
+// Aucun montant ne vient du formulaire : le devis et la réservation relisent tout en base à chaque POST.
+import { z } from 'astro/zod';
+import Base from '../../layouts/Base.astro';
+import '../../styles/forms.css';
+import { CONTACT, FOLDER, langOfFolder, pagePath, t } from '../../lib/site';
+import { RESERVER } from '../../data/i18n/reserver';
+import { createBooking, MAX_UPCOMING, type BookingError } from '../../lib/server/booking.ts';
+import { amounts, euros, isDay, todayBrussels } from '../../lib/server/pricing.ts';
+import { bookingOpen, quote, type Quote } from '../../lib/server/quote.ts';
+import { bookableServices, slots, type Slot } from '../../lib/server/slots.ts';
+
+export const prerender = false;
+
+const lang = langOfFolder(Astro.params.folder!);
+const L = RESERVER[lang];
+const folder = FOLDER[lang];
+const base = `/${folder}/reserver`;
+// Le middleware garde déjà la route ; la page relit la session avant d'agir
+const user = Astro.locals.user;
+if (!user) return Astro.redirect(`/${folder}/compte/connexion`);
+const method = Astro.request.method;
+if (method !== 'GET' && method !== 'HEAD' && method !== 'POST') return new Response(null, { status: 405, headers: { Allow: 'GET, HEAD, POST' } });
+
+const today = todayBrussels();
+const addDays = (day: string, n: number) => new Date(Date.parse(`${day}T00:00:00Z`) + n * 86_400_000).toISOString().slice(0, 10);
+const lastDay = addDays(today, 60);
+const fmt = (o: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat(L.locale, { timeZone: 'Europe/Brussels', ...o });
+// Midi UTC tombe le même jour civil à Bruxelles, en été comme en hiver
+const dayLabel = (day: string) => fmt({ weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(`${day}T12:00:00Z`));
+
+const services = await bookableServices(lang);
+const open = services.length > 0 && (await bookingOpen());
+const pick = (id: number) => services.find((s) => s.id === id) ?? null;
+// Mêmes catégories et libellés que les filtres des tarifs du site
+const groups = t(lang).home.tarifs.filters
+  .filter((f) => f.key !== 'all')
+  .map((f) => ({ key: f.key, label: f.label, items: services.filter((s) => s.category === f.key) }))
+  .filter((g) => g.items.length);
+
+const Id = z.string().regex(/^\d{1,9}$/).transform(Number);
+const Post = z.object({
+  etape: z.enum(['choisir', 'appliquer', 'reserver']),
+  service: Id,
+  debut: z.iso.datetime(),
+  // Le format du code est contrôlé par le devis et la réservation : même réponse qu'un code inconnu, essai compté
+  code: z.string().max(64).default('').transform((s) => s.trim().toUpperCase()),
+  cgv: z.literal('on').optional(),
+});
+
+let view: 1 | 2 | 3 = 1;
+let error: string | null = null;
+let svc: (typeof services)[number] | null = null;
+let day = today;
+let at: Date | null = null;
+let q: Quote | null = null;
+let code = '';
+let promoMsg: string | null = null;
+let applied = false;
+let cgvMissing = false;
+let limit = false;
+
+if (open && method === 'POST') {
+  let fields: Record<string, unknown> = {};
+  // Au-delà de 64 Kio (bodySizeLimit), la lecture échoue : traité comme un formulaire illisible
+  try {
+    fields = Object.fromEntries(await Astro.request.formData());
+  } catch {}
+  const f = Post.safeParse(fields);
+  if (!f.success) error = L.err.invalid;
+  else if (!(svc = pick(f.data.service))) error = L.err.service;
+  else {
+    const { etape, cgv } = f.data;
+    const startsAt = new Date(f.data.debut);
+    const serviceId = svc.id;
+    code = f.data.code;
+    at = startsAt;
+    day = todayBrussels(startsAt);
+    const ask = (promoCode: string) => quote({ userId: user.id, serviceId, startsAt, promoCode, lang });
+    let fail: BookingError | null = null;
+    let tryCode = etape === 'choisir' ? '' : code;
+    if (etape === 'reserver' && cgv) {
+      const r = await createBooking({ userId: user.id, serviceId, startsAt, promoCode: code, lang });
+      if (r.ok) return Astro.redirect(r.checkoutUrl ?? `/${folder}/compte?reservation=ok`, 303);
+      fail = r.error;
+      // Essai déjà compté par createBooking : le devis repart sans le code
+      if (r.error === 'promo') {
+        promoMsg = L.promo[r.promo ?? 'unknown'];
+        tryCode = '';
+      }
+    }
+    if (fail !== 'unavailable' && fail !== 'limit') {
+      let r = await ask(tryCode);
+      if (!r.ok && r.error === 'promo') {
+        promoMsg = L.promo[r.promo ?? 'unknown'];
+        r = await ask('');
+      }
+      if (r.ok) {
+        q = r.quote;
+        view = 3;
+        applied = etape === 'appliquer' && !!q.code;
+      } else fail = r.error;
+    }
+    if (fail === 'unavailable' || fail === 'limit') {
+      view = 2;
+      limit = fail === 'limit';
+      error = limit ? L.err.limit(MAX_UPCOMING) : L.err.unavailable;
+    } else if (fail === 'payment') error = L.err.payment;
+    else if (etape === 'reserver' && !cgv) {
+      cgvMissing = true;
+      error = L.err.cgv;
+    }
+  }
+} else if (open && Astro.url.searchParams.has('service')) {
+  const sp = Astro.url.searchParams;
+  const id = Id.safeParse(sp.get('service'));
+  svc = id.success ? pick(id.data) : null;
+  if (!svc) error = L.err.service;
+  else {
+    view = 2;
+    const j = sp.get('jour');
+    if (j !== null) {
+      if (isDay(j) && j >= today && j <= lastDay) day = j;
+      else error = L.err.day(dayLabel(lastDay));
+    }
+  }
+}
+const list: Slot[] = view === 2 && svc && !limit ? await slots(svc.id, day) : [];
+// Résumé en tête de page ; le message du code promo est aussi répété sous son champ
+const summary = error ?? promoMsg;
+---
+<Base lang={lang} pageKey="home" canonicalPath={base} title={L.metaTitle} description={L.description} noindex mainClass="legal">
+<div class="wrap"><article>
+<h1>{L.h1}</h1>
+{summary && <p class="notice notice--error" role="alert">{summary}{limit && <> <a href={`/${folder}/compte`}>{L.myBookings}</a></>}</p>}
+{!open && <p class="notice">{L.soon} <a href={`tel:${CONTACT.phone}`}>{CONTACT.phoneLabel}</a>.</p>}
+
+{open && view === 1 && (
+<section aria-labelledby="h-step">
+<p class="eyebrow">{L.step(1)}</p>
+<h2 id="h-step">{L.chooseService}</h2>
+{groups.map((g) => (
+  <section class="group" aria-labelledby={`h-cat-${g.key}`}>
+  <h3 id={`h-cat-${g.key}`}>{g.label}</h3>
+  <ul class="prices">{g.items.map((s) => {
+    const dep = amounts(s.price_cents, s.deposit_cents).deposit_cents;
+    return <li><span class="name"><a href={`${base}?service=${s.id}`}>{s.name}</a><small>{L.minutes(s.duration_min)} · {dep ? L.deposit(dep) : L.noDeposit}</small></span><span class="dots" aria-hidden="true"></span><span class="amount">{euros(s.price_cents, lang)}</span></li>;
+  })}</ul>
+  </section>
+))}
+</section>
+)}
+
+{open && view === 2 && svc && (
+<section aria-labelledby="h-step">
+<p class="eyebrow">{L.step(2)}</p>
+<h2 id="h-step">{L.chooseDay}</h2>
+<p><strong>{svc.name}</strong> — {L.minutes(svc.duration_min)}, {euros(svc.price_cents, lang)}. <a href={base}>{L.change}</a></p>
+<form class="form" method="get" action={base}>
+<input type="hidden" name="service" value={svc.id}>
+<div class="field"><label for="jour">{L.day}</label><input type="date" id="jour" name="jour" value={day} min={today} max={lastDay} required></div>
+<button class="btn btn--ghost" type="submit">{L.showSlots}</button>
+</form>
+<h3 id="h-slots">{L.slotsOf(dayLabel(day))}</h3>
+{list.length ? (
+  <form method="post" action={base} aria-labelledby="h-slots">
+  <input type="hidden" name="etape" value="choisir">
+  <input type="hidden" name="service" value={svc.id}>
+  <ul class="slots">{list.map((s) => <li><button class="btn btn--ghost" type="submit" name="debut" value={s.at.toISOString()}>{s.label}</button></li>)}</ul>
+  <p class="hint">{L.brussels}</p>
+  </form>
+) : !limit && <p class="notice">{L.noSlot}</p>}
+<nav class="actions days" aria-label={L.day}>
+{day > today && <a class="btn btn--ghost" href={`${base}?service=${svc.id}&jour=${addDays(day, -1)}`}>{L.prevDay}</a>}
+{day < lastDay && <a class="btn btn--ghost" href={`${base}?service=${svc.id}&jour=${addDays(day, 1)}`}>{L.nextDay}</a>}
+</nav>
+</section>
+)}
+
+{open && view === 3 && svc && q && at && (
+<section aria-labelledby="h-step">
+<p class="eyebrow">{L.step(3)}</p>
+<h2 id="h-step">{L.recap}</h2>
+{applied && <p class="notice" role="status">{L.applied(q.code!)}</p>}
+<dl class="recap">
+<dt>{L.service}</dt><dd>{q.name}</dd>
+<dt>{L.date}</dt><dd>{fmt({ dateStyle: 'full' }).format(at)}</dd>
+<dt>{L.time}</dt><dd>{fmt({ timeStyle: 'short' }).format(at)}</dd>
+<dt>{L.duration}</dt><dd>{L.minutes(q.duration_min)}</dd>
+<dt>{L.price}</dt><dd>{euros(q.price_cents, lang)}</dd>
+{q.discount_cents > 0 && <><dt>{L.discount(q.code!)}</dt><dd>− {euros(q.discount_cents, lang)}</dd><dt>{L.final}</dt><dd>{euros(q.final_cents, lang)}</dd></>}
+<dt>{L.depositNow}</dt><dd>{q.deposit_cents ? euros(q.deposit_cents, lang) : L.none}</dd>
+<dt>{L.rest}</dt><dd>{euros(q.final_cents - q.deposit_cents, lang)}</dd>
+</dl>
+<form class="form" method="post" action={base}>
+<input type="hidden" name="service" value={svc.id}>
+<input type="hidden" name="debut" value={at.toISOString()}>
+<div class="field">
+<label for="code">{L.code}</label>
+<div class="promo">
+<input id="code" name="code" value={code} maxlength="32" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-invalid={promoMsg ? 'true' : undefined} aria-describedby={promoMsg ? 'code-msg' : undefined}>
+<button class="btn btn--ghost" type="submit" name="etape" value="appliquer" formnovalidate>{L.apply}</button>
+</div>
+{promoMsg && <p class="hint" id="code-msg">{promoMsg}</p>}
+</div>
+<div class="check">
+<input type="checkbox" id="cgv" name="cgv" required aria-invalid={cgvMissing ? 'true' : undefined}>
+<label for="cgv">{L.cgv[0]}<a href={pagePath(lang, 'cgv')} target="_blank" rel="noopener">{L.cgv[1]}<span class="visually-hidden"> {L.newTab}</span></a>{L.cgv[2]}</label>
+</div>
+<p class="hint">{L.cancelRule}{q.deposit_cents > 0 && ` ${L.payNote}`}</p>
+<button class="btn btn--solid pay" type="submit" name="etape" value="reserver">{q.deposit_cents ? L.pay(q.deposit_cents) : L.confirm}</button>
+</form>
+<p class="other"><a href={`${base}?service=${svc.id}&jour=${day}`}>{L.otherTime}</a></p>
+</section>
+)}
+</article></div>
+</Base>
+
+<style>
+.group{margin-top:1.75rem}
+.days{margin-top:1.25rem}
+.recap{display:grid;grid-template-columns:auto 1fr;gap:.5rem 1.25rem;margin:0 0 1.75rem}
+.recap dt{color:var(--text-soft)}
+.recap dd{margin:0;font-variant-numeric:tabular-nums}
+.promo{display:flex;flex-wrap:wrap;gap:.5rem}
+.promo input{flex:1 1 10rem;width:auto}
+.other{margin-top:1.5rem}
+/* Le libellé avec le montant dépasse un écran de téléphone sur une ligne */
+.pay{white-space:normal;line-height:1.3;text-align:center}
+</style>
