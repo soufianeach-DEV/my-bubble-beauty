@@ -22,7 +22,8 @@ if (Astro.request.method === 'POST') {
   v = Object.fromEntries([...form].map(([k, x]) => [k, String(x)]));
   Astro.response.status = 400;
 }
-const done = DONE[Astro.url.searchParams.get('ok') ?? ''];
+// Le formulaire repart vers l'URL courante : après un refus, le ?ok= du succès précédent ne doit plus s'afficher
+const done = !error && DONE[Astro.url.searchParams.get('ok') ?? ''];
 const [hours, closures] = await Promise.all([listHours(), listClosures()]);
 const days = EXTRA.fr.days.map((label, i) => ({ label, ranges: hours.filter((h) => h.weekday === i + 1) }));
 ---

@@ -29,7 +29,8 @@ const DONE: Record<string, string> = {
   echec: "Le remboursement n'a pas abouti. S'il reste un acompte à rendre, le bouton « Rembourser l'acompte » reste sur la ligne : réessayez plus tard.",
   cree: 'Rendez-vous enregistré.',
 };
-const done = DONE[q.get('ok') ?? ''];
+// Le formulaire repart vers l'URL courante : après un refus, le ?ok= du succès précédent ne doit plus s'afficher
+const done = !error && DONE[q.get('ok') ?? ''];
 const from = vue === 'jour' ? jour : monday(jour);
 const count = vue === 'jour' ? 1 : 7;
 const rows = await adminAgenda(from, count);

@@ -65,7 +65,7 @@ const [t0, cgv, t2, privacy, t4] = t.terms;
 <p class="hint" id="phone-hint">{t.phoneHint}</p>
 </div>
 <div class="check">
-<input id="terms" name="terms" type="checkbox" required aria-invalid={invalid('terms')}>
+<input id="terms" name="terms" type="checkbox" required checked={raw.terms === 'on'} aria-invalid={invalid('terms')}>
 <label for="terms">{t0}<a href={pagePath(lang, 'cgv')} target="_blank" rel="noopener">{cgv}</a>{t2}<a href={pagePath(lang, 'privacy')} target="_blank" rel="noopener">{privacy}</a>{t4}</label>
 </div>
 <button class="btn btn--solid" type="submit">{t.submit}</button>

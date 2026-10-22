@@ -37,7 +37,8 @@ const LINKS = [
   .admin :global(.table-wrap){position:relative}
   .admin-nav{display:flex;flex-wrap:wrap;gap:1rem 1.5rem;align-items:center;justify-content:space-between;margin:0 0 1.5rem;padding:0 0 1rem;border-bottom:1px solid var(--line-soft)}
   .admin-nav ul{display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;list-style:none;margin:0;padding:0}
-  .admin-nav a{color:var(--link)}
+  /* Cibles de 44 px : la gérante passe d'une page à l'autre au téléphone */
+  .admin-nav a{color:var(--link);display:inline-flex;align-items:center;min-height:44px}
   .admin-nav a[aria-current="page"]{color:var(--text);font-weight:500;text-decoration:none}
   .admin-nav .btn{min-height:44px;padding:.55rem 1.1rem}
 </style>

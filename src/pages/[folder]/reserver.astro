@@ -59,6 +59,8 @@ let code = '';
 let promoMsg: string | null = null;
 let applied = false;
 let cgvMissing = false;
+// Case déjà cochée par la cliente : elle le reste après un code appliqué ou un refus (paiement indisponible, code invalide)
+let cgvChecked = false;
 let limit = false;
 
 if (open && method === 'POST') {
@@ -72,6 +74,7 @@ if (open && method === 'POST') {
   else if (!(svc = pick(f.data.service))) error = L.err.service;
   else {
     const { etape, cgv } = f.data;
+    cgvChecked = !!cgv;
     const startsAt = new Date(f.data.debut);
     const serviceId = svc.id;
     code = f.data.code;
@@ -205,7 +208,7 @@ const summary = error ?? promoMsg;
 {promoMsg && <p class="hint" id="code-msg">{promoMsg}</p>}
 </div>
 <div class="check">
-<input type="checkbox" id="cgv" name="cgv" required aria-invalid={cgvMissing ? 'true' : undefined}>
+<input type="checkbox" id="cgv" name="cgv" required checked={cgvChecked} aria-invalid={cgvMissing ? 'true' : undefined}>
 <label for="cgv">{L.cgv[0]}<a href={pagePath(lang, 'cgv')} target="_blank" rel="noopener">{L.cgv[1]}<span class="visually-hidden"> {L.newTab}</span></a>{L.cgv[2]}</label>
 </div>
 <p class="hint">{L.cancelRule}{q.deposit_cents > 0 && ` ${L.payNote}`}</p>
