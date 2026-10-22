@@ -1,0 +1,55 @@
+---
+// Nouveau mot de passe depuis le lien reçu (30 min, usage unique) : toutes les sessions tombent, pas de connexion automatique.
+// Comme pour l'activation, le jeton passe du lien au corps du POST.
+export const prerender = false;
+import { z } from 'astro/zod';
+import Base from '../../../layouts/Base.astro';
+import PasswordField from './_password-field.astro';
+import '../../../styles/forms.css';
+import { COMPTE } from '../../../data/i18n/compte.ts';
+import { FOLDER, JS_VERSION, langOfFolder } from '../../../lib/site';
+import { resetPassword } from '../../../lib/server/accounts.ts';
+import { PASSWORD, TOKEN, readForm } from '../../../lib/server/compte.ts';
+
+const lang = langOfFolder(Astro.params.folder!);
+const d = FOLDER[lang];
+const tx = COMPTE[lang];
+const t = tx.reset;
+
+let token = Astro.url.searchParams.get('token');
+let result: Awaited<ReturnType<typeof resetPassword>> | 'form' | null = null;
+if (Astro.request.method === 'POST') {
+  const { data, raw } = await readForm(Astro.request, z.object({ token: TOKEN, password: PASSWORD }));
+  token = raw.token ?? null;
+  result = data ? await resetPassword(data.token, data.password) : 'form';
+}
+const valid = result !== 'invalid' && TOKEN.safeParse(token).success;
+const error = result === 'short' || result === 'long' || result === 'pwned' ? tx.problem[result] : result === 'form' ? tx.invalid : null;
+---
+<Base lang={lang} pageKey="home" canonicalPath={`/${d}/compte/nouveau-mot-de-passe`} title={`${t.title} — My Bubble Beauty`} description={t.description} noindex mainClass="legal">
+<Fragment slot="head"><meta name="referrer" content="no-referrer"><script is:inline src={`/assets/js/password.js?v=${JS_VERSION}`} defer></script></Fragment>
+<div class="wrap"><article>
+<h1>{t.title}</h1>
+{result === 'ok' ? (
+<Fragment>
+<p class="notice" role="status">{t.done}</p>
+<p><a class="btn btn--solid" href={`/${d}/compte/connexion`}>{tx.login.submit}</a></p>
+</Fragment>
+) : valid ? (
+<Fragment>
+{error && <p class="notice notice--error" role="alert">{error}</p>}
+<p>{t.intro}</p>
+<form class="form" method="post" action={`/${d}/compte/nouveau-mot-de-passe`}>
+<input type="hidden" name="token" value={token}>
+<PasswordField id="password" name="password" label={t.label} lang={lang} isNew invalid={!!error} />
+<button class="btn btn--solid" type="submit">{t.submit}</button>
+</form>
+</Fragment>
+) : (
+<Fragment>
+<p class="notice notice--error" role="alert">{t.invalid}</p>
+<p><a href={`/${d}/compte/mot-de-passe-oublie`}>{t.again}</a></p>
+</Fragment>
+)}
+</article></div>
+</Base>
