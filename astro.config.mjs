@@ -10,8 +10,9 @@ export default defineConfig({
   site: 'https://mybubble-beauty.com',
   output: 'static',
   trailingSlash: 'ignore',
-  // Port de server.mjs et de Render : hors allowedDomains (en local), Astro retombe sur localhost:10000 et accepte les formulaires
-  server: { port: 10000 },
+  // Port de server.mjs et de Render : hors allowedDomains (en local), Astro retombe sur localhost:<port> et accepte les formulaires.
+  // PORT au build seulement pour un serveur local sur un autre port ; Render ne le pose pas au build (10000).
+  server: { port: Number(process.env.PORT) || 10000 },
   // Formulaires et événements Stripe font quelques Ko : le défaut d'1 Gio saturerait l'instance de 512 Mo
   adapter: node({ mode: 'standalone', bodySizeLimit: 64 * 1024 }),
   security: {
