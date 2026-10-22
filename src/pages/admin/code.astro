@@ -1,6 +1,6 @@
 ---
 export const prerender = false;
-// Second facteur de l'admin : seule page d'admin ouverte avant le code ; un code valide ouvre une nouvelle session marquée mfa
+// Second facteur de l'admin : ouverte avant le code, comme la déconnexion ; un code valide ouvre une nouvelle session marquée mfa
 import Admin from './_layout.astro';
 import { verifyAdminTotp } from '../../lib/server/accounts.ts';
 import { readForm } from '../../lib/server/admin.ts';

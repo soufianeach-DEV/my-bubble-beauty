@@ -26,7 +26,7 @@ export async function quote(input: { userId: number; serviceId: number; startsAt
   const [s] = await sql`
     SELECT price_cents, deposit_cents, duration_min, CASE ${lang} WHEN 'nl' THEN name_nl WHEN 'en' THEN name_en ELSE name_fr END AS name
     FROM services WHERE id = ${serviceId} AND active`;
-  if (!s || !(await isFree(sql, serviceId, startsAt))) return { ok: false, error: 'unavailable' };
+  if (!s || !(await isFree(sql, serviceId, startsAt, userId))) return { ok: false, error: 'unavailable' };
   let promo: Promo | null = null;
   if (code) {
     // Le devis est aussi un moyen de deviner un code : mêmes compteurs que la réservation

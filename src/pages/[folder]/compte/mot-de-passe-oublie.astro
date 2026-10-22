@@ -28,7 +28,7 @@ if (Astro.request.method === 'POST') {
   }
 }
 ---
-<Base lang={lang} pageKey="home" canonicalPath={`/${d}/compte/mot-de-passe-oublie`} title={`${t.title} — My Bubble Beauty`} description={t.description} noindex mainClass="legal">
+<Base lang={lang} pageKey="home" route="compte/mot-de-passe-oublie" title={`${t.title} — My Bubble Beauty`} description={t.description} noindex mainClass="legal">
 <div class="wrap"><article>
 <h1>{t.title}</h1>
 {sent ? <p class="notice" role="status">{t.sent}</p> : (

@@ -159,7 +159,7 @@ export async function newBooking(userId: number, form: FormData): Promise<Result
   const p = newBookingForm.safeParse(fields(form));
   if (!p.success) return first(p.error);
   const b = p.data;
-  const [{ at }] = await sql<{ at: Date }[]>`SELECT (${b.day}::date + ${b.time}::time) AT TIME ZONE 'Europe/Brussels' AS at`;
+  const [{ at }] = await sql<{ at: Date }[]>`SELECT (${b.day}::text::date + ${b.time}::time) AT TIME ZONE 'Europe/Brussels' AS at`;
   const r = await createAdminBooking({ serviceId: b.service, startsAt: at, guestName: b.name, guestPhone: b.phone || null });
   if (!r.ok)
     return {

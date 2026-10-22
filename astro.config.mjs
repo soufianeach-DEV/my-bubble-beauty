@@ -20,7 +20,7 @@ export default defineConfig({
     // Render termine le TLS : sans cette liste, Astro voit http://localhost et refuse des POST légitimes
     allowedDomains: [
       { hostname: 'mybubble-beauty.com', protocol: 'https' },
-      { hostname: 'my-bubble-beauty.onrender.com', protocol: 'https' },
+      { hostname: 'my-bubble-beauty-app.onrender.com', protocol: 'https' },
     ],
   },
   env: {

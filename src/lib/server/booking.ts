@@ -298,8 +298,8 @@ export function adminAgenda(from: string, days = 7) {
     SELECT b.id, b.starts_at, b.ends_at, b.status, s.name_fr AS service, coalesce(u.name, b.guest_name) AS name, coalesce(u.phone, b.guest_phone) AS phone,
       u.email, b.user_id IS NULL AS guest, b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.stripe_payment_intent IS NOT NULL AS paid, p.code AS promo
     FROM bookings b JOIN services s ON s.id = b.service_id LEFT JOIN users u ON u.id = b.user_id LEFT JOIN promo_codes p ON p.id = b.promo_code_id
-    WHERE b.starts_at >= ${from}::date::timestamp AT TIME ZONE 'Europe/Brussels'
-      AND b.starts_at < (${from}::date + ${Math.min(Math.max(Math.trunc(days) || 1, 1), 62)}::int)::timestamp AT TIME ZONE 'Europe/Brussels'
+    WHERE b.starts_at >= ${from}::text::date::timestamp AT TIME ZONE 'Europe/Brussels'
+      AND b.starts_at < (${from}::text::date + ${Math.min(Math.max(Math.trunc(days) || 1, 1), 62)}::int)::timestamp AT TIME ZONE 'Europe/Brussels'
       AND (b.status IN ('confirmed', 'cancelled') OR (b.status = 'pending_payment' AND b.created_at > now() - interval '35 minutes')
         OR (b.status = 'expired' AND b.stripe_payment_intent IS NOT NULL))
     ORDER BY b.starts_at`;

@@ -7,12 +7,13 @@ import { isDay } from './pricing.ts';
 
 export type Slot = { at: Date; label: string };
 
-// Même requête pour l'affichage (day) et pour le POST (at) : un début forgé (de nuit, hors grille, trop proche, prestation fermée) n'en sort pas
-function free(q: Sql, serviceId: number, day: string | null, at: Date | null) {
+// Même requête pour l'affichage (day) et pour le POST (at) : un début forgé (de nuit, hors grille, trop proche, prestation fermée) n'en sort pas.
+// Les paiements en cours de la cliente (userId) ne l'occupent pas : createBooking les expire avant de réserver (retour d'un Checkout abandonné)
+function free(q: Sql, serviceId: number, day: string | null, at: Date | null, userId: number | null) {
   return q<Slot[]>`
     WITH d AS (
       SELECT day, day::timestamp AT TIME ZONE 'Europe/Brussels' AS lo, (day + 1)::timestamp AT TIME ZONE 'Europe/Brussels' AS hi
-      FROM (SELECT coalesce(${day}::date, (${at}::timestamptz AT TIME ZONE 'Europe/Brussels')::date) AS day) x
+      FROM (SELECT coalesce(${day}::text::date, (${at}::timestamptz AT TIME ZONE 'Europe/Brussels')::date) AS day) x
     ),
     s AS (SELECT make_interval(mins => duration_min) AS len FROM services WHERE id = ${serviceId} AND active),
     o AS (
@@ -23,7 +24,7 @@ function free(q: Sql, serviceId: number, day: string | null, at: Date | null) {
       SELECT coalesce(range_agg(r), '{}') AS r FROM (
         SELECT tstzrange(k.starts_at, k.ends_at) AS r FROM bookings k, d
         WHERE k.starts_at < d.hi AND k.ends_at > d.lo
-          AND (k.status = 'confirmed' OR (k.status = 'pending_payment' AND k.created_at > now() - interval '35 minutes'))
+          AND (k.status = 'confirmed' OR (k.status = 'pending_payment' AND k.created_at > now() - interval '35 minutes' AND k.user_id IS DISTINCT FROM ${userId}))
         UNION ALL
         SELECT tstzrange(c.starts_at, c.ends_at) FROM closures c, d WHERE c.starts_at < d.hi AND c.ends_at > d.lo
       ) busy
@@ -37,13 +38,13 @@ function free(q: Sql, serviceId: number, day: string | null, at: Date | null) {
 }
 
 // Créneaux d'un jour ('AAAA-MM-JJ', heure de Bruxelles) ; label 'HH:MM' local (deux fois 02:xx le jour du passage à l'heure d'hiver, at les distingue)
-export async function slots(serviceId: number, day: string): Promise<Slot[]> {
-  return Number.isInteger(serviceId) && isDay(day) ? free(sql, serviceId, day, null) : [];
+export async function slots(serviceId: number, day: string, userId: number | null = null): Promise<Slot[]> {
+  return Number.isInteger(serviceId) && isDay(day) ? free(sql, serviceId, day, null, userId) : [];
 }
 
 // Contrôle du début demandé au POST, dans la transaction de réservation (après expiration des paiements abandonnés)
-export async function isFree(q: Sql, serviceId: number, at: Date): Promise<boolean> {
-  return !Number.isNaN(at.getTime()) && (await free(q, serviceId, null, at)).length === 1;
+export async function isFree(q: Sql, serviceId: number, at: Date, userId: number | null = null): Promise<boolean> {
+  return !Number.isNaN(at.getTime()) && (await free(q, serviceId, null, at, userId)).length === 1;
 }
 
 // Étape 1 de la réservation : prestations ouvertes, dans la langue de la page

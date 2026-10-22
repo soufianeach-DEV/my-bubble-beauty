@@ -28,7 +28,7 @@ if (Astro.request.method === 'POST') {
 }
 const valid = TOKEN.safeParse(token).success;
 ---
-<Base lang={lang} pageKey="home" canonicalPath={`/${d}/compte/verification`} title={`${t.title} — My Bubble Beauty`} description={t.description} noindex mainClass="legal">
+<Base lang={lang} pageKey="home" route="compte/verification" title={`${t.title} — My Bubble Beauty`} description={t.description} noindex mainClass="legal">
 <Fragment slot="head"><meta name="referrer" content="no-referrer"><script is:inline src={`/assets/js/password.js?v=${JS_VERSION}`} defer></script></Fragment>
 <div class="wrap"><article>
 <h1>{t.title}</h1>

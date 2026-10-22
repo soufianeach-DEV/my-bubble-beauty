@@ -15,8 +15,10 @@ interface Props {
   mainClass?: string;
   /** Page hors traduction (404) : canonical fixe, pas de hreflang. */
   canonicalPath?: string;
+  /** Route à la demande sous le dossier de langue (ex. 'compte/inscription') : le sélecteur de langue mène à la même route. */
+  route?: string;
 }
-const { lang, pageKey, title, description, ogType = 'website', jsonld, noindex = false, isHome = false, mainClass, canonicalPath } = Astro.props;
+const { lang, pageKey, title, description, ogType = 'website', jsonld, noindex = false, isHome = false, mainClass, canonicalPath, route } = Astro.props;
 const d = t(lang);
 const ui = d.ui;
 const home = pagePath(lang, 'home');
@@ -24,8 +26,9 @@ const anchor = (hash: string) => (isHome ? hash : home + hash);
 const nav = ui.nav.map((n) => ({ label: n.label, href: anchor(n.href) }));
 // Route à la demande : pagePath ajouterait « .html » (404)
 const account = `/${FOLDER[lang]}/compte`;
-const canonical = SITE + (canonicalPath ?? pagePath(lang, pageKey));
-const alts = canonicalPath ? [] : alternates(pageKey);
+const langHref = (l: Lang) => (route ? `/${FOLDER[l]}/${route}` : pagePath(l, pageKey));
+const canonical = SITE + (canonicalPath ?? langHref(lang));
+const alts = canonicalPath || route ? [] : alternates(pageKey);
 const footerLinks = [
   { href: pagePath(lang, 'mentions'), label: ui.legalLinks[0] },
   { href: pagePath(lang, 'privacy'), label: ui.legalLinks[1] },
@@ -76,7 +79,7 @@ const year = new Date().getFullYear();
 <details class="langsel">
 <summary><span class="visually-hidden">{ui.langPrefix} </span><span aria-hidden="true">{LANG_META[lang].code}</span><span class="visually-hidden">{LANG_META[lang].name}</span><Icon name="chevron" /></summary>
 <ul class="langsel__list">{LANGS.map((l) => (
-  <li><a href={pagePath(l, pageKey)} hreflang={LANG_META[l].hreflang} lang={LANG_META[l].hreflang} aria-current={l === lang ? 'page' : undefined}><span class="langsel__code">{LANG_META[l].code}</span>{LANG_META[l].name}</a></li>
+  <li><a href={langHref(l)} hreflang={LANG_META[l].hreflang} lang={LANG_META[l].hreflang} aria-current={l === lang ? 'page' : undefined}><span class="langsel__code">{LANG_META[l].code}</span>{LANG_META[l].name}</a></li>
 ))}</ul>
 </details>
 <button class="theme-btn" type="button" data-dark={EXTRA[lang].toDark} data-light={EXTRA[lang].toLight} aria-label={EXTRA[lang].toDark} title={EXTRA[lang].toDark} hidden><Icon name="theme" /></button>

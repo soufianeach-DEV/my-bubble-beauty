@@ -1,6 +1,6 @@
 ---
 export const prerender = false;
-// Agenda : rendez-vous du jour ou de la semaine à l'heure de Bruxelles, annulation et remboursement de l'acompte
+// Agenda : rendez-vous du jour ou de la semaine à l'heure de Bruxelles, annulation en deux temps et remboursement de l'acompte
 import Admin from './_layout.astro';
 import { adminId, agendaAction, fmtDay, fmtTime, readForm } from '../../lib/server/admin.ts';
 import { addDays, monday } from '../../lib/server/admin-form.ts';
@@ -82,11 +82,13 @@ const due = (r: (typeof rows)[number]) => (r.paid ? r.deposit_cents - r.refunded
             </td>
             <td>
               {(r.status === 'confirmed' || r.status === 'pending_payment') && (
-                <form class="cell-form" method="post">
-                  <input type="hidden" name="action" value="cancel"><input type="hidden" name="id" value={r.id}>
-                  {due(r) > 0 && <label class="check"><input type="checkbox" name="refund"><span>Rembourser l'acompte ({euros(due(r))})</span></label>}
-                  <button class="btn btn--ghost" type="submit">Annuler le rendez-vous</button>
-                </form>
+                <details class="cancel"><summary>Annuler<span class="visually-hidden"> le rendez-vous de {fmtTime(r.starts_at)}, {r.name ?? r.service}</span></summary>
+                  <form class="cell-form" method="post">
+                    <input type="hidden" name="action" value="cancel"><input type="hidden" name="id" value={r.id}>
+                    {due(r) > 0 && <label class="check"><input type="checkbox" name="refund"><span>Rembourser l'acompte ({euros(due(r))})</span></label>}
+                    <button class="btn btn--ghost" type="submit">Confirmer l'annulation</button>
+                  </form>
+                </details>
               )}
               {(r.status === 'cancelled' || r.status === 'expired') && due(r) > 0 && (
                 <form class="cell-form" method="post">

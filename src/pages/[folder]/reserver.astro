@@ -126,11 +126,11 @@ if (open && method === 'POST') {
     }
   }
 }
-const list: Slot[] = view === 2 && svc && !limit ? await slots(svc.id, day) : [];
+const list: Slot[] = view === 2 && svc && !limit ? await slots(svc.id, day, user.id) : [];
 // Résumé en tête de page ; le message du code promo est aussi répété sous son champ
 const summary = error ?? promoMsg;
 ---
-<Base lang={lang} pageKey="home" canonicalPath={base} title={L.metaTitle} description={L.description} noindex mainClass="legal">
+<Base lang={lang} pageKey="home" route="reserver" title={L.metaTitle} description={L.description} noindex mainClass="legal">
 <div class="wrap"><article>
 <h1>{L.h1}</h1>
 {summary && <p class="notice notice--error" role="alert">{summary}{limit && <> <a href={`/${folder}/compte`}>{L.myBookings}</a></>}</p>}

@@ -30,7 +30,7 @@ if (Astro.request.method === 'POST') {
   failed = true;
 }
 ---
-<Base lang={lang} pageKey="home" canonicalPath={`/${d}/compte/connexion`} title={`${tx.login.title} — My Bubble Beauty`} description={tx.login.description} noindex mainClass="legal">
+<Base lang={lang} pageKey="home" route="compte/connexion" title={`${tx.login.title} — My Bubble Beauty`} description={tx.login.description} noindex mainClass="legal">
 <Fragment slot="head"><script is:inline src={`/assets/js/password.js?v=${JS_VERSION}`} defer></script></Fragment>
 <div class="wrap"><article>
 <h1>{tx.login.title}</h1>

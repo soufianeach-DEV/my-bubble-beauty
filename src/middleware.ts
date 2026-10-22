@@ -13,8 +13,8 @@ const PUBLIC = new Set([
   '/[folder]/compte/nouveau-mot-de-passe',
   '/api/stripe/webhook',
 ]);
-// Seule page admin permise avant le code TOTP
-const ADMIN_CODE = '/admin/code';
+// Pages admin permises avant le code TOTP : le code lui-même, et la déconnexion pour en sortir
+const BEFORE_CODE = new Set(['/admin/code', '/admin/deconnexion']);
 
 export const onRequest = defineMiddleware(async (ctx, next) => {
   if (ctx.isPrerendered) return next();
@@ -35,7 +35,7 @@ export const onRequest = defineMiddleware(async (ctx, next) => {
   if (!found) return ctx.redirect(`/${folder ?? 'fr'}/compte/connexion?retour=${encodeURIComponent(ctx.url.pathname + ctx.url.search)}`);
   if (route === '/admin' || route.startsWith('/admin/')) {
     if (!found.user.isAdmin) return new Response(null, { status: 404 });
-    if (route !== ADMIN_CODE && !found.session.mfaAt) return ctx.redirect(ADMIN_CODE);
+    if (!BEFORE_CODE.has(route) && !found.session.mfaAt) return ctx.redirect('/admin/code');
   }
   return next();
 });

@@ -12,7 +12,7 @@ export const t = (lang: Lang) => DATA[lang];
 
 export const SITE = 'https://mybubble-beauty.com';
 // Empreinte des scripts : servis « immutable » un an, ils changent d'URL dès que leur contenu change.
-export const JS_VERSION = createHash('sha1').update(['main', 'motion-pref', 'stats'].map((f) => readFileSync(`public/assets/js/${f}.js`, 'utf8')).join('\n')).digest('hex').slice(0, 8);
+export const JS_VERSION = createHash('sha1').update(['main', 'motion-pref', 'stats', 'password'].map((f) => readFileSync(`public/assets/js/${f}.js`, 'utf8')).join('\n')).digest('hex').slice(0, 8);
 
 // Mesure d'audience GoatCounter (sans cookie). Vide = désactivée.
 // Mettre le code du site créé sur goatcounter.com, ex. 'mybubble' pour https://mybubble.goatcounter.com
