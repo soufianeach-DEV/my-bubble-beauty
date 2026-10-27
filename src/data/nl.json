@@ -42,7 +42,7 @@
   "back": "← Terug naar de tarieven"
  },
  "home": {
-  "title": "My Bubble — Schoonheids- en welzijnscentrum",
+  "title": "Schoonheidssalon in Dilbeek — My Bubble Beauty",
   "description": "Schoonheids- en welzijnscentrum in Dilbeek, vlak bij Anderlecht, Molenbeek en Berchem: gezichtsverzorging, medische pedicure, nagels en ontharing.",
   "hero": {
    "brand": "My Bubble:",
@@ -789,22 +789,6 @@
   },
   "cta": {
    "title": "Zin in een My Bubble-moment?"
-  }
- },
- "legal": {
-  "mentions": {
-   "slug": "juridische-informatie",
-   "title": "Juridische informatie",
-   "metaTitle": "Juridische informatie — My Bubble Beauty",
-   "description": "Juridische informatie — My Bubble Beauty, Rue Paloke 146, 1700 Dilbeek.",
-   "bodyHtml": "<h2>Uitgever van de site</h2><p>My Bubble Beauty — [benaming of naam van de uitbater]<br/>Rue Paloke 146, 1700 Dilbeek, België<br/>Ondernemingsnummer (KBO): [in te vullen]<br/>Telefoon: <a href=\"tel:+32484118395\">0484.118.395</a> · E-mail: <a href=\"mailto:mybubblebeauty@gmail.com\">mybubblebeauty@gmail.com</a></p><h2>Hosting</h2><p>OVH SAS, 2 rue Kellermann, 59100 Roubaix, Frankrijk — <a href=\"https://www.ovhcloud.com\">ovhcloud.com</a></p><h2>Intellectuele eigendom</h2><p>De teksten, foto's, het logo en de grafische elementen van deze site zijn eigendom van My Bubble Beauty. Elke reproductie zonder schriftelijke toestemming is verboden.</p><h2>Tarieven</h2><p>De vermelde prijzen zijn indicatief, inclusief btw, en kunnen op elk moment worden gewijzigd. De geldende prijs is die welke bij het maken van de afspraak wordt meegedeeld.</p><h2>Informatie over de behandelingen</h2><p>De beschrijvingen van de behandelingen zijn informatief en vervangen niet het advies van een zorgverlener.</p>"
-  },
-  "privacy": {
-   "slug": "privacy",
-   "title": "Privacybeleid",
-   "metaTitle": "Privacybeleid — My Bubble Beauty",
-   "description": "Privacybeleid — My Bubble Beauty, Rue Paloke 146, 1700 Dilbeek.",
-   "bodyHtml": "<h2>Verwerkingsverantwoordelijke</h2><p>My Bubble Beauty, Rue Paloke 146, 1700 Dilbeek — <a href=\"mailto:mybubblebeauty@gmail.com\">mybubblebeauty@gmail.com</a></p><h2>Verzamelde gegevens</h2><p>Deze site bevat geen formulier, geen bezoekersstatistieken en gebruikt geen cookies. Tijdens je bezoek worden geen persoonsgegevens verzameld.</p><p>De keuze « Animaties pauzeren » wordt alleen in je browser bewaard (lokale opslag), wordt nooit doorgestuurd en kan op elk moment via je browserinstellingen worden gewist.</p><h2>Afspraken</h2><p>Wanneer je ons per telefoon, e-mail, WhatsApp of via sociale media contacteert, gebruiken we je gegevens alleen om je afspraak te beheren (rechtsgrond: precontractuele maatregelen, art. 6.1.b AVG). Ze worden maximaal 3 jaar na het laatste contact bewaard. WhatsApp, Facebook, Instagram en Snapchat zijn externe diensten met een eigen privacybeleid.</p><h2>Externe links</h2><p>Links naar YouTube, Google Maps en onze sociale media openen die diensten, die hun eigen regels toepassen. Er wordt geen inhoud van die diensten op deze site geladen.</p><h2>Je rechten</h2><p>Je hebt recht op inzage, verbetering, wissing, beperking en bezwaar. Schrijf ons op het adres hierboven. Je kunt ook klacht indienen bij de Gegevensbeschermingsautoriteit (<a href=\"https://www.gegevensbeschermingsautoriteit.be\" rel=\"noopener\">gegevensbeschermingsautoriteit.be</a>).</p>"
   }
  },
  "treatments": {
