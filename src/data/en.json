@@ -42,7 +42,7 @@
   "back": "← Back to prices"
  },
  "home": {
-  "title": "My Bubble — Beauty and Wellness Centre",
+  "title": "Beauty salon in Dilbeek — My Bubble Beauty",
   "description": "Beauty and wellness centre in Dilbeek, close to Anderlecht, Molenbeek and Berchem: facials, medical pedicure, nails and hair removal.",
   "hero": {
    "brand": "My Bubble:",
@@ -789,22 +789,6 @@
   },
   "cta": {
    "title": "Ready for your My Bubble moment?"
-  }
- },
- "legal": {
-  "mentions": {
-   "slug": "legal-notice",
-   "title": "Legal notice",
-   "metaTitle": "Legal notice — My Bubble Beauty",
-   "description": "Legal notice — My Bubble Beauty, Rue Paloke 146, 1700 Dilbeek.",
-   "bodyHtml": "<h2>Publisher</h2><p>My Bubble Beauty — [company or owner name]<br/>Rue Paloke 146, 1700 Dilbeek, Belgium<br/>Company number (BCE/KBO): [to be completed]<br/>Phone: <a href=\"tel:+32484118395\">0484.118.395</a> · Email: <a href=\"mailto:mybubblebeauty@gmail.com\">mybubblebeauty@gmail.com</a></p><h2>Hosting</h2><p>OVH SAS, 2 rue Kellermann, 59100 Roubaix, France — <a href=\"https://www.ovhcloud.com\">ovhcloud.com</a></p><h2>Intellectual property</h2><p>The texts, photographs, logo and graphic elements of this site are the property of My Bubble Beauty. Any reproduction without written permission is prohibited.</p><h2>Prices</h2><p>Prices shown are indicative, VAT included, and may change at any time. The applicable price is the one given when you book.</p><h2>Treatment information</h2><p>Treatment descriptions are for information only and do not replace the advice of a healthcare professional.</p>"
-  },
-  "privacy": {
-   "slug": "privacy",
-   "title": "Privacy policy",
-   "metaTitle": "Privacy policy — My Bubble Beauty",
-   "description": "Privacy policy — My Bubble Beauty, Rue Paloke 146, 1700 Dilbeek.",
-   "bodyHtml": "<h2>Data controller</h2><p>My Bubble Beauty, Rue Paloke 146, 1700 Dilbeek — <a href=\"mailto:mybubblebeauty@gmail.com\">mybubblebeauty@gmail.com</a></p><h2>Data collected</h2><p>This site has no forms, no analytics and uses no cookies. No personal data is collected during your visit.</p><p>The “Pause animations” choice is stored only in your browser (local storage), is never sent anywhere and can be cleared at any time in your browser settings.</p><h2>Appointments</h2><p>When you contact us by phone, email, WhatsApp or social media, we use your details only to manage your appointment (legal basis: pre-contractual measures, Art. 6(1)(b) GDPR). They are kept for up to 3 years after the last contact. WhatsApp, Facebook, Instagram and Snapchat are third-party services with their own privacy policies.</p><h2>External links</h2><p>Links to YouTube, Google Maps and our social media open those services, which apply their own rules. No content from those services is loaded on this site.</p><h2>Your rights</h2><p>You have the right of access, rectification, erasure, restriction and objection. Write to us at the address above. You can also lodge a complaint with the Belgian Data Protection Authority (<a href=\"https://www.dataprotectionauthority.be\" rel=\"noopener\">dataprotectionauthority.be</a>).</p>"
   }
  },
  "treatments": {
