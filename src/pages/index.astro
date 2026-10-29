@@ -19,8 +19,8 @@ const description = 'Centre de beauté et de bien-être à Dilbeek, aux portes d
 {alternates('home').map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href}>)}
 <link rel="alternate" hreflang="x-default" href={SITE + '/'}>
 <link rel="preload" href="/assets/fonts/italiana-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="icon" href="/assets/img/favicon.png" type="image/png" sizes="64x64">
-<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="icon" href="/assets/img/favicon.png?v=2" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png?v=2">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="My Bubble Beauty">
 <meta property="og:title" content={title}>
@@ -36,7 +36,7 @@ const description = 'Centre de beauté et de bien-être à Dilbeek, aux portes d
 </head>
 <body class="chooser">
 <main id="main" class="chooser__main">
-<h1 class="chooser__logo"><span class="chooser__glow" aria-hidden="true"></span><img src="/assets/img/my-bubble-logo-480.webp" srcset="/assets/img/my-bubble-logo-480.webp 480w, /assets/img/my-bubble-logo.webp 960w" sizes="min(80vw, 440px)" width="960" height="828" alt="My Bubble Beauty"></h1>
+<h1 class="chooser__logo"><span class="chooser__glow" aria-hidden="true"></span><img src="/assets/img/logo-my-bubble-400.webp" srcset="/assets/img/logo-my-bubble-400.webp 400w, /assets/img/logo-my-bubble-800.webp 800w" sizes="min(80vw, 440px)" width="955" height="673" alt="My Bubble Beauty"></h1>
 <p class="chooser__tag"><span>Choisissez votre langue</span> · <span lang="nl-BE">Kies je taal</span> · <span lang="en">Choose your language</span></p>
 <ul class="chooser__langs">{LANGS.map((l, i) => (
   <li><a class={`btn ${i === 0 ? 'btn--solid' : 'btn--ghost'} sheen`} href={pagePath(l, 'home')} hreflang={LANG_META[l].hreflang} lang={LANG_META[l].hreflang}>{LANG_META[l].name}</a></li>

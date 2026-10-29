@@ -48,8 +48,8 @@ const year = new Date().getFullYear();
 <link rel="preload" href="/assets/fonts/italiana-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <slot name="head" />
-<link rel="icon" href="/assets/img/favicon.png" type="image/png" sizes="64x64">
-<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="icon" href="/assets/img/favicon.png?v=2" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png?v=2">
 <meta property="og:type" content={ogType}>
 <meta property="og:site_name" content="My Bubble Beauty">
 <meta property="og:title" content={title}>
@@ -69,7 +69,7 @@ const year = new Date().getFullYear();
 <a class="skip" href="#main">{ui.skip}</a>
 <header class="site-header">
 <div class="wrap">
-<a class="brand" href={home}><img src="/assets/img/my-bubble-wordmark-80.webp" srcset="/assets/img/my-bubble-wordmark-80.webp 344w, /assets/img/my-bubble-wordmark-120.webp 516w" sizes="(max-width: 374px) 103px, (max-width: 639px) 120px, 172px" width="344" height="80" alt={ui.brandAlt}></a>
+<a class="brand" href={home}><img src="/assets/img/logo-my-bubble-200.webp" srcset="/assets/img/logo-my-bubble-200.webp 200w, /assets/img/logo-my-bubble-400.webp 400w" sizes="(max-width: 374px) 65px, (max-width: 639px) 74px, 91px" width="955" height="673" alt={ui.brandAlt}></a>
 <nav class="nav" aria-label={ui.navLabel}><ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul></nav>
 <details class="langsel">
 <summary><span class="visually-hidden">{ui.langPrefix} </span><span aria-hidden="true">{LANG_META[lang].code}</span><span class="visually-hidden">{LANG_META[lang].name}</span><Icon name="chevron" /></summary>
@@ -87,7 +87,7 @@ const year = new Date().getFullYear();
 </main>
 <footer class="site-footer">
 <div class="wrap">
-<a class="footer-logo" href={home}><img src="/assets/img/my-bubble-logo-480.webp" srcset="/assets/img/my-bubble-logo-480.webp 480w, /assets/img/my-bubble-logo.webp 960w" sizes="140px" width="960" height="828" alt={ui.brandAlt} loading="lazy" decoding="async"></a>
+<a class="footer-logo" href={home}><img src="/assets/img/logo-my-bubble-200.webp" srcset="/assets/img/logo-my-bubble-200.webp 200w, /assets/img/logo-my-bubble-400.webp 400w" sizes="120px" width="955" height="673" alt={ui.brandAlt} loading="lazy" decoding="async"></a>
 <p>{ui.rights.replace(/\d{4}/, String(year))}</p>
 <ul>{footerLinks.map((f) => <li><a href={f.href}>{f.label}</a></li>)}</ul>
 <button class="motion-toggle" type="button" data-off={ui.pauseOff} data-on={ui.pauseOn}><Icon name="pause" /><span>{ui.pauseOff}</span></button>
