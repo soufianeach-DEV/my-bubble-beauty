@@ -32,7 +32,7 @@
   --k:1;            /* intensité du parallax : 1 desktop, .5 mobile, 0 sans mouvement */
   /* Espace */
   --gutter:clamp(1rem,4vw,3rem); --maxw:1240px; --radius:22px;
-  --header-h:72px;
+  --header-h:96px;
 }
 :root[data-theme="light"]{color-scheme:light}
 :root[data-theme="dark"]{color-scheme:dark}
@@ -54,7 +54,7 @@
     --grain:url("/assets/img/grain-dark.svg");
   }
 
-@media (max-width:767px){:root{--k:.5;--header-h:60px}}
+@media (max-width:767px){:root{--k:.5;--header-h:72px}}
 @media (prefers-reduced-motion:reduce){:root{--k:0}}
 :root[data-motion="off"]{--k:0}
 
@@ -102,13 +102,12 @@ p{margin:0 0 1em}
 :where(:root[data-theme="dark"]) .site-header{background:rgb(42 32 30 / .82)}
 .site-header .wrap{height:100%;display:flex;align-items:center;gap:1.5rem}
 .brand{display:flex;align-items:center;gap:.6rem;color:var(--text);text-decoration:none;font:400 1.5rem/1 var(--f-title);letter-spacing:.06em;margin-right:auto}
-.brand img{height:40px;width:auto}
 .nav ul{display:flex;gap:1.75rem;list-style:none;margin:0;padding:0}
 .nav a{color:var(--text);text-decoration:none;font-size:.9375rem;letter-spacing:.04em;padding:.5rem 0;background:linear-gradient(var(--line),var(--line)) no-repeat 0 100%/0 1px;transition:background-size var(--dur-sheen) var(--ease-soft)}
 .nav a:hover{background-size:100% 1px}
 .site-header .btn{min-height:44px;padding:.6rem 1.15rem;font-size:.875rem}
 @media (max-width:1023px){.nav{display:none}}
-@media (max-width:639px){.site-header .btn .lbl-long{display:none}.brand img{height:28px}.site-header .wrap{gap:.75rem}}
+@media (max-width:639px){.site-header .btn .lbl-long{display:none}.site-header .wrap{gap:.75rem}}
 @media (min-width:640px){.site-header .btn .lbl-short{display:none}}
 
 /* ---------- Halos de section (s'allument à l'entrée) ---------- */
@@ -452,13 +451,12 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 @media (min-width:1024px) and (prefers-color-scheme:dark){:where(:root:not([data-theme="light"])) .hero__panel{--veil:42 32 30}}
 @media (prefers-reduced-transparency:reduce){.hero__panel{background:var(--surface);backdrop-filter:none}}
 
-/* Header : bouton clair/sombre à côté du choix de langue. Seul le logo rétrécit, sans se déformer. */
+/* Header : bouton clair/sombre à côté du choix de langue. Le logo suit la hauteur de l'en-tête. */
 .brand{min-width:0;flex:0 1 auto;min-height:44px}
-.brand img{height:64px;width:auto}
+.brand img{height:calc(var(--header-h) - 12px);width:auto}
 .langsel,.theme-btn,.mnav,.site-header .btn{flex:none}
-@media (max-width:639px){.brand img{height:52px}}
 @media (max-width:559px){.site-header .btn{display:none}}
-@media (max-width:374px){.site-header .wrap{gap:.45rem}.brand img{height:46px}.theme-btn{width:40px;height:40px}.langsel summary,.mnav summary{padding:.5rem .6rem}}
+@media (max-width:374px){.site-header .wrap{gap:.45rem}.theme-btn{width:40px;height:40px}.langsel summary,.mnav summary{padding:.5rem .6rem}}
 @media (max-width:339px){.site-header .wrap{gap:.35rem}.theme-btn{width:36px;height:36px}.langsel summary,.mnav summary{padding:.45rem .5rem}}
 /* Logo accentué en clair : à petite taille, ses traits fins se perdent sur le fond poudré */
 .brand img,.footer-logo img{filter:brightness(.68) saturate(1.5) contrast(1.1) drop-shadow(0 0 .35px rgb(110 70 60 / .9))}
