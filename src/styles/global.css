@@ -4,11 +4,10 @@
    Effets : transform/opacity uniquement. Aucun flou animé.
    ========================================================================== */
 
-@font-face{font-family:"Italiana";src:url("/assets/fonts/italiana-latin-400-normal.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Fraunces";src:url("/assets/fonts/fraunces-latin-full-normal.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
 @font-face{font-family:"Jost";src:url("/assets/fonts/jost-latin-400-normal.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:"Jost";src:url("/assets/fonts/jost-latin-500-normal.woff2") format("woff2");font-weight:500;font-style:normal;font-display:swap}
 /* Polices de repli calées sur les métriques, pour limiter le décalage au swap */
-@font-face{font-family:"Italiana-fb";src:local("Georgia"),local("Times New Roman");size-adjust:92%;ascent-override:96%;descent-override:26%}
 @font-face{font-family:"Jost-fb";src:local("Arial"),local("Helvetica");size-adjust:96%;ascent-override:104%;descent-override:28%}
 
 
@@ -23,7 +22,7 @@
   --halo-a:.55; --sheen:rgb(255 255 255 / .6);
   --grain:url("/assets/img/grain.svg");
   /* Typo */
-  --f-title:"Italiana","Italiana-fb",Georgia,serif;
+  --f-title:"Fraunces",Georgia,serif;
   --f-text:"Jost","Jost-fb",Arial,sans-serif;
   /* Mouvement */
   --ease-soft:cubic-bezier(.22,.61,.36,1);
@@ -69,7 +68,8 @@ img,svg{display:block;max-width:100%}
 a{color:var(--link);text-underline-offset:.2em;text-decoration-thickness:1px}
 a:hover{text-decoration-thickness:2px}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
-h1,h2,h3{font-family:var(--f-title);font-weight:400;letter-spacing:.04em;line-height:1.1;margin:0 0 .5em}
+/* Fraunces en version douce (SOFT), sans lettres fantaisie (WONK). Posé sur chaque titre : le raccourci font: du body le remet à zéro */
+h1,h2,h3{font-family:var(--f-title);font-weight:300;font-variation-settings:"SOFT" 100,"WONK" 0;letter-spacing:.04em;line-height:1.1;margin:0 0 .5em}
 h1{font-size:clamp(2.75rem,6vw + 1rem,5.5rem)}
 h2{font-size:clamp(2rem,3vw + 1rem,3.25rem)}
 h3{font-size:clamp(1.6rem,1.2vw + 1.1rem,2rem)}
@@ -265,7 +265,7 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 
 /* ---------- Titre principal : marque + sous-titre ---------- */
 .h1-brand{display:block}
-.h1-sub{display:block;margin-top:.5rem;font:400 clamp(1.5rem,1.4vw + 1rem,2.25rem)/1.25 var(--f-title);letter-spacing:.03em;color:var(--text-soft);text-wrap:balance}
+.h1-sub{display:block;margin-top:.5rem;font:300 clamp(1.5rem,1.4vw + 1rem,2.25rem)/1.25 var(--f-title);font-variation-settings:"SOFT" 100,"WONK" 0;letter-spacing:.03em;color:var(--text-soft);text-wrap:balance}
 
 /* ---------- Menu mobile (sans JS) ---------- */
 .mnav{position:relative;display:none}
