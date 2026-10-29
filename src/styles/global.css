@@ -454,11 +454,11 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 
 /* Header : bouton clair/sombre à côté du choix de langue. Seul le logo rétrécit, sans se déformer. */
 .brand{min-width:0;flex:0 1 auto;min-height:44px}
-.brand img{height:auto;width:100%;max-width:172px}
+.brand img{height:64px;width:auto}
 .langsel,.theme-btn,.mnav,.site-header .btn{flex:none}
-@media (max-width:639px){.brand img{max-width:120px}}
+@media (max-width:639px){.brand img{height:52px}}
 @media (max-width:559px){.site-header .btn{display:none}}
-@media (max-width:374px){.site-header .wrap{gap:.45rem}.brand img{max-width:103px}.theme-btn{width:40px;height:40px}.langsel summary,.mnav summary{padding:.5rem .6rem}}
+@media (max-width:374px){.site-header .wrap{gap:.45rem}.brand img{height:46px}.theme-btn{width:40px;height:40px}.langsel summary,.mnav summary{padding:.5rem .6rem}}
 @media (max-width:339px){.site-header .wrap{gap:.35rem}.theme-btn{width:36px;height:36px}.langsel summary,.mnav summary{padding:.45rem .5rem}}
 
 /* ==========================================================================
