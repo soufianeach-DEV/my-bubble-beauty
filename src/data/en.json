@@ -39,7 +39,9 @@
   "quickContact": "Quick contact",
   "call": "Call",
   "moreInfo": "Learn more",
-  "back": "← Back to prices"
+  "back": "← Back to prices",
+  "book": "Book an appointment",
+  "bookShort": "Book"
  },
  "home": {
   "title": "Beauty salon in Dilbeek — My Bubble Beauty",
@@ -96,7 +98,7 @@
     {
      "title": "Massage",
      "text": "Deeply relax with our relaxing wellness massages.",
-     "href": "#tarif-rituel-douceur",
+     "href": "#tarif-massages",
      "link": "See prices"
     },
     {
@@ -128,7 +130,7 @@
   },
   "tarifs": {
    "title": "Prices",
-   "intro": "We also offer subscriptions for specific treatments.",
+   "intro": "Our treatments one by one, then our packages and courses to go further.",
    "filtersLabel": "Filter prices by category",
    "filters": [
     {
@@ -143,8 +145,8 @@
     },
     {
      "key": "corps",
-     "label": "Body & slimming",
-     "status": "Showing: Body & slimming"
+     "label": "Body & silhouette",
+     "status": "Showing: Body & silhouette"
     },
     {
      "key": "sourire",
@@ -210,11 +212,6 @@
        "amount": "150 €"
       },
       {
-       "name": "Phototherapy",
-       "href": "photo",
-       "amount": "40 €"
-      },
-      {
        "name": "BB Glow",
        "href": "bbglow",
        "amount": "120 €"
@@ -227,83 +224,87 @@
      ]
     },
     {
-     "id": "beaute-minceur",
-     "cat": "corps",
-     "title": "Slimming Treatments",
-     "href": null,
+     "id": "purete",
+     "cat": "visage",
+     "title": "Purity Ritual",
+     "href": "brosse",
      "items": [
       {
-       "name": "Lipo-laser",
-       "href": "lipolaser",
+       "name": "Cleanse",
+       "duration": "30 min",
+       "desc": "Rotating brush",
+       "amount": "35 €"
+      },
+      {
+       "name": "Full treatment",
+       "duration": "45 min",
+       "desc": "Cleanse, rotating brush, mask and cream",
        "amount": "50 €"
-      },
-      {
-       "name": "Radiofrequency",
-       "href": "radiofrequence",
-       "amount": "50 €"
-      },
-      {
-       "name": "Vascslim",
-       "href": null,
-       "amount": "50 €"
-      },
-      {
-       "name": "Colombian Lift",
-       "href": null,
-       "amount": "60 €"
-      },
-      {
-       "name": "Maderotherapy",
-       "href": "mado",
-       "amount": "75 €"
       }
      ]
     },
     {
-     "id": "hifu",
+     "id": "lumiere-led",
      "cat": "visage",
-     "title": "HIFU",
-     "href": "hifu",
+     "title": "LED light therapy",
+     "href": "photo",
      "items": [
       {
-       "name": "Upper Face",
-       "href": null,
-       "amount": "250 €"
+       "name": "Radiance & Youth",
+       "duration": "20 min",
+       "desc": "Red light, mature or dull skin",
+       "amount": "25 €"
       },
       {
-       "name": "Full Face",
-       "href": null,
-       "amount": "500 €"
+       "name": "Purity & Blemishes",
+       "duration": "20 min",
+       "desc": "Blue light, blemish-prone skin",
+       "amount": "25 €"
       },
       {
-       "name": "Face + Décolletage",
-       "href": null,
-       "amount": "750 €"
+       "name": "Double Radiance",
+       "duration": "20 min",
+       "desc": "Red and blue light",
+       "amount": "30 €"
       },
       {
-       "name": "Stomach + Abdomen",
+       "name": "Signature Light",
+       "duration": "30 min",
+       "desc": "Lights chosen for your skin",
+       "amount": "35 €"
+      }
+     ]
+    },
+    {
+     "id": "serum",
+     "cat": "visage",
+     "title": "Serum",
+     "href": null,
+     "items": [
+      {
+       "name": "Anti-Aging",
        "href": null,
-       "amount": "600 €"
+       "amount": "75 €"
       },
       {
-       "name": "Saddlebags",
+       "name": "Booster",
        "href": null,
-       "amount": "550 €"
+       "amount": "125 €"
       },
       {
-       "name": "Intimate Area",
+       "name": "Vitamin",
        "href": null,
-       "amount": "300 €"
+       "amount": "100 €"
       },
       {
-       "name": "Buttocks",
+       "name": "Wellness",
        "href": null,
-       "amount": "300 €"
+       "amount": "80 €"
       },
       {
-       "name": "Thighs",
+       "name": "Mesotherapy",
        "href": null,
-       "amount": "300 €"
+       "amount": "180 €"
       }
      ]
     },
@@ -317,6 +318,106 @@
        "name": "1 Session",
        "href": null,
        "amount": "250 €"
+      }
+     ]
+    },
+    {
+     "id": "massages",
+     "cat": "corps",
+     "title": "Relaxing massages",
+     "href": "massages",
+     "intro": "A gentle break to care for your body and calm your mind.",
+     "items": [
+      {
+       "name": "Warmth & Relaxation",
+       "duration": "60 min",
+       "desc": "Hot stones",
+       "amount": "85 €"
+      },
+      {
+       "name": "Bamboo & Balance",
+       "duration": "60 min",
+       "desc": "Bamboo sticks",
+       "amount": "80 €"
+      },
+      {
+       "name": "Gold & Softness",
+       "duration": "60 min",
+       "desc": "Argan oil",
+       "amount": "75 €"
+      },
+      {
+       "name": "Feather & Serenity",
+       "duration": "45 min",
+       "desc": "Light strokes",
+       "amount": "65 €"
+      },
+      {
+       "name": "Gentle Mum",
+       "duration": "60 min",
+       "desc": "Pregnancy massage",
+       "amount": "80 €"
+      }
+     ]
+    },
+    {
+     "id": "gommages",
+     "cat": "corps",
+     "title": "Body scrubs",
+     "href": "massages",
+     "intro": "For soft, smooth and delicately scented skin.",
+     "items": [
+      {
+       "name": "Lavender & Softness",
+       "duration": "30 min",
+       "desc": "With lavender",
+       "amount": "45 €"
+      },
+      {
+       "name": "Honey & Velvet",
+       "duration": "30 min",
+       "desc": "With honey",
+       "amount": "48 €"
+      }
+     ]
+    },
+    {
+     "id": "silhouette",
+     "cat": "corps",
+     "title": "Silhouette & well-being",
+     "items": [
+      {
+       "name": "Maderotherapy",
+       "href": "mado",
+       "duration": "60 min",
+       "desc": "Massage with wooden tools",
+       "amount": "75 €"
+      },
+      {
+       "name": "Sculpt & Firm",
+       "href": "radiofrequence",
+       "duration": "30 min",
+       "desc": "Vacuum and radiofrequency",
+       "amount": "50 €"
+      },
+      {
+       "name": "Sculpt & Firm",
+       "href": "radiofrequence",
+       "duration": "60 min",
+       "amount": "80 €"
+      },
+      {
+       "name": "Lipo Light",
+       "href": "lipolaser",
+       "duration": "30 min",
+       "desc": "Heat, cold and red light",
+       "amount": "45 €"
+      },
+      {
+       "name": "Lipo Light",
+       "href": "lipolaser",
+       "duration": "60 min",
+       "amount": "70 €"
       }
      ]
     },
@@ -335,59 +436,6 @@
        "name": "2 Sessions",
        "href": null,
        "amount": "120 €"
-      }
-     ]
-    },
-    {
-     "id": "epilation-definitive",
-     "cat": "epilation",
-     "title": "Long-Lasting Laser Hair Removal",
-     "href": "laserepilation",
-     "items": [
-      {
-       "name": "Chin",
-       "href": null,
-       "amount": "50 €"
-      },
-      {
-       "name": "Upper Lip",
-       "href": null,
-       "amount": "50 €"
-      },
-      {
-       "name": "Full Face",
-       "href": null,
-       "amount": "120 €"
-      },
-      {
-       "name": "Underarms",
-       "href": null,
-       "amount": "90 €"
-      },
-      {
-       "name": "Forearms",
-       "href": null,
-       "amount": "110 €"
-      },
-      {
-       "name": "Full Arms",
-       "href": null,
-       "amount": "180 €"
-      },
-      {
-       "name": "Bikini",
-       "href": null,
-       "amount": "100 €"
-      },
-      {
-       "name": "Half Legs",
-       "href": null,
-       "amount": "180 €"
-      },
-      {
-       "name": "Full Legs",
-       "href": null,
-       "amount": "250 €"
       }
      ]
     },
@@ -411,44 +459,6 @@
        "name": "Aloe Vera",
        "href": null,
        "amount": "12.50 €"
-      }
-     ]
-    },
-    {
-     "id": "detatouage",
-     "cat": "epilation",
-     "title": "Tattoo Removal",
-     "href": null,
-     "items": [
-      {
-       "name": "Tattoo Removal XS",
-       "href": null,
-       "amount": "99 €"
-      },
-      {
-       "name": "Tattoo Removal S",
-       "href": null,
-       "amount": "149 €"
-      },
-      {
-       "name": "Tattoo Removal M",
-       "href": null,
-       "amount": "199 €"
-      },
-      {
-       "name": "Tattoo Removal L",
-       "href": null,
-       "amount": "249 €"
-      },
-      {
-       "name": "Tattoo Removal XL",
-       "href": null,
-       "amount": "299 €"
-      },
-      {
-       "name": "Tattoo Removal XXL",
-       "href": null,
-       "amount": "399 €"
       }
      ]
     },
@@ -511,45 +521,88 @@
      ]
     },
     {
-     "id": "rituel-douceur",
-     "cat": "corps",
-     "title": "Gentle Rituals",
-     "href": null,
+     "id": "epilation-definitive",
+     "cat": "epilation",
+     "title": "Long-Lasting Laser Hair Removal",
+     "href": "laserepilation",
      "items": [
       {
-       "name": "With Argan Oil",
-       "href": null,
-       "amount": "65 €"
-      },
-      {
-       "name": "With Candles",
-       "href": null,
-       "amount": "70 €"
-      },
-      {
-       "name": "Bamboo Massage",
-       "href": null,
-       "amount": "70 €"
-      },
-      {
-       "name": "Back Massage",
+       "name": "Chin",
        "href": null,
        "amount": "50 €"
       },
       {
-       "name": "Pregnancy Massage",
+       "name": "Upper Lip",
+       "href": null,
+       "amount": "50 €"
+      },
+      {
+       "name": "Full Face",
+       "href": null,
+       "amount": "120 €"
+      },
+      {
+       "name": "Underarms",
        "href": null,
        "amount": "90 €"
       },
       {
-       "name": "Hot Stone Massage",
+       "name": "Forearms",
        "href": null,
-       "amount": "90 €"
+       "amount": "110 €"
       },
       {
-       "name": "Essential Oil Massage",
+       "name": "Full Arms",
        "href": null,
-       "amount": "70 €"
+       "amount": "180 €"
+      },
+      {
+       "name": "Bikini",
+       "href": null,
+       "amount": "100 €"
+      },
+      {
+       "name": "Half Legs",
+       "href": null,
+       "amount": "180 €"
+      },
+      {
+       "name": "Full Legs",
+       "href": null,
+       "amount": "250 €"
+      }
+     ]
+    },
+    {
+     "id": "electrolyse",
+     "cat": "epilation",
+     "title": "Electrolysis",
+     "href": null,
+     "items": [
+      {
+       "name": "5 minutes",
+       "href": null,
+       "amount": "15 €"
+      },
+      {
+       "name": "10 minutes",
+       "href": null,
+       "amount": "25 €"
+      },
+      {
+       "name": "20 minutes",
+       "href": null,
+       "amount": "45 €"
+      },
+      {
+       "name": "25 minutes",
+       "href": null,
+       "amount": "50 €"
+      },
+      {
+       "name": "30 minutes",
+       "href": null,
+       "amount": "60 €"
       }
      ]
     },
@@ -631,121 +684,128 @@
        "amount": "25 €"
       }
      ]
-    },
+    }
+   ],
+   "eyebrow": "Our prices",
+   "partPresta": "Treatments",
+   "partFormules": "Packages & courses",
+   "formulas": [
     {
-     "id": "serum",
+     "id": "combines-visage",
      "cat": "visage",
-     "title": "Serum",
-     "href": null,
+     "title": "Combined facials",
+     "intro": "45 to 60 minutes depending on the package.",
      "items": [
       {
-       "name": "Anti-Aging",
-       "href": null,
-       "amount": "75 €"
+       "name": "Purity & Light",
+       "detail": "Rotating brush + LED",
+       "amount": "60 €"
       },
       {
-       "name": "Booster",
-       "href": null,
-       "amount": "125 €"
+       "name": "Radiance & Youth",
+       "detail": "Cleanse + mask + red LED",
+       "amount": "70 €",
+       "was": "75 €",
+       "note": "save €5 (–7%)"
       },
       {
-       "name": "Vitamin",
-       "href": null,
-       "amount": "100 €"
-      },
-      {
-       "name": "Wellness",
-       "href": null,
-       "amount": "80 €"
-      },
-      {
-       "name": "Mesotherapy",
-       "href": null,
-       "amount": "180 €"
+       "name": "Clear Skin",
+       "detail": "Cleanse + blue LED",
+       "amount": "60 €"
       }
      ]
     },
     {
-     "id": "huile-corps",
+     "id": "cures-led",
+     "cat": "visage",
+     "title": "LED light therapy courses",
+     "href": "photo",
+     "items": [
+      {
+       "name": "Radiance course",
+       "detail": "5 sessions",
+       "duration": "5 × 20 min",
+       "amount": "110 €",
+       "note": "€22 per session · save €15 (–12%)",
+       "was": "125 €"
+      },
+      {
+       "name": "Beauty course",
+       "detail": "10 sessions",
+       "duration": "10 × 20 min",
+       "amount": "200 €",
+       "note": "€20 per session · save €50 (–20%)",
+       "was": "250 €",
+       "badge": "Best price per session"
+      },
+      {
+       "name": "Signature course",
+       "detail": "10 tailored sessions",
+       "duration": "10 × 30 min",
+       "amount": "280 €",
+       "note": "€28 per session · save €70 (–20%)",
+       "was": "350 €"
+      }
+     ]
+    },
+    {
+     "id": "rituels-signature",
      "cat": "corps",
-     "title": "Body Oil",
-     "href": null,
+     "title": "Signature rituals",
+     "href": "massages",
+     "intro": "A scrub, then a massage, to make the moment last.",
      "items": [
       {
-       "name": "Massage",
-       "href": null,
-       "amount": "50 €"
+       "name": "Awakening of the Senses",
+       "detail": "Lavender scrub + light-stroke massage",
+       "amount": "105 €",
+       "was": "110 €",
+       "note": "save €5 (–5%)"
       },
       {
-       "name": "Anti-Cellulite",
-       "href": null,
-       "amount": "75 €"
+       "name": "Precious Softness",
+       "detail": "Honey scrub + argan oil massage",
+       "amount": "115 €",
+       "was": "123 €",
+       "note": "save €8 (–7%)"
       },
       {
-       "name": "Slimming",
-       "href": null,
-       "amount": "90 €"
-      },
-      {
-       "name": "Wellness",
-       "href": null,
-       "amount": "60 €"
+       "name": "Total Escape",
+       "detail": "Scrub of your choice + hot stone massage",
+       "amount": "125 €",
+       "was": "130 €",
+       "note": "save €5 (–4%)"
       }
      ]
     },
     {
-     "id": "gommage",
-     "cat": "visage",
-     "title": "Exfoliation",
-     "href": null,
+     "id": "cures-maderotherapie",
+     "cat": "corps",
+     "title": "Maderotherapy courses",
+     "href": "mado",
      "items": [
       {
-       "name": "Facial Scrub",
-       "href": null,
-       "amount": "35 €"
+       "name": "5-session course",
+       "detail": "Silhouette Ritual",
+       "duration": "5 × 60 min",
+       "amount": "340 €",
+       "note": "€68 per session · save €35 (–9%)",
+       "was": "375 €"
       },
       {
-       "name": "Body Scrub (according to skin type)",
-       "href": null,
-       "amount": "25 €"
-      }
-     ]
-    },
-    {
-     "id": "electrolyse",
-     "cat": "epilation",
-     "title": "Electrolysis",
-     "href": null,
-     "items": [
-      {
-       "name": "5 minutes",
-       "href": null,
-       "amount": "15 €"
-      },
-      {
-       "name": "10 minutes",
-       "href": null,
-       "amount": "25 €"
-      },
-      {
-       "name": "20 minutes",
-       "href": null,
-       "amount": "45 €"
-      },
-      {
-       "name": "25 minutes",
-       "href": null,
-       "amount": "50 €"
-      },
-      {
-       "name": "30 minutes",
-       "href": null,
-       "amount": "60 €"
+       "name": "10-session course",
+       "detail": "Silhouette Ritual",
+       "duration": "10 × 60 min",
+       "amount": "650 €",
+       "note": "€65 per session · save €100 (–13%)",
+       "was": "750 €",
+       "badge": "Best price per session"
       }
      ]
     }
    ],
-   "eyebrow": "Our prices"
+   "wasLabel": "instead of",
+   "book": "Book"
   },
   "gallery": {
    "title": "Gallery",
@@ -916,55 +976,6 @@
     }
    ]
   },
-  "hifu": {
-   "title": "High-Intensity Focused Ultrasound (HIFU) in Aesthetics",
-   "metaTitle": "HIFU in Aesthetics — My Bubble Beauty",
-   "description": "HIFU (High-Intensity Focused Ultrasound) uses focused ultrasound waves to heat the tissues beneath the skin and stimulate collagen production.",
-   "articleHtml": "<p>High-Intensity Focused Ultrasound (HIFU) is a technology that uses high-intensity focused ultrasound waves to heat underlying tissues at specific depths while generally sparing the skin's surface. This heat induces coagulation in the tissues, stimulating collagen production and potentially improving skin firmness.</p><h2>Applications in Aesthetics</h2><p>HIFU is used in aesthetics to address various skin concerns and rejuvenation goals, including skin tightening, reducing wrinkles and fine lines, as well as non-surgical facelifts. It can help reduce sagging skin and improve skin firmness on the face, neck, and other body areas. HIFU can decrease the appearance of wrinkles and fine lines by stimulating collagen production. It is sometimes referred to as the \"HIFU facelift\" due to its tightening effects, achieved without surgery and usually with minimal to no downtime. However, it is not a substitute for a surgical facelift.</p><h2>How the Treatment Works</h2><p>During a HIFU session, a device delivers intensely focused ultrasound waves at precise depths within the target tissues. This ultrasound energy heats the underlying tissues and stimulates collagen production. Results are typically not immediately visible but gradually improve over weeks and months as collagen regenerates.</p><h2>Safety and Comfort</h2><p>HIFU is considered a non-invasive treatment and generally has few side effects. You may feel a warming sensation during the session, but the treatment is generally well tolerated and usually does not require anaesthesia.</p><h2>Number of Sessions</h2><p>The number of sessions required depends on the specific treatment and your goals. In general, several sessions may be recommended for the best results.</p><h2>Results</h2><p>HIFU results are gradual and can last for several months. The skin may become firmer, wrinkles may be reduced, and the face can appear tighter.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p><p>HIFU is a popular choice in aesthetics for those who want to tighten the skin without surgery. However, as with any aesthetic treatment, it's important to consult a qualified healthcare professional to discuss the right options based on your individual needs and ensure that HIFU is the best solution for you.</p><p class=\"video-link\"><a class=\"btn btn--ghost\" href=\"https://www.youtube.com/watch?v=8P2RqfhO8i0\" rel=\"noopener\">Watch the video on YouTube</a> <small>The video opens on YouTube.</small></p>",
-   "priceTitle": "Price — HIFU",
-   "prices": [
-    {
-     "name": "Upper Face",
-     "amount": "250 €"
-    },
-    {
-     "name": "Full Face",
-     "amount": "500 €"
-    },
-    {
-     "name": "Face + Décolletage",
-     "amount": "750 €"
-    },
-    {
-     "name": "Stomach + Abdomen",
-     "amount": "600 €"
-    },
-    {
-     "name": "Saddlebags",
-     "amount": "550 €"
-    },
-    {
-     "name": "Intimate Area",
-     "amount": "300 €"
-    },
-    {
-     "name": "Buttocks",
-     "amount": "300 €"
-    },
-    {
-     "name": "Thighs",
-     "amount": "300 €"
-    }
-   ],
-   "figures": [
-    {
-     "src": "soins/hifu.webp",
-     "w": 800,
-     "h": 800,
-     "alt": "Diagram of a HIFU device and the skin layers it targets"
-    }
-   ]
-  },
   "hydra": {
    "title": "HydraFacial",
    "metaTitle": "HydraFacial — My Bubble Beauty",
@@ -1070,15 +1081,19 @@
    ]
   },
   "lipolaser": {
-   "title": "Lipo Laser",
-   "metaTitle": "Lipo Laser — My Bubble Beauty",
-   "description": "Laser lipolysis, or \"lipo laser\", is a non-invasive aesthetic treatment that aims to reduce body fat in target areas such as the abdomen, thighs and arms.",
-   "articleHtml": "<p>Laser lipolysis, also known as \"lipo laser\", is a non-invasive aesthetic treatment aimed at reducing body fat, primarily in target areas such as the abdomen, thighs, arms, or flanks. Here is how a lipo laser treatment usually works:</p><h2>Initial Consultation</h2><p>Prior to a lipo laser treatment, you'll have an initial consultation with an aesthetic professional. During this consultation, your fat loss goals and the areas to be treated are discussed, and basic health and fitness information is taken into consideration.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p><h2>Preparation</h2><p>On the day of the treatment, the treatment area is cleansed. Photos may be taken to track progress over time.</p><h2>Application of Lasers</h2><p>Lipo laser devices contain diodes that emit low-intensity laser light. They are placed directly on the skin of the treatment area. These lasers emit specific wavelengths that are absorbed by the fat cells beneath the skin.</p><h2>Action on Fat Cells</h2><p>The lasers are intended to stimulate the fat cells to encourage the release of their contents. This process is known as lipolysis, where fat cells release their triglycerides as fatty acids and glycerol.</p><h2>Removal of Fats</h2><p>The fatty acids and glycerol released during lipolysis are naturally eliminated by the body. This can occur through the lymphatic system and the liver.</p><h2>Post-Treatment</h2><p>After the lipo laser session, it is often recommended to engage in physical activity to help burn the released fats. It is also important to stay well hydrated to facilitate fat removal.</p><h2>Multiple Sessions</h2><p>One lipo laser treatment may yield slight results, so multiple sessions are usually needed to see more noticeable results, which vary from person to person. These sessions are typically scheduled several weeks apart.</p><p>It's important to note that lipo laser is intended for reducing body fat, but it is not a substitute for a balanced diet and exercise. To maintain the results, a healthy lifestyle is essential.</p>",
-   "priceTitle": "Price",
+   "title": "Lipo Light: heat, cold and red light",
+   "metaTitle": "Lipo Light, heat, cold and red light pads — My Bubble Beauty",
+   "description": "A non-invasive body treatment with pads that combine heat, cold and red light, on the stomach, hips, thighs or arms. Prices.",
+   "articleHtml": "<p>The Lipo Light Ritual uses pads placed on the chosen areas: stomach, hips, thighs or arms. The device combines heat and cold functions with red light.</p><h2>The aims</h2><ul><li>A non-invasive treatment, with no mechanical massage.</li><li>A moment of comfort on the treated areas.</li><li>A complement to your silhouette treatments.</li></ul><p>Heat, cold and red light do not work in the same way. This treatment does not make you lose weight and its results are not guaranteed.</p><h2>How it works</h2><p>A session lasts 30 or 60 minutes, depending on the number of areas.</p><p>Before the treatment, we check any contraindications with you, for example pregnancy, ongoing medical treatment or damaged skin.</p>",
+   "priceTitle": "Prices",
    "prices": [
     {
-     "name": "Lipo-laser",
-     "amount": "50 €"
+     "name": "Lipo Light (30 min)",
+     "amount": "45 €"
+    },
+    {
+     "name": "Lipo Light (60 min)",
+     "amount": "70 €"
     }
    ],
    "figures": [
@@ -1092,14 +1107,22 @@
   },
   "mado": {
    "title": "Maderotherapy",
-   "metaTitle": "Maderotherapy — My Bubble Beauty",
-   "description": "Maderotherapy is a massage using wooden tools that aims to smooth the skin and reduce the appearance of cellulite. Find out how it works and the price.",
-   "articleHtml": "<p>Maderotherapy is a body massage and shaping technique that uses specially designed wooden tools, such as rollers, sticks, and wooden spoons, to improve skin texture, reduce the appearance of cellulite, and promote relaxation. The term \"maderotherapy\" is derived from the Spanish word \"madera\", which means wood, and \"therapy\".</p><h2>Preparation</h2><p>Before the treatment, the practitioner discusses your goals and concerns with you. Then, massage oil or lotion is applied to the skin to facilitate the gliding of the wooden tools.</p><h2>Massage with Wooden Tools</h2><p>The practitioner uses specially designed wooden tools to perform various types of massage techniques. These wooden tools come in various shapes and sizes suitable for different body parts and massage methods. Movements can be kneading, rolling, pressing, or circular, depending on the treatment goals.</p><h2>Effects</h2><p>Maderotherapy aims to work on areas of localized fullness, smooth the skin, improve skin texture, and promote muscle relaxation. It can also be used to address areas of the body with cellulite.</p><h2>Multiple Sessions</h2><p>To achieve optimal results, multiple maderotherapy sessions are typically required. The frequency of sessions depends on your goals and the condition of your skin.</p><p>Maderotherapy is often considered a non-invasive and relaxing treatment, although the sensations during the treatment may vary depending on the applied pressure and treated areas. The benefits of maderotherapy may include firmer, more toned skin and a reduction in the appearance of cellulite.</p><p>As with any aesthetic treatment, it is recommended to consult a qualified professional to discuss your specific needs, benefits, and potential risks of maderotherapy, as well as to assess whether this treatment is suitable for your situation.</p>",
-   "priceTitle": "Price",
+   "metaTitle": "Maderotherapy, Silhouette Ritual — My Bubble Beauty",
+   "description": "Maderotherapy is a deep, toning massage with wooden tools that works on the look of the skin. How it works, courses and prices.",
+   "articleHtml": "<p>Maderotherapy is a massage technique from Colombia. It uses wooden tools designed to work on the different areas of the body.</p><p>The movements are precise, rhythmic and repeated. They massage the tissues, stimulate local circulation and work on the look of the skin. It is popular for its toning effect and deep massage.</p><h2>The benefits</h2><ul><li><strong>Circulation</strong>: supports local blood and lymph circulation.</li><li><strong>Skin</strong>: can make the skin look smoother.</li><li><strong>Orange-peel skin</strong>: can temporarily improve the look of cellulite.</li><li><strong>Drainage</strong>: the movements help move surface fluids.</li><li><strong>Tone</strong>: brings a feeling of tone and lightness.</li><li><strong>Relaxation</strong>: feels like a deep massage.</li></ul><p>Maderotherapy does not make you lose fat. It does not guarantee a lasting loss of centimetres. Results vary from person to person.</p><h2>How it works</h2><p>Before the first session, we do a short assessment. Together we choose the areas to work on: stomach, thighs, buttocks, hips or arms. The pressure is adapted to your sensitivity.</p><p>A session lasts 60 minutes, to work on several areas properly. In a course of 5 or 10 sessions, we leave enough time between sessions depending on how your skin reacts. We follow the progress with you.</p><h2>Precautions</h2><p>Too much pressure can cause pain or bruising. We do not treat an area with inflammation, a lesion or a vascular problem without medical advice. You fill in a questionnaire before the first session.</p><h2>What you can expect</h2><ul><li>Legs that feel lighter.</li><li>A moment of relaxation and deep massage.</li><li>A possible temporary improvement in the look of orange-peel skin.</li><li>Skin that can look smoother after the massage.</li></ul>",
+   "priceTitle": "Prices",
    "prices": [
     {
-     "name": "Maderotherapy",
+     "name": "Session (60 min)",
      "amount": "75 €"
+    },
+    {
+     "name": "5-session course",
+     "amount": "340 €"
+    },
+    {
+     "name": "10-session course",
+     "amount": "650 €"
     }
    ],
    "figures": [
@@ -1184,15 +1207,39 @@
    ]
   },
   "photo": {
-   "title": "Phototherapy",
-   "metaTitle": "Phototherapy — My Bubble Beauty",
-   "description": "Phototherapy, also known as light therapy, is used in aesthetics to improve the appearance of the skin. Discover how a session works and what it costs.",
-   "articleHtml": "<p>Phototherapy, also known as light therapy, is a technique used in aesthetics to improve the appearance of the skin and reduce the visibility of various imperfections by utilizing different wavelengths of light. Phototherapy can be performed using various devices, including LED lamps or lasers. This is how phototherapy typically works in aesthetics:</p><h2>Wavelength Selection</h2><p>Phototherapy involves using light at a specific wavelength depending on the treatment goal. Different wavelengths target different skin issues. For example, red light is often used to stimulate collagen production and improve skin texture, while blue light is used to help purify acne-prone skin.</p><h2>Skin Preparation</h2><p>Prior to phototherapy, the skin must be clean and free from cosmetics. Clients often wear protective eyewear to shield their eyes from intense light.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p><h2>Phototherapy Session</h2><p>The aesthetic professional uses the phototherapy device to expose the skin to light at the specific wavelength for a certain duration. The light is usually evenly applied to the area being treated.</p><h2>Skin Response</h2><p>The light penetrates the skin and interacts with the target cells, which can have various beneficial effects, such as stimulating collagen production, soothing the skin, purifying acne-prone skin, or reducing the appearance of excessive pigmentation.</p><h2>Aftercare</h2><p>After the phototherapy session, it may be necessary to apply soothing or moisturizing topical products to calm the skin and minimize irritation. Sun protection is also essential after treatment, as the skin may be more sensitive to sun damage.</p><h2>Results</h2><p>Phototherapy is used to improve the appearance of a wide range of skin issues, including acne-prone skin, wrinkles, pigment spots, and scars. The benefits of phototherapy generally include little to no downtime and gradual results.</p><h2>Duration</h2><p>The duration of the treatment and the number of sessions required vary depending on the treatment goal and the individual skin response. It is important to consult with a qualified aesthetic professional to discuss your specific needs and determine if phototherapy is suitable for you.</p>",
-   "priceTitle": "Price",
+   "title": "LED light therapy",
+   "metaTitle": "LED light therapy — My Bubble Beauty",
+   "description": "A non-invasive treatment with red or blue LED light, for dull, mature or blemish-prone skin. Rituals, courses and prices.",
+   "articleHtml": "<p>LED light therapy is a non-invasive treatment. It uses different colours of light to support the needs of the skin. It is popular for anti-ageing care, blemish-prone skin and skin with redness.</p><h2>The colours of light</h2><p><strong>Red light, radiance and firmness.</strong> It supports anti-ageing care. It can improve the look of fine lines, skin texture and firmness.</p><p><strong>Blue light, purity.</strong> It supports oily and acne-prone skin. It can help reduce blemishes.</p><p><strong>Yellow light, radiance and soothing.</strong> It supports dull skin and can improve the look of redness.</p><p><strong>Green light, even complexion.</strong> It supports uneven skin tone and can work on the look of dark spots.</p><p>The effects depend on the light, the power and the protocol. They are not the same for every colour or every skin. Results vary from person to person.</p><h2>Our light rituals</h2><ul><li><strong>Radiance & Youth</strong> (20 min): red light, for mature or dull skin.</li><li><strong>Purity & Blemishes</strong> (20 min): blue light, for oily, blemish-prone skin.</li><li><strong>Double Radiance</strong> (20 min): both lights, for skin with blemishes and signs of tiredness.</li><li><strong>Signature Light</strong> (30 min): red light, blue light or both, chosen for your skin.</li></ul><h2>The courses</h2><p>The Radiance course has 5 sessions and the Beauty course 10 sessions. The Signature course has 10 tailored 30-minute sessions. LED can also complete a facial in our combined packages.</p><p>Before the treatment, we check any contraindications with you, for example pregnancy, ongoing medical treatment or damaged skin.</p>",
+   "priceTitle": "Prices",
    "prices": [
     {
-     "name": "Phototherapy",
-     "amount": "40 €"
+     "name": "Radiance & Youth (20 min)",
+     "amount": "25 €"
+    },
+    {
+     "name": "Purity & Blemishes (20 min)",
+     "amount": "25 €"
+    },
+    {
+     "name": "Double Radiance (20 min)",
+     "amount": "30 €"
+    },
+    {
+     "name": "Signature Light (30 min)",
+     "amount": "35 €"
+    },
+    {
+     "name": "Radiance course (5 sessions)",
+     "amount": "110 €"
+    },
+    {
+     "name": "Beauty course (10 sessions)",
+     "amount": "200 €"
+    },
+    {
+     "name": "Signature course (10 × 30 min)",
+     "amount": "280 €"
     }
    ],
    "figures": [
@@ -1226,15 +1273,19 @@
    ]
   },
   "radiofrequence": {
-   "title": "Radiofrequency",
-   "metaTitle": "Radiofrequency — My Bubble Beauty",
-   "description": "Radiofrequency is an aesthetic technology that uses electromagnetic waves to gently heat the deep layers of the skin.",
-   "articleHtml": "<p>Radiofrequency is an aesthetic technology that uses electromagnetic waves to gently heat the deep layers of the skin. This heat aims to stimulate collagen production, boost blood circulation and promote skin tightening.</p><h2>Applications in Aesthetics</h2><p>Radiofrequency is used in aesthetics to address various skin concerns and rejuvenation goals, including skin tightening, reducing wrinkles and fine lines, softening the appearance of cellulite, and improving skin texture. It can help reduce skin sagging and enhance firmness. Increased collagen production helps smooth out wrinkles and fine lines. It can aid in reducing the visibility of cellulite by stimulating circulation and promoting lymphatic drainage. Radiofrequency can also improve overall skin texture by reducing the appearance of acne scars and imperfections.</p><h2>How the Treatment Works</h2><p>During a radiofrequency treatment, a device emits electromagnetic waves into the targeted skin. This energy is converted into heat, warming the underlying tissues while sparing the skin's surface as much as possible. The heat aims to stimulate collagen production and the skin's natural renewal. The results are usually not immediately visible but gradually improve over time as collagen regenerates.</p><h2>Safety and Comfort</h2><p>Radiofrequency is a non-invasive treatment, meaning it doesn't require surgery or incisions. You will typically feel a warm sensation during the session, but the treatment is generally well tolerated and does not require anaesthesia.</p><h2>Number of Sessions</h2><p>The number of sessions needed depends on the specific treatment and your goals. In general, multiple sessions may be recommended for the best results.</p><h2>Results</h2><p>The results of radiofrequency in aesthetics are progressive and can last for several months. The skin may appear firmer, wrinkles may look softened, and overall skin texture may improve.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p><p>Radiofrequency is a popular option in aesthetics due to the results it can offer and its non-invasive nature. It is used to address various skin issues and may be an attractive non-surgical option for some individuals looking to enhance their appearance. However, it is always recommended to consult with a qualified aesthetic professional before undergoing an aesthetic treatment to discuss suitable options based on individual needs.</p>",
-   "priceTitle": "Price",
+   "title": "Sculpt & Firm: vacuum and radiofrequency",
+   "metaTitle": "Sculpt & Firm, vacuum and radiofrequency — My Bubble Beauty",
+   "description": "A body treatment that combines suction (vacuum) with the warmth of radiofrequency, for skin that looks smoother and firmer. Prices.",
+   "articleHtml": "<p>The Sculpt & Firm Ritual combines mechanical suction, the vacuum, with radiofrequency. The vacuum mobilises the tissues. Radiofrequency spreads a controlled warmth in the treated area.</p><h2>The aims</h2><ul><li>Improve the look of cellulite.</li><li>Skin that looks smoother.</li><li>Temporarily firmer-looking skin.</li><li>A feeling of massage and relaxation.</li></ul><p>This treatment does not make you lose weight and does not remove fat. Results vary from person to person.</p><h2>How it works</h2><p>A session lasts 30 or 60 minutes, depending on the number of areas.</p><p>Before the treatment, we check any contraindications with you, for example pregnancy, ongoing medical treatment or damaged skin.</p>",
+   "priceTitle": "Prices",
    "prices": [
     {
-     "name": "Radiofrequency",
+     "name": "Sculpt & Firm (30 min)",
      "amount": "50 €"
+    },
+    {
+     "name": "Sculpt & Firm (60 min)",
+     "amount": "80 €"
     }
    ],
    "figures": [
@@ -1264,6 +1315,92 @@
      "w": 756,
      "h": 418,
      "alt": "Comparison between cleansing by hand and cleansing with the brush"
+    }
+   ]
+  },
+  "massages": {
+   "title": "Massages and body scrubs",
+   "metaTitle": "Massages and body scrubs — My Bubble Beauty",
+   "description": "Hot stone, bamboo, argan oil, light-stroke and pregnancy massages, lavender and honey body scrubs, signature rituals. Durations and prices.",
+   "articleHtml": "<p>Treat yourself to a gentle break. A precious moment to care for your body and calm your mind.</p><h2>Our relaxing massages</h2><p><strong>Warmth & Relaxation Ritual: hot stone massage.</strong> A deeply relaxing massage. The warmth of volcanic stones meets enveloping movements. It helps release muscle tension and brings a feeling of complete well-being. 60 minutes.</p><p><strong>Bamboo & Balance Ritual: bamboo massage.</strong> A rhythmic, enveloping massage with bamboo sticks. It works on body tension, stimulates the tissues and leaves a pleasant feeling of lightness. 60 minutes.</p><p><strong>Gold & Softness Ritual: argan oil massage.</strong> A delicate massage with argan oil, which nourishes the skin and wraps it in softness. Its flowing movements help you let go. 60 minutes.</p><p><strong>Feather & Serenity Ritual: light-stroke massage.</strong> Slow, light and harmonious movements. A true invitation to relax, to calm body and mind. 45 minutes.</p><p><strong>Gentle Mum Ritual: pregnancy massage.</strong> A moment for the mother-to-be. Gentle movements adapted to pregnancy, for relaxation and comfort. 60 minutes.</p><h2>Our body scrubs</h2><p><strong>Lavender & Softness Ritual.</strong> A scrub delicately scented with lavender. It helps remove dead skin cells and leaves the skin soft and silky. 30 minutes.</p><p><strong>Honey & Velvet Ritual.</strong> An indulgent scrub that pairs the softness of honey with a delicate ritual. The skin feels soft, supple and comfortable again. 30 minutes.</p><h2>Our signature rituals</h2><p>To make the moment last, we pair a scrub with a massage.</p><ul><li><strong>Awakening of the Senses</strong>: lavender scrub and light-stroke massage.</li><li><strong>Precious Softness</strong>: honey scrub and argan oil massage.</li><li><strong>Total Escape</strong>: scrub of your choice and hot stone massage.</li></ul><p>Before the treatment, we check any contraindications with you, for example pregnancy, ongoing medical treatment or damaged skin.</p>",
+   "priceTitle": "Prices",
+   "prices": [
+    {
+     "name": "Warmth & Relaxation (60 min)",
+     "amount": "85 €"
+    },
+    {
+     "name": "Bamboo & Balance (60 min)",
+     "amount": "80 €"
+    },
+    {
+     "name": "Gold & Softness (60 min)",
+     "amount": "75 €"
+    },
+    {
+     "name": "Feather & Serenity (45 min)",
+     "amount": "65 €"
+    },
+    {
+     "name": "Gentle Mum (60 min)",
+     "amount": "80 €"
+    },
+    {
+     "name": "Lavender & Softness (30 min)",
+     "amount": "45 €"
+    },
+    {
+     "name": "Honey & Velvet (30 min)",
+     "amount": "48 €"
+    },
+    {
+     "name": "Awakening of the Senses",
+     "amount": "105 €"
+    },
+    {
+     "name": "Precious Softness",
+     "amount": "115 €"
+    },
+    {
+     "name": "Total Escape",
+     "amount": "125 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "cartes/massage.webp",
+     "w": 720,
+     "h": 540,
+     "alt": "Back massage in the treatment room"
+    }
+   ]
+  },
+  "brosse": {
+   "title": "Purity Ritual: the rotating brush",
+   "metaTitle": "Purity Ritual, rotating brush facial — My Bubble Beauty",
+   "description": "A cleansing and exfoliating facial with a rotating brush, for softer, brighter-looking skin. Benefits, skin types and prices.",
+   "articleHtml": "<p>The Purity Ritual is a facial with a rotating brush. The brush gives a mechanical cleanse and a light exfoliation. It clears the skin of impurities and of the dead cells that build up on its surface.</p><h2>The benefits</h2><ul><li>Removes dead cells from the surface.</li><li>Helps clear out impurities.</li><li>Visibly refines skin texture.</li><li>Leaves the skin softer and smoother.</li><li>Brings radiance to the complexion.</li><li>Prepares the skin for the next products.</li><li>Helps improve the look of rough areas.</li></ul><h2>Two options</h2><p>The cleanse takes 30 minutes. The full treatment takes 45 minutes: cleanse, rotating brush, suitable mask and finishing cream. It can also be combined with LED light therapy.</p><h2>Which skin types?</h2><p>It suits normal, combination and thick skin, depending on how sensitive it is. We avoid it on very sensitive or irritated skin, and with marked couperose, inflammatory rosacea, eczema, lesions or significant inflammatory acne.</p><p>Before the treatment, we check any contraindications with you, for example pregnancy, ongoing medical treatment or damaged skin.</p>",
+   "priceTitle": "Prices",
+   "prices": [
+    {
+     "name": "Cleanse (30 min)",
+     "amount": "35 €"
+    },
+    {
+     "name": "Full treatment (45 min)",
+     "amount": "50 €"
+    },
+    {
+     "name": "Purity & Light (brush + LED)",
+     "amount": "60 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "cartes/visage.webp",
+     "w": 720,
+     "h": 540,
+     "alt": "Facial in the treatment room"
     }
    ]
   }

@@ -11,7 +11,7 @@ export function getStaticPaths() {
 const lang = langOfFolder(Astro.params.folder!);
 const slug = Astro.params.slug!;
 const d = t(lang);
-const tr = (d.treatments as Record<string, (typeof d.treatments)['hifu']>)[slug];
+const tr = (d.treatments as Record<string, (typeof d.treatments)['mado']>)[slug];
 const key = `treatment:${slug}` as const;
 // Le retour vise le groupe de tarifs du soin : main.js affiche alors son filtre
 const grp = d.home.tarifs.groups.find((g) => g.href === slug || g.items.some((it) => it.href === slug));
@@ -37,7 +37,7 @@ const jsonld = {
 <div class="treatment__side">
 <aside class="pricebox" aria-labelledby="h-price"><h2 id="h-price">{tr.priceTitle}</h2>
 <ul class="prices">{tr.prices.map((p) => <li><span class="name">{p.name}</span><span class="dots" aria-hidden="true"></span><span class="amount">{p.amount}</span></li>)}</ul>
-<div class="pricebox__cta"><a class="btn btn--solid sheen" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{d.ui.call}</a><a class="btn btn--ghost" href={CONTACT.whatsapp}><Icon name="whatsapp" />WhatsApp</a></div>
+<div class="pricebox__cta"><a class="btn btn--solid sheen" href={CONTACT.whatsapp}>{d.ui.book}</a><a class="btn btn--ghost" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{d.ui.call}</a></div>
 </aside>
 <div class="treatment__figs">{tr.figures.map((f) => (
   <figure><img src={`/assets/img/${f.src}`} width={f.w} height={f.h} alt={f.alt} loading="lazy" decoding="async"></figure>

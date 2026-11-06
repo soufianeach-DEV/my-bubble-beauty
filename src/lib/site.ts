@@ -72,7 +72,14 @@ export const EXTRA: Record<Lang, { cgv: string; hours: string; closed: string; d
 // Horaires d'ouverture, à remplir quand la cliente les donne (vide = rien n'est affiché).
 // day : 1 = lundi … 7 = dimanche ; un jour absent est affiché « Fermé ». Exemple :
 // { day: 1, open: '09:30', close: '18:30' }, { day: 6, open: '09:00', close: '16:00' }
-export const HOURS: { day: number; open: string; close: string }[] = [];
+// Horaires de la fiche Google de l'institut (06/11/2026) ; 1 = lundi … 7 = dimanche, un jour absent = fermé
+export const HOURS: { day: number; open: string; close: string }[] = [
+  { day: 1, open: '10:00', close: '15:00' }, { day: 1, open: '17:00', close: '19:00' },
+  { day: 2, open: '10:00', close: '15:00' }, { day: 2, open: '17:00', close: '19:00' },
+  { day: 3, open: '10:00', close: '11:00' }, { day: 3, open: '14:00', close: '18:00' },
+  { day: 4, open: '10:00', close: '15:00' }, { day: 4, open: '17:00', close: '20:00' },
+  { day: 5, open: '10:00', close: '15:00' },
+];
 const SCHEMA_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 export const openingHoursSchema = () =>
   HOURS.map((h) => ({ '@type': 'OpeningHoursSpecification', dayOfWeek: SCHEMA_DAYS[h.day - 1], opens: h.open, closes: h.close }));

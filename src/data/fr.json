@@ -14,7 +14,7 @@
    },
    {
     "href": "#package",
-    "label": "Tarif"
+    "label": "Tarifs"
    },
    {
     "href": "#gallery",
@@ -39,7 +39,9 @@
   "quickContact": "Contact rapide",
   "call": "Appeler",
   "moreInfo": "En savoir plus",
-  "back": "← Retour aux tarifs"
+  "back": "← Retour aux tarifs",
+  "book": "Prendre rendez-vous",
+  "bookShort": "Réserver"
  },
  "home": {
   "title": "Institut de beauté à Dilbeek — My Bubble Beauty",
@@ -96,7 +98,7 @@
     {
      "title": "Massage",
      "text": "Détendez-vous profondément avec nos massages relaxants et de bien-être.",
-     "href": "#tarif-rituel-douceur",
+     "href": "#tarif-massages",
      "link": "Voir les tarifs"
     },
     {
@@ -127,8 +129,8 @@
    "eyebrow": "Nos soins"
   },
   "tarifs": {
-   "title": "Tarif",
-   "intro": "Nous proposons aussi des formules d'abonnement pour certains soins.",
+   "title": "Tarifs",
+   "intro": "Nos soins à la carte, puis nos formules et nos cures pour aller plus loin.",
    "filtersLabel": "Filtrer les tarifs par catégorie",
    "filters": [
     {
@@ -143,8 +145,8 @@
     },
     {
      "key": "corps",
-     "label": "Corps & minceur",
-     "status": "Affichage : Corps & minceur"
+     "label": "Corps & silhouette",
+     "status": "Affichage : Corps & silhouette"
     },
     {
      "key": "sourire",
@@ -210,11 +212,6 @@
        "amount": "150 €"
       },
       {
-       "name": "Photothérapie",
-       "href": "photo",
-       "amount": "40 €"
-      },
-      {
        "name": "BB Glow",
        "href": "bbglow",
        "amount": "120 €"
@@ -227,83 +224,87 @@
      ]
     },
     {
-     "id": "beaute-minceur",
-     "cat": "corps",
-     "title": "Beauté minceur",
-     "href": null,
+     "id": "purete",
+     "cat": "visage",
+     "title": "Rituel Pureté",
+     "href": "brosse",
      "items": [
       {
-       "name": "Lipo-laser",
-       "href": "lipolaser",
+       "name": "Nettoyage",
+       "duration": "30 min",
+       "desc": "Brosse rotative",
+       "amount": "35 €"
+      },
+      {
+       "name": "Soin complet",
+       "duration": "45 min",
+       "desc": "Nettoyage, brosse rotative, masque et crème",
        "amount": "50 €"
-      },
-      {
-       "name": "Radiofréquence",
-       "href": "radiofrequence",
-       "amount": "50 €"
-      },
-      {
-       "name": "Vascslim",
-       "href": null,
-       "amount": "50 €"
-      },
-      {
-       "name": "Lift colombien",
-       "href": null,
-       "amount": "60 €"
-      },
-      {
-       "name": "Maderothérapie",
-       "href": "mado",
-       "amount": "75 €"
       }
      ]
     },
     {
-     "id": "hifu",
+     "id": "lumiere-led",
      "cat": "visage",
-     "title": "HIFU",
-     "href": "hifu",
+     "title": "Photothérapie LED",
+     "href": "photo",
      "items": [
       {
-       "name": "Haut du visage",
-       "href": null,
-       "amount": "250 €"
+       "name": "Éclat & Jeunesse",
+       "duration": "20 min",
+       "desc": "Lumière rouge, peaux matures ou ternes",
+       "amount": "25 €"
       },
       {
-       "name": "Visage complet",
-       "href": null,
-       "amount": "500 €"
+       "name": "Pureté & Imperfections",
+       "duration": "20 min",
+       "desc": "Lumière bleue, peaux à imperfections",
+       "amount": "25 €"
       },
       {
-       "name": "Visage + décolleté",
-       "href": null,
-       "amount": "750 €"
+       "name": "Double Éclat",
+       "duration": "20 min",
+       "desc": "Lumière rouge et bleue",
+       "amount": "30 €"
       },
       {
-       "name": "Ventre + abdomen",
+       "name": "Lumière Signature",
+       "duration": "30 min",
+       "desc": "Lumières choisies selon votre peau",
+       "amount": "35 €"
+      }
+     ]
+    },
+    {
+     "id": "serum",
+     "cat": "visage",
+     "title": "Sérum",
+     "href": null,
+     "items": [
+      {
+       "name": "Anti-âge",
        "href": null,
-       "amount": "600 €"
+       "amount": "75 €"
       },
       {
-       "name": "Culotte de cheval",
+       "name": "Booster",
        "href": null,
-       "amount": "550 €"
+       "amount": "125 €"
       },
       {
-       "name": "Partie intime",
+       "name": "Vitaminé",
        "href": null,
-       "amount": "300 €"
+       "amount": "100 €"
       },
       {
-       "name": "Fesse",
+       "name": "Bien-être",
        "href": null,
-       "amount": "300 €"
+       "amount": "80 €"
       },
       {
-       "name": "Cuisse",
+       "name": "Mésothérapie",
        "href": null,
-       "amount": "300 €"
+       "amount": "180 €"
       }
      ]
     },
@@ -317,6 +318,106 @@
        "name": "1 séance",
        "href": null,
        "amount": "250 €"
+      }
+     ]
+    },
+    {
+     "id": "massages",
+     "cat": "corps",
+     "title": "Massages relaxants",
+     "href": "massages",
+     "intro": "Une parenthèse de douceur pour prendre soin du corps et apaiser l’esprit.",
+     "items": [
+      {
+       "name": "Chaleur & Détente",
+       "duration": "60 min",
+       "desc": "Pierres chaudes",
+       "amount": "85 €"
+      },
+      {
+       "name": "Bambou & Équilibre",
+       "duration": "60 min",
+       "desc": "Bois de bambou",
+       "amount": "80 €"
+      },
+      {
+       "name": "Or & Douceur",
+       "duration": "60 min",
+       "desc": "Huile d’argan",
+       "amount": "75 €"
+      },
+      {
+       "name": "Plume & Sérénité",
+       "duration": "45 min",
+       "desc": "Effleurage",
+       "amount": "65 €"
+      },
+      {
+       "name": "Maman Douceur",
+       "duration": "60 min",
+       "desc": "Massage prénatal",
+       "amount": "80 €"
+      }
+     ]
+    },
+    {
+     "id": "gommages",
+     "cat": "corps",
+     "title": "Gommages corps",
+     "href": "massages",
+     "intro": "Pour une peau douce, lisse et délicatement parfumée.",
+     "items": [
+      {
+       "name": "Lavande & Douceur",
+       "duration": "30 min",
+       "desc": "À la lavande",
+       "amount": "45 €"
+      },
+      {
+       "name": "Miel & Velours",
+       "duration": "30 min",
+       "desc": "Au miel",
+       "amount": "48 €"
+      }
+     ]
+    },
+    {
+     "id": "silhouette",
+     "cat": "corps",
+     "title": "Silhouette & bien-être",
+     "items": [
+      {
+       "name": "Madérothérapie",
+       "href": "mado",
+       "duration": "60 min",
+       "desc": "Massage aux instruments en bois",
+       "amount": "75 €"
+      },
+      {
+       "name": "Sculpt & Fermeté",
+       "href": "radiofrequence",
+       "duration": "30 min",
+       "desc": "Vacuum et radiofréquence",
+       "amount": "50 €"
+      },
+      {
+       "name": "Sculpt & Fermeté",
+       "href": "radiofrequence",
+       "duration": "60 min",
+       "amount": "80 €"
+      },
+      {
+       "name": "Lipo Lumière",
+       "href": "lipolaser",
+       "duration": "30 min",
+       "desc": "Chaud, froid et lumière rouge",
+       "amount": "45 €"
+      },
+      {
+       "name": "Lipo Lumière",
+       "href": "lipolaser",
+       "duration": "60 min",
+       "amount": "70 €"
       }
      ]
     },
@@ -335,59 +436,6 @@
        "name": "2 séances",
        "href": null,
        "amount": "120 €"
-      }
-     ]
-    },
-    {
-     "id": "epilation-definitive",
-     "cat": "epilation",
-     "title": "Épilation laser longue durée",
-     "href": "laserepilation",
-     "items": [
-      {
-       "name": "Menton",
-       "href": null,
-       "amount": "50 €"
-      },
-      {
-       "name": "Lèvre supérieure",
-       "href": null,
-       "amount": "50 €"
-      },
-      {
-       "name": "Visage complet",
-       "href": null,
-       "amount": "120 €"
-      },
-      {
-       "name": "Aisselles",
-       "href": null,
-       "amount": "90 €"
-      },
-      {
-       "name": "Avant-bras",
-       "href": null,
-       "amount": "110 €"
-      },
-      {
-       "name": "Bras complet",
-       "href": null,
-       "amount": "180 €"
-      },
-      {
-       "name": "Bikini",
-       "href": null,
-       "amount": "100 €"
-      },
-      {
-       "name": "Demi-jambes",
-       "href": null,
-       "amount": "180 €"
-      },
-      {
-       "name": "Jambes complètes",
-       "href": null,
-       "amount": "250 €"
       }
      ]
     },
@@ -411,44 +459,6 @@
        "name": "Aloe vera",
        "href": null,
        "amount": "12,50 €"
-      }
-     ]
-    },
-    {
-     "id": "detatouage",
-     "cat": "epilation",
-     "title": "Détatouage",
-     "href": null,
-     "items": [
-      {
-       "name": "Détatouage XS",
-       "href": null,
-       "amount": "99 €"
-      },
-      {
-       "name": "Détatouage S",
-       "href": null,
-       "amount": "149 €"
-      },
-      {
-       "name": "Détatouage M",
-       "href": null,
-       "amount": "199 €"
-      },
-      {
-       "name": "Détatouage L",
-       "href": null,
-       "amount": "249 €"
-      },
-      {
-       "name": "Détatouage XL",
-       "href": null,
-       "amount": "299 €"
-      },
-      {
-       "name": "Détatouage XXL",
-       "href": null,
-       "amount": "399 €"
       }
      ]
     },
@@ -511,45 +521,88 @@
      ]
     },
     {
-     "id": "rituel-douceur",
-     "cat": "corps",
-     "title": "Rituel douceur",
-     "href": null,
+     "id": "epilation-definitive",
+     "cat": "epilation",
+     "title": "Épilation laser longue durée",
+     "href": "laserepilation",
      "items": [
       {
-       "name": "À l'argan",
-       "href": null,
-       "amount": "65 €"
-      },
-      {
-       "name": "À la bougie",
-       "href": null,
-       "amount": "70 €"
-      },
-      {
-       "name": "Bois de bambou",
-       "href": null,
-       "amount": "70 €"
-      },
-      {
-       "name": "Massage dos",
+       "name": "Menton",
        "href": null,
        "amount": "50 €"
       },
       {
-       "name": "Massage prénatal",
+       "name": "Lèvre supérieure",
+       "href": null,
+       "amount": "50 €"
+      },
+      {
+       "name": "Visage complet",
+       "href": null,
+       "amount": "120 €"
+      },
+      {
+       "name": "Aisselles",
        "href": null,
        "amount": "90 €"
       },
       {
-       "name": "Pierres chauffantes",
+       "name": "Avant-bras",
        "href": null,
-       "amount": "90 €"
+       "amount": "110 €"
       },
       {
-       "name": "Huile essentielle",
+       "name": "Bras complet",
        "href": null,
-       "amount": "70 €"
+       "amount": "180 €"
+      },
+      {
+       "name": "Bikini",
+       "href": null,
+       "amount": "100 €"
+      },
+      {
+       "name": "Demi-jambes",
+       "href": null,
+       "amount": "180 €"
+      },
+      {
+       "name": "Jambes complètes",
+       "href": null,
+       "amount": "250 €"
+      }
+     ]
+    },
+    {
+     "id": "electrolyse",
+     "cat": "epilation",
+     "title": "Électrolyse",
+     "href": null,
+     "items": [
+      {
+       "name": "5 minutes",
+       "href": null,
+       "amount": "15 €"
+      },
+      {
+       "name": "10 minutes",
+       "href": null,
+       "amount": "25 €"
+      },
+      {
+       "name": "20 minutes",
+       "href": null,
+       "amount": "45 €"
+      },
+      {
+       "name": "25 minutes",
+       "href": null,
+       "amount": "50 €"
+      },
+      {
+       "name": "30 minutes",
+       "href": null,
+       "amount": "60 €"
       }
      ]
     },
@@ -631,121 +684,128 @@
        "amount": "25 €"
       }
      ]
-    },
+    }
+   ],
+   "eyebrow": "Nos tarifs",
+   "partPresta": "Prestations",
+   "partFormules": "Formules & cures",
+   "formulas": [
     {
-     "id": "serum",
+     "id": "combines-visage",
      "cat": "visage",
-     "title": "Sérum",
-     "href": null,
+     "title": "Soins visage combinés",
+     "intro": "45 à 60 minutes selon la formule.",
      "items": [
       {
-       "name": "Anti-âge",
-       "href": null,
-       "amount": "75 €"
+       "name": "Pureté & Lumière",
+       "detail": "Brosse rotative + LED",
+       "amount": "60 €"
       },
       {
-       "name": "Booster",
-       "href": null,
-       "amount": "125 €"
+       "name": "Éclat & Jeunesse",
+       "detail": "Nettoyage + masque + LED rouge",
+       "amount": "70 €",
+       "was": "75 €",
+       "note": "5 € d’économie (–7 %)"
       },
       {
-       "name": "Vitaminé",
-       "href": null,
-       "amount": "100 €"
-      },
-      {
-       "name": "Bien-être",
-       "href": null,
-       "amount": "80 €"
-      },
-      {
-       "name": "Mésothérapie",
-       "href": null,
-       "amount": "180 €"
+       "name": "Peau Nette",
+       "detail": "Nettoyage + LED bleue",
+       "amount": "60 €"
       }
      ]
     },
     {
-     "id": "huile-corps",
+     "id": "cures-led",
+     "cat": "visage",
+     "title": "Cures photothérapie LED",
+     "href": "photo",
+     "items": [
+      {
+       "name": "Cure Éclat",
+       "detail": "5 séances",
+       "duration": "5 × 20 min",
+       "amount": "110 €",
+       "note": "22 € la séance · 15 € d’économie (–12 %)",
+       "was": "125 €"
+      },
+      {
+       "name": "Cure Beauté",
+       "detail": "10 séances",
+       "duration": "10 × 20 min",
+       "amount": "200 €",
+       "note": "20 € la séance · 50 € d’économie (–20 %)",
+       "was": "250 €",
+       "badge": "Meilleur prix par séance"
+      },
+      {
+       "name": "Cure Signature",
+       "detail": "10 séances personnalisées",
+       "duration": "10 × 30 min",
+       "amount": "280 €",
+       "note": "28 € la séance · 70 € d’économie (–20 %)",
+       "was": "350 €"
+      }
+     ]
+    },
+    {
+     "id": "rituels-signature",
      "cat": "corps",
-     "title": "Huile corps",
-     "href": null,
+     "title": "Rituels signature",
+     "href": "massages",
+     "intro": "Un gommage puis un massage, pour prolonger le plaisir.",
      "items": [
       {
-       "name": "Massage",
-       "href": null,
-       "amount": "50 €"
+       "name": "Éveil des Sens",
+       "detail": "Gommage lavande + massage par effleurage",
+       "amount": "105 €",
+       "was": "110 €",
+       "note": "5 € d’économie (–5 %)"
       },
       {
-       "name": "Anti-cellulite",
-       "href": null,
-       "amount": "75 €"
+       "name": "Douceur Précieuse",
+       "detail": "Gommage miel + massage à l’huile d’argan",
+       "amount": "115 €",
+       "was": "123 €",
+       "note": "8 € d’économie (–7 %)"
       },
       {
-       "name": "Amincissante",
-       "href": null,
-       "amount": "90 €"
-      },
-      {
-       "name": "Bien-être",
-       "href": null,
-       "amount": "60 €"
+       "name": "Évasion Absolue",
+       "detail": "Gommage au choix + massage aux pierres chaudes",
+       "amount": "125 €",
+       "was": "130 €",
+       "note": "5 € d’économie (–4 %)"
       }
      ]
     },
     {
-     "id": "gommage",
-     "cat": "visage",
-     "title": "Gommage",
-     "href": null,
+     "id": "cures-maderotherapie",
+     "cat": "corps",
+     "title": "Cures madérothérapie",
+     "href": "mado",
      "items": [
       {
-       "name": "Gommage visage",
-       "href": null,
-       "amount": "35 €"
+       "name": "Cure 5 séances",
+       "detail": "Rituel Silhouette",
+       "duration": "5 × 60 min",
+       "amount": "340 €",
+       "note": "68 € la séance · 35 € d’économie (–9 %)",
+       "was": "375 €"
       },
       {
-       "name": "Gommage corps (selon le type de peau)",
-       "href": null,
-       "amount": "25 €"
-      }
-     ]
-    },
-    {
-     "id": "electrolyse",
-     "cat": "epilation",
-     "title": "Électrolyse",
-     "href": null,
-     "items": [
-      {
-       "name": "5 minutes",
-       "href": null,
-       "amount": "15 €"
-      },
-      {
-       "name": "10 minutes",
-       "href": null,
-       "amount": "25 €"
-      },
-      {
-       "name": "20 minutes",
-       "href": null,
-       "amount": "45 €"
-      },
-      {
-       "name": "25 minutes",
-       "href": null,
-       "amount": "50 €"
-      },
-      {
-       "name": "30 minutes",
-       "href": null,
-       "amount": "60 €"
+       "name": "Cure 10 séances",
+       "detail": "Rituel Silhouette",
+       "duration": "10 × 60 min",
+       "amount": "650 €",
+       "note": "65 € la séance · 100 € d’économie (–13 %)",
+       "was": "750 €",
+       "badge": "Meilleur prix par séance"
       }
      ]
     }
    ],
-   "eyebrow": "Nos tarifs"
+   "wasLabel": "au lieu de",
+   "book": "Réserver"
   },
   "gallery": {
    "title": "Galerie",
@@ -916,55 +976,6 @@
     }
    ]
   },
-  "hifu": {
-   "title": "Le HIFU en esthétique",
-   "metaTitle": "Le HIFU en esthétique — My Bubble Beauty",
-   "description": "Le HIFU, ou High-Intensity Focused Ultrasound, chauffe par ultrasons focalisés les tissus sous la peau et stimule la production de collagène.",
-   "articleHtml": "<p>Le HIFU, ou High-Intensity Focused Ultrasound, est une technologie qui utilise des ultrasons focalisés de haute intensité pour chauffer les tissus sous-cutanés à des profondeurs spécifiques sans endommager, en principe, la surface de la peau. Cette chaleur induit une réaction de coagulation dans les tissus, stimulant ainsi la production de collagène et pouvant améliorer la fermeté de la peau.</p><h2>Applications en esthétique</h2><p>Le HIFU est utilisé en esthétique pour répondre à diverses préoccupations cutanées et à des objectifs de rajeunissement, notamment le raffermissement de la peau, la réduction des rides et ridules, ainsi que le lifting non chirurgical. Il peut aider à réduire le relâchement cutané et à améliorer la fermeté de la peau du visage, du cou et d'autres zones du corps. Le HIFU peut atténuer l'apparence des rides et des ridules en stimulant la production de collagène. Il est parfois appelé « lifting HIFU » en raison de ses effets raffermissants, obtenus sans chirurgie et en général sans temps de récupération significatif. Il ne remplace cependant pas un lifting chirurgical.</p><h2>Déroulement du soin</h2><p>Pendant une séance de HIFU, un dispositif émet des ultrasons focalisés de haute intensité à des profondeurs précises dans les tissus ciblés. Cette énergie ultrasonore chauffe les tissus sous-cutanés, stimulant la production de collagène. Les résultats ne sont généralement pas immédiats, mais s'améliorent progressivement au fil des semaines et des mois à mesure que le collagène se régénère.</p><h2>Sécurité et confort</h2><p>Le HIFU est considéré comme un soin non invasif et présente généralement peu d'effets secondaires. Vous pouvez ressentir une sensation de chaleur pendant la séance, mais le soin est le plus souvent bien toléré et ne nécessite généralement pas d'anesthésie.</p><h2>Nombre de séances</h2><p>Le nombre de séances nécessaires dépend du traitement spécifique et de vos objectifs. En général, plusieurs séances peuvent être recommandées pour obtenir les meilleurs résultats.</p><h2>Résultats</h2><p>Les résultats du HIFU sont progressifs et peuvent durer plusieurs mois. La peau peut gagner en fermeté, les rides peuvent être atténuées, et le visage peut paraître plus tonique.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><p>Le HIFU est une option prisée en esthétique pour qui souhaite raffermir la peau sans chirurgie. Cependant, comme pour tout soin esthétique, il est important de consulter un professionnel de la santé qualifié pour discuter des options appropriées en fonction de vos besoins individuels et pour vous assurer que le HIFU est la meilleure solution pour vous.</p><p class=\"video-link\"><a class=\"btn btn--ghost\" href=\"https://www.youtube.com/watch?v=8P2RqfhO8i0\" rel=\"noopener\">Voir la vidéo sur YouTube</a> <small>La vidéo s'ouvre sur YouTube.</small></p>",
-   "priceTitle": "Tarif — HIFU",
-   "prices": [
-    {
-     "name": "Haut du visage",
-     "amount": "250 €"
-    },
-    {
-     "name": "Visage complet",
-     "amount": "500 €"
-    },
-    {
-     "name": "Visage + décolleté",
-     "amount": "750 €"
-    },
-    {
-     "name": "Ventre + abdomen",
-     "amount": "600 €"
-    },
-    {
-     "name": "Culotte de cheval",
-     "amount": "550 €"
-    },
-    {
-     "name": "Partie intime",
-     "amount": "300 €"
-    },
-    {
-     "name": "Fesse",
-     "amount": "300 €"
-    },
-    {
-     "name": "Cuisse",
-     "amount": "300 €"
-    }
-   ],
-   "figures": [
-    {
-     "src": "soins/hifu.webp",
-     "w": 800,
-     "h": 800,
-     "alt": "Schéma d'un appareil HIFU et des couches de la peau qu'il cible"
-    }
-   ]
-  },
   "hydra": {
    "title": "HydraFacial",
    "metaTitle": "HydraFacial — My Bubble Beauty",
@@ -1070,15 +1081,19 @@
    ]
   },
   "lipolaser": {
-   "title": "La lipo laser",
-   "metaTitle": "La lipo laser — My Bubble Beauty",
-   "description": "La lipolyse laser, ou « lipo laser », est un soin esthétique non invasif qui vise à réduire la graisse corporelle sur des zones ciblées comme l'abdomen.",
-   "articleHtml": "<p>Le traitement de lipolyse laser, communément appelé « lipo laser », est un soin esthétique non invasif qui vise à réduire la graisse corporelle, principalement dans des zones ciblées comme l'abdomen, les cuisses, les bras ou les flancs. Voici comment fonctionne généralement un traitement de lipo laser :</p><h2>Consultation initiale</h2><p>Avant de subir un traitement de lipo laser, vous aurez une consultation initiale avec un professionnel de l'esthétique. Lors de cette consultation, vos objectifs de perte de graisse et les zones à traiter seront discutés, et des mesures de base de votre santé et de votre condition physique seront prises en compte.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><h2>Préparation</h2><p>Le jour du soin, la zone à traiter sera nettoyée. Des photographies peuvent être prises pour suivre les progrès au fil du temps.</p><h2>Application des lasers</h2><p>Les appareils de lipo laser contiennent des diodes qui émettent une lumière laser de faible intensité. Ils sont placés directement sur la peau de la zone à traiter. Ces lasers émettent des longueurs d'onde spécifiques qui sont absorbées par les cellules graisseuses situées sous la peau.</p><h2>Action sur les cellules graisseuses</h2><p>Les lasers visent à stimuler les cellules graisseuses pour favoriser la libération de leur contenu. Ce processus s'appelle la lipolyse, ce qui signifie que les cellules graisseuses libèrent leurs triglycérides sous forme d'acides gras et de glycérol.</p><h2>Élimination des graisses</h2><p>Les acides gras et le glycérol libérés pendant la lipolyse sont naturellement éliminés par le corps. Cela peut se produire par le système lymphatique et le foie.</p><h2>Après le traitement</h2><p>Après la séance de lipo laser, il est souvent recommandé de faire de l'exercice physique pour aider à brûler les graisses libérées. Il est également important de maintenir une hydratation adéquate pour faciliter l'élimination des graisses.</p><h2>Séances multiples</h2><p>Un seul traitement de lipo laser peut donner des résultats légers, de sorte que plusieurs séances sont généralement nécessaires pour espérer des résultats plus visibles, qui varient d'une personne à l'autre. Ces séances sont généralement espacées de quelques semaines.</p><p>Il est important de noter que la lipo laser est destinée à réduire la graisse corporelle, mais elle n'est pas un substitut à une alimentation équilibrée et à l'exercice physique. Pour conserver les résultats, il est essentiel de maintenir un mode de vie sain.</p>",
-   "priceTitle": "Tarif",
+   "title": "Lipo Lumière : chaud, froid et lumière rouge",
+   "metaTitle": "Lipo Lumière, plaquettes chaud, froid et lumière rouge — My Bubble Beauty",
+   "description": "Un soin du corps non invasif avec des plaquettes qui associent chaud, froid et lumière rouge, sur le ventre, les hanches, les cuisses ou les bras. Tarifs.",
+   "articleHtml": "<p>Le Rituel Lipo Lumière utilise des plaquettes posées sur les zones choisies : ventre, hanches, cuisses ou bras. L’appareil associe des fonctions de chaud et de froid à la lumière rouge.</p><h2>Les bénéfices recherchés</h2><ul><li>Un soin non invasif, sans massage mécanique.</li><li>Un moment de confort sur les zones traitées.</li><li>Un complément à vos soins silhouette.</li></ul><p>Le chaud, le froid et la lumière rouge n’agissent pas de la même façon. Ce soin ne fait pas perdre de poids et ses résultats ne sont pas garantis.</p><h2>Déroulement</h2><p>La séance dure 30 ou 60 minutes, selon le nombre de zones.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
+   "priceTitle": "Tarifs",
    "prices": [
     {
-     "name": "Lipo-laser",
-     "amount": "50 €"
+     "name": "Lipo Lumière (30 min)",
+     "amount": "45 €"
+    },
+    {
+     "name": "Lipo Lumière (60 min)",
+     "amount": "70 €"
     }
    ],
    "figures": [
@@ -1091,15 +1106,23 @@
    ]
   },
   "mado": {
-   "title": "La maderothérapie",
-   "metaTitle": "La maderothérapie — My Bubble Beauty",
-   "description": "La maderothérapie est un massage aux outils en bois qui vise à lisser la peau et à atténuer l'aspect de la cellulite. Découvrez le déroulement et le tarif.",
-   "articleHtml": "<p>La maderothérapie est une technique de massage et de remodelage corporel qui utilise des outils en bois spécialement conçus, tels que des rouleaux, des bâtons et des cuillères en bois, pour améliorer la texture de la peau, atténuer l'aspect de la cellulite et favoriser la relaxation. Le terme « maderothérapie » provient du mot espagnol « madera », qui signifie bois, et de « thérapie ».</p><h2>Préparation</h2><p>Avant le traitement, le praticien discute avec vous de vos objectifs et de vos préoccupations. Ensuite, une huile de massage ou une lotion est appliquée sur la peau pour faciliter le glissement des outils en bois.</p><h2>Massage avec des outils en bois</h2><p>Le praticien utilise des outils en bois spécialement conçus pour effectuer différents types de mouvements de massage. Ces outils en bois ont des formes et des tailles variées, adaptées à différentes parties du corps et à différentes techniques de massage. Les mouvements peuvent être de type palper-rouler, pétrissage, pression ou des mouvements circulaires, en fonction des objectifs du traitement.</p><h2>Effets</h2><p>La maderothérapie vise à travailler les zones de rondeurs localisées, à lisser la peau, à améliorer sa texture et à favoriser la détente musculaire. Elle peut également être utilisée pour cibler des zones du corps sujettes à la cellulite.</p><h2>Séances multiples</h2><p>Pour obtenir des résultats optimaux, il est généralement nécessaire de suivre plusieurs séances de maderothérapie. La fréquence des séances dépend de vos objectifs et de l'état de votre peau.</p><p>La maderothérapie est souvent considérée comme un traitement non invasif et relaxant, bien que les sensations pendant le traitement puissent varier en fonction de la pression exercée et des zones traitées. Les avantages de la maderothérapie peuvent inclure une peau plus ferme et plus tonique ainsi qu'une réduction de l'apparence de la cellulite.</p><p>Comme pour tout traitement esthétique, il est recommandé de consulter un professionnel qualifié pour discuter de vos besoins spécifiques, des avantages et des risques potentiels de la maderothérapie, ainsi que pour déterminer si ce traitement est adapté à votre situation.</p>",
-   "priceTitle": "Tarif",
+   "title": "La madérothérapie",
+   "metaTitle": "La madérothérapie, Rituel Silhouette — My Bubble Beauty",
+   "description": "La madérothérapie est un massage aux instruments en bois, tonifiant et profond, qui travaille l’aspect de la peau. Déroulement, cures et tarifs.",
+   "articleHtml": "<p>La madérothérapie est une technique de massage d’origine colombienne. Elle utilise des instruments en bois conçus pour travailler les différentes zones du corps.</p><p>Les mouvements sont précis, rythmés et répétés. Ils massent les tissus, stimulent la circulation locale et travaillent l’aspect de la peau. C’est un soin apprécié pour son effet tonifiant et son massage profond.</p><h2>Les bienfaits</h2><ul><li><strong>Circulation</strong> : favorise la circulation sanguine et lymphatique locale.</li><li><strong>Aspect de la peau</strong> : peut rendre la peau visuellement plus lisse.</li><li><strong>Peau d’orange</strong> : peut améliorer temporairement l’aspect de la cellulite.</li><li><strong>Drainage</strong> : les mouvements aident à mobiliser les fluides superficiels.</li><li><strong>Tonicité</strong> : donne une sensation de tonicité et de légèreté.</li><li><strong>Détente</strong> : procure la sensation d’un massage profond.</li></ul><p>La madérothérapie ne fait pas perdre de graisse. Elle ne garantit pas une réduction durable des centimètres. Les résultats varient d’une personne à l’autre.</p><h2>Déroulement</h2><p>Avant la première séance, nous faisons un petit bilan. Nous choisissons ensemble les zones à travailler : ventre, cuisses, fesses, hanches ou bras. La pression est adaptée à votre sensibilité.</p><p>Une séance dure 60 minutes, pour travailler plusieurs zones dans de bonnes conditions. En cure de 5 ou 10 séances, nous laissons assez de temps entre deux séances selon la réaction de votre peau. Nous suivons l’évolution avec vous.</p><h2>Précautions</h2><p>Une pression trop forte peut provoquer des douleurs ou des bleus. Le soin n’est pas réalisé sur une zone avec une inflammation, une lésion ou un problème vasculaire sans avis médical. Un questionnaire est rempli avant la première séance.</p><h2>Ce que vous pouvez attendre</h2><ul><li>Une sensation de jambes plus légères.</li><li>Un moment de détente et de massage profond.</li><li>Une amélioration temporaire possible de l’aspect peau d’orange.</li><li>Une peau qui peut paraître plus lisse après le massage.</li></ul>",
+   "priceTitle": "Tarifs",
    "prices": [
     {
-     "name": "Maderothérapie",
+     "name": "Séance (60 min)",
      "amount": "75 €"
+    },
+    {
+     "name": "Cure 5 séances",
+     "amount": "340 €"
+    },
+    {
+     "name": "Cure 10 séances",
+     "amount": "650 €"
     }
    ],
    "figures": [
@@ -1184,15 +1207,39 @@
    ]
   },
   "photo": {
-   "title": "La photothérapie",
-   "metaTitle": "La photothérapie — My Bubble Beauty",
-   "description": "La photothérapie, ou thérapie par la lumière, est utilisée en esthétique pour améliorer l'aspect de la peau. Découvrez le déroulement et le tarif.",
-   "articleHtml": "<p>La photothérapie, également connue sous le nom de thérapie par la lumière, est une technique utilisée en esthétique pour améliorer l'aspect de la peau et atténuer l'apparence de diverses imperfections, en utilisant différentes longueurs d'onde de lumière. La photothérapie peut être réalisée à l'aide de divers dispositifs, notamment des lampes LED ou des lasers. Voici comment fonctionne généralement la photothérapie en esthétique :</p><h2>Sélection de la longueur d'onde</h2><p>La photothérapie repose sur l'utilisation d'une lumière à une longueur d'onde spécifique, en fonction de l'objectif du traitement. Différentes longueurs d'onde ciblent différents problèmes de peau. Par exemple, la lumière rouge est souvent utilisée pour stimuler la production de collagène et améliorer la texture de la peau, tandis que la lumière bleue est utilisée pour aider à purifier les peaux à tendance acnéique.</p><h2>Préparation de la peau</h2><p>Avant la photothérapie, la peau doit être propre et exempte de produits cosmétiques. Les clients portent souvent des lunettes de protection pour protéger leurs yeux de la lumière intense.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><h2>Séance de photothérapie</h2><p>Le professionnel de l'esthétique utilise l'appareil de photothérapie pour exposer la peau à la lumière à la longueur d'onde spécifique pendant une période déterminée. La lumière est généralement appliquée uniformément sur la zone à traiter.</p><h2>Réponse de la peau</h2><p>La lumière pénètre dans la peau et interagit avec les cellules cibles, ce qui peut avoir plusieurs effets bénéfiques, tels que la stimulation de la production de collagène, l'apaisement de la peau, la purification des peaux à tendance acnéique, ou l'atténuation de l'aspect d'une pigmentation excessive.</p><h2>Soin post-traitement</h2><p>Après la séance de photothérapie, il peut être nécessaire d'appliquer des produits topiques apaisants ou hydratants pour calmer la peau et minimiser les irritations. Une protection solaire est également importante après le traitement, car la peau peut être plus sensible aux dommages causés par le soleil.</p><h2>Résultats</h2><p>La photothérapie est utilisée pour améliorer l'aspect de nombreux problèmes de peau, notamment les peaux à tendance acnéique, les rides, les taches pigmentaires et les cicatrices. Les avantages de la photothérapie comprennent généralement un temps de récupération court, voire nul, et des résultats progressifs.</p><h2>Durée</h2><p>La durée du traitement et le nombre de séances nécessaires varient en fonction de l'objectif du soin et de la réaction individuelle de la peau. Il est important de consulter un professionnel de l'esthétique qualifié pour discuter de vos besoins spécifiques et déterminer si la photothérapie est appropriée pour vous.</p>",
-   "priceTitle": "Tarif",
+   "title": "La photothérapie LED",
+   "metaTitle": "La photothérapie LED — My Bubble Beauty",
+   "description": "Un soin non invasif à la lumière LED rouge ou bleue, pour accompagner les peaux ternes, matures ou à imperfections. Rituels, cures et tarifs.",
+   "articleHtml": "<p>La photothérapie LED est un soin non invasif. Elle utilise différentes couleurs de lumière pour accompagner les besoins de la peau. Elle est appréciée pour les soins anti-âge, les peaux à imperfections et les peaux qui présentent des rougeurs.</p><h2>Les couleurs de lumière</h2><p><strong>Lumière rouge, éclat et fermeté.</strong> Elle accompagne les soins anti-âge. Elle peut améliorer l’apparence des ridules, la texture et la fermeté de la peau.</p><p><strong>Lumière bleue, pureté.</strong> Elle accompagne les peaux grasses et à tendance acnéique. Elle peut aider à réduire les imperfections.</p><p><strong>Lumière jaune, éclat et apaisement.</strong> Elle accompagne les peaux ternes et peut améliorer l’aspect des rougeurs.</p><p><strong>Lumière verte, uniformité du teint.</strong> Elle accompagne les teints irréguliers et peut travailler l’apparence des taches pigmentaires.</p><p>Les effets dépendent de la lumière, de la puissance et du protocole. Ils ne sont pas les mêmes pour toutes les couleurs ni pour toutes les peaux. Les résultats varient d’une personne à l’autre.</p><h2>Nos rituels lumière</h2><ul><li><strong>Éclat & Jeunesse</strong> (20 min) : lumière rouge, pour les peaux matures ou ternes.</li><li><strong>Pureté & Imperfections</strong> (20 min) : lumière bleue, pour les peaux grasses à imperfections.</li><li><strong>Double Éclat</strong> (20 min) : les deux lumières, pour les peaux qui ont à la fois des imperfections et des signes de fatigue.</li><li><strong>Lumière Signature</strong> (30 min) : lumière rouge, bleue ou les deux, choisies selon les besoins de votre peau.</li></ul><h2>Les cures</h2><p>La cure Éclat compte 5 séances, la cure Beauté 10 séances. La cure Signature compte 10 séances personnalisées de 30 minutes. La LED peut aussi compléter un soin du visage dans nos formules combinées.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
+   "priceTitle": "Tarifs",
    "prices": [
     {
-     "name": "Photothérapie",
-     "amount": "40 €"
+     "name": "Éclat & Jeunesse (20 min)",
+     "amount": "25 €"
+    },
+    {
+     "name": "Pureté & Imperfections (20 min)",
+     "amount": "25 €"
+    },
+    {
+     "name": "Double Éclat (20 min)",
+     "amount": "30 €"
+    },
+    {
+     "name": "Lumière Signature (30 min)",
+     "amount": "35 €"
+    },
+    {
+     "name": "Cure Éclat (5 séances)",
+     "amount": "110 €"
+    },
+    {
+     "name": "Cure Beauté (10 séances)",
+     "amount": "200 €"
+    },
+    {
+     "name": "Cure Signature (10 × 30 min)",
+     "amount": "280 €"
     }
    ],
    "figures": [
@@ -1226,15 +1273,19 @@
    ]
   },
   "radiofrequence": {
-   "title": "La radiofréquence",
-   "metaTitle": "La radiofréquence — My Bubble Beauty",
-   "description": "La radiofréquence est une technologie esthétique qui utilise des ondes électromagnétiques pour chauffer en douceur les couches profondes de la peau.",
-   "articleHtml": "<p>La radiofréquence est une technologie esthétique qui utilise des ondes électromagnétiques pour chauffer en douceur les couches profondes de la peau. Cette chaleur vise à stimuler la production de collagène, à activer la circulation sanguine et à favoriser le resserrement de la peau.</p><h2>Applications en esthétique</h2><p>La radiofréquence est utilisée en esthétique pour répondre à divers problèmes de peau et à des objectifs de rajeunissement, notamment le raffermissement de la peau, la réduction des rides et ridules, l'atténuation de l'aspect de la cellulite, ainsi que l'amélioration de la texture de la peau. Elle peut contribuer à réduire le relâchement cutané et à améliorer la fermeté. La production accrue de collagène aide à lisser les rides et les ridules. Elle peut aider à réduire l'apparence de la cellulite en stimulant la circulation et en favorisant le drainage lymphatique. La radiofréquence peut également améliorer la texture générale de la peau en atténuant l'apparence des cicatrices d'acné et des imperfections.</p><h2>Déroulement du soin</h2><p>Lors d'une séance de radiofréquence, un appareil émet des ondes électromagnétiques dans la peau ciblée. Cette énergie est convertie en chaleur, chauffant les tissus sous-cutanés en préservant autant que possible la surface de la peau. La chaleur vise à stimuler la production de collagène et le renouvellement naturel de la peau. Les résultats ne sont généralement pas immédiats, mais s'améliorent progressivement au fil du temps à mesure que le collagène se régénère.</p><h2>Sécurité et confort</h2><p>La radiofréquence est un soin non invasif, ce qui signifie qu'il ne nécessite pas de chirurgie ni d'incisions. Vous ressentez généralement une sensation de chaleur pendant la séance, mais le soin est le plus souvent bien toléré et ne nécessite pas d'anesthésie.</p><h2>Nombre de séances</h2><p>Le nombre de séances nécessaires dépend du traitement spécifique et de vos objectifs. En général, plusieurs séances peuvent être recommandées pour obtenir les meilleurs résultats.</p><h2>Résultats</h2><p>Les résultats de la radiofréquence en esthétique sont progressifs et peuvent durer plusieurs mois. La peau peut apparaître plus ferme, les rides atténuées et la texture générale de la peau améliorée.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><p>La radiofréquence est une option populaire en esthétique en raison des résultats qu'elle peut offrir et de son caractère non invasif. Elle est utilisée pour répondre à une variété de problèmes de peau et peut être une option non chirurgicale intéressante pour certaines personnes cherchant à améliorer leur apparence. Cependant, il est toujours recommandé de consulter un professionnel de l'esthétique qualifié avant tout soin esthétique pour discuter des options appropriées en fonction des besoins individuels.</p>",
-   "priceTitle": "Tarif",
+   "title": "Sculpt & Fermeté : vacuum et radiofréquence",
+   "metaTitle": "Sculpt & Fermeté, vacuum et radiofréquence — My Bubble Beauty",
+   "description": "Un soin du corps qui associe l’aspiration (vacuum) et la chaleur de la radiofréquence, pour une peau visuellement plus lisse et plus ferme. Tarifs.",
+   "articleHtml": "<p>Le Rituel Sculpt & Fermeté associe l’aspiration mécanique, le vacuum, et la radiofréquence. Le vacuum mobilise les tissus. La radiofréquence diffuse une chaleur contrôlée dans la zone traitée.</p><h2>Les bénéfices recherchés</h2><ul><li>Améliorer l’aspect de la cellulite.</li><li>Une peau visuellement plus lisse.</li><li>Une fermeté de la peau améliorée temporairement.</li><li>Une sensation de massage et de détente.</li></ul><p>Ce soin ne fait pas perdre de poids et ne retire pas de graisse. Les résultats varient d’une personne à l’autre.</p><h2>Déroulement</h2><p>La séance dure 30 ou 60 minutes, selon le nombre de zones à travailler.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
+   "priceTitle": "Tarifs",
    "prices": [
     {
-     "name": "Radiofréquence",
+     "name": "Sculpt & Fermeté (30 min)",
      "amount": "50 €"
+    },
+    {
+     "name": "Sculpt & Fermeté (60 min)",
+     "amount": "80 €"
     }
    ],
    "figures": [
@@ -1264,6 +1315,92 @@
      "w": 756,
      "h": 418,
      "alt": "Comparaison entre un nettoyage avec les mains et un nettoyage avec la brosse"
+    }
+   ]
+  },
+  "massages": {
+   "title": "Massages et gommages",
+   "metaTitle": "Massages et gommages corps — My Bubble Beauty",
+   "description": "Massages aux pierres chaudes, au bambou, à l’huile d’argan, par effleurage ou prénatal, gommages lavande et miel, rituels signature. Durées et tarifs.",
+   "articleHtml": "<p>Offrez-vous une parenthèse de douceur. Un instant précieux pour prendre soin de votre corps et apaiser votre esprit.</p><h2>Nos massages relaxants</h2><p><strong>Rituel Chaleur & Détente : massage aux pierres chaudes.</strong> Un massage profondément relaxant. La chaleur des pierres volcaniques s’associe à des mouvements enveloppants. Elle aide à relâcher les tensions musculaires et procure une sensation de bien-être absolu. 60 minutes.</p><p><strong>Rituel Bambou & Équilibre : massage au bois de bambou.</strong> Un massage rythmé et enveloppant, réalisé avec des bambous. Il travaille les tensions du corps, stimule les tissus et apporte une agréable sensation de légèreté. 60 minutes.</p><p><strong>Rituel Or & Douceur : massage à l’huile d’argan.</strong> Un massage délicat à l’huile d’argan, qui nourrit la peau et l’enveloppe de douceur. Ses gestes fluides invitent au lâcher-prise. 60 minutes.</p><p><strong>Rituel Plume & Sérénité : massage par effleurage.</strong> Des mouvements lents, légers et harmonieux. Une vraie invitation à la détente, pour apaiser le corps et l’esprit. 45 minutes.</p><p><strong>Rituel Maman Douceur : massage prénatal.</strong> Un moment dédié à la future maman. Des mouvements doux, adaptés à la grossesse, pour la détente et le confort. 60 minutes.</p><h2>Nos gommages corps</h2><p><strong>Rituel Lavande & Douceur.</strong> Un gommage délicatement parfumé à la lavande. Il aide à éliminer les cellules mortes et laisse la peau douce et soyeuse. 30 minutes.</p><p><strong>Rituel Miel & Velours.</strong> Un gommage gourmand qui associe la douceur du miel à un rituel délicat. La peau retrouve douceur, souplesse et confort. 30 minutes.</p><h2>Nos rituels signature</h2><p>Pour prolonger le plaisir, nous associons un gommage et un massage.</p><ul><li><strong>Éveil des Sens</strong> : gommage lavande et massage par effleurage.</li><li><strong>Douceur Précieuse</strong> : gommage miel et massage à l’huile d’argan.</li><li><strong>Évasion Absolue</strong> : gommage au choix et massage aux pierres chaudes.</li></ul><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
+   "priceTitle": "Tarifs",
+   "prices": [
+    {
+     "name": "Chaleur & Détente (60 min)",
+     "amount": "85 €"
+    },
+    {
+     "name": "Bambou & Équilibre (60 min)",
+     "amount": "80 €"
+    },
+    {
+     "name": "Or & Douceur (60 min)",
+     "amount": "75 €"
+    },
+    {
+     "name": "Plume & Sérénité (45 min)",
+     "amount": "65 €"
+    },
+    {
+     "name": "Maman Douceur (60 min)",
+     "amount": "80 €"
+    },
+    {
+     "name": "Lavande & Douceur (30 min)",
+     "amount": "45 €"
+    },
+    {
+     "name": "Miel & Velours (30 min)",
+     "amount": "48 €"
+    },
+    {
+     "name": "Éveil des Sens",
+     "amount": "105 €"
+    },
+    {
+     "name": "Douceur Précieuse",
+     "amount": "115 €"
+    },
+    {
+     "name": "Évasion Absolue",
+     "amount": "125 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "cartes/massage.webp",
+     "w": 720,
+     "h": 540,
+     "alt": "Massage du dos en cabine"
+    }
+   ]
+  },
+  "brosse": {
+   "title": "Rituel Pureté : la brosse rotative",
+   "metaTitle": "Rituel Pureté, soin visage à la brosse rotative — My Bubble Beauty",
+   "description": "Un soin du visage nettoyant et exfoliant à la brosse rotative, pour une peau plus douce et plus lumineuse. Bienfaits, types de peau et tarifs.",
+   "articleHtml": "<p>Le Rituel Pureté est un soin du visage à la brosse rotative. La brosse réalise un nettoyage mécanique et une exfoliation superficielle. Elle débarrasse la peau des impuretés et des cellules mortes accumulées à sa surface.</p><h2>Les bienfaits du soin</h2><ul><li>Élimine les cellules mortes en surface.</li><li>Aide à désincruster les impuretés.</li><li>Affine visuellement le grain de peau.</li><li>Rend la peau plus douce et plus lisse.</li><li>Apporte de l’éclat au teint.</li><li>Prépare la peau à recevoir les soins.</li><li>Aide à améliorer l’aspect des zones rugueuses.</li></ul><h2>Deux formules</h2><p>Le nettoyage dure 30 minutes. Le soin complet dure 45 minutes : nettoyage, brosse rotative, masque adapté et crème de finition. Le soin peut aussi se combiner avec la photothérapie LED.</p><h2>Pour quels types de peau ?</h2><p>Le soin convient aux peaux normales, mixtes et épaisses, selon leur sensibilité. Nous l’évitons sur les peaux très sensibles ou irritées, ou en cas de couperose marquée, de rosacée inflammatoire, d’eczéma, de lésions ou d’acné inflammatoire importante.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
+   "priceTitle": "Tarifs",
+   "prices": [
+    {
+     "name": "Nettoyage (30 min)",
+     "amount": "35 €"
+    },
+    {
+     "name": "Soin complet (45 min)",
+     "amount": "50 €"
+    },
+    {
+     "name": "Pureté & Lumière (brosse + LED)",
+     "amount": "60 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "cartes/visage.webp",
+     "w": 720,
+     "h": 540,
+     "alt": "Soin du visage en cabine"
     }
    ]
   }

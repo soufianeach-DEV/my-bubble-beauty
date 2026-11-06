@@ -75,6 +75,9 @@ if(!CSS.supports('animation-timeline','view()')){
 }
 readK();reduced.addEventListener('change',()=>{readK();px&&px()});
 
+/* 4b. Horaires : le jour courant (heure de Bruxelles) est mis en évidence */
+{const day=new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/Brussels",weekday:"short"}).format(new Date()),n=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].indexOf(day)+1;const li=d.querySelector(`.hours li[data-day="${n}"]`);li&&(li.classList.add("is-today"),li.setAttribute("aria-current","date"))}
+
 /* 5. Filtres des tarifs */
 const fl=d.querySelector('.filters');
 if(fl){
@@ -82,7 +85,7 @@ if(fl){
   const pick=(b,say)=>{if(!b)return;fl.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
     /* Rangée défilante sur mobile : la puce choisie revient au centre si elle est hors de vue */
     const r=b.getBoundingClientRect(),q=fl.getBoundingClientRect();(r.left<q.left||r.right>q.right)&&(fl.scrollLeft+=r.left-q.left-(q.width-r.width)/2);
-    const f=b.dataset.filter;groups.forEach(g=>g.hidden=f!=='all'&&g.dataset.cat!==f);
+    const f=b.dataset.filter;groups.forEach(g=>g.hidden=f!=='all'&&g.dataset.cat!==f);d.querySelectorAll('.tarifs__part').forEach(p=>p.hidden=!p.querySelector('.price-group:not([hidden])'));
     say&&st&&(st.textContent=b.dataset.status||'')};
   /* Le filtre marqué dans le HTML (Visage) s'applique dès le chargement */
   pick(fl.querySelector('[aria-pressed="true"]')||fl.querySelector('button'));
