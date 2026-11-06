@@ -29,7 +29,10 @@ test('prestation : durée exigée pour l\'ouvrir, montants convertis', () => {
   const base = { id: '7', name_fr: 'Soin', name_nl: 'Verzorging', name_en: 'Care', duration: '', price: '35', deposit: '0', sort: '0' };
   const off = serviceForm.safeParse(base);
   assert.ok(off.success);
-  assert.deepEqual(off.data, { ...base, id: 7, duration: null, price: 3500, deposit: 0, sort: 0, active: false });
+  assert.deepEqual(off.data, { ...base, id: 7, duration: null, buffer: 0, price: 3500, deposit: 0, sort: 0, active: false });
+  // Temps tampon : 0 à 120 minutes
+  assert.equal(serviceForm.safeParse({ ...base, buffer: '15' }).data?.buffer, 15);
+  assert.match(err(serviceForm.safeParse({ ...base, buffer: '121' }))!, /tampon/);
   assert.match(err(serviceForm.safeParse({ ...base, active: 'on' }))!, /durée/);
   assert.equal(serviceForm.safeParse({ ...base, duration: '45', active: 'on' }).data?.active, true);
   assert.match(err(serviceForm.safeParse({ ...base, price: '-1' }))!, /Prix/);
@@ -65,7 +68,10 @@ test('codes promo : format, bornes de la remise, dates, prestations ciblées', (
 });
 
 test('agenda, saisie manuelle et code admin', () => {
-  assert.deepEqual(agendaForm.safeParse({ action: 'cancel', id: '4', refund: 'on' }).data, { action: 'cancel', id: 4, refund: true });
+  assert.deepEqual(agendaForm.safeParse({ action: 'cancel', id: '4', refund: 'on' }).data, { action: 'cancel', id: 4, refund: true, day: null, time: null });
+  // Déplacer exige la nouvelle date et l'heure
+  assert.ok(!agendaForm.safeParse({ action: 'move', id: '4', day: '2026-12-01' }).success);
+  assert.deepEqual(agendaForm.safeParse({ action: 'move', id: '4', day: '2026-12-01', time: '10:30' }).data, { action: 'move', id: 4, refund: false, day: '2026-12-01', time: '10:30' });
   assert.ok(!agendaForm.safeParse({ action: 'delete', id: '4' }).success);
   const b = { service: '3', day: '2026-10-25', time: '02:30', name: ' Mme Dupont ', phone: '+32 484 11 83 95' };
   assert.deepEqual(newBookingForm.safeParse(b).data, { service: 3, day: '2026-10-25', time: '02:30', name: 'Mme Dupont', phone: '+32 484 11 83 95' });

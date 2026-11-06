@@ -5,7 +5,8 @@ import { COOKIE, SESSION_COOKIE, hashToken, newToken } from './cookie.ts';
 import { sql } from './db.ts';
 import { SESSION_IDLE, SESSION_MAX } from './session-limits.mjs';
 
-export type SessionUser = { id: number; email: string; name: string | null; phone: string | null; locale: 'fr' | 'nl' | 'en'; isAdmin: boolean };
+// deletedAt : compte en suppression (30 jours) ; le middleware ne lui ouvre que la page de réactivation
+export type SessionUser = { id: number; email: string; name: string | null; phone: string | null; locale: 'fr' | 'nl' | 'en'; isAdmin: boolean; deletedAt: Date | null; healthConsent: Date | null };
 export type SessionInfo = { hash: Buffer; mfaAt: Date | null; createdAt: Date };
 
 // L'admin se décide côté serveur : e-mail vérifié égal à ADMIN_EMAIL, jamais un champ de formulaire
@@ -17,11 +18,13 @@ export async function readSession(token: string): Promise<{ user: SessionUser; s
     UPDATE sessions s SET last_seen_at = now() FROM users u
     WHERE s.token_hash = ${hashToken(token)} AND u.id = s.user_id
       AND s.expires_at > now() AND s.last_seen_at > now() - ${SESSION_IDLE}::interval
-    RETURNING s.token_hash, s.mfa_at, s.created_at, u.id, u.email, u.name, u.phone, u.locale, u.email_verified_at`;
+      -- Compte bloqué par l'institut : plus aucune session valable, même ouverte avant le blocage
+      AND u.blocked_at IS NULL
+    RETURNING s.token_hash, s.mfa_at, s.created_at, u.id, u.email, u.name, u.phone, u.locale, u.email_verified_at, u.deleted_at, u.health_consent_at`;
   if (!r) return null;
   const isAdmin = r.email_verified_at !== null && isAdminEmail(r.email);
   return {
-    user: { id: r.id, email: r.email, name: r.name, phone: r.phone, locale: r.locale, isAdmin },
+    user: { id: r.id, email: r.email, name: r.name, phone: r.phone, locale: r.locale, isAdmin, deletedAt: r.deleted_at, healthConsent: r.health_consent_at },
     session: { hash: r.token_hash, mfaAt: r.mfa_at, createdAt: r.created_at },
   };
 }

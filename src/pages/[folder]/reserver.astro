@@ -10,6 +10,8 @@ import { createBooking, MAX_UPCOMING, type BookingError } from '../../lib/server
 import { amounts, euros, isDay, todayBrussels } from '../../lib/server/pricing.ts';
 import { bookingOpen, quote, type Quote } from '../../lib/server/quote.ts';
 import { bookableServices, slots, type Slot } from '../../lib/server/slots.ts';
+import { setConsent } from '../../lib/server/rgpd.ts';
+import { COMPTE } from '../../data/i18n/compte.ts';
 
 export const prerender = false;
 
@@ -48,6 +50,8 @@ const Post = z.object({
   // Le format du code est contrôlé par le devis et la réservation : même réponse qu'un code inconnu, essai compté
   code: z.string().max(64).default('').transform((s) => s.trim().toUpperCase()),
   cgv: z.literal('on').optional(),
+  // Accord facultatif pour les données de santé (art. 9.2.a RGPD) : jamais une condition de la réservation
+  sante: z.literal('on').optional(),
 });
 
 let view: 1 | 2 | 3 = 1;
@@ -86,7 +90,10 @@ if (open && method === 'POST') {
     let tryCode = etape === 'choisir' ? '' : code;
     if (etape === 'reserver' && cgv) {
       const r = await createBooking({ userId: user.id, serviceId, startsAt, promoCode: code, lang });
-      if (r.ok) return Astro.redirect(r.checkoutUrl ?? `/${folder}/compte?reservation=ok`, 303);
+      if (r.ok) {
+        if (f.data.sante) await setConsent(user.id, true, Astro.locals.ip);
+        return Astro.redirect(r.checkoutUrl ?? `/${folder}/compte?reservation=ok`, 303);
+      }
       fail = r.error;
       // Essai déjà compté par createBooking : le devis repart sans le code
       if (r.error === 'promo') {
@@ -212,6 +219,12 @@ const summary = error ?? promoMsg;
 <input type="checkbox" id="cgv" name="cgv" required checked={cgvChecked} aria-invalid={cgvMissing ? 'true' : undefined}>
 <label for="cgv">{L.cgv[0]}<a href={pagePath(lang, 'cgv')} target="_blank" rel="noopener">{L.cgv[1]}<span class="visually-hidden"> {L.newTab}</span></a>{L.cgv[2]}</label>
 </div>
+{!user.healthConsent && (
+<div class="check">
+<input type="checkbox" id="sante" name="sante">
+<label for="sante">{COMPTE[lang].account.consentText}</label>
+</div>
+)}
 <p class="hint">{L.cancelRule}{q.deposit_cents > 0 && ` ${L.payNote}`}</p>
 <button class="btn btn--solid pay" type="submit" name="etape" value="reserver">{q.deposit_cents ? L.pay(q.deposit_cents) : L.confirm}</button>
 </form>

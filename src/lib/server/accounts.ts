@@ -5,6 +5,7 @@ import type { Lang } from '../site.ts';
 import { checkAdminCode, clearLoginLimits, deviceCookie, hashPassword, login, newPasswordProblem, verifyPassword, type LoginUser } from './auth.ts';
 import { DEVICE, DEVICE_COOKIE, hashToken, newToken } from './cookie.ts';
 import { sql } from './db.ts';
+import { journal } from './journal.ts';
 import { log } from './log.ts';
 import { existsMail, passwordChangedMail, resetMail, sendMail, verifyMail, type Mail } from './mail.ts';
 import { badEmail } from './password.ts';
@@ -42,7 +43,7 @@ export async function register(input: { email: string; password: string; name?: 
     INSERT INTO users (email, password_hash, name, phone, locale) VALUES (${email}, ${hash}, ${input.name || null}, ${input.phone || null}, ${input.locale})
     ON CONFLICT (email) DO NOTHING RETURNING id`;
   if (u) {
-    log('register', { user_id: u.id, ip: input.ip });
+    journal('register', { actor: u.id, client: u.id, ip: input.ip });
     mailWithToken(u.id, email, 'verify', 24 * 60, (t) => verifyMail(input.locale, t));
   } else {
     log('register_existing', { ip: input.ip });
@@ -69,7 +70,7 @@ export async function verifyEmail(cookies: AstroCookies, token: string, password
   const [used] = await sql`UPDATE email_tokens SET used_at = now() WHERE token_hash = ${hashToken(token)} AND used_at IS NULL RETURNING user_id`;
   if (!used) return null;
   await sql`UPDATE users SET email_verified_at = coalesce(email_verified_at, now()), updated_at = now() WHERE id = ${u.id}`;
-  log('email_verified', { user_id: u.id });
+  journal('email_verified', { actor: u.id, client: u.id, ip });
   await openSession(cookies, u.id, userAgent);
   return { id: u.id, email: u.email, locale: u.locale };
 }
@@ -125,13 +126,13 @@ export async function resetPassword(token: string, password: string): Promise<'o
   });
   if (!u) return 'invalid';
   clearLoginLimits(u.email);
-  log('password_reset', { user_id: u.id });
+  journal('password_reset', { actor: u.id, client: u.id });
   sendMail(u.email, passwordChangedMail(u.locale));
   return 'ok';
 }
 
 // Mot de passe actuel redemandé, essais comptés comme la connexion (100 par heure et par compte)
-async function checkCurrent(userId: number, password: string) {
+export async function checkCurrent(userId: number, password: string) {
   const [u] = await sql<{ email: string; locale: Lang; password_hash: string }[]>`SELECT email, locale, password_hash FROM users WHERE id = ${userId}`;
   // Essai compté avant l'await : une rafale concurrente ne passe plus entre lecture et incrément
   if (!u || hit('loginEmail', u.email) || !(await verifyPassword(u.password_hash, password))) {
@@ -149,7 +150,7 @@ export async function changePassword(userId: number, current: string, next: stri
   if (problem) return problem;
   await sql`UPDATE users SET password_hash = ${await hashPassword(next)}, updated_at = now() WHERE id = ${userId}`;
   await revokeOthers(userId, keep);
-  log('password_changed', { user_id: userId });
+  journal('password_changed', { actor: userId, client: userId });
   sendMail(u.email, passwordChangedMail(u.locale));
   return 'ok';
 }
@@ -158,12 +159,12 @@ export async function changePassword(userId: number, current: string, next: stri
 export async function signOutOthers(userId: number, password: string, keep: Buffer): Promise<boolean> {
   if (!(await checkCurrent(userId, password))) return false;
   await revokeOthers(userId, keep);
-  log('sessions_revoked', { user_id: userId });
+  journal('sessions_revoked', { actor: userId, client: userId });
   return true;
 }
 
 // Nom et téléphone seulement : l'e-mail est figé (le rôle admin en dépend), un changement se demande par e-mail
 export async function updateProfile(userId: number, p: { name: string | null; phone: string | null }): Promise<void> {
   await sql`UPDATE users SET name = ${p.name || null}, phone = ${p.phone || null}, updated_at = now() WHERE id = ${userId}`;
-  log('profile_updated', { user_id: userId });
+  journal('profile_updated', { actor: userId, client: userId });
 }

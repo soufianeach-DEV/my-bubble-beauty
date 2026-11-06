@@ -42,6 +42,17 @@ const T = {
     refund: (x: string) => `L'acompte de ${x} vous sera remboursé. Le délai dépend de votre banque.`,
     again: 'Pour reprendre rendez-vous, passez par votre compte.',
     account: 'Voir mon compte',
+    deleted: "Votre compte va être supprimé",
+    deletedIntro: (d: number) => `Votre compte My Bubble Beauty est supprimé. Vous avez ${d} jours pour changer d'avis : reconnectez-vous avec votre adresse et votre mot de passe, puis choisissez « Réactiver mon compte ». Passé ce délai, il est effacé définitivement.`,
+    deletedBookings: (n: number) => `${n} rendez-vous à venir ${n > 1 ? "ont été annulés" : "a été annulé"}.`,
+    deletedRefund: `L'acompte payé vous sera remboursé par l'institut. Pour toute question, appelez-nous au ${CONTACT.phoneLabel}.`,
+    erased: ["Votre compte est effacé", "Votre compte My Bubble Beauty et vos données personnelles sont effacés. Les rendez-vous passés restent dans notre comptabilité, sans votre nom.", "Vous pouvez créer un nouveau compte à tout moment."],
+    moved: "Votre rendez-vous est déplacé",
+    movedIntro: "Votre rendez-vous chez My Bubble Beauty a été déplacé. Voici la nouvelle date.",
+    reminder: "Rappel : votre rendez-vous de demain",
+    reminderIntro: "Nous vous rappelons votre rendez-vous chez My Bubble Beauty.",
+    reminderLate: `Un empêchement ? Moins de 24 heures avant, appelez-nous au ${CONTACT.phoneLabel}.`,
+    create: "Créer un compte",
   },
   nl: {
     hello: 'Hallo,',
@@ -59,6 +70,17 @@ const T = {
     refund: (x: string) => `Het voorschot van ${x} wordt u terugbetaald. De termijn hangt af van uw bank.`,
     again: 'Een nieuwe afspraak maakt u via uw account.',
     account: 'Mijn account bekijken',
+    deleted: "Uw account wordt verwijderd",
+    deletedIntro: (d: number) => `Uw account bij My Bubble Beauty is verwijderd. U hebt ${d} dagen om van gedachten te veranderen: log opnieuw in met uw adres en wachtwoord en kies « Mijn account heractiveren ». Daarna wordt het definitief gewist.`,
+    deletedBookings: (n: number) => `${n} komende ${n > 1 ? "afspraken werden" : "afspraak werd"} geannuleerd.`,
+    deletedRefund: `Het betaalde voorschot wordt u door het instituut terugbetaald. Vragen? Bel ons op ${CONTACT.phoneLabel}.`,
+    erased: ["Uw account is gewist", "Uw account bij My Bubble Beauty en uw persoonsgegevens zijn gewist. Voorbije afspraken blijven in onze boekhouding, zonder uw naam.", "U kunt op elk moment een nieuw account aanmaken."],
+    moved: "Uw afspraak is verplaatst",
+    movedIntro: "Uw afspraak bij My Bubble Beauty werd verplaatst. Dit is de nieuwe datum.",
+    reminder: "Herinnering: uw afspraak van morgen",
+    reminderIntro: "We herinneren u aan uw afspraak bij My Bubble Beauty.",
+    reminderLate: `Verhinderd? Minder dan 24 uur op voorhand belt u ons op ${CONTACT.phoneLabel}.`,
+    create: "Een account aanmaken",
   },
   en: {
     hello: 'Hello,',
@@ -76,6 +98,17 @@ const T = {
     refund: (x: string) => `Your deposit of ${x} will be refunded. The time it takes depends on your bank.`,
     again: 'To book again, go to your account.',
     account: 'View my account',
+    deleted: "Your account is being deleted",
+    deletedIntro: (d: number) => `Your My Bubble Beauty account has been deleted. You have ${d} days to change your mind: log in again with your address and password, then choose “Reactivate my account”. After that, it is erased for good.`,
+    deletedBookings: (n: number) => `${n} upcoming ${n > 1 ? "appointments have" : "appointment has"} been cancelled.`,
+    deletedRefund: `The salon will refund the deposit you paid. Any questions? Call us on ${CONTACT.phoneLabel}.`,
+    erased: ["Your account has been erased", "Your My Bubble Beauty account and your personal data have been erased. Past appointments stay in our accounts, without your name.", "You can create a new account at any time."],
+    moved: "Your appointment has been moved",
+    movedIntro: "Your appointment at My Bubble Beauty has been moved. Here is the new date.",
+    reminder: "Reminder: your appointment tomorrow",
+    reminderIntro: "This is a reminder of your appointment at My Bubble Beauty.",
+    reminderLate: `Can't make it? Less than 24 hours before, please call us on ${CONTACT.phoneLabel}.`,
+    create: "Create an account",
   },
 } as const;
 
@@ -122,11 +155,33 @@ export function bookingCancelledMail(lang: Lang, b: BookingMail, refund: number)
   return build('booking_cancelled', lang, t.cancelled, [t.hello, t.cancelledIntro(when(b.starts_at, lang), b.service), refund > 0 && t.refund(euros(refund, lang)), t.again], [t.account, accountUrl(lang)]);
 }
 
+// Suppression douce : délai pour revenir, rendez-vous annulés, acompte rendu hors du site
+export function accountDeletedMail(lang: Lang, days: number, cancelled: number, refundDue: boolean): Mail {
+  const t = T[lang];
+  return build('account_deleted', lang, t.deleted, [t.hello, t.deletedIntro(days), cancelled > 0 && t.deletedBookings(cancelled), refundDue && t.deletedRefund], [t.account, accountUrl(lang, '/connexion')]);
+}
+
+export function accountErasedMail(lang: Lang): Mail {
+  const [subject, a, b] = T[lang].erased;
+  return build('account_erased', lang, subject, [T[lang].hello, a, b], [T[lang].create, accountUrl(lang, '/inscription')]);
+}
+
+export function bookingMovedMail(lang: Lang, b: BookingMail): Mail {
+  const t = T[lang];
+  return build('booking_moved', lang, t.moved, [t.hello, t.movedIntro, t.service + b.service, t.date + when(b.starts_at, lang), t.address + ADDRESS, t.rules], [t.account, accountUrl(lang)]);
+}
+
+export function bookingReminderMail(lang: Lang, b: BookingMail): Mail {
+  const t = T[lang];
+  return build('booking_reminder', lang, t.reminder, [t.hello, t.reminderIntro, t.service + b.service, t.date + when(b.starts_at, lang), t.address + ADDRESS, t.reminderLate], [t.account, accountUrl(lang)]);
+}
+
 // Envoi détaché : la réponse n'attend jamais Resend (une adresse connue ne répond pas plus lentement qu'une inconnue).
 // Sans clé : console sous astro dev uniquement, sinon erreur journalisée ; le destinataire n'est jamais journalisé.
 export function sendMail(to: string, mail: Mail): void {
   if (!RESEND_API_KEY || !MAIL_FROM) {
-    if (import.meta.env.DEV) console.log(`[e-mail] ${to} — ${mail.subject}\n${mail.text}`);
+    // import.meta.env n'existe que sous Astro (absent des tests node:test)
+    if (import.meta.env?.DEV) console.log(`[e-mail] ${to} — ${mail.subject}\n${mail.text}`);
     else log('mail_unconfigured', { kind: mail.kind });
     return;
   }

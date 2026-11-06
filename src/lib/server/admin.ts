@@ -2,9 +2,9 @@
 // Toute saisie passe par un schéma de admin-form.ts, toute requête est paramétrée, toute modification est journalisée avec l'admin.
 import { t } from '../site.ts';
 import { agendaForm, closureForm, hoursForm, idForm, newBookingForm, promoForm, serviceForm, toggleForm } from './admin-form.ts';
-import { cancelByAdmin, createAdminBooking } from './booking.ts';
+import { cancelByAdmin, createAdminBooking, markRefundedManually, rescheduleByAdmin, setNoShow } from './booking.ts';
 import { sql } from './db.ts';
-import { log } from './log.ts';
+import { journal } from './journal.ts';
 
 export type Result = { ok: true; id: number; key?: string; day?: string } | { ok: false; error: string };
 
@@ -20,7 +20,9 @@ export async function readForm(request: Request) {
   }
 }
 
-const audit = (userId: number, action: string, data: Record<string, unknown> = {}) => log('admin_action', { user_id: userId, action, ...data });
+// Journal en base et sur stdout ; booking_id et client_id deviennent des colonnes filtrables de l'écran Journal
+export const audit = (userId: number, action: string, { booking_id, client_id, ...data }: Record<string, unknown> = {}) =>
+  journal('admin_action', { actor: userId, booking: (booking_id as number) ?? null, client: (client_id as number) ?? null, details: { action, ...data } });
 const fields = (form: FormData) => Object.fromEntries(form);
 const first = (e: { issues: { message: string }[] }): Result => ({ ok: false, error: e.issues[0]?.message ?? 'Saisie invalide.' });
 const pgCode = (e: unknown) => (e as { code?: string })?.code;
@@ -37,20 +39,20 @@ const dayFormat = new Intl.DateTimeFormat('fr-BE', { timeZone: 'UTC', weekday: '
 export const fmtDay = (day: string) => dayFormat.format(new Date(`${day}T12:00:00Z`));
 
 // Prestations : jamais supprimées (les rendez-vous passés y renvoient), seulement retirées de la réservation en ligne
-export type Service = { id: number; category: string; name_fr: string; name_nl: string; name_en: string; duration_min: number | null; price_cents: number; deposit_cents: number; active: boolean; sort: number };
+export type Service = { id: number; category: string; name_fr: string; name_nl: string; name_en: string; duration_min: number | null; buffer_min: number; price_cents: number; deposit_cents: number; active: boolean; sort: number };
 export const listServices = () =>
-  sql<Service[]>`SELECT id, category, name_fr, name_nl, name_en, duration_min, price_cents, deposit_cents, active, sort FROM services ORDER BY sort, id`;
+  sql<Service[]>`SELECT id, category, name_fr, name_nl, name_en, duration_min, buffer_min, price_cents, deposit_cents, active, sort FROM services ORDER BY sort, id`;
 
 export async function saveService(userId: number, form: FormData): Promise<Result> {
   const p = serviceForm.safeParse(fields(form));
   if (!p.success) return first(p.error);
   const s = p.data;
   const [r] = await sql`
-    UPDATE services SET name_fr = ${s.name_fr}, name_nl = ${s.name_nl}, name_en = ${s.name_en}, duration_min = ${s.duration},
+    UPDATE services SET name_fr = ${s.name_fr}, name_nl = ${s.name_nl}, name_en = ${s.name_en}, duration_min = ${s.duration}, buffer_min = ${s.buffer},
       price_cents = ${s.price}, deposit_cents = ${s.deposit}, sort = ${s.sort}, active = ${s.active}
     WHERE id = ${s.id} RETURNING id`;
   if (!r) return { ok: false, error: 'Prestation introuvable.' };
-  audit(userId, 'service_saved', { service_id: s.id, active: s.active, duration: s.duration, price: s.price, deposit: s.deposit });
+  audit(userId, 'service_saved', { service_id: s.id, active: s.active, duration: s.duration, buffer: s.buffer, price: s.price, deposit: s.deposit });
   return { ok: true, id: s.id };
 }
 
@@ -77,6 +79,14 @@ export async function deleteHours(userId: number, form: FormData): Promise<Resul
 }
 
 // Fermetures à venir ou en cours ; les passées ne servent plus au calcul des créneaux
+// Rendez-vous déjà pris qui tombent dans une fermeture à venir : la fermeture ne les annule pas, l'admin les voit et prévient la cliente
+export const closureConflicts = () =>
+  sql<{ id: number; starts_at: Date; service: string; name: string | null; phone: string | null; user_id: number | null; reason: string }[]>`
+    SELECT DISTINCT ON (b.id) b.id, b.starts_at, s.name_fr AS service, coalesce(u.name, b.guest_name) AS name, coalesce(u.phone, b.guest_phone) AS phone, b.user_id, c.reason
+    FROM closures c JOIN bookings b ON b.starts_at < c.ends_at AND b.ends_at > c.starts_at AND b.status IN ('confirmed', 'pending_payment')
+    JOIN services s ON s.id = b.service_id LEFT JOIN users u ON u.id = b.user_id
+    WHERE c.ends_at > now() AND b.ends_at > now() ORDER BY b.id, c.starts_at`;
+
 export const listClosures = () =>
   sql<{ id: number; starts_at: Date; ends_at: Date; reason: string }[]>`SELECT id, starts_at, ends_at, reason FROM closures WHERE ends_at > now() ORDER BY starts_at`;
 
@@ -147,6 +157,25 @@ export async function agendaAction(userId: number, form: FormData): Promise<Resu
   const p = agendaForm.safeParse(fields(form));
   if (!p.success) return first(p.error);
   const { action, id } = p.data;
+  if (action === 'no_show' || action === 'show') {
+    const b = await setNoShow(id, action === 'no_show');
+    if (!b) return { ok: false, error: 'Seul un rendez-vous confirmé et passé peut être marqué.' };
+    audit(userId, action === 'no_show' ? 'booking_no_show' : 'booking_attended', { booking_id: id, client_id: b.user_id });
+    return { ok: true, id, key: action === 'no_show' ? 'absente' : 'venue' };
+  }
+  if (action === 'manual_refund') {
+    const b = await markRefundedManually(id);
+    if (!b) return { ok: false, error: 'Aucun acompte à rendre sur ce rendez-vous.' };
+    audit(userId, 'booking_refund_manual', { booking_id: id, client_id: b.user_id, amount: b.amount });
+    return { ok: true, id, key: 'rendu' };
+  }
+  if (action === 'move') {
+    const r = await rescheduleByAdmin(id, p.data.day!, p.data.time!);
+    if (r === 'not_found') return { ok: false, error: 'Seul un rendez-vous confirmé peut être déplacé.' };
+    if (r === 'unavailable') return { ok: false, error: 'Ce créneau chevauche un autre rendez-vous ou un paiement en cours : choisissez une autre heure.' };
+    audit(userId, 'booking_moved', { booking_id: id, day: p.data.day, time: p.data.time });
+    return { ok: true, id, key: 'deplace', day: p.data.day! };
+  }
   const refund = action === 'refund' || p.data.refund;
   const r = await cancelByAdmin(id, refund);
   if (!r.ok) return { ok: false, error: 'Rendez-vous introuvable ou déjà terminé.' };

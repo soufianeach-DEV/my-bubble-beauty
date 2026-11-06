@@ -4,8 +4,9 @@ import type { Sql } from 'postgres';
 import { STRIPE_WEBHOOK_SECRET } from 'astro:env/server';
 import type { Lang } from '../site.ts';
 import { sql } from './db.ts';
+import { journal } from './journal.ts';
 import { log } from './log.ts';
-import { bookingCancelledMail, bookingConfirmedMail, sendMail } from './mail.ts';
+import { bookingCancelledMail, bookingConfirmedMail, bookingMovedMail, bookingReminderMail, sendMail } from './mail.ts';
 import { amounts, isDay, promoProblem, type Promo, type PromoProblem } from './pricing.ts';
 import { blocked, hit } from './rate.ts';
 import { isFree } from './slots.ts';
@@ -35,22 +36,31 @@ const expireAtStripe = (ids: string[]) => {
 };
 
 // E-mail dans la langue de la cliente (envoyé hors requête : webhook, annulation par l'admin) ; rien pour une invitée
-function notify(bookingId: number, kind: 'confirmed' | 'cancelled', refundCents = 0) {
+function notify(bookingId: number, kind: 'confirmed' | 'cancelled' | 'moved' | 'reminder', refundCents = 0) {
   sql<{ email: string; locale: Lang; service: string; starts_at: Date; price_cents: number; discount_cents: number; deposit_cents: number }[]>`
     SELECT u.email, u.locale, CASE u.locale WHEN 'nl' THEN s.name_nl WHEN 'en' THEN s.name_en ELSE s.name_fr END AS service,
       b.starts_at, b.price_cents, b.discount_cents, b.deposit_cents
     FROM bookings b JOIN users u ON u.id = b.user_id JOIN services s ON s.id = b.service_id WHERE b.id = ${bookingId}`
-    .then(([b]) => b && sendMail(b.email, kind === 'confirmed' ? bookingConfirmedMail(b.locale, b) : bookingCancelledMail(b.locale, b, refundCents)))
+    .then(([b]) => b && sendMail(b.email, kind === 'confirmed' ? bookingConfirmedMail(b.locale, b) : kind === 'moved' ? bookingMovedMail(b.locale, b) : kind === 'reminder' ? bookingReminderMail(b.locale, b) : bookingCancelledMail(b.locale, b, refundCents)))
     .catch((e) => log('mail_failed', { kind, booking_id: bookingId, error: String(e) }));
 }
 
 // refunded_cents n'est écrit qu'après l'accord de Stripe : un échec reste visible dans l'admin (payé, non remboursé)
+// Ligne verrouillée pendant l'appel à Stripe : « remboursé hors site » attend la fin et voit l'acompte rendu ; un acompte déjà
+// noté rendu hors site n'est jamais renvoyé par Stripe.
 async function refundBooking(bookingId: number, paymentIntent: string, amount: number): Promise<boolean> {
   try {
-    await refund(paymentIntent, amount, bookingId);
-    await sql`UPDATE bookings SET refunded_cents = ${amount} WHERE id = ${bookingId}`;
-    log('refund_ok', { booking_id: bookingId, amount });
-    return true;
+    return await sql.begin(async (tx) => {
+      const [b] = await tx`SELECT refunded_manually_at FROM bookings WHERE id = ${bookingId} FOR UPDATE`;
+      if (!b || b.refunded_manually_at) {
+        log('refund_skipped_manual', { booking_id: bookingId });
+        return false;
+      }
+      await refund(paymentIntent, amount, bookingId);
+      await tx`UPDATE bookings SET refunded_cents = ${amount} WHERE id = ${bookingId}`;
+      log('refund_ok', { booking_id: bookingId, amount });
+      return true;
+    });
   } catch (e) {
     log('refund_failed', { booking_id: bookingId, amount, error: String(e) });
     return false;
@@ -72,14 +82,16 @@ export async function createBooking(input: { userId: number; serviceId: number; 
   try {
     r = await sql.begin(async (tx) => {
       // Verrous toujours dans cet ordre (cliente, puis code promo) : deux réservations simultanées ne s'interbloquent pas
-      await tx`SELECT id FROM users WHERE id = ${userId} FOR UPDATE`;
+      // Compte supprimé ou bloqué entre-temps (course avec la suppression) : aucune ligne, aucune réservation
+      const [me] = await tx`SELECT id FROM users WHERE id = ${userId} AND deleted_at IS NULL AND blocked_at IS NULL FOR UPDATE`;
+      if (!me) return { ok: false, error: 'unavailable' } as const;
       // Lu sous le verrou de la cliente : en rafale, chaque essai voit les échecs comptés par le précédent
       if (code && blocked('promo', String(userId))) return { ok: false, error: 'promo', promo: 'blocked' } as const;
       stale = await expirePending(tx, userId);
       const [{ n }] = await tx`SELECT count(*) AS n FROM bookings WHERE user_id = ${userId} AND status IN ('pending_payment', 'confirmed') AND starts_at > now()`;
       if (n >= MAX_UPCOMING) return { ok: false, error: 'limit' } as const;
       const [s] = await tx`
-        SELECT price_cents, deposit_cents, duration_min, CASE ${lang} WHEN 'nl' THEN name_nl WHEN 'en' THEN name_en ELSE name_fr END AS name
+        SELECT price_cents, deposit_cents, duration_min + buffer_min AS busy_min, CASE ${lang} WHEN 'nl' THEN name_nl WHEN 'en' THEN name_en ELSE name_fr END AS name
         FROM services WHERE id = ${serviceId} AND active`;
       if (!s || !(await isFree(tx, serviceId, startsAt))) return { ok: false, error: 'unavailable' } as const;
       let promo: (Promo & { id: number }) | null = null;
@@ -100,7 +112,7 @@ export async function createBooking(input: { userId: number; serviceId: number; 
       const m = amounts(s.price_cents, s.deposit_cents, promo);
       const [b] = await tx`
         INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, discount_cents, deposit_cents, promo_code_id)
-        VALUES (${userId}, ${serviceId}, ${startsAt}, ${startsAt}::timestamptz + make_interval(mins => ${s.duration_min}::int),
+        VALUES (${userId}, ${serviceId}, ${startsAt}, ${startsAt}::timestamptz + make_interval(mins => ${s.busy_min}::int),
           ${m.deposit_cents ? 'pending_payment' : 'confirmed'}, ${m.price_cents}, ${m.discount_cents}, ${m.deposit_cents}, ${promo?.id ?? null})
         RETURNING id`;
       return { ok: true, id: b.id as number, deposit: m.deposit_cents, label: `${DEPOSIT_LABEL[lang]} — ${s.name}` } as const;
@@ -111,7 +123,7 @@ export async function createBooking(input: { userId: number; serviceId: number; 
   }
   expireAtStripe(stale);
   if (!r.ok) return r;
-  log('booking_created', { booking_id: r.id, user_id: userId, deposit: r.deposit });
+  journal('booking_created', { actor: userId, client: userId, booking: r.id, details: { deposit: r.deposit } });
   if (!r.deposit) {
     notify(r.id, 'confirmed');
     return { ok: true, id: r.id, checkoutUrl: null };
@@ -135,6 +147,8 @@ export type PaymentOutcome = 'confirmed' | 'already' | 'refunded' | 'unpaid' | '
 async function stillAllowed(tx: Sql, id: number, b: { user_id: number | null; service_id: number; promo_code_id: number | null; starts_at: Date }) {
   if (b.starts_at <= new Date()) return false;
   if (b.user_id) {
+    const [active] = await tx`SELECT 1 FROM users WHERE id = ${b.user_id} AND deleted_at IS NULL AND blocked_at IS NULL`;
+    if (!active) return false;
     const [{ n }] = await tx`SELECT count(*) AS n FROM bookings WHERE user_id = ${b.user_id} AND id <> ${id} AND status IN ('pending_payment', 'confirmed') AND starts_at > now()`;
     if (n >= MAX_UPCOMING) return false;
   }
@@ -229,7 +243,7 @@ export async function confirmReturn(userId: number, sessionId: unknown): Promise
 // Annulation par la cliente : 24 h avant au plus tard, garde atomique (un double clic n'annule ni ne rembourse deux fois)
 export async function cancelByClient(userId: number, bookingId: number): Promise<{ ok: true; refunded: boolean } | { ok: false; error: 'too_late' | 'not_found' }> {
   const [b] = await sql`
-    UPDATE bookings SET status = 'cancelled', cancelled_at = now()
+    UPDATE bookings SET status = 'cancelled', cancelled_at = now(), cancel_reason = 'client'
     WHERE id = ${bookingId} AND user_id = ${userId} AND status = 'confirmed' AND starts_at >= now() + interval '24 hours'
     RETURNING id, deposit_cents, stripe_payment_intent`;
   if (!b) {
@@ -237,7 +251,7 @@ export async function cancelByClient(userId: number, bookingId: number): Promise
     log('booking_cancel_refused', { booking_id: bookingId, user_id: userId, too_late: !!later });
     return { ok: false, error: later ? 'too_late' : 'not_found' };
   }
-  log('booking_cancelled', { booking_id: b.id, user_id: userId, by: 'client' });
+  journal('booking_cancelled', { actor: userId, client: userId, booking: b.id, details: { by: 'client' } });
   const paid = b.stripe_payment_intent && b.deposit_cents > 0;
   const refunded = paid ? await refundBooking(b.id, b.stripe_payment_intent, b.deposit_cents) : false;
   notify(b.id, 'cancelled', paid ? b.deposit_cents : 0);
@@ -251,7 +265,7 @@ export async function cancelByAdmin(bookingId: number, refundDeposit: boolean): 
   const [b] = await sql`
     WITH old AS (SELECT id, status FROM bookings WHERE id = ${bookingId}
       AND (status IN ('pending_payment', 'confirmed', 'cancelled') OR (status = 'expired' AND stripe_payment_intent IS NOT NULL)) FOR UPDATE)
-    UPDATE bookings k SET status = 'cancelled', cancelled_at = coalesce(k.cancelled_at, now()) FROM old WHERE k.id = old.id
+    UPDATE bookings k SET status = 'cancelled', cancelled_at = coalesce(k.cancelled_at, now()), cancel_reason = coalesce(k.cancel_reason, 'admin') FROM old WHERE k.id = old.id
     RETURNING k.id, old.status AS was, k.user_id, k.deposit_cents, k.refunded_cents, k.stripe_session_id, k.stripe_payment_intent`;
   if (!b) return { ok: false };
   if (b.was === 'pending_payment' && b.stripe_session_id) expireAtStripe([b.stripe_session_id]);
@@ -270,7 +284,7 @@ export async function createAdminBooking(input: { serviceId: number; startsAt: D
   try {
     const [b] = await sql`
       INSERT INTO bookings (guest_name, guest_phone, service_id, starts_at, ends_at, status, price_cents)
-      SELECT ${input.guestName}, ${input.guestPhone || null}, id, ${input.startsAt}, ${input.startsAt}::timestamptz + make_interval(mins => duration_min), 'confirmed', price_cents
+      SELECT ${input.guestName}, ${input.guestPhone || null}, id, ${input.startsAt}, ${input.startsAt}::timestamptz + make_interval(mins => duration_min + buffer_min), 'confirmed', price_cents
       FROM services WHERE id = ${input.serviceId} AND duration_min IS NOT NULL
       RETURNING id`;
     if (!b) return { ok: false, error: 'service' };
@@ -284,9 +298,10 @@ export async function createAdminBooking(input: { serviceId: number; startsAt: D
 
 // Compte de la cliente : toujours filtré par user_id (pas d'accès à la réservation d'une autre en changeant l'identifiant)
 export function clientBookings(userId: number, lang: Lang) {
-  return sql<{ id: number; service: string; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled'; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; upcoming: boolean; cancellable: boolean }[]>`
+  return sql<{ id: number; service: string; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled'; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; upcoming: boolean; cancellable: boolean; no_show: boolean }[]>`
     SELECT b.id, CASE ${lang} WHEN 'nl' THEN s.name_nl WHEN 'en' THEN s.name_en ELSE s.name_fr END AS service, b.starts_at, b.ends_at, b.status,
-      b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.starts_at > now() AS upcoming,
+      b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.starts_at > now() AS upcoming, b.no_show,
+      -- Même délai pour annuler et pour déplacer : 24 h avant au plus tard
       b.status = 'confirmed' AND b.starts_at >= now() + interval '24 hours' AS cancellable
     FROM bookings b JOIN services s ON s.id = b.service_id
     WHERE b.user_id = ${userId}
@@ -298,13 +313,103 @@ export function clientBookings(userId: number, lang: Lang) {
 // sur une annulée = acompte gardé ou remboursement échoué, sur une expirée = paiement tardif non remboursé (à relancer par cancelByAdmin).
 export function adminAgenda(from: string, days = 7) {
   if (!isDay(from)) return Promise.resolve([]);
-  return sql<{ id: number; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled' | 'expired'; service: string; name: string | null; phone: string | null; email: string | null; guest: boolean; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; promo: string | null }[]>`
+  return sql<{ id: number; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled' | 'expired'; service: string; name: string | null; phone: string | null; email: string | null; user_id: number | null; guest: boolean; erased: boolean; deleting: boolean; past: boolean; no_show: boolean; cancel_reason: string | null; refunded_manually: boolean; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; promo: string | null }[]>`
     SELECT b.id, b.starts_at, b.ends_at, b.status, s.name_fr AS service, coalesce(u.name, b.guest_name) AS name, coalesce(u.phone, b.guest_phone) AS phone,
-      u.email, b.user_id IS NULL AS guest, b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.stripe_payment_intent IS NOT NULL AS paid, p.code AS promo
+      u.email, b.user_id, b.user_id IS NULL AND NOT b.client_erased AS guest, b.client_erased AS erased, u.deleted_at IS NOT NULL AS deleting,
+      b.starts_at < now() AS past, b.no_show, b.cancel_reason, b.refunded_manually_at IS NOT NULL AS refunded_manually,
+      b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.stripe_payment_intent IS NOT NULL AS paid, p.code AS promo
     FROM bookings b JOIN services s ON s.id = b.service_id LEFT JOIN users u ON u.id = b.user_id LEFT JOIN promo_codes p ON p.id = b.promo_code_id
     WHERE b.starts_at >= ${from}::text::date::timestamp AT TIME ZONE 'Europe/Brussels'
       AND b.starts_at < (${from}::text::date + ${Math.min(Math.max(Math.trunc(days) || 1, 1), 62)}::int)::timestamp AT TIME ZONE 'Europe/Brussels'
       AND (b.status IN ('confirmed', 'cancelled') OR (b.status = 'pending_payment' AND b.created_at > now() - interval '35 minutes')
         OR (b.status = 'expired' AND b.stripe_payment_intent IS NOT NULL))
     ORDER BY b.starts_at`;
+}
+
+const SERVICE_NAME = (lang: Lang) => sql`CASE ${lang} WHEN 'nl' THEN s.name_nl WHEN 'en' THEN s.name_en ELSE s.name_fr END`;
+
+// Rendez-vous de la cliente qu'elle peut encore déplacer (confirmé, 24 h avant au plus tard) ; null sinon
+export async function movableBooking(userId: number, bookingId: number, lang: Lang) {
+  const [b] = await sql<{ id: number; service_id: number; service: string; starts_at: Date }[]>`
+    SELECT b.id, b.service_id, ${SERVICE_NAME(lang)} AS service, b.starts_at
+    FROM bookings b JOIN services s ON s.id = b.service_id
+    WHERE b.id = ${bookingId} AND b.user_id = ${userId} AND b.status = 'confirmed' AND b.starts_at >= now() + interval '24 hours'`;
+  return b ?? null;
+}
+
+// Déplacement par la cliente : même prestation, même acompte ; le nouveau créneau suit les règles en ligne (horaires, 2 h à 60 jours).
+// Garde atomique : la ligne est relue sous verrou, l'exclusion bookings_no_overlap tranche toujours les courses.
+export async function rescheduleByClient(userId: number, bookingId: number, startsAt: Date): Promise<'ok' | 'unavailable' | 'not_found'> {
+  if (Number.isNaN(startsAt.getTime())) return 'unavailable';
+  let r: 'ok' | 'unavailable' | 'not_found';
+  try {
+    r = await sql.begin(async (tx) => {
+      const [me] = await tx`SELECT id FROM users WHERE id = ${userId} AND deleted_at IS NULL AND blocked_at IS NULL FOR UPDATE`;
+      if (!me) return 'not_found' as const;
+      const [b] = await tx`SELECT id, service_id FROM bookings
+        WHERE id = ${bookingId} AND user_id = ${userId} AND status = 'confirmed' AND starts_at >= now() + interval '24 hours' FOR UPDATE`;
+      if (!b) return 'not_found' as const;
+      if (!(await isFree(tx, b.service_id, startsAt, userId, b.id))) return 'unavailable' as const;
+      await tx`UPDATE bookings k SET starts_at = ${startsAt}, ends_at = ${startsAt}::timestamptz + make_interval(mins => s.duration_min + s.buffer_min),
+          moved_at = now(), reminder_sent_at = NULL
+        FROM services s WHERE k.id = ${b.id} AND s.id = k.service_id`;
+      return 'ok' as const;
+    });
+  } catch (e) {
+    if (isTaken(e)) return 'unavailable';
+    throw e;
+  }
+  if (r === 'ok') {
+    journal('booking_moved', { actor: userId, client: userId, booking: bookingId, details: { by: 'client' } });
+    notify(bookingId, 'moved');
+  }
+  return r;
+}
+
+// Déplacement par l'admin (jour et heure de Bruxelles) : hors horaires possible, jamais sur un autre rendez-vous
+export async function rescheduleByAdmin(bookingId: number, day: string, time: string): Promise<'ok' | 'unavailable' | 'not_found'> {
+  try {
+    const [b] = await sql`
+      UPDATE bookings k SET starts_at = (${day}::text::date + ${time}::time) AT TIME ZONE 'Europe/Brussels',
+        ends_at = (${day}::text::date + ${time}::time) AT TIME ZONE 'Europe/Brussels' + make_interval(mins => coalesce(s.duration_min, 0) + s.buffer_min),
+        moved_at = now(), reminder_sent_at = NULL
+      FROM services s WHERE k.id = ${bookingId} AND s.id = k.service_id AND k.status = 'confirmed' AND s.duration_min IS NOT NULL
+      RETURNING k.id, k.user_id`;
+    if (!b) return 'not_found';
+    if (b.user_id) notify(b.id, 'moved');
+    return 'ok';
+  } catch (e) {
+    if (isTaken(e)) return 'unavailable';
+    throw e;
+  }
+}
+
+// Absence à un rendez-vous confirmé et passé (fiche cliente, agenda) ; renvoie la cliente concernée
+export async function setNoShow(bookingId: number, noShow: boolean): Promise<{ user_id: number | null } | null> {
+  const [b] = await sql<{ user_id: number | null }[]>`UPDATE bookings SET no_show = ${noShow}
+    WHERE id = ${bookingId} AND status = 'confirmed' AND starts_at < now() RETURNING user_id`;
+  return b ?? null;
+}
+
+// Acompte rendu hors du site (virement, espèces) : le reste dû passe à zéro, la date est gardée
+export async function markRefundedManually(bookingId: number): Promise<{ amount: number; user_id: number | null } | null> {
+  const [b] = await sql<{ amount: number; user_id: number | null }[]>`
+    WITH old AS (SELECT id, deposit_cents - refunded_cents AS amount FROM bookings
+      WHERE id = ${bookingId} AND stripe_payment_intent IS NOT NULL AND status IN ('cancelled', 'expired') AND refunded_cents < deposit_cents FOR UPDATE)
+    UPDATE bookings k SET refunded_cents = k.deposit_cents, refunded_manually_at = now() FROM old WHERE k.id = old.id
+    RETURNING old.amount, k.user_id`;
+  return b ?? null;
+}
+
+// Rappel la veille (de 26 h à 2 h avant), une seule fois par rendez-vous : la ligne est réservée par l'UPDATE avant l'envoi.
+// Seulement pour les réservations prises plus de 26 h à l'avance (la confirmation vient de partir pour les autres).
+export async function sendReminders(): Promise<number> {
+  const rows = await sql<{ id: number }[]>`
+    UPDATE bookings SET reminder_sent_at = now()
+    WHERE status = 'confirmed' AND user_id IS NOT NULL AND reminder_sent_at IS NULL
+      AND starts_at > now() + interval '2 hours' AND starts_at <= now() + interval '26 hours'
+      AND created_at < starts_at - interval '26 hours'
+    RETURNING id`;
+  for (const r of rows) notify(r.id, 'reminder');
+  return rows.length;
 }

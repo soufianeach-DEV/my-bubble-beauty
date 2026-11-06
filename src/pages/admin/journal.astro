@@ -1,0 +1,54 @@
+---
+export const prerender = false;
+// Journal d'audit : connexions, actions des clientes et de l'admin, 12 mois ; filtre par événement ou par cliente
+import Admin from './_layout.astro';
+import { adminId, fmtDateTime } from '../../lib/server/admin.ts';
+import { journalList } from '../../lib/server/admin-clientes.ts';
+import { ACTION_LABELS } from '../../lib/server/journal.ts';
+
+const me = adminId(Astro.locals);
+if (!me) return new Response(null, { status: 404 });
+const sp = Astro.url.searchParams;
+const action = Object.hasOwn(ACTION_LABELS, sp.get('action') ?? '') ? sp.get('action')! : '';
+const client = /^[1-9]\d{0,17}$/.test(sp.get('cliente') ?? '') ? Number(sp.get('cliente')) : null;
+const page = Math.min(Math.max(Number.parseInt(sp.get('page') ?? '1', 10) || 1, 1), 1000);
+const { rows, more } = await journalList(action, client, page);
+const params = (p: number) => new URLSearchParams({ action, ...(client ? { cliente: String(client) } : {}), page: String(p) });
+const link = (p: number) => `/admin/journal?${params(p)}`;
+const detail = (d: Record<string, unknown>) => Object.entries(d).map(([k, v]) => `${k} : ${typeof v === 'object' ? JSON.stringify(v) : String(v)}`).join(', ');
+---
+<Admin title="Journal">
+<p>Événements de sécurité et actions sur les comptes et les rendez-vous, gardés 12 mois. Les mots de passe et le contenu des notes n'y figurent jamais.</p>
+<form class="actions bar" method="get" action="/admin/journal">
+  <div class="field"><label for="action">Événement</label>
+    <select id="action" name="action"><option value="">Tous</option>{Object.entries(ACTION_LABELS).map(([k, label]) => <option value={k} selected={k === action}>{label}</option>)}</select>
+  </div>
+  {client && <input type="hidden" name="cliente" value={client}>}
+  <button class="btn btn--ghost" type="submit">Filtrer</button>
+  {client && <a class="btn btn--ghost" href="/admin/journal">Toutes les clientes</a>}
+</form>
+{rows.length === 0 ? <p>Aucune ligne.</p> : (
+<div class="table-wrap"><table class="data-table">
+  <thead><tr><th scope="col">Date</th><th scope="col">Événement</th><th scope="col">Par</th><th scope="col">Cliente</th><th scope="col">Détails</th><th scope="col">IP</th></tr></thead>
+  <tbody>{rows.map((r) => (
+    <tr>
+      <td>{fmtDateTime(r.at)}</td>
+      <td>{ACTION_LABELS[r.action] ?? r.action}</td>
+      <td>{r.actor ?? '—'}</td>
+      <td>{r.client_id ? <a href={`/admin/clientes/${r.client_id}`}>{r.client ?? `n° ${r.client_id}`}</a> : r.action === 'account_erased' ? 'compte effacé' : '—'}</td>
+      <td><small>{[r.booking_id && `rendez-vous n° ${r.booking_id}`, detail(r.details)].filter(Boolean).join(' · ')}</small></td>
+      <td><small>{r.ip ?? ''}</small></td>
+    </tr>
+  ))}</tbody>
+</table></div>
+)}
+<nav class="actions bar" aria-label="Pages">
+  {page > 1 && <a class="btn btn--ghost" href={link(page - 1)}>Plus récent</a>}
+  {more && <a class="btn btn--ghost" href={link(page + 1)}>Plus ancien</a>}
+</nav>
+</Admin>
+
+<style>
+  .bar{margin:0 0 1.25rem;align-items:flex-end}
+  .bar .field{min-width:12rem}
+</style>

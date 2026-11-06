@@ -16,6 +16,8 @@ const PUBLIC = new Set([
 ]);
 // Seules routes ouvertes à l'admin avant le code TOTP : le code lui-même, et la déconnexion pour en sortir
 const BEFORE_CODE = new Set(['/admin/code', '/admin/deconnexion']);
+// Compte en suppression (30 jours) : réactiver, effacer tout de suite ou se déconnecter, rien d'autre
+const REACTIVATE = '/[folder]/compte/reactiver';
 
 export const onRequest = defineMiddleware(async (ctx, next) => {
   if (ctx.isPrerendered) return next();
@@ -27,6 +29,8 @@ export const onRequest = defineMiddleware(async (ctx, next) => {
   ctx.locals.ip = clientIp(ctx.request.headers.get('x-forwarded-for'));
   // Import différé : le build pré-rend les pages statiques à travers ce middleware sans aucune variable d'environnement
   const { readSession } = await import('./lib/server/session.ts');
+  // Rappels de la veille : lancés à la première requête servie (l'instance gratuite dort sans trafic)
+  (await import('./lib/server/jobs.ts')).startJobs();
   const token = ctx.cookies.get(SESSION_COOKIE)?.value;
   const found = token ? await readSession(token) : null;
   if (token && !found) ctx.cookies.delete(SESSION_COOKIE, COOKIE);
@@ -36,6 +40,8 @@ export const onRequest = defineMiddleware(async (ctx, next) => {
   const route = ctx.routePattern;
   if (PUBLIC.has(route)) return next();
   if (!found) return ctx.redirect(`/${folder ?? 'fr'}/compte/connexion?retour=${encodeURIComponent(ctx.url.pathname + ctx.url.search)}`);
+  if (found.user.deletedAt && route !== REACTIVATE) return ctx.redirect(`/${folder ?? 'fr'}/compte/reactiver`);
+  if (!found.user.deletedAt && route === REACTIVATE) return ctx.redirect(`/${folder ?? 'fr'}/compte`);
   if ((route === '/admin' || route.startsWith('/admin/')) && !found.user.isAdmin) {
     log('admin_denied', { user_id: found.user.id, ip: ctx.locals.ip });
     return new Response(null, { status: 404 });

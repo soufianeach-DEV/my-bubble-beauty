@@ -19,7 +19,8 @@ if (Astro.request.method === 'POST') {
   const form = await readForm(Astro.request);
   if (!form) return new Response(null, { status: 413 });
   const r = await agendaAction(me, form);
-  if (r.ok) return Astro.redirect(`${link(jour)}&ok=${r.key}#r-${r.id}`, 303);
+  // Déplacé : l'agenda suit le rendez-vous à sa nouvelle date
+  if (r.ok) return Astro.redirect(`${link(r.day ?? jour)}&ok=${r.key}#r-${r.id}`, 303);
   error = r.error;
   Astro.response.status = 400;
 }
@@ -28,6 +29,10 @@ const DONE: Record<string, string> = {
   rembourse: 'Acompte remboursé, rendez-vous annulé.',
   echec: "Le remboursement n'a pas abouti. S'il reste un acompte à rendre, le bouton « Rembourser l'acompte » reste sur la ligne : réessayez plus tard.",
   cree: 'Rendez-vous enregistré.',
+  deplace: 'Rendez-vous déplacé. La cliente reçoit un e-mail si elle a un compte.',
+  absente: 'Rendez-vous marqué « absente ».',
+  venue: 'Absence retirée.',
+  rendu: 'Acompte noté comme remboursé hors du site.',
 };
 // Le formulaire repart vers l'URL courante : après un refus, le ?ok= du succès précédent ne doit plus s'afficher
 const done = !error && DONE[q.get('ok') ?? ''];
@@ -66,12 +71,14 @@ const due = (r: (typeof rows)[number]) => (r.paid ? r.deposit_cents - r.refunded
             <td>{fmtTime(r.starts_at)}–{fmtTime(r.ends_at)}</td>
             <td>{r.service}</td>
             <td>
-              {r.name ?? '—'}{r.guest && <small> (saisie par l'institut)</small>}
+              {r.user_id ? <a href={`/admin/clientes/${r.user_id}`}>{r.name ?? r.email}</a> : r.erased ? 'Compte supprimé' : r.name ?? '—'}
+              {r.guest && <small> (saisie par l'institut)</small>}{r.deleting && <small> (suppression demandée)</small>}
               {r.phone && <><br><a href={`tel:${r.phone.replace(/[^0-9+]/g, '')}`}>{r.phone}</a></>}
               {r.email && <><br><small>{r.email}</small></>}
             </td>
             <td>
-              {STATUS[r.status]}
+              {r.no_show ? 'Absente' : STATUS[r.status]}
+              {r.cancel_reason === 'account_deleted' && <><br><small>Compte supprimé par la cliente</small></>}
               {r.status === 'cancelled' && due(r) > 0 && <><br><small>Acompte gardé ou remboursement à relancer</small></>}
               {r.status === 'expired' && <><br><small>Créneau repris : acompte à rendre</small></>}
             </td>
@@ -93,8 +100,25 @@ const due = (r: (typeof rows)[number]) => (r.paid ? r.deposit_cents - r.refunded
               )}
               {(r.status === 'cancelled' || r.status === 'expired') && due(r) > 0 && (
                 <form class="cell-form" method="post">
-                  <input type="hidden" name="action" value="refund"><input type="hidden" name="id" value={r.id}>
-                  <button class="btn btn--ghost" type="submit">Rembourser l'acompte ({euros(due(r))})</button>
+                  <input type="hidden" name="id" value={r.id}>
+                  <button class="btn btn--ghost" type="submit" name="action" value="refund">Rembourser l'acompte par Stripe ({euros(due(r))})</button>
+                  <button class="btn btn--ghost" type="submit" name="action" value="manual_refund">Marquer remboursé hors site</button>
+                </form>
+              )}
+              {r.status === 'confirmed' && !r.past && (
+                <details class="cancel"><summary>Déplacer<span class="visually-hidden"> le rendez-vous de {fmtTime(r.starts_at)}</span></summary>
+                  <form class="cell-form" method="post">
+                    <input type="hidden" name="action" value="move"><input type="hidden" name="id" value={r.id}>
+                    <label class="field">Date<input type="date" name="day" required value={todayBrussels(r.starts_at)}></label>
+                    <label class="field">Heure<input type="time" name="time" required step="900" value={fmtTime(r.starts_at)}></label>
+                    <button class="btn btn--ghost" type="submit">Confirmer le déplacement</button>
+                  </form>
+                </details>
+              )}
+              {r.status === 'confirmed' && r.past && (
+                <form class="cell-form" method="post">
+                  <input type="hidden" name="id" value={r.id}>
+                  <button class="btn btn--ghost" type="submit" name="action" value={r.no_show ? 'show' : 'no_show'}>{r.no_show ? "Retirer l'absence" : 'Marquer absente'}</button>
                 </form>
               )}
             </td>

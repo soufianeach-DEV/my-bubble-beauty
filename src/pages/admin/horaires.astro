@@ -2,7 +2,8 @@
 export const prerender = false;
 // Horaires d'ouverture (plusieurs plages par jour) et fermetures (congés, créneaux bloqués), en heure de Bruxelles
 import Admin from './_layout.astro';
-import { addClosure, addHours, adminId, deleteClosure, deleteHours, fmtDateTime, listClosures, listHours, readForm } from '../../lib/server/admin.ts';
+import { addClosure, addHours, adminId, closureConflicts, deleteClosure, deleteHours, fmtDateTime, listClosures, listHours, readForm } from '../../lib/server/admin.ts';
+import { todayBrussels } from '../../lib/server/pricing.ts';
 import { EXTRA } from '../../lib/site';
 
 const me = adminId(Astro.locals);
@@ -24,7 +25,7 @@ if (Astro.request.method === 'POST') {
 }
 // Le formulaire repart vers l'URL courante : après un refus, le ?ok= du succès précédent ne doit plus s'afficher
 const done = !error && DONE[Astro.url.searchParams.get('ok') ?? ''];
-const [hours, closures] = await Promise.all([listHours(), listClosures()]);
+const [hours, closures, conflicts] = await Promise.all([listHours(), listClosures(), closureConflicts()]);
 const days = EXTRA.fr.days.map((label, i) => ({ label, ranges: hours.filter((h) => h.weekday === i + 1) }));
 ---
 <Admin title="Horaires et fermetures">
@@ -64,6 +65,12 @@ const days = EXTRA.fr.days.map((label, i) => ({ label, ranges: hours.filter((h) 
 <section aria-labelledby="fermetures">
 <h2 id="fermetures">Fermetures</h2>
 <p>Congés ou créneau bloqué : aucun rendez-vous en ligne n'y est proposé. Les rendez-vous déjà pris ne sont pas annulés (voir l'agenda).</p>
+{conflicts.length > 0 && (
+  <div class="notice notice--error" role="alert">
+    <p><strong>{conflicts.length} rendez-vous déjà pris tombe{conflicts.length > 1 && 'nt'} pendant une fermeture.</strong> Prévenez la cliente, puis déplacez ou annulez le rendez-vous dans l'agenda.</p>
+    <ul>{conflicts.map((c) => <li><a href={`/admin?jour=${todayBrussels(c.starts_at)}&vue=jour#r-${c.id}`}>{fmtDateTime(c.starts_at)}</a> — {c.service}, {c.name ?? '—'}{c.phone && <>, <a href={`tel:${c.phone.replace(/[^0-9+]/g, '')}`}>{c.phone}</a></>}{c.reason && <> (fermeture : {c.reason})</>}</li>)}</ul>
+  </div>
+)}
 {closures.length === 0 ? <p>Aucune fermeture à venir.</p> : (
   <div class="table-wrap"><table class="data-table">
     <thead><tr><th scope="col">Début</th><th scope="col">Fin</th><th scope="col">Motif</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>

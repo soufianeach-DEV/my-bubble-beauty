@@ -38,7 +38,8 @@ const groups = byCategory(await listServices());
                 <input form={f} name="name_nl" value={s.name_nl} maxlength="200" required aria-label={`Nom néerlandais (${s.name_fr})`} lang="nl">
                 <input form={f} name="name_en" value={s.name_en} maxlength="200" required aria-label={`Nom anglais (${s.name_fr})`} lang="en">
               </div></td>
-              <td><input form={f} name="duration" type="number" min="5" max="600" step="1" value={s.duration_min ?? ''} aria-label={`Durée en minutes (${s.name_fr})`}></td>
+              <td><input form={f} name="duration" type="number" min="5" max="600" step="1" value={s.duration_min ?? ''} aria-label={`Durée en minutes (${s.name_fr})`}>
+                <label class="buffer"><small>+ tampon</small><input form={f} name="buffer" type="number" min="0" max="120" step="5" value={s.buffer_min} aria-label={`Temps tampon après le soin, en minutes (${s.name_fr})`}></label></td>
               <td><input form={f} name="price" inputmode="decimal" pattern="[0-9]{1,5}([.,][0-9]{1,2})?" value={centsInput(s.price_cents)} required aria-label={`Prix en euros (${s.name_fr})`}></td>
               <td><input form={f} name="deposit" inputmode="decimal" pattern="[0-9]{1,5}([.,][0-9]{1,2})?" value={centsInput(s.deposit_cents)} required aria-label={`Acompte en euros (${s.name_fr})`}></td>
               <td><input form={f} name="sort" type="number" min="0" max="9999" step="1" value={s.sort} required aria-label={`Ordre d'affichage (${s.name_fr})`}></td>
@@ -66,4 +67,6 @@ const groups = byCategory(await listServices());
   .svc .btn{min-height:44px;padding:.55rem 1rem}
   .svc .notice{margin:0}
   h2 small{font-size:1rem;color:var(--text-soft)}
+  /* Tampon sous la durée : même colonne, la ligne reste lisible au téléphone */
+  .buffer{display:grid;gap:.15rem;margin-top:.35rem}
 </style>

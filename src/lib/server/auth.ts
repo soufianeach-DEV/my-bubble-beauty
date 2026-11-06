@@ -3,6 +3,7 @@ import { hash, verify } from '@node-rs/argon2';
 import { ADMIN_TOTP_SECRET, PASSWORD_PEPPER } from 'astro:env/server';
 import { deviceToken, isDevice } from './cookie.ts';
 import { sql } from './db.ts';
+import { journal } from './journal.ts';
 import { log } from './log.ts';
 import { badEmail, isPwned, passwordProblem } from './password.ts';
 import { blocked, forget, hit } from './rate.ts';
@@ -51,18 +52,25 @@ export async function login(email: string, password: string, ip: string, device?
     log('login_locked', { ip });
     return null;
   }
-  const [u] = await sql`SELECT id, email, locale, password_hash, email_verified_at FROM users WHERE email = ${email}`;
+  // gone : supprimé depuis plus de 30 jours, en attente de la purge ; il ne se réactive plus
+  const [u] = await sql`SELECT id, email, locale, password_hash, email_verified_at, blocked_at IS NOT NULL AS blocked,
+    deleted_at IS NOT NULL AND deleted_at <= now() - interval '30 days' AS gone FROM users WHERE email = ${email}`;
   const ok = await verifyPassword(u?.password_hash, password);
-  if (!ok) {
-    log('login_failed', { user_id: u?.id ?? null, ip });
+  if (!ok || u.gone) {
+    journal('login_failed', { client: u?.id ?? null, ip });
     return null;
   }
   if (!u.email_verified_at) {
     log('login_unverified', { user_id: u.id, ip });
     return null;
   }
+  // Même message qu'un échec : le blocage se règle avec l'institut, pas sur le site
+  if (u.blocked) {
+    journal('login_blocked', { client: u.id, ip });
+    return null;
+  }
   forget('loginPair', pair);
-  log('login_ok', { user_id: u.id, ip });
+  journal('login_ok', { actor: u.id, client: u.id, ip });
   return { id: u.id, email: u.email, locale: u.locale };
 }
 
@@ -86,10 +94,10 @@ export async function checkAdminCode(userId: number, code: string, ip: string): 
   const [row] = step === null ? [] : await sql`UPDATE users SET totp_last_step = ${step} WHERE id = ${userId} AND totp_last_step < ${step} RETURNING id`;
   if (!row) {
     hit('totp', id);
-    log('totp_failed', { user_id: userId, ip });
+    journal('totp_failed', { actor: userId, ip });
     return false;
   }
   forget('totp', id);
-  log('totp_ok', { user_id: userId, ip });
+  journal('totp_ok', { actor: userId, ip });
   return true;
 }

@@ -47,6 +47,8 @@ export const serviceForm = z
     name_nl: text(200, 'Nom néerlandais : 1 à 200 caractères.'),
     name_en: text(200, 'Nom anglais : 1 à 200 caractères.'),
     duration: optInt(5, 600, 'Durée : nombre de minutes de 5 à 600.'),
+    // Vide = aucun tampon
+    buffer: optInt(0, 120, 'Temps tampon : nombre de minutes de 0 à 120.').transform((v) => v ?? 0),
     price: money('Prix : montant en euros, par exemple 35 ou 12,50.'),
     deposit: money('Acompte : montant en euros, 0 pour aucun.'),
     sort: int(0, 9999, 'Ordre : nombre entier de 0 à 9999.'),
@@ -103,11 +105,24 @@ export const promoForm = z
     service_ids: services.length ? [...new Set(services)] : null,
   }));
 
-export const agendaForm = z.object({
-  action: z.enum(['cancel', 'refund'], { error: 'Action inconnue.' }),
-  id,
-  refund: box,
-});
+// Agenda et fiche cliente : day et time ne servent qu'au déplacement
+export const agendaForm = z
+  .object({
+    action: z.enum(['cancel', 'refund', 'manual_refund', 'no_show', 'show', 'move'], { error: 'Action inconnue.' }),
+    id,
+    refund: box,
+    day: optDay('Nouvelle date invalide.'),
+    time: optTime('Nouvelle heure au format HH:MM.'),
+  })
+  .refine((a) => a.action !== 'move' || (a.day && a.time), "Pour déplacer, saisissez la nouvelle date et l'heure.");
+
+// Fiche cliente : notes (4000 caractères, plusieurs lignes permises), blocage, effacement confirmé par un mot tapé
+export const clientForm = z.discriminatedUnion('action', [
+  z.object({ action: z.literal('notes'), id, notes: z.string({ error: 'Notes : 4000 caractères au plus.' }).max(4000, 'Notes : 4000 caractères au plus.').default('') }),
+  z.object({ action: z.literal('block'), id }),
+  z.object({ action: z.literal('unblock'), id }),
+  z.object({ action: z.literal('erase'), id, confirm: z.literal('EFFACER', { error: 'Tapez EFFACER pour confirmer.' }) }),
+], { error: 'Action inconnue.' });
 
 // Rendez-vous pris par téléphone ou WhatsApp : nom exigé, téléphone facultatif
 export const newBookingForm = z.object({

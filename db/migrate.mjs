@@ -13,12 +13,15 @@ async function serviceSeed() {
   const [fr, nl, en] = await Promise.all(['fr', 'nl', 'en'].map(async (l) => JSON.parse(await readFile(new URL(`${l}.json`, DATA), 'utf8')).home.tarifs.groups));
   return fr.flatMap((g, i) => g.items.map((item, j) => {
     const m = AMOUNT.exec(item.amount);
+    // Même soin en deux durées (Sculpt & Fermeté 30 et 60 min) : la durée distingue le slug (unique) et le nom
+    const twin = g.items.filter((x) => x.name === item.name).length > 1;
+    const suffix = (it) => (twin && it.duration ? ` (${it.duration})` : '');
     return {
-      slug: slugify(`${g.id}-${item.name}`),
+      slug: slugify(`${g.id}-${item.name}${suffix(item)}`),
       category: g.cat,
-      name_fr: `${g.title} — ${item.name}`,
-      name_nl: `${nl[i].title} — ${nl[i].items[j].name}`,
-      name_en: `${en[i].title} — ${en[i].items[j].name}`,
+      name_fr: `${g.title} — ${item.name}${suffix(item)}`,
+      name_nl: `${nl[i].title} — ${nl[i].items[j].name}${suffix(nl[i].items[j])}`,
+      name_en: `${en[i].title} — ${en[i].items[j].name}${suffix(en[i].items[j])}`,
       price_cents: m ? Number(m[1]) * 100 + Number(m[2] ?? 0) : 0,
       active: false,
     };

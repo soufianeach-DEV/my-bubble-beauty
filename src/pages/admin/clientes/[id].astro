@@ -1,0 +1,152 @@
+---
+export const prerender = false;
+// Fiche cliente : coordonnées, état du compte, statistiques, notes (données de santé seulement avec son accord), rendez-vous,
+// absences et acomptes à rendre, blocage, effacement à sa demande, dernières lignes du journal la concernant.
+import Admin from '../_layout.astro';
+import { adminId, agendaAction, fmtDateTime, readForm } from '../../../lib/server/admin.ts';
+import { clientAction, clientDetail } from '../../../lib/server/admin-clientes.ts';
+import { ACTION_LABELS } from '../../../lib/server/journal.ts';
+import { euros, todayBrussels } from '../../../lib/server/pricing.ts';
+import { GRACE_DAYS } from '../../../lib/server/rgpd.ts';
+
+const me = adminId(Astro.locals);
+if (!me) return new Response(null, { status: 404 });
+const id = /^[1-9]\d{0,17}$/.test(Astro.params.id ?? '') ? Number(Astro.params.id) : null;
+if (!id) return new Response(null, { status: 404 });
+const self = `/admin/clientes/${id}`;
+let error = '';
+let notesDraft: string | null = null;
+if (Astro.request.method === 'POST') {
+  const form = await readForm(Astro.request);
+  if (!form) return new Response(null, { status: 413 });
+  // Les actions sur un rendez-vous passent par l'agenda (mêmes règles et même journal)
+  const r = form.get('scope') === 'booking' ? await agendaAction(me, form) : await clientAction(me, form);
+  if (r.ok && r.key === 'efface') return Astro.redirect('/admin/clientes?ok=efface', 303);
+  if (r.ok) return Astro.redirect(`${self}?ok=${r.key}${r.id !== id ? `#b-${r.id}` : ''}`, 303);
+  error = r.error;
+  if (form.get('action') === 'notes') notesDraft = String(form.get('notes') ?? '');
+  Astro.response.status = 400;
+}
+const c = await clientDetail(id);
+if (!c) return new Response(null, { status: 404 });
+const { user: u, bookings, stats, events } = c;
+const DONE: Record<string, string> = {
+  notes: 'Notes enregistrées.', block: 'Compte bloqué : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte débloqué.',
+  absente: 'Rendez-vous marqué « absente ».', venue: 'Absence retirée.', rendu: 'Acompte noté comme remboursé hors du site.',
+};
+const done = !error && DONE[Astro.url.searchParams.get('ok') ?? ''];
+const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', dateStyle: 'long' }).format;
+const STATUS: Record<string, string> = { confirmed: 'Confirmé', pending_payment: 'Paiement en cours', cancelled: 'Annulé', expired: 'Payé après expiration' };
+const REASON: Record<string, string> = { client: 'par la cliente', admin: "par l'institut", account_deleted: 'compte supprimé' };
+const due = (b: (typeof bookings)[number]) => (b.paid ? b.deposit_cents - b.refunded_cents : 0);
+const purgeOn = u.deleted_at && new Date(u.deleted_at.getTime() + GRACE_DAYS * 86_400_000);
+const LANGS: Record<string, string> = { fr: 'français', nl: 'néerlandais', en: 'anglais' };
+const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
+---
+<Admin title={u.name || u.email}>
+{done && <p class="notice" role="status">{done}</p>}
+{error && <p class="notice notice--error" role="alert">{error}</p>}
+<p><a href="/admin/clientes">← Toutes les clientes</a></p>
+{u.blocked_at && <p class="notice notice--error">Compte bloqué depuis le {day(u.blocked_at)}.</p>}
+{purgeOn && <p class="notice notice--error">Suppression demandée le {day(u.deleted_at!)}. Sans retour de la cliente, le compte sera effacé le {day(purgeOn)}.</p>}
+
+<section aria-labelledby="h-coord">
+<h2 id="h-coord">Coordonnées</h2>
+<dl class="recap">
+  <dt>E-mail</dt><dd><a href={`mailto:${u.email}`}>{u.email}</a></dd>
+  <dt>Téléphone</dt><dd>{u.phone ? <a href={tel(u.phone)}>{u.phone}</a> : '—'}</dd>
+  <dt>Langue</dt><dd>{LANGS[u.locale] ?? u.locale}</dd>
+  <dt>Cliente depuis</dt><dd>{day(u.created_at)}</dd>
+  <dt>Rendez-vous honorés</dt><dd>{stats.done}</dd>
+  <dt>Absences</dt><dd>{stats.no_shows}</dd>
+  <dt>Annulations</dt><dd>{stats.cancelled}</dd>
+  <dt>Total des soins honorés</dt><dd>{euros(stats.spent_cents)}</dd>
+</dl>
+</section>
+
+<section aria-labelledby="h-notes">
+<h2 id="h-notes">Notes de l'institut</h2>
+{u.health_consent_at
+  ? <p class="hint">Accord pour les données de santé donné le {day(u.health_consent_at)} : vous pouvez noter allergies et contre-indications utiles aux soins.</p>
+  : <p class="notice notice--error">Pas d'accord pour les données de santé : n'inscrivez ici aucune allergie, grossesse, traitement ni contre-indication. La cliente donne son accord en réservant ou depuis son compte.</p>}
+<p class="hint">La cliente voit ces notes si elle demande l'export de ses données. Écrivez des faits utiles aux soins, sans jugement.</p>
+<form class="form" method="post" action={self}>
+  <input type="hidden" name="action" value="notes"><input type="hidden" name="id" value={u.id}>
+  <div class="field"><label for="notes">Notes</label><textarea id="notes" name="notes" rows="6" maxlength="4000">{notesDraft ?? u.notes}</textarea></div>
+  <button class="btn btn--solid" type="submit">Enregistrer les notes</button>
+</form>
+</section>
+
+<section aria-labelledby="h-rdv">
+<h2 id="h-rdv">Rendez-vous</h2>
+{bookings.length === 0 ? <p>Aucun rendez-vous.</p> : (
+<div class="table-wrap"><table class="data-table">
+  <thead><tr><th scope="col">Date</th><th scope="col">Prestation</th><th scope="col">Statut</th><th scope="col">Montants</th><th scope="col">Actions</th></tr></thead>
+  <tbody>{bookings.map((b) => (
+    <tr id={`b-${b.id}`}>
+      <td><a href={`/admin?jour=${todayBrussels(b.starts_at)}&vue=jour#r-${b.id}`}>{fmtDateTime(b.starts_at)}</a>{b.moved && <><br><small>déplacé</small></>}</td>
+      <td>{b.service}</td>
+      <td>
+        {b.no_show ? 'Absente' : b.status === 'confirmed' && b.past ? 'Honoré' : STATUS[b.status]}
+        {b.cancel_reason && <><br><small>{REASON[b.cancel_reason]}</small></>}
+        {due(b) > 0 && b.status !== 'confirmed' && <><br><small>Acompte à rendre</small></>}
+      </td>
+      <td>Prix {euros(b.price_cents - b.discount_cents)}<br>Acompte {b.deposit_cents > 0 ? `${euros(b.deposit_cents)}${b.paid ? ' payé' : ''}` : 'aucun'}{b.refunded_cents > 0 && <><br>Remboursé {euros(b.refunded_cents)}</>}</td>
+      <td>
+        {b.status === 'confirmed' && b.past && (
+          <form class="cell-form" method="post" action={self}>
+            <input type="hidden" name="scope" value="booking"><input type="hidden" name="id" value={b.id}>
+            <button class="btn btn--ghost" type="submit" name="action" value={b.no_show ? 'show' : 'no_show'}>{b.no_show ? "Retirer l'absence" : 'Marquer absente'}</button>
+          </form>
+        )}
+        {b.status !== 'confirmed' && b.status !== 'pending_payment' && due(b) > 0 && (
+          <form class="cell-form" method="post" action={self}>
+            <input type="hidden" name="scope" value="booking"><input type="hidden" name="id" value={b.id}>
+            <button class="btn btn--ghost" type="submit" name="action" value="manual_refund">Marquer remboursé hors site ({euros(due(b))})</button>
+          </form>
+        )}
+      </td>
+    </tr>
+  ))}</tbody>
+</table></div>
+)}
+</section>
+
+<section aria-labelledby="h-compte">
+<h2 id="h-compte">Compte</h2>
+<form class="form" method="post" action={self}>
+  <input type="hidden" name="id" value={u.id}>
+  {u.blocked_at
+    ? <button class="btn btn--ghost" type="submit" name="action" value="unblock">Débloquer le compte</button>
+    : <><p class="hint">Bloquer déconnecte la cliente et l'empêche de se connecter. Ses rendez-vous restent.</p><button class="btn btn--ghost" type="submit" name="action" value="block">Bloquer le compte</button></>}
+</form>
+<details class="cancel">
+  <summary>Effacer le compte à la demande de la cliente</summary>
+  <form class="form" method="post" action={self}>
+    <input type="hidden" name="action" value="erase"><input type="hidden" name="id" value={u.id}>
+    <p class="hint">Effacement immédiat et définitif : coordonnées, notes et sessions disparaissent. Les rendez-vous à venir sont annulés et les acomptes payés restent à rendre hors du site. Les rendez-vous passés restent pour la comptabilité, marqués « compte supprimé ».</p>
+    <div class="field"><label for="confirm">Tapez EFFACER pour confirmer</label><input id="confirm" name="confirm" required autocomplete="off" pattern="EFFACER"></div>
+    <button class="btn btn--ghost" type="submit">Effacer définitivement</button>
+  </form>
+</details>
+</section>
+
+<section aria-labelledby="h-journal">
+<h2 id="h-journal">Journal récent</h2>
+{events.length === 0 ? <p>Aucune ligne.</p> : (
+<ul class="events">{events.map((e) => <li><time datetime={e.at.toISOString()}>{fmtDateTime(e.at)}</time> — {ACTION_LABELS[e.action] ?? e.action}{e.action === 'admin_action' && typeof e.details.action === 'string' && ` (${e.details.action})`}</li>)}</ul>
+)}
+<p><a href={`/admin/journal?cliente=${u.id}`}>Tout le journal de cette cliente</a></p>
+</section>
+</Admin>
+
+<style>
+  .recap{display:grid;grid-template-columns:auto 1fr;gap:.4rem 1.25rem;margin:0 0 1.5rem}
+  .recap dt{color:var(--text-soft)}
+  .recap dd{margin:0}
+  textarea{width:100%;font:inherit}
+  .cell-form{display:grid;gap:.5rem;justify-items:start}
+  .cell-form .btn{min-height:44px;padding:.55rem 1rem;white-space:normal;text-align:left;line-height:1.3}
+  .events{padding-left:1.1rem}
+  section{margin-bottom:2rem}
+</style>
