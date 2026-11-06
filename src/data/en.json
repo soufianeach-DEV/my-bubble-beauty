@@ -47,11 +47,12 @@
   "title": "Beauty salon in Dilbeek — My Bubble Beauty",
   "description": "Beauty and wellness centre in Dilbeek, close to Anderlecht, Molenbeek and Berchem: facials, medical pedicure, nails and hair removal.",
   "hero": {
-   "brand": "My Bubble:",
-   "sub": "Your Oasis of Well-being and Beauty in Dilbeek, close to Anderlecht, Molenbeek and Berchem",
+   "eyebrow": "Beauty salon · Dilbeek",
+   "brand": "My Bubble",
+   "sub": "Your oasis of well-being and beauty in Dilbeek",
    "lead": "Facials, medical pedicure, nails and hair removal: our experienced team combines expertise with premium products to reveal and enhance your natural beauty, in a relaxing setting.",
    "cta": "Make an Appointment",
-   "imgAlt": "Facial treatment with a mask, in a candlelit treatment room"
+   "imgAlt": "Souade prepares the treatment room: rolled towels, bottles and a jade roller on the trolley"
   },
   "infos": {
    "label": "Phone, Address, Appointments",
