@@ -1,10 +1,10 @@
-# Plan de déploiement Render (New > Blueprint) : service web Node (pages du site, compte, réservation, admin) et base Postgres, tous deux à Francfort.
+# Plan de déploiement Render (New > Blueprint) : service web Node (pages du site, compte, réservation, admin) à Francfort ; base Postgres chez Supabase (région Francfort).
 # En-têtes, cache et redirections sont posés par server.mjs : les réglages headers/routes de Render ne valent que pour les sites statiques.
-# Offre gratuite = recette seulement : la base expire 30 jours après sa création, puis est supprimée 14 jours plus tard, sans aucune sauvegarde.
-# Passer la base et le service en payant avant d'ouvrir l'inscription à une vraie cliente.
+# Supabase gratuit : projet mis en pause après 7 jours sans activité, aucune sauvegarde automatique ; exporter la base régulièrement.
+# Service gratuit Render : mis en veille sans trafic, premier affichage lent ; passer en payant avant d'ouvrir l'inscription à une vraie cliente.
 # Nouveau nom : l'ancien site statique « my-bubble-beauty » ne peut pas devenir un service Node (type figé à la création) ; le supprimer une fois celui-ci validé.
 # L'URL https://my-bubble-beauty-app.onrender.com doit figurer dans security.allowedDomains (astro.config.mjs) ; si Render y ajoute un suffixe, reporter l'URL réelle.
-# region, postgresMajorVersion, databaseName et user sont figés à la création.
+# region est figée à la création.
 # HTTP -> HTTPS est automatique chez Render ; www -> domaine nu se règle dans Custom Domains.
 services:
   - type: web
@@ -19,11 +19,9 @@ services:
     envVars:
       - key: NODE_VERSION
         value: "22"
-      # Adresse interne : la base n'accepte aucune connexion venue d'Internet (ipAllowList vide)
+      # Supabase > Connect > Session pooler (port 5432), suivie de ?sslmode=require : la connexion directe de Supabase est en IPv6 seul, que Render ne joint pas
       - key: DATABASE_URL
-        fromDatabase:
-          name: my-bubble-beauty-db
-          property: connectionString
+        sync: false
       # Secrets saisis à la création du Blueprint, jamais écrits ici ; Render ne les redemande plus aux synchronisations suivantes
       - key: SITE_URL
         sync: false
@@ -44,13 +42,3 @@ services:
       - key: MAIL_FROM
         sync: false
 
-databases:
-  - name: my-bubble-beauty-db
-    region: frankfurt
-    plan: free
-    # Version des tests locaux
-    postgresMajorVersion: "16"
-    databaseName: mybubble
-    user: mybubble
-    # Réseau privé de Render seulement
-    ipAllowList: []
