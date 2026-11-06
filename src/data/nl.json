@@ -47,11 +47,12 @@
   "title": "Schoonheidssalon in Dilbeek — My Bubble Beauty",
   "description": "Schoonheids- en welzijnscentrum in Dilbeek, vlak bij Anderlecht, Molenbeek en Berchem: gezichtsverzorging, medische pedicure, nagels en ontharing.",
   "hero": {
-   "brand": "My Bubble:",
-   "sub": "Uw oase van welzijn en schoonheid in Dilbeek, vlak bij Anderlecht, Molenbeek en Berchem",
+   "eyebrow": "Schoonheidsinstituut · Dilbeek",
+   "brand": "My Bubble",
+   "sub": "Uw oase van welzijn en schoonheid in Dilbeek",
    "lead": "Gezichtsverzorging, medische pedicure, nagels en ontharing: ons ervaren team combineert expertise met hoogwaardige producten om uw natuurlijke schoonheid te onthullen en te versterken, in alle rust.",
    "cta": "Afspraak maken",
-   "imgAlt": "Gezichtsbehandeling met masker, in een cabine met kaarslicht"
+   "imgAlt": "Souade maakt de behandelruimte klaar: opgerolde handdoeken, flesjes en een jaderoller op het karretje"
   },
   "infos": {
    "label": "Telefoon, Adres, Afspraken",

@@ -47,11 +47,12 @@
   "title": "Institut de beauté à Dilbeek — My Bubble Beauty",
   "description": "Centre de beauté et de bien-être à Dilbeek, aux portes d'Anderlecht, de Molenbeek et de Berchem : soins du visage, pédicure médicale, ongles et épilation.",
   "hero": {
+   "eyebrow": "Institut de beauté · Dilbeek",
    "brand": "My Bubble",
-   "sub": "– Votre centre de beauté et de bien-être à Dilbeek, aux portes d'Anderlecht, de Molenbeek et de Berchem",
+   "sub": "Votre centre de beauté et de bien-être à Dilbeek",
    "lead": "Soins du visage, pédicure médicale, ongles et épilation : notre équipe expérimentée allie expertise et produits haut de gamme pour révéler et sublimer votre beauté naturelle, en toute détente.",
    "cta": "Prendre rendez-vous",
-   "imgAlt": "Soin du visage avec masque, dans une cabine éclairée à la bougie"
+   "imgAlt": "Souade prépare la cabine de soins : serviettes roulées, flacons et rouleau de jade sur la desserte"
   },
   "infos": {
    "label": "Téléphone, Adresse, Rendez-vous",

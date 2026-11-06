@@ -530,11 +530,11 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
   @media (max-width:1023px){.hero .hero__wrap{margin-top:1rem}}
 }
 @media (max-width:1023px){
-  /* Mobile et tablette, cadrage demandé : photo presque carrée (environ 6:5), visage et mains au centre, bougies en haut à gauche ; fondu limité au bas de l'image */
+  /* Mobile et tablette : image presque carrée (environ 6:5), Souade entière avec ses mains et la desserte ; fondu limité au bas de l'image */
   .hero .hero__media{height:auto;aspect-ratio:131 / 111;
     -webkit-mask-image:linear-gradient(180deg,#000 80%,rgb(0 0 0 / .7) 88%,rgb(0 0 0 / .3) 95%,transparent);
             mask-image:linear-gradient(180deg,#000 80%,rgb(0 0 0 / .7) 88%,rgb(0 0 0 / .3) 95%,transparent)}
-  .hero .hero__img{object-position:20% 50%;scale:1.22;transform-origin:16% 18%}
+  .hero .hero__img{object-position:18% 50%}
   .hero .hero__wrap{margin-top:-2.25rem}
   .hero .hero__lead{margin-top:1.25rem}
 }
@@ -672,4 +672,38 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
   .hero .hero__panel{margin-inline:auto;text-align:center}
   .hero .hero__lead{margin-inline:auto}
   .hero .hero__cta{justify-content:center}
+}
+
+/* Bandeau d'accueil « sceau » : surtitre entre deux filets, « My Bubble » + « Beauty » manuscrit, une seule action mise en avant.
+   Sur ordinateur, le texte est posé dans une carte presque opaque (contraste du texte garanti quel que soit l'arrière-plan). */
+.hero__eyebrow{display:flex;align-items:center;justify-content:center;gap:.8rem;margin:0 0 1.1rem;font:400 .74rem/1.3 var(--f-text);letter-spacing:.26em;text-transform:uppercase;color:var(--accent)}
+.hero__eyebrow::before,.hero__eyebrow::after{content:"";width:2rem;height:1px;background:var(--line)}
+.h1-script{display:block;margin:-.12em auto .05em;font:400 clamp(3.2rem,2.6vw + 2.1rem,4.4rem)/.62 "Allura",cursive;letter-spacing:0;color:var(--line)}
+.hero .h1-brand{font-size:clamp(3rem,3.4vw + 1.6rem,4.4rem);line-height:1}
+.hero .h1-sub{margin:1.2rem auto 0;max-width:24ch;font:400 clamp(1.05rem,.35vw + .95rem,1.2rem)/1.55 var(--f-text);letter-spacing:.01em;color:var(--text);text-wrap:balance}
+.hero__panel{text-align:center}
+.hero__cta{justify-content:center;align-items:center;gap:1rem 1.75rem}
+.hero__tel{display:inline-flex;align-items:center;gap:.45rem;padding:.5rem 0 3px;font:500 .95rem/1 var(--f-text);letter-spacing:.04em;color:var(--text);text-decoration:none;border-bottom:1px solid var(--line)}
+.hero__tel:hover,.hero__tel:focus-visible{color:var(--accent)}
+.hero__tel svg{width:1em;height:1em}
+@media (min-width:1024px){
+  .hero{align-items:center}
+  .hero__wrap{display:flex;justify-content:flex-end;padding:clamp(2rem,4vw,3.5rem) var(--gutter)}
+  .hero__panel{--card:255 251 249;
+    width:min(34rem,44vw);padding:clamp(2.5rem,3.5vw,3.5rem) clamp(2rem,3vw,3rem);border:1px solid rgb(201 164 108 / .55);border-radius:6px;
+    background:radial-gradient(circle at 50% 30%,rgb(var(--card) / .9),rgb(var(--card) / .84));
+    -webkit-backdrop-filter:blur(16px) saturate(1.1);backdrop-filter:blur(16px) saturate(1.1);
+    box-shadow:0 30px 70px -30px rgb(30 22 21 / .55),inset 0 0 0 6px rgb(var(--card) / .35),inset 0 0 0 7px rgb(201 164 108 / .25)}
+  .hero__panel>*{max-width:none}
+}
+@media (min-width:1024px) and (prefers-color-scheme:dark){:where(:root:not([data-theme="light"])) .hero__panel{--card:30 22 21}}
+@media (min-width:1024px){:where(:root[data-theme="dark"]) .hero__panel{--card:30 22 21}}
+@media (min-width:1024px) and (prefers-reduced-transparency:reduce){.hero__panel{background:var(--surface)}}
+@media (max-width:1023px){.hero .h1-sub{max-width:28ch}}
+@media (max-width:767px) and (min-height:501px){.hero__tel{display:none}}
+/* Téléphone et tablette : le surtitre ne chevauche pas la photo et tient sur une ligne (« Schoonheidsinstituut » compris) */
+@media (max-width:1023px){
+  .hero .hero__wrap{margin-top:.75rem}
+  .hero__eyebrow{gap:.6rem;font-size:.68rem;letter-spacing:.18em}
+  .hero__eyebrow::before,.hero__eyebrow::after{width:1.25rem;flex:none}
 }

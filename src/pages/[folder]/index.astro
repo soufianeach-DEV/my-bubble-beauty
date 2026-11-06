@@ -25,19 +25,19 @@ const jsonld = {
 };
 ---
 <Base lang={lang} pageKey="home" title={h.title} description={h.description} jsonld={jsonld} isHome>
-<link slot="head" rel="preload" as="image" href="/assets/img/hero-1200.webp" imagesrcset="/assets/img/hero-800.webp 800w, /assets/img/hero-1200.webp 1200w, /assets/img/hero-1774.webp 1774w" imagesizes="100vw" fetchpriority="high">
+<link slot="head" rel="preload" as="image" href="/assets/img/hero-souade-1200.webp" imagesrcset="/assets/img/hero-souade-800.webp 800w, /assets/img/hero-souade-1200.webp 1200w, /assets/img/hero-souade-1536.webp 1536w" imagesizes="100vw" fetchpriority="high">
 
 <section class="hero" data-loop aria-labelledby="h-hero">
-<div class="hero__media"><img class="hero__img px-far" src="/assets/img/hero-1200.webp" srcset="/assets/img/hero-800.webp 800w, /assets/img/hero-1200.webp 1200w, /assets/img/hero-1774.webp 1774w" sizes="100vw" width="1774" height="887" alt={h.hero.imgAlt} fetchpriority="high" decoding="async"></div>
+<div class="hero__media"><img class="hero__img px-far" src="/assets/img/hero-souade-1200.webp" srcset="/assets/img/hero-souade-800.webp 800w, /assets/img/hero-souade-1200.webp 1200w, /assets/img/hero-souade-1536.webp 1536w" sizes="100vw" width="1536" height="768" alt={h.hero.imgAlt} fetchpriority="high" decoding="async"></div>
 <div class="wrap hero__wrap">
 <div class="hero__panel">
-<h1 id="h-hero"><span class="h1-brand">{h.hero.brand}</span> <span class="h1-sub">{h.hero.sub}</span></h1>
-<p class="hero__lead">{h.hero.lead}</p>
+<p class="hero__eyebrow">{h.hero.eyebrow}</p>
+<h1 id="h-hero"><span class="h1-brand">{h.hero.brand} <span class="h1-script">Beauty</span></span> <span class="h1-sub">{h.hero.sub}</span></h1>
 <div class="hero__cta">
 <a class="btn btn--solid sheen" href="#contact">{h.hero.cta}</a>
-<a class="btn btn--ghost" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{CONTACT.phoneLabel}</a>
+{/* Une seule action mise en avant : le téléphone reste un simple lien */}
+<a class="hero__tel" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{CONTACT.phoneLabel}</a>
 </div>
-<hr class="rule">
 </div>
 </div>
 </section>
