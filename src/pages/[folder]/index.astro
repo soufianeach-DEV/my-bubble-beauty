@@ -51,13 +51,17 @@ const jsonld = {
 
 <section class="section about lit" aria-labelledby="h-about">
 <div class="halo halo--lilas" aria-hidden="true"></div>
-<div class="wrap about__grid">
-<figure class="about__media"><img src="/assets/img/galerie-1-800.webp" srcset="/assets/img/galerie-1-800.webp 800w, /assets/img/galerie-1-1200.webp 1200w, /assets/img/galerie-1.webp 1600w" sizes="(max-width: 899px) min(520px, 100vw), min(65vw, 900px)" width="800" height="600" alt={h.about.imgAlt} loading="lazy" decoding="async"></figure>
+<div class="wrap about__gallery">
 <div class="about__content">
 <p class="eyebrow">{h.about.eyebrow}</p>
 <h2 id="h-about">{h.about.quote}</h2><p class="about__lead">{h.about.lead}</p>
-<ul class="about__points">{h.about.points.map((p) => <li><Icon name="check" />{p}</li>)}</ul>
 <details class="about__more"><summary><span class="more">{h.about.more}</span><span class="less">{h.about.less}</span></summary><Fragment set:html={h.about.bodyHtml} /></details>
+</div>
+{/* Mosaïque des vraies photos de l'institut : la cabine, l'appareil Hydra, le mur My Bubble */}
+<div class="about__mosaic">
+<figure class="about__tile about__tile--main"><img src="/assets/img/centre-cabine-800.webp" srcset="/assets/img/centre-cabine-800.webp 800w, /assets/img/centre-cabine-1200.webp 1200w" sizes="(max-width: 899px) 60vw, 30vw" width="1200" height="1600" alt={h.about.imgAlt} loading="lazy" decoding="async"></figure>
+<figure class="about__tile"><img src="/assets/img/centre-hydra-600.webp" width="600" height="600" alt="" loading="lazy" decoding="async"></figure>
+<figure class="about__tile"><img src="/assets/img/centre-mur-600.webp" width="600" height="600" alt="" loading="lazy" decoding="async"></figure>
 </div>
 </div>
 </section>
