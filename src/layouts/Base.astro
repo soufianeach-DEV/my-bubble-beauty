@@ -84,7 +84,9 @@ const year = new Date().getFullYear();
 </details>
 <button class="theme-btn" type="button" data-dark={EXTRA[lang].toDark} data-light={EXTRA[lang].toLight} aria-label={EXTRA[lang].toDark} title={EXTRA[lang].toDark} hidden><Icon name="theme" /></button>
 <details class="mnav"><summary>{ui.menu}</summary><div class="mnav__panel"><ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}<li><a href={account}>{ui.ctaLong}</a></li></ul></div></details>
-<a class="btn btn--solid sheen" href={account}><span class="lbl-long">{ui.ctaLong}</span><span class="lbl-short">{ui.ctaShort}</span></a>
+{/* Une seule action mise en avant : la réservation ; le compte passe en second */}
+<a class="btn btn--ghost header-account" href={account}>{ui.ctaShort}</a>
+<a class="btn btn--solid sheen" href={`/${FOLDER[lang]}/reserver`}><span class="lbl-long">{ui.book}</span><span class="lbl-short">{ui.bookShort}</span></a>
 </div>
 </header>
 <main id="main" class={mainClass}>
@@ -99,8 +101,9 @@ const year = new Date().getFullYear();
 </div>
 </footer>
 <nav class="callbar" aria-label={ui.quickContact}>
-<a class="btn btn--solid" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{ui.call}</a>
-<a class="btn btn--ghost" href={CONTACT.whatsapp}><Icon name="whatsapp" />WhatsApp</a>
+<a class="btn btn--solid" href={`/${FOLDER[lang]}/reserver`}>{ui.bookShort}</a>
+<a class="btn btn--ghost" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{ui.call}</a>
+<a class="btn btn--ghost" href={CONTACT.whatsapp} aria-label="WhatsApp"><Icon name="whatsapp" /></a>
 </nav>
 </body>
 </html>

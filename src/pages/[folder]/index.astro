@@ -55,8 +55,7 @@ const jsonld = {
 <figure class="about__media"><img src="/assets/img/galerie-1-800.webp" srcset="/assets/img/galerie-1-800.webp 800w, /assets/img/galerie-1-1200.webp 1200w, /assets/img/galerie-1.webp 1600w" sizes="(max-width: 899px) min(520px, 100vw), min(65vw, 900px)" width="800" height="600" alt={h.about.imgAlt} loading="lazy" decoding="async"></figure>
 <div class="about__content">
 <p class="eyebrow">{h.about.eyebrow}</p>
-<h2 id="h-about">{h.about.quote}</h2>
-<p class="about__lead">{h.about.lead}</p>
+<h2 id="h-about">{h.about.quote}</h2><p class="about__lead">{h.about.lead}</p>
 <ul class="about__points">{h.about.points.map((p) => <li><Icon name="check" />{p}</li>)}</ul>
 <details class="about__more"><summary><span class="more">{h.about.more}</span><span class="less">{h.about.less}</span></summary><Fragment set:html={h.about.bodyHtml} /></details>
 </div>
@@ -85,20 +84,41 @@ const jsonld = {
 {h.tarifs.filters.map((f, i) => <li><button class="pill" type="button" data-filter={f.key} aria-pressed={f.key === 'visage' ? 'true' : 'false'} data-status={f.status}>{f.label}</button></li>)}
 </ul>
 <p class="visually-hidden" id="filter-status" role="status"></p>
-<div class="price-groups">
-{h.tarifs.groups.map((g) => (
-  <section class="price-group" data-cat={g.cat} id={`tarif-${g.id}`} aria-labelledby={`h-tarif-${g.id}`}>
-    <h3 id={`h-tarif-${g.id}`}>{g.href
-      ? <a href={treat(g.href)}>{g.title}<Icon name="info" class="i-info" /><span class="visually-hidden"> — {ui.moreInfo}</span></a>
-      : g.title}</h3>
-    <ul class="prices">{g.items.map((it) => (
-      <li class="sheen"><span class="name">{it.href
-        ? <a href={treat(it.href)}>{it.name}<Icon name="info" class="i-info" /><span class="visually-hidden"> — {ui.moreInfo}</span></a>
-        : it.name}</span><span class="dots" aria-hidden="true"></span><span class="amount">{it.amount}</span></li>
-    ))}</ul>
+{[
+  { key: 'presta', title: h.tarifs.partPresta, groups: h.tarifs.groups },
+  { key: 'formules', title: h.tarifs.partFormules, groups: h.tarifs.formulas },
+].map((part) => (
+  <section class={`tarifs__part tarifs__part--${part.key}`} aria-labelledby={`h-part-${part.key}`}>
+  <h3 class="tarifs__part-title" id={`h-part-${part.key}`}>{part.title}</h3>
+  <div class="price-groups">
+  {part.groups.map((g) => (
+    <section class="price-group" data-cat={g.cat} id={`tarif-${g.id}`} aria-labelledby={`h-tarif-${g.id}`}>
+      <h4 id={`h-tarif-${g.id}`}>{g.href
+        ? <a href={treat(g.href)}>{g.title}<Icon name="info" class="i-info" /><span class="visually-hidden"> — {ui.moreInfo}</span></a>
+        : g.title}</h4>
+      {g.intro && <p class="price-group__intro">{g.intro}</p>}
+      <ul class="prices">{g.items.map((it) => {
+        // Prestation : « durée · description » ; formule : son contenu, puis « durée · prix par séance »
+        const isFormule = 'detail' in it;
+        const line1 = isFormule ? it.detail : [it.duration, it.desc].filter(Boolean).join(' · ');
+        const line2 = isFormule ? [it.duration, it.note].filter(Boolean).join(' · ') : '';
+        return (
+          <li class="sheen"><span class="name">{it.href
+            ? <a href={treat(it.href)}>{it.name}<Icon name="info" class="i-info" /><span class="visually-hidden"> — {ui.moreInfo}</span></a>
+            : it.name}{it.badge && <span class="price-badge">{it.badge}</span>}{line1 && <small>{line1}</small>}{line2 && <small class="price-note">{line2}</small>}</span><span class="dots" aria-hidden="true"></span><span class="amount">{it.amount}{it.was && <s class="was"><span class="visually-hidden"> {h.tarifs.wasLabel} </span>{it.was}</s>}</span></li>
+        );
+      })}</ul>
+      {/* Le titre est un lien, mais peu de clientes le devinent : la fiche est aussi proposée en toutes lettres */}
+      <div class="price-group__foot">
+        {g.href && <a class="price-group__more" href={treat(g.href)}>{ui.moreInfo}<span class="visually-hidden">{lang === 'fr' ? ' : ' : ': '}{g.title}</span><span aria-hidden="true"> →</span></a>}
+        <a class="price-group__book" href={`/${FOLDER[lang]}/reserver`}>{h.tarifs.book}<span class="visually-hidden">{lang === 'fr' ? ' : ' : ': '}{g.title}</span><span aria-hidden="true"> →</span></a>
+      </div>
+    </section>
+  ))}
+  </div>
   </section>
 ))}
-</div>
+<div class="tarifs__cta"><a class="btn btn--solid sheen" href={`/${FOLDER[lang]}/reserver`}>{h.hero.cta}</a><a class="btn btn--ghost" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{CONTACT.phoneLabel}</a></div>
 </div>
 </div>
 </section>
@@ -124,7 +144,7 @@ const jsonld = {
 <div class="wrap cta-band__inner">
 <h2 id="h-cta">{h.cta.title}</h2>
 <p>{h.contact.intro}</p>
-<div class="cta-band__btns"><a class="btn btn--light sheen" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{CONTACT.phoneLabel}</a><a class="btn btn--outline-light" href={CONTACT.whatsapp}><Icon name="whatsapp" />WhatsApp</a></div>
+<div class="cta-band__btns"><a class="btn btn--light sheen" href={`/${FOLDER[lang]}/reserver`}>{ui.book}</a><a class="btn btn--outline-light" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{CONTACT.phoneLabel}</a><a class="btn btn--outline-light" href={CONTACT.whatsapp}><Icon name="whatsapp" />WhatsApp</a></div>
 </div>
 </section>
 
@@ -132,25 +152,29 @@ const jsonld = {
 <div class="halo halo--menthe px-halo" aria-hidden="true"></div>
 <div class="halo halo--rose px-halo" aria-hidden="true"></div>
 <div class="wrap">
+{/* Gauche : l'action d'abord, puis les coordonnées ; droite : horaires et canaux, pour équilibrer les deux colonnes */}
 <div class="contact__card">
-<div>
+{/* Le même avatar que dans les reels, en grand : la cliente reconnaît la personne qui l'accueille */}
+<figure class="contact__avatar"><img class="contact__avatar-img" src="/assets/img/souade-avatar-480.webp" srcset="/assets/img/souade-avatar-300.webp 300w, /assets/img/souade-avatar-480.webp 480w" sizes="(max-width:1023px) 220px, 300px" width="480" height="672" alt="Souade, My Bubble Beauty" loading="lazy" decoding="async"><figcaption><span class="contact__avatar-name">Souade</span><span class="contact__avatar-role">My Bubble Beauty</span></figcaption></figure>
+<div class="contact__main">
 <p class="eyebrow">{h.contact.eyebrow}</p>
 <h2 id="h-contact">{h.contact.title}</h2>
-<p>{h.contact.intro}</p>
-<dl>
+<p class="contact__intro">{h.contact.intro}</p>
+<div class="contact__cta">
+<a class="btn btn--solid sheen" href={`/${FOLDER[lang]}/reserver`}>{ui.book}</a>
+<a class="btn btn--ghost" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{ui.call}</a>
+</div>
+<dl class="contact__info">
 <div><dt>{h.contact.labels[0]}</dt><dd><address>{CONTACT.street}<br>{CONTACT.postal} {CONTACT.city}<br>{LANG_META[lang].country}</address><a href={CONTACT.maps} rel="noopener">{h.contact.itinerary}</a></dd></div>
 <div><dt>{h.contact.labels[1]}</dt><dd><a href={`tel:${CONTACT.phone}`}>{CONTACT.phoneLabel}</a></dd></div>
 <div><dt>{h.contact.labels[2]}</dt><dd><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></dd></div>
-{HOURS.length > 0 && <div><dt>{EXTRA[lang].hours}</dt><dd><ul class="hours">{hoursRows(lang).map((r) => <li><span>{r.label}</span> <span>{r.value}</span></li>)}</ul></dd></div>}
 </dl>
-<div class="contact__cta">
-<a class="btn btn--solid sheen" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{ui.call}</a>
-<a class="btn btn--ghost" href={CONTACT.whatsapp}><Icon name="whatsapp" />WhatsApp</a>
 </div>
-</div>
-<div class="contact__social">
-<h3>{h.contact.socialTitle}</h3>
-<ul class="social">{CONTACT.social.map((s) => <li><a href={s.href} rel="noopener"><Icon name={s.key} /><span>{s.label}</span></a></li>)}</ul>
+<div class="contact__side">
+{HOURS.length > 0 && <section class="contact__hours" aria-labelledby="h-hours"><h3 id="h-hours">{EXTRA[lang].hours}</h3>
+<ul class="hours">{hoursRows(lang).map((r, i) => <li data-day={i + 1}><span>{r.label}</span><span>{r.value}</span></li>)}</ul></section>}
+<section class="contact__social" aria-labelledby="h-social"><h3 id="h-social">{h.contact.socialTitle}</h3>
+<ul class="social"><li><a href={CONTACT.whatsapp} rel="noopener"><Icon name="whatsapp" /><span>WhatsApp</span></a></li>{CONTACT.social.map((s) => <li><a href={s.href} rel="noopener"><Icon name={s.key} /><span>{s.label}</span></a></li>)}</ul></section>
 </div>
 </div>
 </div>
