@@ -31,7 +31,7 @@ const c = await clientDetail(id);
 if (!c) return new Response(null, { status: 404 });
 const { user: u, bookings, stats, events } = c;
 const DONE: Record<string, string> = {
-  notes: 'Notes enregistrées.', block: 'Compte bloqué : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte débloqué.',
+  notes: 'Notes enregistrées.', block: 'Compte bloqué : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte débloqué.', restore: 'Suppression annulée : le compte est de nouveau actif. Les rendez-vous annulés le restent.',
   absente: 'Rendez-vous marqué « absente ».', venue: 'Absence retirée.', rendu: 'Acompte noté comme remboursé hors du site.',
 };
 const done = !error && DONE[Astro.url.searchParams.get('ok') ?? ''];
@@ -114,6 +114,13 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 
 <section aria-labelledby="h-compte">
 <h2 id="h-compte">Compte</h2>
+{purgeOn && (
+  <form class="form" method="post" action={self}>
+    <input type="hidden" name="id" value={u.id}>
+    <p class="hint">À faire seulement si la cliente le demande. Ses rendez-vous annulés lors de la suppression ne reviennent pas.</p>
+    <button class="btn btn--solid" type="submit" name="action" value="restore">Annuler la suppression</button>
+  </form>
+)}
 <form class="form" method="post" action={self}>
   <input type="hidden" name="id" value={u.id}>
   {u.blocked_at

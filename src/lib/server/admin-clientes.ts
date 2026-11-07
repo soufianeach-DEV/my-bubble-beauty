@@ -1,9 +1,10 @@
 // Fiches clientes (admin) : liste et recherche, fiche avec historique et statistiques, notes, blocage, effacement ; écran du journal.
 // Les pages relisent adminId() avant d'appeler ; toute action est journalisée avec l'admin et la cliente.
+import { ADMIN_EMAIL } from 'astro:env/server';
 import { audit, type Result } from './admin.ts';
 import { clientForm } from './admin-form.ts';
 import { sql } from './db.ts';
-import { eraseUser } from './rgpd.ts';
+import { eraseUser, GRACE_DAYS } from './rgpd.ts';
 import { isAdminEmail, revokeAll } from './session.ts';
 
 const PAGE = 50;
@@ -14,6 +15,16 @@ export type ClientFilter = 'actives' | 'suppression' | 'bloquees' | 'toutes';
 export type ClientRow = { id: number; name: string | null; email: string; phone: string | null; created_at: Date; deleted_at: Date | null; blocked_at: Date | null; done: number; upcoming: number; no_shows: number; last_at: Date | null };
 
 // Comptes confirmés seulement ; la gérante n'est pas une cliente. Téléphone cherché sur ses seuls chiffres (0484 11 83 95 = 0484118395).
+// Nombre de comptes par onglet de la liste (adresse confirmée, admin exclue)
+export async function clientCounts(): Promise<Record<ClientFilter, number>> {
+  const [c] = await sql<Record<ClientFilter, number>[]>`
+    SELECT count(*) FILTER (WHERE deleted_at IS NULL AND blocked_at IS NULL)::int AS actives,
+      count(*) FILTER (WHERE deleted_at IS NOT NULL)::int AS suppression,
+      count(*) FILTER (WHERE blocked_at IS NOT NULL)::int AS bloquees, count(*)::int AS toutes
+    FROM users WHERE email_verified_at IS NOT NULL AND email <> ${ADMIN_EMAIL.trim().toLowerCase()}`;
+  return c;
+}
+
 export async function listClients(q: string, filter: ClientFilter, page: number) {
   q = q.trim().slice(0, 100);
   const digits = q.replace(/\D/g, '');
@@ -79,6 +90,14 @@ export async function clientAction(adminUser: number, form: FormData): Promise<R
     if (f.action === 'block') await revokeAll(f.id);
     audit(adminUser, f.action === 'block' ? 'client_blocked' : 'client_unblocked', { client_id: f.id });
     return { ok: true, id: f.id, key: f.action };
+  }
+  // Suppression demandée annulée à la demande de la cliente (téléphone) : même délai de 30 jours que la réactivation depuis son compte
+  if (f.action === 'restore') {
+    const [r] = await sql`UPDATE users SET deleted_at = NULL, updated_at = now()
+      WHERE id = ${f.id} AND deleted_at > now() - make_interval(days => ${GRACE_DAYS}) RETURNING id`;
+    if (!r) return { ok: false, error: "Ce compte n'est pas en cours de suppression, ou le délai de 30 jours est passé." };
+    audit(adminUser, 'account_reactivated', { client_id: f.id });
+    return { ok: true, id: f.id, key: 'restore' };
   }
   // Effacement à la demande de la cliente (téléphone, e-mail) : mêmes effets que depuis son compte
   const gone = await eraseUser(f.id, adminUser, null, 'admin');

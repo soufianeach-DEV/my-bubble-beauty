@@ -25,48 +25,50 @@ const groups = byCategory(await listServices());
 {groups.map((g) => (
   <section aria-labelledby={`c-${g.key}`}>
     <h2 id={`c-${g.key}`}>{g.label} <small>({g.items.filter((s) => s.active).length} en ligne sur {g.items.length})</small></h2>
-    <div class="table-wrap"><table class="data-table svc">
-      <thead><tr><th scope="col">Noms FR / NL / EN</th><th scope="col">Durée (min)</th><th scope="col">Prix (€)</th><th scope="col">Acompte (€)</th><th scope="col">Ordre</th><th scope="col">En ligne</th><th scope="col"><span class="visually-hidden">Enregistrer</span></th></tr></thead>
-      <tbody>{g.items.map((s) => {
-        const f = `f-${s.id}`;
-        return (
-          <>
-            <tr id={`p-${s.id}`}>
-              <td><div class="names">
-                <form id={f} method="post" action={`#p-${s.id}`}><input type="hidden" name="id" value={s.id}></form>
-                <input form={f} name="name_fr" value={s.name_fr} maxlength="200" required aria-label={`Nom français (${s.name_fr})`} lang="fr">
-                <input form={f} name="name_nl" value={s.name_nl} maxlength="200" required aria-label={`Nom néerlandais (${s.name_fr})`} lang="nl">
-                <input form={f} name="name_en" value={s.name_en} maxlength="200" required aria-label={`Nom anglais (${s.name_fr})`} lang="en">
-              </div></td>
-              <td><input form={f} name="duration" type="number" min="5" max="600" step="1" value={s.duration_min ?? ''} aria-label={`Durée en minutes (${s.name_fr})`}>
-                <label class="buffer"><small>+ tampon</small><input form={f} name="buffer" type="number" min="0" max="120" step="5" value={s.buffer_min} aria-label={`Temps tampon après le soin, en minutes (${s.name_fr})`}></label></td>
-              <td><input form={f} name="price" inputmode="decimal" pattern="[0-9]{1,5}([.,][0-9]{1,2})?" value={centsInput(s.price_cents)} required aria-label={`Prix en euros (${s.name_fr})`}></td>
-              <td><input form={f} name="deposit" inputmode="decimal" pattern="[0-9]{1,5}([.,][0-9]{1,2})?" value={centsInput(s.deposit_cents)} required aria-label={`Acompte en euros (${s.name_fr})`}></td>
-              <td><input form={f} name="sort" type="number" min="0" max="9999" step="1" value={s.sort} required aria-label={`Ordre d'affichage (${s.name_fr})`}></td>
-              <td><input form={f} name="active" type="checkbox" checked={s.active} aria-label={`Proposée en ligne (${s.name_fr})`}></td>
-              <td><button form={f} class="btn btn--ghost" type="submit">Enregistrer</button></td>
-            </tr>
-            {flash?.id === s.id && (
-              <tr><td colspan="7"><p class={flash.error ? 'notice notice--error' : 'notice'} role={flash.error ? 'alert' : 'status'}>{flash.text}</p></td></tr>
-            )}
-          </>
-        );
-      })}</tbody>
-    </table></div>
+    <div class="svc-list">{g.items.map((s) => (
+      <form id={`p-${s.id}`} class:list={['svc', { 'svc--off': !s.active }]} method="post" action={`#p-${s.id}`}>
+        <input type="hidden" name="id" value={s.id}>
+        <fieldset class="names"><legend class="visually-hidden">Noms de la prestation</legend>
+          <label><span>FR</span><input name="name_fr" value={s.name_fr} maxlength="200" required lang="fr"></label>
+          <label><span>NL</span><input name="name_nl" value={s.name_nl} maxlength="200" required lang="nl"></label>
+          <label><span>EN</span><input name="name_en" value={s.name_en} maxlength="200" required lang="en"></label>
+        </fieldset>
+        <div class="row"><div class="nums">
+          <label>Durée (min)<input name="duration" type="number" min="5" max="600" step="1" value={s.duration_min ?? ''}></label>
+          <label>Tampon (min)<input name="buffer" type="number" min="0" max="120" step="5" value={s.buffer_min}></label>
+          <label>Prix (€)<input name="price" inputmode="decimal" pattern="[0-9]{1,5}([.,][0-9]{1,2})?" value={centsInput(s.price_cents)} required></label>
+          <label>Acompte (€)<input name="deposit" inputmode="decimal" pattern="[0-9]{1,5}([.,][0-9]{1,2})?" value={centsInput(s.deposit_cents)} required></label>
+          <label>Ordre<input name="sort" type="number" min="0" max="9999" step="1" value={s.sort} required></label>
+        </div>
+        <div class="end">
+          <label class="check"><input name="active" type="checkbox" checked={s.active}><span>En ligne</span></label>
+          <button class="btn btn--ghost" type="submit">Enregistrer<span class="visually-hidden"> {s.name_fr}</span></button>
+        </div></div>
+        {flash?.id === s.id && <p class={flash.error ? 'notice notice--error' : 'notice'} role={flash.error ? 'alert' : 'status'}>{flash.text}</p>}
+      </form>
+    ))}</div>
   </section>
 ))}
 </Admin>
 
 <style>
-  .svc input:not([type="checkbox"]){font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line-soft);border-radius:8px;padding:.4rem .55rem;min-height:44px;width:6rem}
-  .svc .names{display:grid;gap:.35rem;min-width:16rem}
-  .svc .names input{width:100%}
-  .svc form{display:contents}
-  .svc input[type="checkbox"]{width:1.25rem;height:1.25rem;accent-color:var(--accent)}
-  .svc td{vertical-align:middle}
-  .svc .btn{min-height:44px;padding:.55rem 1rem}
+  .svc-list{display:grid;gap:.75rem;margin:0 0 2rem}
+  /* Une carte par prestation : les trois noms côte à côte, puis chiffres et enregistrement sur une ligne ; tout passe à la ligne au lieu de déborder */
+  .svc{display:grid;gap:.9rem;padding:1rem 1.25rem;border:1px solid var(--line-soft);border-radius:16px;background:var(--bg);scroll-margin-top:calc(var(--header-h) + 1rem)}
+  .svc--off{opacity:.72}
+  .svc--off:focus-within{opacity:1}
+  .svc input:not([type="checkbox"]){width:100%;min-width:0;min-height:44px;padding:.4rem .6rem;border:1px solid var(--line-soft);border-radius:8px;background:rgb(var(--card));color:var(--text);font:inherit}
+  .svc label{display:grid;gap:.25rem;font-size:.8125rem;color:var(--text-soft)}
+  .names{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.6rem;margin:0;padding:0;border:0;min-width:0}
+  .names span{font-weight:500;letter-spacing:.08em}
+  .nums{display:flex;flex-wrap:wrap;gap:.6rem}
+  .nums label{width:6.75rem}
+  .row{display:flex;flex-wrap:wrap;gap:.9rem 1.5rem;align-items:flex-end;justify-content:space-between}
+  .end{display:flex;flex-wrap:wrap;gap:.6rem 1.25rem;align-items:center}
+  .end .check{display:flex;flex-direction:row;align-items:center;gap:.5rem;min-height:44px;font-size:.9375rem;color:var(--text)}
+  .end input[type="checkbox"]{width:1.25rem;height:1.25rem;margin:0;accent-color:var(--accent)}
+  .end .btn{min-height:44px;padding:.55rem 1.1rem}
   .svc .notice{margin:0}
   h2 small{font-size:1rem;color:var(--text-soft)}
-  /* Tampon sous la durée : même colonne, la ligne reste lisible au téléphone */
-  .buffer{display:grid;gap:.15rem;margin-top:.35rem}
+  @media (max-width:599px){.nums label{width:calc(50% - .3rem)}}
 </style>

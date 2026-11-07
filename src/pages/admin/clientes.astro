@@ -3,7 +3,7 @@ export const prerender = false;
 // Clientes : comptes confirmés, recherche par nom, e-mail ou téléphone, filtre par état ; un clic ouvre la fiche
 import Admin from './_layout.astro';
 import { adminId, fmtDateTime } from '../../lib/server/admin.ts';
-import { listClients, type ClientFilter } from '../../lib/server/admin-clientes.ts';
+import { clientCounts, listClients, type ClientFilter } from '../../lib/server/admin-clientes.ts';
 
 const me = adminId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
@@ -12,18 +12,19 @@ const q = (sp.get('q') ?? '').slice(0, 100);
 const FILTERS: Record<ClientFilter, string> = { actives: 'Actives', suppression: 'En suppression (30 jours)', bloquees: 'Bloquées', toutes: 'Toutes' };
 const filter = (Object.hasOwn(FILTERS, sp.get('etat') ?? '') ? sp.get('etat') : 'actives') as ClientFilter;
 const page = Math.min(Math.max(Number.parseInt(sp.get('page') ?? '1', 10) || 1, 1), 1000);
-const { rows, more } = await listClients(q, filter, page);
-const link = (p: number) => `/admin/clientes?${new URLSearchParams({ q, etat: filter, page: String(p) })}`;
+const [{ rows, more }, counts] = await Promise.all([listClients(q, filter, page), clientCounts()]);
+const link = (p: number, etat: string = filter) => `/admin/clientes?${new URLSearchParams({ q, etat, page: String(p) })}`;
 const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', dateStyle: 'medium' }).format;
 const erased = sp.get('ok') === 'efface';
 ---
 <Admin title="Clientes">
 {erased && <p class="notice" role="status">Compte effacé. Ses rendez-vous restent dans l'agenda, marqués « compte supprimé ».</p>}
+<nav class="tabs" aria-label="État des comptes">{(Object.keys(FILTERS) as ClientFilter[]).map((k) => (
+  <a href={link(1, k)} aria-current={k === filter ? 'page' : undefined}>{FILTERS[k]} <span class="count">{counts[k]}</span></a>
+))}</nav>
 <form class="actions bar" method="get" action="/admin/clientes" role="search">
+  <input type="hidden" name="etat" value={filter}>
   <div class="field grow"><label for="q">Nom, e-mail ou téléphone</label><input id="q" name="q" type="search" value={q} maxlength="100" autocomplete="off"></div>
-  <div class="field"><label for="etat">État</label>
-    <select id="etat" name="etat">{Object.entries(FILTERS).map(([k, label]) => <option value={k} selected={k === filter}>{label}</option>)}</select>
-  </div>
   <button class="btn btn--ghost" type="submit">Chercher</button>
 </form>
 <p class="hint">Seuls les comptes dont l'adresse est confirmée apparaissent. Les rendez-vous saisis pour une personne sans compte restent dans l'agenda.</p>
@@ -36,7 +37,8 @@ const erased = sp.get('ok') === 'efface';
       <td>{c.phone ? <a href={`tel:${c.phone.replace(/[^0-9+]/g, '')}`}>{c.phone}</a> : '—'}</td>
       <td>{c.done} passé{c.done > 1 && 's'} · {c.upcoming} à venir{c.no_shows > 0 && <><br><small>{c.no_shows} absence{c.no_shows > 1 && 's'}</small></>}</td>
       <td>{c.last_at ? day(c.last_at) : '—'}</td>
-      <td>{c.blocked_at ? 'Bloquée' : c.deleted_at ? `Suppression demandée le ${day(c.deleted_at)}` : `Cliente depuis ${day(c.created_at)}`}</td>
+      <td>{c.blocked_at && <span class="badge badge--alert">Bloquée</span>}{c.deleted_at && <span class="badge badge--wait">Suppression demandée le {day(c.deleted_at)}</span>}
+        {!c.blocked_at && !c.deleted_at && <>Cliente depuis {day(c.created_at)}</>}</td>
     </tr>
   ))}</tbody>
 </table></div>
@@ -48,7 +50,13 @@ const erased = sp.get('ok') === 'efface';
 </Admin>
 
 <style>
+  /* Onglets avec compteur : les comptes bloqués ou en suppression se voient sans ouvrir de menu */
+  .tabs{display:flex;flex-wrap:wrap;gap:.4rem;margin:0 0 1.25rem}
+  .tabs a{display:inline-flex;align-items:center;gap:.5rem;min-height:44px;padding:.4rem 1rem;border:1px solid var(--line-soft);border-radius:999px;color:var(--text);text-decoration:none;font-size:.9375rem}
+  .tabs a:hover,.tabs a:focus-visible{background:rgb(var(--card))}
+  .tabs a[aria-current="page"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+  .count{min-width:1.5rem;padding:0 .4rem;border-radius:999px;background:rgb(0 0 0 / .1);font-size:.8125rem;text-align:center}
   .bar{margin:0 0 1.25rem;align-items:flex-end}
-  .bar .field{min-width:10rem}
   .bar .grow{flex:1 1 16rem}
+  td .badge + .badge{margin-top:.3rem}
 </style>

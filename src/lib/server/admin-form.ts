@@ -121,6 +121,7 @@ export const clientForm = z.discriminatedUnion('action', [
   z.object({ action: z.literal('notes'), id, notes: z.string({ error: 'Notes : 4000 caractères au plus.' }).max(4000, 'Notes : 4000 caractères au plus.').default('') }),
   z.object({ action: z.literal('block'), id }),
   z.object({ action: z.literal('unblock'), id }),
+  z.object({ action: z.literal('restore'), id }),
   z.object({ action: z.literal('erase'), id, confirm: z.literal('EFFACER', { error: 'Tapez EFFACER pour confirmer.' }) }),
 ], { error: 'Action inconnue.' });
 
