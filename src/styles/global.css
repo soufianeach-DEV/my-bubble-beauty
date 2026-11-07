@@ -710,26 +710,25 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 }
 
 /* Le centre, version « galerie » : texte à gauche, mosaïque de trois vraies photos de l'institut à droite,
-   plus de liste de points (retirée à la demande). */
-.about__gallery{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"text mosaic";gap:clamp(2.5rem,5vw,4.5rem) clamp(2rem,5vw,5rem);align-items:center}
+   plus de liste de points (retirée à la demande). Les photos prennent la plus grande colonne. */
+.about__gallery{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-areas:"text mosaic";gap:clamp(2.5rem,5vw,4.5rem) clamp(2rem,4vw,4rem);align-items:center}
 .about__content{grid-area:text}
 .about .eyebrow{display:flex;align-items:center;gap:.75rem}
 .about .eyebrow::before{content:"";width:2.25rem;height:1px;background:var(--line)}
 .about h2{font-size:clamp(2.1rem,2.1vw + 1rem,3rem);line-height:1.12}
 .about__lead{font-size:1.0625rem;line-height:1.8;margin-bottom:1.25rem}
-.about__mosaic{grid-area:mosaic;display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:repeat(12,1fr);aspect-ratio:1/1;gap:0}
-.about__tile{margin:0;overflow:hidden;border-radius:14px;border:6px solid var(--bg);background:var(--surface);box-shadow:0 30px 60px -30px rgb(59 42 39 / .5)}
-.about__tile--main{grid-column:1 / 9;grid-row:2 / 12;z-index:1}
-.about__tile:nth-child(2){grid-column:7 / 13;grid-row:1 / 6;z-index:2}
-.about__tile:nth-child(3){grid-column:6 / 11;grid-row:8 / 13;z-index:3}
+/* Mosaïque sans chevauchement ni cadre : la cabine en grand à gauche, l'appareil Hydra et le mur empilés à droite */
+.about__mosaic{grid-area:mosaic;display:grid;grid-template-columns:7fr 5fr;grid-template-rows:1fr 1fr;aspect-ratio:6/5;gap:clamp(.5rem,1vw,.875rem)}
+.about__tile{margin:0;overflow:hidden;border-radius:16px;background:var(--surface);box-shadow:0 30px 60px -34px rgb(59 42 39 / .45)}
+.about__tile--main{grid-column:1;grid-row:1 / 3}
 .about__tile img{display:block;width:100%;height:100%;object-fit:cover;transition:transform 900ms var(--ease-soft)}
 @media (hover:hover){.about__tile:hover img{transform:scale(1.04)}}
 @media (max-width:899px){
   .about__gallery{grid-template-columns:1fr;grid-template-areas:"mosaic" "text";gap:2rem}
-  .about__mosaic{max-width:560px;width:100%;justify-self:center}
+  .about__mosaic{max-width:640px;width:100%;justify-self:center}
 }
 @media (max-width:479px){
-  .about__tile{border-radius:12px;border-width:4px}
+  .about__tile{border-radius:12px}
 }
 /* Le centre → Nos soins : écart resserré (les deux marges de section s'additionnaient) */
 .section.about{padding-bottom:clamp(1.5rem,3vw,3rem)}
