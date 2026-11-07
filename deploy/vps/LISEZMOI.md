@@ -96,6 +96,7 @@ Dès que le DNS répond, Caddy obtient le certificat HTTPS tout seul (`journalct
 | Redémarrer | `sudo systemctl restart mybubble` |
 | Revenir à une version | `ls /srv/mybubble/releases`, puis `ln -sfn /srv/mybubble/releases/<commit> /srv/mybubble/current && systemctl restart mybubble` |
 | Sauvegarde tout de suite | `sudo systemctl start mybubble-backup` |
+| `mybubble.service` a changé dans le dépôt | le relire sur GitHub, puis `install -m 644 /srv/mybubble/current/deploy/vps/mybubble.service /etc/systemd/system/ && systemctl daemon-reload && systemctl restart mybubble` (jamais automatique : le build exécute du code de paquets npm) |
 
 ## Sauvegardes
 
