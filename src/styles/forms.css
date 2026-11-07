@@ -35,8 +35,23 @@ fieldset.field{border:0;padding:0;margin:0}
    (transition de vue entre documents) et la pose de l'autre côté. La lame ne tourne jamais, elle traverse. */
 .auth{--blade:46%;--slant:14%;container-type:inline-size;position:relative;display:grid;grid-template-columns:minmax(0,1fr) var(--blade);max-width:1040px;min-height:min(640px,80vh);margin-inline:auto;border:1px solid var(--line-soft);border-radius:var(--radius);overflow:hidden;background:var(--surface);box-shadow:0 30px 70px -45px rgb(59 42 39 / .45)}
 .legal .auth article{max-width:none;margin:0;border:0;border-radius:0;background:none;align-self:center}
-/* Connexion et inscription : même hauteur exacte sur ordinateur (celle de l'inscription), le contenu en trop défile dans la carte */
-@media (min-width:760px){.auth{height:66.5rem;min-height:0}.legal .auth article{max-height:100%;overflow-y:auto}}
+/* Connexion et inscription sur ordinateur : la carte remplit la fenêtre sous l'en-tête, quelle que soit sa largeur, avec la même
+   hauteur et la même place sur les deux pages (rien ne bouge au passage de l'une à l'autre). Le contenu en trop défile dans la carte. */
+@media (min-width:760px){
+  .legal:has(> .wrap > .auth){padding-block:clamp(.75rem,2vh,1.5rem)}
+  .auth{max-width:1180px;height:calc(100vh - var(--header-h) - 2 * clamp(.75rem,2vh,1.5rem));height:calc(100dvh - var(--header-h) - 2 * clamp(.75rem,2vh,1.5rem));min-height:0}
+  .legal .auth article{max-height:100%;overflow-y:auto}
+}
+/* Fenêtre basse (portable 720-900 px) : espacements resserrés pour que le formulaire tienne entier dans la carte */
+@media (min-width:760px) and (max-height:900px){
+  .legal .auth article{padding:clamp(1rem,3vh,2rem) clamp(1.5rem,3vw,2.75rem)}
+  .auth .form{max-width:none}
+  .legal .auth h1{font-size:clamp(2rem,5vh,2.75rem);margin-bottom:.25em}
+  .auth article p{margin-bottom:.6em}
+  .auth .form{gap:.65rem}
+  .auth .field{gap:.25rem}
+  .auth .field input{padding-block:.5rem;min-height:40px}
+}
 .auth--register{grid-template-columns:var(--blade) minmax(0,1fr)}
 .auth--register article{grid-column:2}
 .auth__blade{view-transition-name:auth-blade;position:absolute;inset:0 0 0 auto;width:var(--blade);overflow:hidden;color:#FFFBF9;background:#4E302C;
