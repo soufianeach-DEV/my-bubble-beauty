@@ -505,7 +505,7 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 @media (max-width:374px){.site-header .wrap{gap:.45rem}.theme-btn{width:40px;height:40px}.langsel summary,.mnav summary{padding:.5rem .6rem}}
 @media (max-width:339px){.site-header .wrap{gap:.35rem}.theme-btn{width:36px;height:36px}.langsel summary,.mnav summary{padding:.45rem .5rem}}
 /* Logo accentué en clair : à petite taille, ses traits fins se perdent sur le fond poudré */
-.brand img,.footer-logo img{filter:brightness(.68) saturate(1.5) contrast(1.1) drop-shadow(0 0 .35px rgb(110 70 60 / .9))}
+.brand img,.footer-logo img{filter:none}
 @media (prefers-color-scheme:dark){:where(:root:not([data-theme="light"])) :is(.brand,.footer-logo) img{filter:none}}
 :where(:root[data-theme="dark"]) :is(.brand,.footer-logo) img{filter:none}
 
@@ -734,3 +734,8 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 /* Le centre → Nos soins : écart resserré (les deux marges de section s'additionnaient) */
 .section.about{padding-bottom:clamp(1.5rem,3vw,3rem)}
 .section.about + .section{padding-top:clamp(2.5rem,5vw,4.5rem)}
+/* Grand écran : le bandeau suit le format 2:1 de l'image (avant, plafonné à 760 px, il zoomait et coupait la tête de Souade) */
+@media (min-width:1440px){
+  .hero{min-height:min(50vw,1100px)}
+  .hero__img{object-position:30% 30%}
+}
