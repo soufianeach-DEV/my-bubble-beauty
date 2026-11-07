@@ -284,7 +284,7 @@
     {
      "id": "carbon-peel",
      "cat": "visage",
-     "title": "Carbon Peel Signature",
+     "title": "Carbon Peel Bubble Signature",
      "href": "charbon",
      "items": [
       {
@@ -786,31 +786,10 @@
   }
  },
  "treatments": {
-  "bbglow": {
-   "title": "De BB Glow-behandeling in de esthetiek",
-   "metaTitle": "De BB Glow-behandeling in de esthetiek — My Bubble Beauty",
-   "description": "De BB Glow-behandeling wil de teint verfraaien, de huidskleur egaliseren en de huid een stralende, frisse uitstraling geven. Verloop en tarieven.",
-   "articleHtml": "<p>De BB Glow-behandeling in de esthetiek is een huidbehandelingstechniek die tot doel heeft de teint te verbeteren, de huidskleur gelijkmatiger te maken, onvolkomenheden te verminderen en de huid een stralende en frisse uitstraling te geven. De naam verwijst naar BB-cream (Blemish Balm), want ook deze behandeling streeft naar een egaler ogende teint.</p><h2>Huidvoorbereiding</h2><p>Voor aanvang van de behandeling wordt de huid grondig gereinigd om onzuiverheden, talg en dode huidcellen te verwijderen. De behandeling kan een lichte exfoliatie omvatten voor een betere opname van producten.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><h2>Toepassing van serums</h2><p>Speciaal geformuleerde serums voor de BB Glow-behandeling worden op de huid aangebracht. Deze serums bevatten meestal ingrediënten zoals pigmenten, hyaluronzuur, peptiden en vitamines. De pigmenten helpen de huidskleur gelijkmatiger te maken, onvolkomenheden te camoufleren en een stralendere uitstraling te geven.</p><h2>Micro Pen</h2><p>De Micro Pen is een essentieel onderdeel van de BB Glow-behandeling. Deze techniek houdt in dat een apparaat met fijne naalden wordt gebruikt om microperforaties in de huid te creëren. Deze microperforaties zorgen voor een betere opname van serums en kunnen ook de collageenproductie stimuleren, wat kan bijdragen aan de verbetering van de huidtextuur.</p><h2>Toepassing</h2><p>Na de Micro Pen-behandeling kunnen een kalmerend masker of aanvullende behandelingen worden toegepast om de huid te kalmeren en de voordelen van de behandeling te versterken.</p><h2>Maskers en gerichte behandelingen</h2><p>Reinigende maskers of andere gerichte behandelingen kunnen worden gebruikt om de huid te kalmeren, overtollige talg te verminderen en een betere regulatie van talgproductie te bevorderen.</p><h2>Hydratatie en zonnebescherming</h2><p>De behandeling wordt meestal afgerond met de toepassing van hydraterende producten en zonnebescherming om de pas behandelde huid te beschermen tegen UV-stralen.</p><p>De resultaten van de BB Glow-behandeling kunnen variëren van persoon tot persoon, maar over het algemeen melden klanten een verbetering van de huidtextuur, een vermindering van de zichtbaarheid van onvolkomenheden, een egalere teint en een helderdere huidskleur. De effecten van de behandeling zijn tijdelijk en kunnen enkele weken tot enkele maanden aanhouden, afhankelijk van het huidtype en de nazorg.</p>",
-   "priceTitle": "Tarief",
-   "prices": [
-    {
-     "name": "BB Glow",
-     "amount": "120 €"
-    }
-   ],
-   "figures": [
-    {
-     "src": "soins/glow.webp",
-     "w": 960,
-     "h": 542,
-     "alt": "Vrouwengezicht met stalen van BB Glow-foundation op de wang"
-    }
-   ]
-  },
   "charbon": {
-   "title": "Carbon Peel Signature",
-   "metaTitle": "Carbon Peel Signature, voor glans en zuiverheid — My Bubble Beauty",
-   "description": "De Carbon Peel Signature: een behandeling voor glans, zuiverheid en huidkwaliteit van gezicht, hals en decolleté. Behandelingen à la carte, voordelen en tarieven.",
+   "title": "Carbon Peel Bubble Signature",
+   "metaTitle": "Carbon Peel Bubble Signature, voor glans en zuiverheid — My Bubble Beauty",
+   "description": "De Carbon Peel Bubble Signature: een behandeling voor glans, zuiverheid en huidkwaliteit van gezicht, hals en decolleté. Behandelingen à la carte, voordelen en tarieven.",
    "articleHtml": "<p>Een behandeling voor glans, zuiverheid en huidkwaliteit.</p><h2>Behandelingen à la carte</h2><h3>Carbon Peel – Volledig gezicht</h3><p>Een zuiverende en revitaliserende behandeling om de poriën er beter uit te laten zien, de glans van de huid te verminderen en de teint op te frissen. 30 tot 45 min.</p><h3>Carbon Peel – Gezicht + hals</h3><p>Een gerichte behandeling voor gezicht en hals, voor een fijner ogende huidstructuur en een egalere teint. 45 tot 60 min.</p><h3>Carbon Peel – Gezicht + hals + decolleté</h3><p>Onze volledige signature-behandeling, die het uitzicht van de huid op de drie zones verzorgt en ze stralender en harmonieuzer laat ogen. 60 tot 75 min.</p><h3>Carbon Peel – Hals + decolleté</h3><p>Een specifieke behandeling om het uitzicht en de egaliteit van de huid van hals en decolleté te verbeteren. 30 tot 45 min.</p><h2>De beoogde voordelen per zone</h2><h3>Gezicht</h3><ul><li>Poriën die er beter uitzien.</li><li>Een zuiverder ogende huid.</li><li>Een stralendere teint.</li><li>Een verbeterde huidtextuur.</li></ul><h3>Hals</h3><ul><li>Een beter uitzicht van de huid.</li><li>Werkt aan een onregelmatige teint.</li><li>Een egaler uitzicht.</li></ul><h3>Decolleté</h3><ul><li>Een fijner ogende huidstructuur.</li><li>Een visueel egalere teint.</li><li>Een stralender ogende huid.</li></ul><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p>",
    "priceTitle": "Tarieven",
    "prices": [

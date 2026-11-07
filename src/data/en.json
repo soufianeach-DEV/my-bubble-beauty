@@ -284,7 +284,7 @@
     {
      "id": "carbon-peel",
      "cat": "visage",
-     "title": "Carbon Peel Signature",
+     "title": "Carbon Peel Bubble Signature",
      "href": "charbon",
      "items": [
       {
@@ -786,31 +786,10 @@
   }
  },
  "treatments": {
-  "bbglow": {
-   "title": "The BB Glow Treatment in Aesthetics",
-   "metaTitle": "The BB Glow Treatment in Aesthetics — My Bubble Beauty",
-   "description": "The BB Glow treatment aims to improve the look of the complexion, even out skin tone and give the skin a radiant, fresh appearance. Procedure and prices.",
-   "articleHtml": "<p>The BB Glow treatment in aesthetics is a skincare technique aimed at improving the complexion, making the skin tone more even, reducing imperfections, and giving the skin a radiant and fresh look. The name refers to BB cream (Blemish Balm), as the treatment likewise aims for a more even-looking complexion.</p><h2>Skin Preparation</h2><p>Prior to the treatment, the skin is thoroughly cleansed to remove impurities, sebum, and dead skin cells. The treatment may include a mild exfoliation for better product absorption.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p><h2>Application of Serums</h2><p>Specially formulated serums for the BB Glow treatment are applied to the skin. These serums typically contain ingredients such as pigments, hyaluronic acid, peptides, and vitamins. Pigments help even out the skin tone, conceal imperfections, and provide a more radiant complexion.</p><h2>Micro Pen</h2><p>Micro Pen is an essential part of the BB Glow treatment. This technique entails using a device with fine needles to create micro-perforations in the skin. These micro-perforations facilitate better serum absorption and may also stimulate collagen production, contributing to improved skin texture.</p><h2>Application</h2><p>After the Micro Pen step, a soothing mask or additional treatments may be applied to calm the skin and enhance the benefits of the treatment.</p><h2>Masks and Targeted Treatments</h2><p>Cleansing masks or other targeted treatments can be used to soothe the skin, reduce excess sebum, and promote better sebum production regulation.</p><h2>Hydration and Sun Protection</h2><p>The treatment is typically concluded with the application of moisturizing products and sun protection to safeguard the newly treated skin from UV rays.</p><p>The results of the BB Glow treatment can vary from person to person, but generally, clients report an improvement in skin texture, a reduction in the visibility of imperfections, a more even complexion, and a brighter skin tone. The effects of the treatment are temporary and may last for several weeks to a few months, depending on the skin type and aftercare.</p>",
-   "priceTitle": "Price",
-   "prices": [
-    {
-     "name": "BB Glow",
-     "amount": "120 €"
-    }
-   ],
-   "figures": [
-    {
-     "src": "soins/glow.webp",
-     "w": 960,
-     "h": 542,
-     "alt": "Woman's face with BB Glow foundation swatches on the cheek"
-    }
-   ]
-  },
   "charbon": {
-   "title": "Carbon Peel Signature",
-   "metaTitle": "Carbon Peel Signature, radiance and purity — My Bubble Beauty",
-   "description": "Carbon Peel Signature: a treatment for radiance, purity and skin quality on the face, neck and décolleté. À la carte options, benefits and prices.",
+   "title": "Carbon Peel Bubble Signature",
+   "metaTitle": "Carbon Peel Bubble Signature, radiance and purity — My Bubble Beauty",
+   "description": "Carbon Peel Bubble Signature: a treatment for radiance, purity and skin quality on the face, neck and décolleté. À la carte options, benefits and prices.",
    "articleHtml": "<p>A treatment for radiance, purity and skin quality.</p><h2>À la carte options</h2><h3>Carbon Peel – Full face</h3><p>A purifying, revitalising treatment that aims to improve the look of pores, reduce shine and revive the radiance of your complexion. 30 to 45 min.</p><h3>Carbon Peel – Face + neck</h3><p>A targeted treatment for the face and neck, to refine the look of the skin's texture and even out your complexion. 45 to 60 min.</p><h3>Carbon Peel – Face + neck + décolleté</h3><p>Our complete signature treatment, working on the look of the skin across all three areas for a brighter, more harmonious appearance. 60 to 75 min.</p><h3>Carbon Peel – Neck + décolleté</h3><p>A dedicated treatment to improve the look and evenness of the skin on the neck and décolleté. 30 to 45 min.</p><h2>The benefits we aim for, area by area</h2><h3>Face</h3><ul><li>Better-looking pores.</li><li>Clearer-looking skin.</li><li>A brighter complexion.</li><li>Improved skin texture.</li></ul><h3>Neck</h3><ul><li>Better-looking skin.</li><li>Works on an uneven skin tone.</li><li>A more even appearance.</li></ul><h3>Décolleté</h3><ul><li>A finer-looking skin texture.</li><li>A visibly more even tone.</li><li>Brighter-looking skin.</li></ul><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p>",
    "priceTitle": "Prices",
    "prices": [

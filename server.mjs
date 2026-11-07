@@ -54,6 +54,8 @@ function staticCache(path) {
 const REDIRECTS = new Map([
   ['/mentions-legales.html', '/fr/mentions-legales.html'],
   ['/confidentialite.html', '/fr/confidentialite.html'],
+  // Page BB Glow retirée (07/11/2026) : les liens déjà partagés ou indexés mènent aux tarifs
+  ...['fr', 'nl', 'eng'].map((l) => [`/${l}/subPages/bbglow.html`, `/${l}/index.html#package`]),
 ]);
 
 // Pages privées : noindex aussi dans l'en-tête, pour toute réponse (redirection vers la connexion comprise). Jamais ailleurs.

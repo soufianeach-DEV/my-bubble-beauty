@@ -284,7 +284,7 @@
     {
      "id": "carbon-peel",
      "cat": "visage",
-     "title": "Carbon Peel Signature",
+     "title": "Carbon Peel Bubble Signature",
      "href": "charbon",
      "items": [
       {
@@ -786,31 +786,10 @@
   }
  },
  "treatments": {
-  "bbglow": {
-   "title": "Le soin BB Glow en esthétique",
-   "metaTitle": "Le soin BB Glow en esthétique — My Bubble Beauty",
-   "description": "Le soin BB Glow vise à améliorer l'apparence du teint, à unifier la couleur de la peau et à lui donner un aspect radieux et frais. Déroulement et tarifs.",
-   "articleHtml": "<p>Le soin BB Glow en esthétique est une technique de traitement de la peau qui vise à améliorer l'apparence du teint, à uniformiser la couleur de la peau, à réduire les imperfections et à donner à la peau un aspect radieux et frais. Son nom fait référence à la BB cream (« Blemish Balm »), car ce soin vise lui aussi un teint d'apparence plus uniforme.</p><h2>Préparation de la peau</h2><p>Avant de commencer le traitement, la peau est nettoyée en profondeur pour éliminer les impuretés, le sébum et les cellules mortes de la peau. Le soin peut inclure une exfoliation légère pour une meilleure absorption des produits.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><h2>Application de sérums</h2><p>Des sérums spécialement formulés pour le traitement BB Glow sont appliqués sur la peau. Ces sérums contiennent généralement des ingrédients tels que des pigments, de l'acide hyaluronique, des peptides et des vitamines. Les pigments aident à uniformiser la couleur de la peau, à camoufler les imperfections et à donner un aspect plus éclatant.</p><h2>Micro Pen</h2><p>Le Micro Pen est une étape essentielle du soin BB Glow. Cette technique consiste à utiliser un dispositif doté de fines aiguilles pour créer des micro-perforations dans la peau. Ces micro-perforations permettent une meilleure absorption des sérums et peuvent également stimuler la production de collagène, contribuant ainsi à améliorer la texture de la peau.</p><h2>Application</h2><p>Après le soin Micro Pen, un masque apaisant ou des traitements supplémentaires peuvent être appliqués pour calmer la peau et renforcer les bienfaits du traitement.</p><h2>Masques et traitements ciblés</h2><p>Des masques purifiants ou d'autres traitements ciblés peuvent être utilisés pour calmer la peau, réduire l'excès de sébum et favoriser une meilleure régulation de la production de sébum.</p><h2>Hydratation et protection solaire</h2><p>Le traitement est généralement complété par l'application de produits hydratants et d'un écran solaire pour protéger la peau nouvellement traitée des rayons UV.</p><p>Les résultats du soin BB Glow peuvent varier d'une personne à l'autre, mais de manière générale, les clients rapportent une amélioration de la texture de la peau, une réduction de l'apparence des imperfections, une coloration plus uniforme et un teint plus lumineux. Les effets du traitement sont temporaires et peuvent durer de quelques semaines à quelques mois, selon le type de peau et les soins après-traitement.</p>",
-   "priceTitle": "Tarif",
-   "prices": [
-    {
-     "name": "BB Glow",
-     "amount": "120 €"
-    }
-   ],
-   "figures": [
-    {
-     "src": "soins/glow.webp",
-     "w": 960,
-     "h": 542,
-     "alt": "Visage de femme avec des touches de fond de teint BB Glow sur la joue"
-    }
-   ]
-  },
   "charbon": {
-   "title": "Carbon Peel Signature",
-   "metaTitle": "Carbon Peel Signature, soin éclat et pureté — My Bubble Beauty",
-   "description": "Le Carbon Peel Signature, soin éclat, pureté et qualité de peau pour le visage, le cou et le décolleté. Prestations à la carte, bénéfices et tarifs.",
+   "title": "Carbon Peel Bubble Signature",
+   "metaTitle": "Carbon Peel Bubble Signature, soin éclat et pureté — My Bubble Beauty",
+   "description": "Le Carbon Peel Bubble Signature, soin éclat, pureté et qualité de peau pour le visage, le cou et le décolleté. Prestations à la carte, bénéfices et tarifs.",
    "articleHtml": "<p>Soin éclat, pureté et qualité de peau.</p><h2>Prestations à la carte</h2><h3>Carbon Peel – Visage complet</h3><p>Soin purifiant et revitalisant visant à améliorer l'apparence des pores, réduire l'aspect brillant et raviver l'éclat du teint. 30 à 45 min.</p><h3>Carbon Peel – Visage + Cou</h3><p>Un soin ciblé sur le visage et le cou pour améliorer l'aspect du grain de peau et retrouver un teint plus uniforme. 45 à 60 min.</p><h3>Carbon Peel – Visage + Cou + Décolleté</h3><p>Notre soin signature complet pour travailler l'apparence de la peau sur les trois zones et leur apporter un aspect plus lumineux et harmonieux. 60 à 75 min.</p><h3>Carbon Peel – Cou + Décolleté</h3><p>Un soin spécifique pour améliorer l'apparence et l'uniformité de la peau du cou et du décolleté. 30 à 45 min.</p><h2>Les bénéfices recherchés selon les zones</h2><h3>Visage</h3><ul><li>Amélioration de l'apparence des pores.</li><li>Peau d'apparence plus nette.</li><li>Teint plus lumineux.</li><li>Amélioration de la texture cutanée.</li></ul><h3>Cou</h3><ul><li>Amélioration de l'aspect de la peau.</li><li>Travail sur l'irrégularité du teint.</li><li>Aspect plus homogène.</li></ul><h3>Décolleté</h3><ul><li>Amélioration de l'apparence du grain de peau.</li><li>Teint visuellement plus uniforme.</li><li>Peau d'apparence plus lumineuse.</li></ul><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
    "priceTitle": "Tarifs",
    "prices": [
