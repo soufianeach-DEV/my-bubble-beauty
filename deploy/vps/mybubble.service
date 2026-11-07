@@ -1,0 +1,34 @@
+# Service Node du site. Copié par setup.sh dans /etc/systemd/system/mybubble.service.
+# Les secrets sont dans /etc/mybubble/env (root:mybubble, 640), jamais dans le dépôt.
+[Unit]
+Description=My Bubble Beauty (site, compte, réservation, admin)
+After=network-online.target postgresql.service
+Wants=network-online.target
+Requires=postgresql.service
+
+[Service]
+Type=simple
+User=mybubble
+Group=mybubble
+WorkingDirectory=/srv/mybubble/current
+EnvironmentFile=/etc/mybubble/env
+Environment=NODE_ENV=production HOST=127.0.0.1 PORT=10000 TZ=Europe/Brussels
+ExecStart=/usr/bin/node server.mjs
+Restart=always
+RestartSec=3
+# Le processus n'écrit rien sur disque : système en lecture seule, aucun privilège
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+MemoryMax=1G
+
+[Install]
+WantedBy=multi-user.target

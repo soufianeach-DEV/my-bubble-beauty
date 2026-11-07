@@ -93,7 +93,8 @@ const server = http.createServer((req, res) => {
   }
   handler(req, res);
 });
-server.listen(Number(process.env.PORT) || 10000, () => log('listening', { port: server.address().port }));
+// HOST=127.0.0.1 sur le VPS : seul Caddy, sur la même machine, joint Node. Absent (Render), écoute sur toutes les interfaces.
+server.listen(Number(process.env.PORT) || 10000, process.env.HOST, () => log('listening', { port: server.address().port }));
 
 const runPurge = () => purge(sql, process.env.ADMIN_EMAIL).then((counts) => log('purge', counts), (e) => log('purge_failed', { error: String(e) }));
 runPurge();

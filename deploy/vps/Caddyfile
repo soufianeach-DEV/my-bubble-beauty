@@ -1,0 +1,13 @@
+# Caddy : HTTPS automatique (Let's Encrypt), HTTP -> HTTPS, www -> domaine nu, puis relais vers Node sur la même machine.
+# Copié par setup.sh dans /etc/caddy/Caddyfile. Les en-têtes de sécurité et le cache sont posés par server.mjs, pas ici.
+# Pas de journal d'accès : Caddy n'en écrit aucun par défaut, l'IP des visiteurs n'est donc pas gardée sur disque par le proxy.
+
+mybubble-beauty.com {
+	encode zstd gzip
+	# Caddy remplace X-Forwarded-For par l'IP qu'il voit (aucun proxy de confiance déclaré) : rate.ts la lit à droite, comme chez Render
+	reverse_proxy 127.0.0.1:10000
+}
+
+www.mybubble-beauty.com {
+	redir https://mybubble-beauty.com{uri} permanent
+}

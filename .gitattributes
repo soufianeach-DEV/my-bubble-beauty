@@ -1,0 +1,2 @@
+# Scripts du VPS : toujours en fins de ligne Unix, sinon bash échoue sur le retour chariot de Windows
+deploy/vps/** text eol=lf
