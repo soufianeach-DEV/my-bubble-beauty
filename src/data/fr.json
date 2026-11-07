@@ -376,6 +376,12 @@
        "href": null,
        "duration": "60 à 75 min",
        "amount": "195 €"
+      },
+      {
+       "name": "Cou + décolleté",
+       "href": null,
+       "duration": "30 à 45 min",
+       "amount": "250 €"
       }
      ]
     },
@@ -1074,6 +1080,10 @@
     {
      "name": "Visage + cou + décolleté (60 à 75 min)",
      "amount": "195 €"
+    },
+    {
+     "name": "Cou + décolleté (30 à 45 min)",
+     "amount": "250 €"
     }
    ],
    "figures": [

@@ -376,6 +376,12 @@
        "href": null,
        "duration": "60 to 75 min",
        "amount": "195 €"
+      },
+      {
+       "name": "Neck + décolleté",
+       "href": null,
+       "duration": "30 to 45 min",
+       "amount": "250 €"
       }
      ]
     },
@@ -1074,6 +1080,10 @@
     {
      "name": "Face + neck + décolleté (60 to 75 min)",
      "amount": "195 €"
+    },
+    {
+     "name": "Neck + décolleté (30 to 45 min)",
+     "amount": "250 €"
     }
    ],
    "figures": [

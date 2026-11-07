@@ -376,6 +376,12 @@
        "href": null,
        "duration": "60 tot 75 min",
        "amount": "195 €"
+      },
+      {
+       "name": "Hals + decolleté",
+       "href": null,
+       "duration": "30 tot 45 min",
+       "amount": "250 €"
       }
      ]
     },
@@ -1074,6 +1080,10 @@
     {
      "name": "Gezicht + hals + decolleté (60 tot 75 min)",
      "amount": "195 €"
+    },
+    {
+     "name": "Hals + decolleté (30 tot 45 min)",
+     "amount": "250 €"
     }
    ],
    "figures": [
