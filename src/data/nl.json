@@ -88,7 +88,7 @@
   },
   "soins": {
    "title": "Behandelingen",
-   "intro": "Onze behandelingen op maat zijn erop gericht uw huid haar glans terug te geven: Hydra Signature, Micro Pen en peeling.",
+   "intro": "Onze behandelingen op maat zijn erop gericht uw huid haar glans terug te geven: Hydra Signature, Micro-Pen en peeling.",
    "cards": [
     {
      "title": "Gezicht",
@@ -282,6 +282,78 @@
      ]
     },
     {
+     "id": "hydra",
+     "cat": "visage",
+     "title": "Hydra-behandelingen",
+     "href": "hydra",
+     "intro": "Elke huid is uniek. Je behandeling wordt afgestemd op je noden na een persoonlijke huidanalyse.",
+     "items": [
+      {
+       "name": "HydraPure",
+       "href": null,
+       "desc": "De dieptereiniging · Ideaal voor een onzuivere huid, verwijde poriën en oneffenheden.",
+       "amount": "120 €"
+      },
+      {
+       "name": "HydraLift",
+       "href": null,
+       "desc": "De anti-agingbehandeling · Ideaal voor een rijpere huid die stevigheid mist en tekenen van veroudering vertoont.",
+       "amount": "145 €"
+      },
+      {
+       "name": "HydraGlow",
+       "href": null,
+       "desc": "Glans & hydratatie · Ideaal voor een doffe, uitgedroogde en vermoeide huid.",
+       "amount": "145 €"
+      },
+      {
+       "name": "Hydra Signature",
+       "href": null,
+       "desc": "De volledige behandeling op maat · Ideaal als je een totaalbehandeling en een persoonlijke aanpak wenst.",
+       "amount": "175 €"
+      }
+     ]
+    },
+    {
+     "id": "micro-pen",
+     "cat": "visage",
+     "title": "Micro-Pen — Signature-collectie",
+     "href": "microneed",
+     "intro": "Elk protocol wordt afgestemd op de noden van je huid.",
+     "items": [
+      {
+       "name": "Signature Éclat",
+       "href": null,
+       "desc": "Om de teint weer te laten stralen en egaler te maken.",
+       "amount": "130 €"
+      },
+      {
+       "name": "Signature Hydra",
+       "href": null,
+       "desc": "Voor een zichtbaar beter gehydrateerde, soepele en opgevulde huid.",
+       "amount": "140 €"
+      },
+      {
+       "name": "Signature Lift",
+       "href": null,
+       "desc": "Om te werken aan het uitzicht van fijne lijntjes en een gebrek aan stevigheid.",
+       "amount": "155 €"
+      },
+      {
+       "name": "Signature Skin",
+       "href": null,
+       "desc": "Om het uitzicht van de huidstructuur en oneffenheden in de textuur te verbeteren.",
+       "amount": "150 €"
+      },
+      {
+       "name": "Signature Pure",
+       "href": null,
+       "desc": "Om te werken aan het uitzicht van resterende onzuiverheden en verwijde poriën.",
+       "amount": "145 €"
+      }
+     ]
+    },
+    {
      "id": "carbon-peel",
      "cat": "visage",
      "title": "Carbon Peel Bubble Signature",
@@ -430,6 +502,27 @@
        "href": "lipolaser",
        "duration": "60 min",
        "amount": "70 €"
+      }
+     ]
+    },
+    {
+     "id": "micro-pen-corps",
+     "cat": "corps",
+     "title": "Micro-Pen — lichaamsbehandelingen",
+     "href": "microneed",
+     "intro": "De tarieven hangen af van de oppervlakte en de aard van de te behandelen zone.",
+     "items": [
+      {
+       "name": "Signature Body",
+       "href": null,
+       "desc": "Gerichte behandeling voor het uitzicht van striemen, volgens de te behandelen zone.",
+       "amount": "Vanaf 180 €"
+      },
+      {
+       "name": "Signature Scar",
+       "href": null,
+       "desc": "Gerichte behandeling voor het uitzicht van littekens, na beoordeling van de huid.",
+       "amount": "Vanaf 190 €"
       }
      ]
     },
@@ -676,6 +769,50 @@
       }
      ],
      "intro": "Mooie, zachte en perfect verzorgde voeten."
+    },
+    {
+     "id": "semi-permanent",
+     "cat": "mains",
+     "title": "De kunst van semi-permanente lak",
+     "href": "semi-permanent",
+     "intro": "Mooie nagels, met elegantie. Elke behandeling omvat de voorbereiding van de nagels, de verzorging van de nagelriemen, het vormgeven en een verzorgde afwerking.",
+     "items": [
+      {
+       "name": "Handen: semi-permanente lak",
+       "href": null,
+       "amount": "30 €"
+      },
+      {
+       "name": "Handen: enkel verwijderen",
+       "href": null,
+       "amount": "15 €"
+      },
+      {
+       "name": "Handen: verwijderen en opnieuw lakken",
+       "href": null,
+       "amount": "35 €"
+      },
+      {
+       "name": "Voeten: semi-permanente lak",
+       "href": null,
+       "amount": "30 €"
+      },
+      {
+       "name": "Voeten: enkel verwijderen",
+       "href": null,
+       "amount": "15 €"
+      },
+      {
+       "name": "Voeten: verwijderen en opnieuw lakken",
+       "href": null,
+       "amount": "35 €"
+      },
+      {
+       "name": "Verwijderen met nagelverzorging",
+       "href": null,
+       "amount": "20 €"
+      }
+     ]
     }
    ],
    "eyebrow": "Onze tarieven",
@@ -898,15 +1035,27 @@
    ]
   },
   "hydra": {
-   "title": "Hydra Signature",
-   "metaTitle": "Hydra Signature — My Bubble Beauty",
-   "description": "Een Hydra Signature is een niet-invasieve behandeling die de uitstraling van de gezichtshuid wil verbeteren met reiniging, exfoliatie en hydratatie.",
-   "articleHtml": "<p>Een Hydra Signature is een niet-invasieve esthetische behandeling die tot doel heeft de uitstraling van de gezichtshuid te verbeteren door verschillende technieken te combineren, waaronder exfoliatie, dieptereiniging, hydratatie en bescherming. Het is ontworpen om verschillende huidproblemen minder zichtbaar te maken, zoals onzuiverheden bij een acnegevoelige huid, rimpels, pigmentvlekken en een oneffen huidtextuur.</p><h2>Werkingsprincipe</h2><p>Reiniging: Het proces begint met een dieptereiniging van de huid om onzuiverheden, overtollige talg en dode huidcellen te verwijderen.</p><p>Exfoliatie: Vervolgens wordt een zachte exfoliërende oplossing op de huid aangebracht om dode huidcellen van het huidoppervlak te verwijderen voor een frissere en gladdere huid.</p><p>Extractie: Het Hydra Signature-systeem maakt gebruik van zachte zuigkracht om onzuiverheden uit de huidporiën te verwijderen, wat kan helpen bij het verminderen van huidimperfecties en het ontstoppen van poriën.</p><p>Hydratatie: Vervolgens wordt een hydraterende oplossing verrijkt met antioxidanten, peptiden en hyaluronzuur aangebracht om de huid diep te voeden en te hydrateren.</p><p>Bescherming: Ten slotte wordt vaak een zonnebrandcrème of zonnebeschermingsproduct aangebracht om de vers behandelde huid te beschermen tegen schadelijke UV-stralen.</p><h2>Resultaten</h2><p>De hele behandeling is relatief snel en weinig ongemakkelijk. Velen beschrijven het als plezierig en ontspannend. De resultaten van een Hydra Signature kunnen variëren per persoon. De behandeling beoogt een onmiddellijke verbetering van de uitstraling van de huid, met een helderdere, zachtere huid en een egalere teint.</p>",
-   "priceTitle": "Tarief",
+   "title": "De Hydra-behandelingen",
+   "metaTitle": "De Hydra-behandelingen, van dieptereiniging tot volledige verzorging — My Bubble Beauty",
+   "description": "HydraPure, HydraLift, HydraGlow en Hydra Signature: vier gezichtsbehandelingen om de huid te reinigen, te hydrateren en te laten stralen. Details en tarieven.",
+   "articleHtml": "<ul><li><strong>HydraPure</strong>: de essentiële behandeling.</li><li><strong>HydraLift</strong>: de gerichte anti-agingbehandeling.</li><li><strong>HydraGlow</strong>: de behandeling voor een frisse look.</li><li><strong>Hydra Signature</strong>: de volledige ervaring.</li></ul><h2>HydraPure — de dieptereiniging</h2><p>Een grondige reiniging om onzuiverheden te verwijderen, de poriën uit te zuiveren en een zuivere, frisse en stralende huid terug te vinden.</p><p>Ideaal voor een onzuivere huid, verwijde poriën en oneffenheden.</p><h2>HydraLift — de anti-agingbehandeling</h2><p>Een gerichte behandeling met een aangepaste booster om de huid intens te hydrateren, op te vullen en fijne lijntjes minder zichtbaar te maken.</p><p>Ideaal voor een rijpere huid die stevigheid mist en tekenen van veroudering vertoont.</p><h2>HydraGlow — glans & hydratatie</h2><p>Een revitaliserende behandeling die extra hydratatie en glans geeft dankzij een booster die volgens de noden van je huid wordt gekozen.</p><p>Ideaal voor een doffe, uitgedroogde en vermoeide huid.</p><h2>Hydra Signature — de volledige behandeling op maat</h2><p>De meest volledige Hydra-ervaring: reiniging, exfoliatie, extractie, hydratatie en een booster afgestemd op de specifieke noden van je huid.</p><p>Ideaal als je een totaalbehandeling en een persoonlijke aanpak wenst.</p><p>Elke huid is uniek. Je behandeling wordt afgestemd op je noden na een persoonlijke huidanalyse.</p><p>Voor de behandeling overlopen we samen de mogelijke contra-indicaties, bijvoorbeeld een zwangerschap, een lopende medische behandeling of beschadigde huid.</p>",
+   "priceTitle": "Tarieven",
    "prices": [
     {
+     "name": "HydraPure",
+     "amount": "120 €"
+    },
+    {
+     "name": "HydraLift",
+     "amount": "145 €"
+    },
+    {
+     "name": "HydraGlow",
+     "amount": "145 €"
+    },
+    {
      "name": "Hydra Signature",
-     "amount": "110 €"
+     "amount": "175 €"
     }
    ],
    "figures": [
@@ -914,7 +1063,7 @@
      "src": "soins/hydrafacial.webp",
      "w": 900,
      "h": 600,
-     "alt": "Schoonheidsspecialiste voert een Hydra Signature-behandeling uit op het gezicht van een klant"
+     "alt": "Schoonheidsspecialiste voert een Hydra-behandeling uit op het gezicht van een cliënte"
     }
    ]
   },
@@ -1056,15 +1205,39 @@
    ]
   },
   "microneed": {
-   "title": "Micro Pen",
-   "metaTitle": "Micro Pen — My Bubble Beauty",
-   "description": "De Micro Pen maakt met fijne naalden minuscule openingen in de huid om de textuur en het uiterlijk te verbeteren. Ontdek het verloop en het tarief.",
-   "articleHtml": "<p>Micro Pen is een esthetische behandeling waarbij gebruik wordt gemaakt van een apparaat met fijne naalden om gecontroleerde, minuscule openingen in de huid te creëren. Deze techniek staat ook bekend als microperforatie. Zo werkt de Micro Pen:</p><h2>Voorbereiding</h2><p>Voorafgaand aan de behandeling reinigt uw schoonheidsspecialist uw huid grondig en kan een verdovende gel worden aangebracht om ongemak te minimaliseren. De naalddiepte wordt aangepast op basis van uw specifieke behoeften en de te behandelen gebieden.</p><h2>Microprikken</h2><p>De Micro Pen wordt zachtjes over de huid bewogen, waarbij kleine prikjes worden gemaakt. Deze prikjes zijn zo klein dat ze meestal nauwelijks met het blote oog zichtbaar zijn. Het apparaat is doorgaans voorzien van verschillende naaldlengtes om verschillende huidlagen te bereiken, afhankelijk van het doel van de behandeling.</p><h2>Stimulatie van collageen</h2><p>De microperforaties zijn bedoeld om de natuurlijke reactie van de huid te stimuleren, met name de aanmaak van collageen en elastine. Collageen is een essentieel eiwit dat de huid stevigheid en elasticiteit geeft, terwijl elastine helpt om de huid soepel te houden. Deze collageenstimulatie kan bijdragen aan een betere textuur en een mooier uiterlijk van de huid.</p><h2>Nazorg</h2><p>Na de behandeling kan uw schoonheidsspecialist specifieke topische producten aanbrengen, zoals hydraterende serums of groeifactoren, om de huid te kalmeren en te hydrateren. Het wordt ook aanbevolen om overmatige blootstelling aan de zon te vermijden en zonnebrandcrème te gebruiken om de pas behandelde huid te beschermen.</p><h2>Voordelen</h2><p>De Micro Pen kan worden gebruikt om het uiterlijk van verschillende huidproblemen te verbeteren, waaronder rimpels en fijne lijntjes, acnelittekens, pigmentvlekken, verlies van huidstevigheid en andere huidonvolkomenheden. De resultaten zijn meestal niet onmiddellijk zichtbaar, aangezien de productie van collageen tijd kost. U kunt geleidelijke verbeteringen in het uiterlijk van uw huid in de weken na de behandeling opmerken.</p><h2>Meerdere sessies</h2><p>Het aantal benodigde sessies is afhankelijk van uw behandelingsdoelen en de toestand van uw huid. Uw schoonheidsspecialist zal een aangepast behandelingsplan opstellen om aan uw specifieke behoeften te voldoen.</p><h2>Voorafgaande consultatie</h2><p>Het is belangrijk om een gekwalificeerde professional te raadplegen voor de Micro Pen, omdat onjuist gebruik van het apparaat of ongeschikte naalden complicaties kan veroorzaken. Deze behandeling wordt doorgaans als veilig beschouwd wanneer ze wordt uitgevoerd door een ervaren professional.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p>",
-   "priceTitle": "Tarief",
+   "title": "De Micro-Pen",
+   "metaTitle": "De Micro-Pen, gezichts- en lichaamsbehandelingen — My Bubble Beauty",
+   "description": "De Micro-Pen stimuleert de natuurlijke vernieuwing van de huid om aan de textuur en de glans te werken. Gezicht en lichaam, voorzorgen en tarieven.",
+   "articleHtml": "<p>De Micro-Pen is een esthetische techniek die fijne micronaaldjes gebruikt om de natuurlijke vernieuwingsmechanismen van de huid te stimuleren.</p><p>Met deze behandeling werk je aan de textuur van de huid, verbeter je de glans en krijgt de huid een gladder, egaler en stralender uitzicht.</p><p>Elk protocol wordt afgestemd op de noden van je huid, voor een persoonlijke aanpak.</p><h2>Onze gezichtsbehandelingen: de Signature-collectie</h2><ul><li><strong>Signature Éclat</strong>: om de teint weer te laten stralen en egaler te maken.</li><li><strong>Signature Hydra</strong>: voor een zichtbaar beter gehydrateerde, soepele en opgevulde huid.</li><li><strong>Signature Lift</strong>: om te werken aan het uitzicht van fijne lijntjes en een gebrek aan stevigheid.</li><li><strong>Signature Skin</strong>: om het uitzicht van de huidstructuur en oneffenheden in de textuur te verbeteren.</li><li><strong>Signature Pure</strong>: om te werken aan het uitzicht van resterende onzuiverheden en verwijde poriën.</li></ul><h2>Onze lichaamsbehandelingen</h2><ul><li><strong>Signature Body</strong> (vanaf 180 €): gerichte behandeling voor het uitzicht van striemen, volgens de te behandelen zone.</li><li><strong>Signature Scar</strong> (vanaf 190 €): gerichte behandeling voor het uitzicht van littekens, na beoordeling van de huid.</li></ul><p>De tarieven van de lichaamsbehandelingen hangen af van de oppervlakte en de aard van de te behandelen zone.</p><h2>Contra-indicaties en voorzorgen</h2><p>De Micro-Pen vraagt een voorafgaande huidcheck. In sommige situaties kan de behandeling niet doorgaan of moet ze worden uitgesteld:</p><ul><li>Zwangerschap en borstvoeding, uit voorzorg.</li><li>Herpes of een actieve huidinfectie.</li><li>Ernstige ontstoken acne.</li><li>Eczeem, psoriasis of rosacea in opstoot op de zone.</li><li>Wonden, brandwonden of huidirritatie.</li><li>Neiging tot keloïdlittekens.</li><li>Stollingsstoornissen of gebruik van antistollingsmiddelen.</li><li>Verminderde weerstand of slecht geregelde diabetes.</li><li>Behandeling met isotretinoïne, recent of lopend.</li><li>Gekende allergie voor de gebruikte producten of materialen.</li></ul><p>Bij ziekte, een medische behandeling of twijfel is een medisch advies nodig vóór elke behandeling.</p><p>De veiligheid en het respect voor je huid staan centraal in onze aanpak.</p><h2>Resultaten</h2><p>De resultaten verschillen van persoon tot persoon. Meerdere sessies kunnen nodig zijn. De Micro-Pen garandeert niet dat littekens of striemen verdwijnen.</p>",
+   "priceTitle": "Tarieven",
    "prices": [
     {
-     "name": "Micro Pen",
+     "name": "Signature Éclat",
+     "amount": "130 €"
+    },
+    {
+     "name": "Signature Hydra",
+     "amount": "140 €"
+    },
+    {
+     "name": "Signature Lift",
+     "amount": "155 €"
+    },
+    {
+     "name": "Signature Skin",
      "amount": "150 €"
+    },
+    {
+     "name": "Signature Pure",
+     "amount": "145 €"
+    },
+    {
+     "name": "Signature Body",
+     "amount": "Vanaf 180 €"
+    },
+    {
+     "name": "Signature Scar",
+     "amount": "Vanaf 190 €"
     }
    ],
    "figures": [
@@ -1072,25 +1245,25 @@
      "src": "soins/microneed.webp",
      "w": 800,
      "h": 650,
-     "alt": "Schema van de huid vóór de Micro Pen-behandeling"
+     "alt": "Schema van de huid vóór de Micro-Pen-behandeling"
     },
     {
      "src": "soins/microneed2.webp",
      "w": 800,
      "h": 650,
-     "alt": "Schema van de huid tijdens de Micro Pen-behandeling: de pen maakt kleine perforaties"
+     "alt": "Schema van de huid tijdens de Micro-Pen-behandeling: de pen maakt kleine perforaties"
     },
     {
      "src": "soins/microneedling3.webp",
      "w": 800,
      "h": 650,
-     "alt": "Schema van de huid tijdens de Micro Pen-behandeling: een serum dringt via de perforaties binnen"
+     "alt": "Schema van de huid tijdens de Micro-Pen-behandeling: een serum dringt via de perforaties binnen"
     },
     {
      "src": "soins/microneedling4.webp",
      "w": 800,
      "h": 650,
-     "alt": "Schema van de huid vier tot zes weken na de Micro Pen-behandeling"
+     "alt": "Schema van de huid vier tot zes weken na de Micro-Pen-behandeling"
     }
    ]
   },
@@ -1362,6 +1535,51 @@
     }
    ],
    "figures": []
+  },
+  "semi-permanent": {
+   "title": "De kunst van semi-permanente lak",
+   "metaTitle": "De kunst van semi-permanente lak, handen en voeten — My Bubble Beauty",
+   "description": "Semi-permanente lak voor handen en voeten: intense kleur, langdurige glans en een verzorgde afwerking. Behandelingen, contra-indicaties en tarieven.",
+   "articleHtml": "<p>Mooie nagels, met elegantie.</p><p>Gun je handen en voeten een verfijnde, verzorgde make-over met semi-permanente lak.</p><p>Deze techniek geeft een intense kleur, langdurige glans en een perfecte afwerking, met een natuurlijk en elegant resultaat.</p><p>Een moment van schoonheid om tot in je vingertoppen voor jezelf te zorgen.</p><h2>Onze behandelingen</h2><p>Elke behandeling omvat de voorbereiding van de nagels, de verzorging van de nagelriemen, het vormgeven en een verzorgde afwerking.</p><h2>Contra-indicaties</h2><p>Om de gezondheid en schoonheid van je nagels te beschermen, is semi-permanente lak in sommige situaties niet mogelijk:</p><ul><li>Schimmel of infectie van de nagel.</li><li>Nagels met een ontsteking of een wonde.</li><li>Wonden, irritaties of letsels rond de nagels.</li><li>Gekende allergie voor bestanddelen van de gebruikte producten, met name acrylaten.</li><li>Sterk beschadigde nagels of een afwijking waarvoor medisch advies nodig is.</li></ul><p>Bij twijfel wordt de behandeling uitgesteld en kan een medisch advies aangeraden worden.</p><p>De gezondheid van je nagels blijft onze prioriteit. Bedankt voor je vertrouwen en je trouw.</p>",
+   "priceTitle": "Tarieven",
+   "prices": [
+    {
+     "name": "Handen: semi-permanente lak",
+     "amount": "30 €"
+    },
+    {
+     "name": "Handen: enkel verwijderen",
+     "amount": "15 €"
+    },
+    {
+     "name": "Handen: verwijderen en opnieuw lakken",
+     "amount": "35 €"
+    },
+    {
+     "name": "Voeten: semi-permanente lak",
+     "amount": "30 €"
+    },
+    {
+     "name": "Voeten: enkel verwijderen",
+     "amount": "15 €"
+    },
+    {
+     "name": "Voeten: verwijderen en opnieuw lakken",
+     "amount": "35 €"
+    },
+    {
+     "name": "Verwijderen met nagelverzorging",
+     "amount": "20 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "cartes/onglerie.webp",
+     "w": 720,
+     "h": 540,
+     "alt": "Handen met verzorgde nagels in de behandelkamer"
+    }
+   ]
   }
  }
 }

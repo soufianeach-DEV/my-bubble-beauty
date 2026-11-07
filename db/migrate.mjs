@@ -5,7 +5,8 @@ import { readdir, readFile } from 'node:fs/promises';
 const DIR = new URL('./migrations/', import.meta.url);
 const DATA = new URL('../src/data/', import.meta.url);
 // Montants du site : espace insécable avant € (« 35 € », « 12,50 € »)
-const AMOUNT = /^(\d+)(?:,(\d{2}))? €$/;
+// « Dès 180 € » (prix selon la zone traitée) : 180 € en base, la gérante ajuste le prix du rendez-vous si besoin
+const AMOUNT = /^(?:Dès )?(\d+)(?:,(\d{2}))? €$/;
 
 const slugify = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 

@@ -88,7 +88,7 @@
   },
   "soins": {
    "title": "Nos soins esthétiques",
-   "intro": "Nos soins personnalisés visent à redonner de l'éclat à votre peau : Hydra Signature, Micro Pen et peeling.",
+   "intro": "Nos soins personnalisés visent à redonner de l'éclat à votre peau : Hydra Signature, Micro-Pen et peeling.",
    "cards": [
     {
      "title": "Visage",
@@ -282,6 +282,78 @@
      ]
     },
     {
+     "id": "hydra",
+     "cat": "visage",
+     "title": "Soins Hydra",
+     "href": "hydra",
+     "intro": "Chaque peau est unique. Votre soin est adapté à vos besoins après une analyse personnalisée de votre peau.",
+     "items": [
+      {
+       "name": "HydraPure",
+       "href": null,
+       "desc": "Le nettoyage profond · Idéal pour les peaux encombrées, les pores dilatés et les imperfections.",
+       "amount": "120 €"
+      },
+      {
+       "name": "HydraLift",
+       "href": null,
+       "desc": "Le soin anti-âge · Idéal pour les peaux matures, en manque de fermeté et présentant des signes de l'âge.",
+       "amount": "145 €"
+      },
+      {
+       "name": "HydraGlow",
+       "href": null,
+       "desc": "Éclat & hydratation · Idéal pour les teints ternes, les peaux déshydratées et fatiguées.",
+       "amount": "145 €"
+      },
+      {
+       "name": "Hydra Signature",
+       "href": null,
+       "desc": "Le soin complet personnalisé · Idéal pour celles qui souhaitent un soin global et une prise en charge personnalisée.",
+       "amount": "175 €"
+      }
+     ]
+    },
+    {
+     "id": "micro-pen",
+     "cat": "visage",
+     "title": "Micro-Pen — Collection Signature",
+     "href": "microneed",
+     "intro": "Chaque protocole est adapté aux besoins de votre peau.",
+     "items": [
+      {
+       "name": "Signature Éclat",
+       "href": null,
+       "desc": "Pour raviver la luminosité du teint et améliorer son uniformité.",
+       "amount": "130 €"
+      },
+      {
+       "name": "Signature Hydra",
+       "href": null,
+       "desc": "Pour une peau visiblement plus hydratée, souple et repulpée.",
+       "amount": "140 €"
+      },
+      {
+       "name": "Signature Lift",
+       "href": null,
+       "desc": "Pour travailler l'apparence des ridules et le manque de fermeté.",
+       "amount": "155 €"
+      },
+      {
+       "name": "Signature Skin",
+       "href": null,
+       "desc": "Pour améliorer l'apparence du grain de peau et des irrégularités de texture.",
+       "amount": "150 €"
+      },
+      {
+       "name": "Signature Pure",
+       "href": null,
+       "desc": "Pour travailler l'apparence des imperfections résiduelles et des pores dilatés.",
+       "amount": "145 €"
+      }
+     ]
+    },
+    {
      "id": "carbon-peel",
      "cat": "visage",
      "title": "Carbon Peel Bubble Signature",
@@ -430,6 +502,27 @@
        "href": "lipolaser",
        "duration": "60 min",
        "amount": "70 €"
+      }
+     ]
+    },
+    {
+     "id": "micro-pen-corps",
+     "cat": "corps",
+     "title": "Micro-Pen — soins corps",
+     "href": "microneed",
+     "intro": "Les tarifs varient selon la surface et la nature de la zone à traiter.",
+     "items": [
+      {
+       "name": "Signature Body",
+       "href": null,
+       "desc": "Soin ciblé sur l'apparence des vergetures, selon la zone à traiter.",
+       "amount": "Dès 180 €"
+      },
+      {
+       "name": "Signature Scar",
+       "href": null,
+       "desc": "Soin ciblé sur l'apparence des cicatrices, après évaluation de la peau.",
+       "amount": "Dès 190 €"
       }
      ]
     },
@@ -676,6 +769,50 @@
       }
      ],
      "intro": "Des pieds sublimés, doux et parfaitement entretenus."
+    },
+    {
+     "id": "semi-permanent",
+     "cat": "mains",
+     "title": "L'art du semi-permanent",
+     "href": "semi-permanent",
+     "intro": "La beauté des ongles, tout en élégance. Chaque prestation comprend la préparation des ongles, le travail des cuticules, la mise en forme et une finition soignée.",
+     "items": [
+      {
+       "name": "Mains : pose de vernis semi-permanent",
+       "href": null,
+       "amount": "30 €"
+      },
+      {
+       "name": "Mains : dépose seule",
+       "href": null,
+       "amount": "15 €"
+      },
+      {
+       "name": "Mains : dépose suivie d’une nouvelle pose",
+       "href": null,
+       "amount": "35 €"
+      },
+      {
+       "name": "Pieds : pose de vernis semi-permanent",
+       "href": null,
+       "amount": "30 €"
+      },
+      {
+       "name": "Pieds : dépose seule",
+       "href": null,
+       "amount": "15 €"
+      },
+      {
+       "name": "Pieds : dépose suivie d’une nouvelle pose",
+       "href": null,
+       "amount": "35 €"
+      },
+      {
+       "name": "Dépose avec soin des ongles",
+       "href": null,
+       "amount": "20 €"
+      }
+     ]
     }
    ],
    "eyebrow": "Nos tarifs",
@@ -898,15 +1035,27 @@
    ]
   },
   "hydra": {
-   "title": "Hydra Signature",
-   "metaTitle": "Hydra Signature — My Bubble Beauty",
-   "description": "Un Hydra Signature est un soin esthétique non invasif qui vise à améliorer l'apparence de la peau du visage par le nettoyage, l'exfoliation et l'hydratation.",
-   "articleHtml": "<p>Un Hydra Signature est un traitement esthétique non invasif qui vise à améliorer l'apparence de la peau du visage en combinant plusieurs techniques, notamment l'exfoliation, le nettoyage en profondeur, l'hydratation et la protection. Il est conçu pour atténuer l'aspect de divers problèmes de peau, tels que les imperfections des peaux à tendance acnéique, les rides, les taches pigmentaires et la texture inégale de la peau.</p><h2>Fonctionnement</h2><p>Nettoyage : Le processus commence par un nettoyage en profondeur de la peau pour éliminer les impuretés, l'excès de sébum et les cellules mortes de la peau.</p><p>Exfoliation : Ensuite, une solution d'exfoliation douce est appliquée sur la peau pour éliminer les cellules mortes de la surface et révéler une peau plus fraîche et plus lisse.</p><p>Extraction : Le système Hydra Signature utilise une aspiration douce pour extraire les impuretés des pores de la peau, ce qui peut contribuer à réduire les imperfections et à désobstruer les pores.</p><p>Hydratation : Une solution hydratante enrichie en antioxydants, en peptides et en acide hyaluronique est ensuite appliquée pour nourrir et hydrater la peau en profondeur.</p><p>Protection : Enfin, un écran solaire ou un produit de protection solaire est souvent appliqué pour protéger la peau fraîchement traitée des rayons UV nocifs.</p><h2>Résultats</h2><p>L'ensemble du traitement est relativement rapide et peu inconfortable. Il est souvent décrit comme agréable et relaxant par les personnes qui le reçoivent. Les résultats d'un Hydra Signature peuvent varier en fonction de la personne. Le soin vise une amélioration immédiate de l'apparence de la peau, avec une peau plus lumineuse, plus douce et un teint plus uniforme.</p>",
-   "priceTitle": "Tarif",
+   "title": "Les soins Hydra",
+   "metaTitle": "Les soins Hydra, du nettoyage profond au soin complet — My Bubble Beauty",
+   "description": "HydraPure, HydraLift, HydraGlow et Hydra Signature : quatre soins du visage pour nettoyer, hydrater et illuminer la peau. Détails et tarifs.",
+   "articleHtml": "<ul><li><strong>HydraPure</strong> : le soin essentiel.</li><li><strong>HydraLift</strong> : le soin ciblé anti-âge.</li><li><strong>HydraGlow</strong> : le soin bonne mine.</li><li><strong>Hydra Signature</strong> : l'expérience complète.</li></ul><h2>HydraPure — le nettoyage profond</h2><p>Un nettoyage en profondeur pour éliminer les impuretés, désincruster les pores et retrouver une peau nette, fraîche et lumineuse.</p><p>Idéal pour les peaux encombrées, les pores dilatés et les imperfections.</p><h2>HydraLift — le soin anti-âge</h2><p>Un soin ciblé associé à un booster adapté pour hydrater intensément, repulper la peau et atténuer l'apparence des ridules.</p><p>Idéal pour les peaux matures, en manque de fermeté et présentant des signes de l'âge.</p><h2>HydraGlow — éclat & hydratation</h2><p>Un soin revitalisant qui apporte un supplément d'hydratation et d'éclat grâce à un booster sélectionné selon les besoins de votre peau.</p><p>Idéal pour les teints ternes, les peaux déshydratées et fatiguées.</p><h2>Hydra Signature — le soin complet personnalisé</h2><p>L'expérience Hydra la plus complète : nettoyage, exfoliation, extraction, hydratation et booster adapté aux besoins spécifiques de votre peau.</p><p>Idéal pour celles qui souhaitent un soin global et une prise en charge personnalisée.</p><p>Chaque peau est unique. Votre soin est adapté à vos besoins après une analyse personnalisée de votre peau.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
+   "priceTitle": "Tarifs",
    "prices": [
     {
+     "name": "HydraPure",
+     "amount": "120 €"
+    },
+    {
+     "name": "HydraLift",
+     "amount": "145 €"
+    },
+    {
+     "name": "HydraGlow",
+     "amount": "145 €"
+    },
+    {
      "name": "Hydra Signature",
-     "amount": "110 €"
+     "amount": "175 €"
     }
    ],
    "figures": [
@@ -914,7 +1063,7 @@
      "src": "soins/hydrafacial.webp",
      "w": 900,
      "h": 600,
-     "alt": "Esthéticienne réalisant un soin Hydra Signature sur le visage d'une cliente"
+     "alt": "Esthéticienne réalisant un soin Hydra sur le visage d'une cliente"
     }
    ]
   },
@@ -1056,15 +1205,39 @@
    ]
   },
   "microneed": {
-   "title": "Le Micro Pen",
-   "metaTitle": "Le Micro Pen — My Bubble Beauty",
-   "description": "Le Micro Pen crée de fines perforations contrôlées dans la peau pour en améliorer la texture et l'apparence. Découvrez le déroulement et le tarif.",
-   "articleHtml": "<p>Le Micro Pen est un soin esthétique qui consiste à utiliser un appareil équipé de fines aiguilles pour créer de minuscules perforations contrôlées dans la peau. Cette technique est également connue sous le nom de microperforation. Voici comment fonctionne le soin Micro Pen :</p><h2>Préparation</h2><p>Avant le soin, votre professionnel de l'esthétique nettoie soigneusement votre peau et peut appliquer un gel topique anesthésiant pour minimiser l'inconfort. La profondeur des aiguilles est réglée en fonction de vos besoins spécifiques et des zones à traiter.</p><h2>Micropiqûres</h2><p>Le Micro Pen est passé doucement sur la peau, créant de petites piqûres. Ces piqûres sont si petites qu'elles sont généralement à peine visibles à l'œil nu. L'appareil est généralement muni de différentes longueurs d'aiguilles pour cibler différentes profondeurs de peau en fonction de l'objectif du soin.</p><h2>Stimulation du collagène</h2><p>Les microperforations visent à stimuler la réponse naturelle de la peau, en particulier la production de collagène et d'élastine. Le collagène est une protéine essentielle qui confère à la peau sa fermeté et son élasticité, tandis que l'élastine contribue à maintenir la peau souple. Cette stimulation du collagène peut contribuer à améliorer la texture et l'apparence de la peau.</p><h2>Soins post-traitement</h2><p>Après le soin, votre professionnel peut appliquer des produits topiques spécifiques, tels que des sérums hydratants ou des facteurs de croissance, pour apaiser et hydrater la peau. Il est également recommandé d'éviter une exposition excessive au soleil et d'utiliser un écran solaire pour protéger la peau nouvellement traitée.</p><h2>Avantages</h2><p>Le Micro Pen peut être utilisé pour améliorer l'apparence de différents problèmes de peau, notamment les rides et les ridules, les cicatrices d'acné, les taches pigmentaires, la perte de fermeté de la peau et d'autres imperfections cutanées. Les résultats ne sont généralement pas immédiatement visibles, car la production de collagène prend du temps. Vous pouvez constater une amélioration progressive de l'apparence de votre peau au fil des semaines suivant le soin.</p><h2>Séries de séances</h2><p>Le nombre de séances nécessaires dépend de vos objectifs de traitement et de l'état de votre peau. Votre professionnel de l'esthétique élaborera un plan de traitement personnalisé pour répondre à vos besoins spécifiques.</p><h2>Consultation préalable</h2><p>Il est important de consulter un professionnel qualifié pour le soin Micro Pen, car une mauvaise utilisation de l'appareil ou des aiguilles inappropriées peut entraîner des complications. Ce soin est généralement considéré comme sûr lorsqu'il est réalisé par un professionnel expérimenté.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
-   "priceTitle": "Tarif",
+   "title": "Le Micro-Pen",
+   "metaTitle": "Le Micro-Pen, soins visage et corps — My Bubble Beauty",
+   "description": "Le Micro-Pen stimule le renouvellement naturel de la peau pour travailler sa texture et son éclat. Soins visage et corps, précautions et tarifs.",
+   "articleHtml": "<p>Le Micro-Pen est une technique esthétique qui utilise de fines micro-aiguilles afin de stimuler les mécanismes naturels de renouvellement cutané.</p><p>Ce soin permet de travailler la texture de la peau, d'améliorer son éclat et de favoriser une apparence plus lisse, plus uniforme et plus lumineuse.</p><p>Chaque protocole est adapté aux besoins de votre peau pour une prise en charge personnalisée.</p><h2>Nos soins visage : la Collection Signature</h2><ul><li><strong>Signature Éclat</strong> : pour raviver la luminosité du teint et améliorer son uniformité.</li><li><strong>Signature Hydra</strong> : pour une peau visiblement plus hydratée, souple et repulpée.</li><li><strong>Signature Lift</strong> : pour travailler l'apparence des ridules et le manque de fermeté.</li><li><strong>Signature Skin</strong> : pour améliorer l'apparence du grain de peau et des irrégularités de texture.</li><li><strong>Signature Pure</strong> : pour travailler l'apparence des imperfections résiduelles et des pores dilatés.</li></ul><h2>Nos soins corps</h2><ul><li><strong>Signature Body</strong> (dès 180 €) : soin ciblé sur l'apparence des vergetures, selon la zone à traiter.</li><li><strong>Signature Scar</strong> (dès 190 €) : soin ciblé sur l'apparence des cicatrices, après évaluation de la peau.</li></ul><p>Les tarifs des soins corps varient selon la surface et la nature de la zone à traiter.</p><h2>Contre-indications et précautions</h2><p>Le Micro-Pen nécessite un bilan préalable. Certaines situations peuvent empêcher ou nécessiter le report du soin :</p><ul><li>Grossesse et allaitement, par précaution.</li><li>Herpès ou infection cutanée active.</li><li>Acné inflammatoire importante.</li><li>Eczéma, psoriasis ou rosacée en poussée sur la zone.</li><li>Plaies, brûlures ou irritation cutanée.</li><li>Tendance aux cicatrices chéloïdes.</li><li>Troubles de la coagulation ou prise d’anticoagulants.</li><li>Immunodépression ou diabète non contrôlé.</li><li>Traitement par isotrétinoïne, récent ou en cours.</li><li>Allergie connue aux produits ou matériaux utilisés.</li></ul><p>En cas de maladie, de traitement médical ou de doute, un avis médical est nécessaire avant toute prestation.</p><p>La sécurité et le respect de votre peau sont au cœur de notre expertise.</p><h2>Résultats</h2><p>Les résultats sont variables selon chaque personne. Plusieurs séances peuvent être nécessaires. Le Micro-Pen ne garantit pas la disparition des cicatrices ou des vergetures.</p>",
+   "priceTitle": "Tarifs",
    "prices": [
     {
-     "name": "Micro Pen",
+     "name": "Signature Éclat",
+     "amount": "130 €"
+    },
+    {
+     "name": "Signature Hydra",
+     "amount": "140 €"
+    },
+    {
+     "name": "Signature Lift",
+     "amount": "155 €"
+    },
+    {
+     "name": "Signature Skin",
      "amount": "150 €"
+    },
+    {
+     "name": "Signature Pure",
+     "amount": "145 €"
+    },
+    {
+     "name": "Signature Body",
+     "amount": "Dès 180 €"
+    },
+    {
+     "name": "Signature Scar",
+     "amount": "Dès 190 €"
     }
    ],
    "figures": [
@@ -1072,25 +1245,25 @@
      "src": "soins/microneed.webp",
      "w": 800,
      "h": 650,
-     "alt": "Schéma de la peau avant le soin Micro Pen"
+     "alt": "Schéma de la peau avant le soin Micro-Pen"
     },
     {
      "src": "soins/microneed2.webp",
      "w": 800,
      "h": 650,
-     "alt": "Schéma de la peau pendant le soin Micro Pen : le stylo crée de fines perforations"
+     "alt": "Schéma de la peau pendant le soin Micro-Pen : le stylo crée de fines perforations"
     },
     {
      "src": "soins/microneedling3.webp",
      "w": 800,
      "h": 650,
-     "alt": "Schéma de la peau pendant le soin Micro Pen : un sérum pénètre par les perforations"
+     "alt": "Schéma de la peau pendant le soin Micro-Pen : un sérum pénètre par les perforations"
     },
     {
      "src": "soins/microneedling4.webp",
      "w": 800,
      "h": 650,
-     "alt": "Schéma de la peau quatre à six semaines après le soin Micro Pen"
+     "alt": "Schéma de la peau quatre à six semaines après le soin Micro-Pen"
     }
    ]
   },
@@ -1362,6 +1535,51 @@
     }
    ],
    "figures": []
+  },
+  "semi-permanent": {
+   "title": "L'art du semi-permanent",
+   "metaTitle": "L'art du semi-permanent, mains et pieds — My Bubble Beauty",
+   "description": "Vernis semi-permanent pour les mains et les pieds : couleur intense, brillance longue durée et finition soignée. Prestations, contre-indications et tarifs.",
+   "articleHtml": "<p>La beauté des ongles, tout en élégance.</p><p>Offrez à vos mains et à vos pieds une mise en beauté délicate et soignée grâce au vernis semi-permanent.</p><p>Cette technique permet d’obtenir une couleur intense, une brillance longue durée et une finition impeccable, tout en conservant un résultat naturel et élégant.</p><p>Un moment de beauté pour prendre soin de soi jusqu’au bout des ongles.</p><h2>Nos prestations</h2><p>Chaque prestation comprend la préparation des ongles, le travail des cuticules, la mise en forme et une finition soignée.</p><h2>Contre-indications</h2><p>Afin de préserver la santé et la beauté de vos ongles, certaines situations ne permettent pas la réalisation d’une pose de semi-permanent :</p><ul><li>Mycose ou infection de l’ongle.</li><li>Ongles présentant une inflammation ou une blessure.</li><li>Plaies, irritations ou lésions autour des ongles.</li><li>Allergie connue aux composants des produits utilisés, notamment aux acrylates.</li><li>Ongles fortement abîmés ou présentant une anomalie nécessitant un avis médical.</li></ul><p>En cas de doute, la prestation sera reportée et un avis médical pourra être recommandé.</p><p>La santé de vos ongles reste notre priorité. Merci de votre confiance et de votre fidélité.</p>",
+   "priceTitle": "Tarifs",
+   "prices": [
+    {
+     "name": "Mains : pose de vernis semi-permanent",
+     "amount": "30 €"
+    },
+    {
+     "name": "Mains : dépose seule",
+     "amount": "15 €"
+    },
+    {
+     "name": "Mains : dépose suivie d’une nouvelle pose",
+     "amount": "35 €"
+    },
+    {
+     "name": "Pieds : pose de vernis semi-permanent",
+     "amount": "30 €"
+    },
+    {
+     "name": "Pieds : dépose seule",
+     "amount": "15 €"
+    },
+    {
+     "name": "Pieds : dépose suivie d’une nouvelle pose",
+     "amount": "35 €"
+    },
+    {
+     "name": "Dépose avec soin des ongles",
+     "amount": "20 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "cartes/onglerie.webp",
+     "w": 720,
+     "h": 540,
+     "alt": "Mains aux ongles soignés en cabine"
+    }
+   ]
   }
  }
 }

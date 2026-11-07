@@ -88,7 +88,7 @@
   },
   "soins": {
    "title": "Treatments",
-   "intro": "Our personalised treatments aim to restore your skin's radiance: Hydra Signature, Micro Pen and peels.",
+   "intro": "Our personalised treatments aim to restore your skin's radiance: Hydra Signature, Micro-Pen and peels.",
    "cards": [
     {
      "title": "Face",
@@ -282,6 +282,78 @@
      ]
     },
     {
+     "id": "hydra",
+     "cat": "visage",
+     "title": "Hydra treatments",
+     "href": "hydra",
+     "intro": "Every skin is unique. Your treatment is tailored to your needs after a personalised skin analysis.",
+     "items": [
+      {
+       "name": "HydraPure",
+       "href": null,
+       "desc": "The deep cleanse · Ideal for congested skin, enlarged pores and blemishes.",
+       "amount": "120 €"
+      },
+      {
+       "name": "HydraLift",
+       "href": null,
+       "desc": "The anti-ageing treatment · Ideal for mature skin lacking firmness and showing signs of ageing.",
+       "amount": "145 €"
+      },
+      {
+       "name": "HydraGlow",
+       "href": null,
+       "desc": "Radiance & hydration · Ideal for dull, dehydrated and tired skin.",
+       "amount": "145 €"
+      },
+      {
+       "name": "Hydra Signature",
+       "href": null,
+       "desc": "The complete personalised treatment · Ideal if you want an all-round treatment and personalised care.",
+       "amount": "175 €"
+      }
+     ]
+    },
+    {
+     "id": "micro-pen",
+     "cat": "visage",
+     "title": "Micro-Pen — Signature Collection",
+     "href": "microneed",
+     "intro": "Each protocol is tailored to your skin’s needs.",
+     "items": [
+      {
+       "name": "Signature Éclat",
+       "href": null,
+       "desc": "To revive the radiance of your complexion and even it out.",
+       "amount": "130 €"
+      },
+      {
+       "name": "Signature Hydra",
+       "href": null,
+       "desc": "For visibly more hydrated, supple and plumper skin.",
+       "amount": "140 €"
+      },
+      {
+       "name": "Signature Lift",
+       "href": null,
+       "desc": "To work on the look of fine lines and loss of firmness.",
+       "amount": "155 €"
+      },
+      {
+       "name": "Signature Skin",
+       "href": null,
+       "desc": "To improve the look of skin texture and uneven areas.",
+       "amount": "150 €"
+      },
+      {
+       "name": "Signature Pure",
+       "href": null,
+       "desc": "To work on the look of residual blemishes and enlarged pores.",
+       "amount": "145 €"
+      }
+     ]
+    },
+    {
      "id": "carbon-peel",
      "cat": "visage",
      "title": "Carbon Peel Bubble Signature",
@@ -430,6 +502,27 @@
        "href": "lipolaser",
        "duration": "60 min",
        "amount": "70 €"
+      }
+     ]
+    },
+    {
+     "id": "micro-pen-corps",
+     "cat": "corps",
+     "title": "Micro-Pen — body treatments",
+     "href": "microneed",
+     "intro": "Prices depend on the size and type of the area treated.",
+     "items": [
+      {
+       "name": "Signature Body",
+       "href": null,
+       "desc": "A targeted treatment for the look of stretch marks, depending on the area.",
+       "amount": "From 180 €"
+      },
+      {
+       "name": "Signature Scar",
+       "href": null,
+       "desc": "A targeted treatment for the look of scars, after a skin assessment.",
+       "amount": "From 190 €"
       }
      ]
     },
@@ -676,6 +769,50 @@
       }
      ],
      "intro": "Beautiful, soft and perfectly cared-for feet."
+    },
+    {
+     "id": "semi-permanent",
+     "cat": "mains",
+     "title": "The art of semi-permanent polish",
+     "href": "semi-permanent",
+     "intro": "Beautiful nails, with elegance. Each service includes nail preparation, cuticle care, shaping and a neat finish.",
+     "items": [
+      {
+       "name": "Hands: semi-permanent polish",
+       "href": null,
+       "amount": "30 €"
+      },
+      {
+       "name": "Hands: removal only",
+       "href": null,
+       "amount": "15 €"
+      },
+      {
+       "name": "Hands: removal and new application",
+       "href": null,
+       "amount": "35 €"
+      },
+      {
+       "name": "Feet: semi-permanent polish",
+       "href": null,
+       "amount": "30 €"
+      },
+      {
+       "name": "Feet: removal only",
+       "href": null,
+       "amount": "15 €"
+      },
+      {
+       "name": "Feet: removal and new application",
+       "href": null,
+       "amount": "35 €"
+      },
+      {
+       "name": "Removal with nail care",
+       "href": null,
+       "amount": "20 €"
+      }
+     ]
     }
    ],
    "eyebrow": "Our prices",
@@ -898,15 +1035,27 @@
    ]
   },
   "hydra": {
-   "title": "Hydra Signature",
-   "metaTitle": "Hydra Signature — My Bubble Beauty",
-   "description": "A Hydra Signature is a non-invasive aesthetic treatment that aims to improve the appearance of facial skin through cleansing, exfoliation and hydration.",
-   "articleHtml": "<p>A Hydra Signature is a non-invasive aesthetic treatment designed to improve the appearance of facial skin by combining various techniques, including exfoliation, deep cleansing, hydration, and protection. It is designed to soften the look of various skin concerns such as blemishes on acne-prone skin, wrinkles, pigmentation spots, and uneven skin texture.</p><h2>Working Principle</h2><p>Cleansing: The process begins with a deep cleansing of the skin to remove impurities, excess sebum, and dead skin cells.</p><p>Exfoliation: Next, a gentle exfoliating solution is applied to the skin to remove dead skin cells from the skin's surface for a fresher, smoother complexion.</p><p>Extraction: The Hydra Signature system uses gentle suction to remove impurities from the skin pores, which can help reduce blemishes and unclog pores.</p><p>Hydration: Subsequently, a hydrating solution enriched with antioxidants, peptides, and hyaluronic acid is applied to deeply nourish and moisturize the skin.</p><p>Protection: Finally, sunscreen or sun protection products are often applied to protect the freshly treated skin from harmful UV rays.</p><h2>Results</h2><p>The entire treatment is relatively quick and minimally uncomfortable. Many describe it as enjoyable and relaxing. Results from a Hydra Signature can vary from person to person. The treatment aims for an immediate improvement in the appearance of the skin, with a brighter, softer complexion and a more even tone.</p>",
-   "priceTitle": "Price",
+   "title": "Hydra treatments",
+   "metaTitle": "Hydra treatments, from deep cleanse to complete care — My Bubble Beauty",
+   "description": "HydraPure, HydraLift, HydraGlow and Hydra Signature: four facial treatments to cleanse, hydrate and brighten the skin. Details and prices.",
+   "articleHtml": "<ul><li><strong>HydraPure</strong>: the essential treatment.</li><li><strong>HydraLift</strong>: the targeted anti-ageing treatment.</li><li><strong>HydraGlow</strong>: the healthy-glow treatment.</li><li><strong>Hydra Signature</strong>: the complete experience.</li></ul><h2>HydraPure — the deep cleanse</h2><p>A deep cleanse to remove impurities, clear the pores and get back clean, fresh and radiant skin.</p><p>Ideal for congested skin, enlarged pores and blemishes.</p><h2>HydraLift — the anti-ageing treatment</h2><p>A targeted treatment with a tailored booster to deeply hydrate, plump the skin and soften the look of fine lines.</p><p>Ideal for mature skin lacking firmness and showing signs of ageing.</p><h2>HydraGlow — radiance & hydration</h2><p>A revitalising treatment that adds extra hydration and radiance with a booster chosen for your skin’s needs.</p><p>Ideal for dull, dehydrated and tired skin.</p><h2>Hydra Signature — the complete personalised treatment</h2><p>The most complete Hydra experience: cleansing, exfoliation, extraction, hydration and a booster tailored to your skin’s specific needs.</p><p>Ideal if you want an all-round treatment and personalised care.</p><p>Every skin is unique. Your treatment is tailored to your needs after a personalised skin analysis.</p><p>Before the treatment, we check any contraindications with you, for example pregnancy, ongoing medical treatment or damaged skin.</p>",
+   "priceTitle": "Prices",
    "prices": [
     {
+     "name": "HydraPure",
+     "amount": "120 €"
+    },
+    {
+     "name": "HydraLift",
+     "amount": "145 €"
+    },
+    {
+     "name": "HydraGlow",
+     "amount": "145 €"
+    },
+    {
      "name": "Hydra Signature",
-     "amount": "110 €"
+     "amount": "175 €"
     }
    ],
    "figures": [
@@ -914,7 +1063,7 @@
      "src": "soins/hydrafacial.webp",
      "w": 900,
      "h": 600,
-     "alt": "Beautician performing a Hydra Signature treatment on a client's face"
+     "alt": "Beautician performing a Hydra treatment on a client's face"
     }
    ]
   },
@@ -1056,15 +1205,39 @@
    ]
   },
   "microneed": {
-   "title": "Micro Pen",
-   "metaTitle": "Micro Pen — My Bubble Beauty",
-   "description": "Micro Pen uses fine needles to make tiny, controlled openings in the skin to improve its texture and appearance. Find out how it works and the price.",
-   "articleHtml": "<p>Micro Pen is an aesthetic treatment that utilizes a device with fine needles to create controlled, tiny openings in the skin. This technique is also known as microperforation. Here's how Micro Pen works:</p><h2>Preparation</h2><p>Prior to the treatment, your aesthetic professional thoroughly cleanses your skin, and a numbing gel may be applied to minimize discomfort. The needle depth is adjusted based on your specific needs and the areas to be treated.</p><h2>Micro-Punctures</h2><p>The Micro Pen is gently moved across the skin, creating small punctures. These punctures are so tiny that they are usually barely visible to the naked eye. The device typically features various needle lengths to reach different layers of the skin, depending on the goal of the treatment.</p><h2>Stimulation of Collagen</h2><p>The microperforations aim to stimulate the skin's natural response, in particular the production of collagen and elastin. Collagen is an essential protein that provides firmness and elasticity to the skin, while elastin helps keep the skin supple. This collagen stimulation may help improve the skin's texture and appearance.</p><h2>Aftercare</h2><p>Following the treatment, your aesthetic professional may apply specific topical products, such as moisturizing serums or growth factors, to soothe and hydrate the skin. It is also recommended to avoid excessive sun exposure and use sunscreen to protect the freshly treated skin.</p><h2>Benefits</h2><p>Micro Pen can be used to improve the appearance of a variety of skin issues, including wrinkles and fine lines, acne scars, pigment spots, loss of skin firmness, and other skin imperfections. Results are usually not immediately visible, as collagen production takes time. You may notice gradual improvements in the appearance of your skin in the weeks following the treatment.</p><h2>Multiple Sessions</h2><p>The number of sessions required depends on your treatment goals and the condition of your skin. Your aesthetic professional will create a customized treatment plan to meet your specific needs.</p><h2>Prior Consultation</h2><p>It is important to consult a qualified professional for Micro Pen, as improper device usage or unsuitable needles can lead to complications. This treatment is typically considered safe when performed by an experienced professional.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p>",
-   "priceTitle": "Price",
+   "title": "Micro-Pen",
+   "metaTitle": "Micro-Pen, face and body treatments — My Bubble Beauty",
+   "description": "Micro-Pen stimulates the skin’s natural renewal to work on its texture and radiance. Face and body treatments, precautions and prices.",
+   "articleHtml": "<p>Micro-Pen is an aesthetic technique that uses fine micro-needles to stimulate the skin’s natural renewal mechanisms.</p><p>This treatment works on skin texture, improves radiance and helps the skin look smoother, more even and brighter.</p><p>Each protocol is tailored to your skin’s needs for personalised care.</p><h2>Our face treatments: the Signature Collection</h2><ul><li><strong>Signature Éclat</strong>: to revive the radiance of your complexion and even it out.</li><li><strong>Signature Hydra</strong>: for visibly more hydrated, supple and plumper skin.</li><li><strong>Signature Lift</strong>: to work on the look of fine lines and loss of firmness.</li><li><strong>Signature Skin</strong>: to improve the look of skin texture and uneven areas.</li><li><strong>Signature Pure</strong>: to work on the look of residual blemishes and enlarged pores.</li></ul><h2>Our body treatments</h2><ul><li><strong>Signature Body</strong> (from 180 €): a targeted treatment for the look of stretch marks, depending on the area.</li><li><strong>Signature Scar</strong> (from 190 €): a targeted treatment for the look of scars, after a skin assessment.</li></ul><p>Body treatment prices depend on the size and type of the area treated.</p><h2>Contraindications and precautions</h2><p>Micro-Pen requires a prior skin assessment. Some situations may prevent the treatment or require it to be postponed:</p><ul><li>Pregnancy and breastfeeding, as a precaution.</li><li>Herpes or an active skin infection.</li><li>Severe inflammatory acne.</li><li>Eczema, psoriasis or rosacea flaring on the area.</li><li>Wounds, burns or skin irritation.</li><li>A tendency to keloid scars.</li><li>Clotting disorders or anticoagulant medication.</li><li>Weakened immunity or uncontrolled diabetes.</li><li>Isotretinoin treatment, recent or ongoing.</li><li>Known allergy to the products or materials used.</li></ul><p>If you are ill, under medical treatment or in any doubt, medical advice is needed before any treatment.</p><p>The safety of your skin is at the heart of our expertise.</p><h2>Results</h2><p>Results vary from person to person. Several sessions may be needed. Micro-Pen does not guarantee that scars or stretch marks will disappear.</p>",
+   "priceTitle": "Prices",
    "prices": [
     {
-     "name": "Micro Pen",
+     "name": "Signature Éclat",
+     "amount": "130 €"
+    },
+    {
+     "name": "Signature Hydra",
+     "amount": "140 €"
+    },
+    {
+     "name": "Signature Lift",
+     "amount": "155 €"
+    },
+    {
+     "name": "Signature Skin",
      "amount": "150 €"
+    },
+    {
+     "name": "Signature Pure",
+     "amount": "145 €"
+    },
+    {
+     "name": "Signature Body",
+     "amount": "From 180 €"
+    },
+    {
+     "name": "Signature Scar",
+     "amount": "From 190 €"
     }
    ],
    "figures": [
@@ -1072,25 +1245,25 @@
      "src": "soins/microneed.webp",
      "w": 800,
      "h": 650,
-     "alt": "Diagram of the skin before Micro Pen"
+     "alt": "Diagram of the skin before Micro-Pen"
     },
     {
      "src": "soins/microneed2.webp",
      "w": 800,
      "h": 650,
-     "alt": "Diagram of the skin during Micro Pen: the pen creates tiny perforations"
+     "alt": "Diagram of the skin during Micro-Pen: the pen creates tiny perforations"
     },
     {
      "src": "soins/microneedling3.webp",
      "w": 800,
      "h": 650,
-     "alt": "Diagram of the skin during Micro Pen: a serum penetrates through the perforations"
+     "alt": "Diagram of the skin during Micro-Pen: a serum penetrates through the perforations"
     },
     {
      "src": "soins/microneedling4.webp",
      "w": 800,
      "h": 650,
-     "alt": "Diagram of the skin four to six weeks after Micro Pen"
+     "alt": "Diagram of the skin four to six weeks after Micro-Pen"
     }
    ]
   },
@@ -1362,6 +1535,51 @@
     }
    ],
    "figures": []
+  },
+  "semi-permanent": {
+   "title": "The art of semi-permanent polish",
+   "metaTitle": "The art of semi-permanent polish, hands and feet — My Bubble Beauty",
+   "description": "Semi-permanent polish for hands and feet: intense colour, long-lasting shine and a neat finish. Services, contraindications and prices.",
+   "articleHtml": "<p>Beautiful nails, with elegance.</p><p>Treat your hands and feet to a delicate, polished look with semi-permanent nail polish.</p><p>This technique gives an intense colour, long-lasting shine and a flawless finish, while keeping a natural and elegant result.</p><p>A beauty moment to take care of yourself, right down to your fingertips.</p><h2>Our services</h2><p>Each service includes nail preparation, cuticle care, shaping and a neat finish.</p><h2>Contraindications</h2><p>To protect the health and beauty of your nails, semi-permanent polish cannot be applied in some situations:</p><ul><li>Fungal or other nail infection.</li><li>Nails with inflammation or an injury.</li><li>Wounds, irritation or lesions around the nails.</li><li>Known allergy to ingredients in the products used, especially acrylates.</li><li>Badly damaged nails or an abnormality that needs medical advice.</li></ul><p>If in doubt, the service will be postponed and medical advice may be recommended.</p><p>The health of your nails remains our priority. Thank you for your trust and loyalty.</p>",
+   "priceTitle": "Prices",
+   "prices": [
+    {
+     "name": "Hands: semi-permanent polish",
+     "amount": "30 €"
+    },
+    {
+     "name": "Hands: removal only",
+     "amount": "15 €"
+    },
+    {
+     "name": "Hands: removal and new application",
+     "amount": "35 €"
+    },
+    {
+     "name": "Feet: semi-permanent polish",
+     "amount": "30 €"
+    },
+    {
+     "name": "Feet: removal only",
+     "amount": "15 €"
+    },
+    {
+     "name": "Feet: removal and new application",
+     "amount": "35 €"
+    },
+    {
+     "name": "Removal with nail care",
+     "amount": "20 €"
+    }
+   ],
+   "figures": [
+    {
+     "src": "cartes/onglerie.webp",
+     "w": 720,
+     "h": 540,
+     "alt": "Hands with well-groomed nails in the treatment room"
+    }
+   ]
   }
  }
 }
