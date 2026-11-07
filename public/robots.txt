@@ -1,6 +1,0 @@
-User-agent: *
-Allow: /
-# Compte et réservation restent explorables : Google doit pouvoir y lire leur noindex
-Disallow: /admin
-
-Sitemap: https://mybubble-beauty.com/sitemap.xml

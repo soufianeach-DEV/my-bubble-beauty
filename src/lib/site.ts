@@ -10,7 +10,11 @@ export const LANGS: Lang[] = ['fr', 'nl', 'en'];
 export const DATA = { fr, nl, en } as const;
 export const t = (lang: Lang) => DATA[lang];
 
-export const SITE = 'https://mybubble-beauty.com';
+// Origine des URL absolues (canonical, hreflang, sitemap, robots.txt, JSON-LD, Open Graph).
+// Lue au build pour les pages pré-rendues, à l'exécution pour les autres : le domaine suit SITE_URL, le domaine officiel sinon.
+export const SITE = (process.env.SITE_URL || 'https://mybubble-beauty.com').replace(/\/+$/, '');
+// Même établissement dans les trois langues : un seul identifiant pour Google
+export const SALON_ID = `${SITE}/#salon`;
 // Empreinte des scripts : servis « immutable » un an, ils changent d'URL dès que leur contenu change.
 export const JS_VERSION = createHash('sha1').update(['main', 'motion-pref', 'stats', 'password', 'auth-swap'].map((f) => readFileSync(`public/assets/js/${f}.js`, 'utf8')).join('\n')).digest('hex').slice(0, 8);
 

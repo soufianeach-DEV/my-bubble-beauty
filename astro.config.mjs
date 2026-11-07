@@ -7,7 +7,8 @@ import node from '@astrojs/node';
 const secret = (more = {}) => envField.string({ context: 'server', access: 'secret', ...more });
 
 export default defineConfig({
-  site: 'https://mybubble-beauty.com',
+  // Même origine que SITE dans src/lib/site.ts
+  site: (process.env.SITE_URL || 'https://mybubble-beauty.com').replace(/\/+$/, ''),
   output: 'static',
   trailingSlash: 'ignore',
   // Port de server.mjs et de Render : hors allowedDomains (en local), Astro retombe sur localhost:<port> et accepte les formulaires.

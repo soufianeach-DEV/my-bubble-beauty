@@ -28,5 +28,7 @@ export async function purge(sql, adminEmail) {
       WHERE starts_at < now() - interval '3 years' AND (guest_name IS NOT NULL OR guest_phone IS NOT NULL)`).count,
     // Journal d'audit : 12 mois
     journal: (await tx`DELETE FROM audit_log WHERE at < now() - interval '12 months'`).count,
+    // Mesure d'audience : 13 mois, comme annoncé dans la page confidentialité
+    visits: (await tx`DELETE FROM site_visits WHERE day < (now() - interval '13 months')::date`).count,
   }));
 }

@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
-import { LANGS, FOLDER, CONTACT, SITE, LANG_META, EXTRA, HOURS, hoursRows, openingHoursSchema, t, pagePath, langOfFolder } from '../../lib/site';
+import { LANGS, FOLDER, CONTACT, SITE, SALON_ID, LANG_META, EXTRA, HOURS, hoursRows, openingHoursSchema, t, pagePath, langOfFolder } from '../../lib/site';
 
 export function getStaticPaths() {
   return LANGS.map((l) => ({ params: { folder: FOLDER[l] } }));
@@ -14,8 +14,8 @@ const treat = (slug: string) => pagePath(lang, `treatment:${slug}`);
 // Photo de chaque carte soin, dans l'ordre de home.soins.cards
 const CARD_IMG = ['visage', 'massage', 'epilation', 'corps', 'onglerie', 'sourire'];
 const jsonld = {
-  '@context': 'https://schema.org', '@type': 'BeautySalon', name: 'My Bubble Beauty',
-  url: SITE + pagePath(lang, 'home'), telephone: CONTACT.phone, email: CONTACT.email,
+  '@context': 'https://schema.org', '@type': 'BeautySalon', '@id': SALON_ID, name: 'My Bubble Beauty', description: h.description,
+  url: SITE + pagePath(lang, 'home'), telephone: CONTACT.phone, email: CONTACT.email, hasMap: CONTACT.maps,
   logo: SITE + '/assets/img/logo-my-bubble.png', image: SITE + '/assets/img/galerie-1.webp',
   address: { '@type': 'PostalAddress', streetAddress: CONTACT.street, postalCode: CONTACT.postal, addressLocality: CONTACT.city, addressCountry: 'BE' },
   geo: { '@type': 'GeoCoordinates', latitude: 50.8522424, longitude: 4.2847883 },

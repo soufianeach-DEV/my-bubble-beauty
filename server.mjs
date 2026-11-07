@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import postgres from 'postgres';
 import { migrate } from './db/migrate.mjs';
 import { purge } from './db/purge.mjs';
+import { isCountable, recordVisit } from './db/visits.mjs';
 
 // site.ts lit public/ en chemin relatif : le serveur travaille dans son propre dossier, d'où qu'on le lance
 process.chdir(fileURLToPath(new URL('.', import.meta.url)));
@@ -55,11 +56,17 @@ const REDIRECTS = new Map([
   ['/confidentialite.html', '/fr/confidentialite.html'],
 ]);
 
+// Pages privées : noindex aussi dans l'en-tête, pour toute réponse (redirection vers la connexion comprise). Jamais ailleurs.
+const NOINDEX = /^\/(admin|api|(fr|nl|eng)\/(compte|reserver))(\/|$)/;
+
 const server = http.createServer((req, res) => {
   const path = (req.url ?? '/').split('?')[0];
   const writeHead = res.writeHead;
   res.writeHead = function (status, ...rest) {
     for (const [k, v] of Object.entries(SECURITY)) this.setHeader(k, v);
+    if (NOINDEX.test(path)) this.setHeader('X-Robots-Tag', 'noindex');
+    // Visite comptée une fois la page envoyée, jamais avant (aucun délai pour le visiteur)
+    if (isCountable(req, path, status)) res.once('finish', () => recordVisit(sql, req, log));
     if (this.hasHeader('etag')) {
       const cc = staticCache(path);
       if (cc) this.setHeader('Cache-Control', cc);

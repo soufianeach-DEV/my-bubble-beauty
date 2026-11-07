@@ -1,0 +1,98 @@
+---
+export const prerender = false;
+// Métriques : chiffre d'affaires, rendez-vous, absences, annulations, nouvelles clientes, prestations les plus demandées
+import Admin from './_layout.astro';
+import { adminId } from '../../lib/server/admin.ts';
+import { metrics, toPeriod, delta, rate, PERIODS } from '../../lib/server/metrics.ts';
+
+if (!adminId(Astro.locals)) return new Response(null, { status: 404 });
+const days = toPeriod(Astro.url.searchParams.get('periode'));
+const { now, before, top, months } = await metrics(days);
+
+const eur = new Intl.NumberFormat('fr-BE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+const money = (cents: number) => eur.format(cents / 100);
+const pct = (v: number | null) => (v === null ? '—' : `${v} %`);
+const evo = (cur: number, prev: number) => {
+  const d = delta(cur, prev);
+  return d === null ? null : { text: `${d > 0 ? '+' : ''}${d} %`, up: d >= 0 };
+};
+const LABEL: Record<number, string> = { 7: '7 jours', 30: '30 jours', 90: '3 mois', 365: '12 mois' };
+const monthName = new Intl.DateTimeFormat('fr-BE', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+const maxMonth = Math.max(1, ...months.map((m) => m.revenue));
+const avg = now.done ? Math.round(now.revenue / now.done) : 0;
+
+// Audience gardée 13 mois (db/purge.mjs) : pas de comparaison sur 12 mois, la période précédente serait incomplète
+const visitEvo = (cur: number, prev: number) => (days === 365 ? null : evo(cur, prev));
+const cards = [
+  { label: 'Visites du site', value: String(now.visits), evo: visitEvo(now.visits, before.visits), hint: `${now.pageViews} pages vues` },
+  { label: 'Chiffre d’affaires réalisé', value: money(now.revenue), evo: evo(now.revenue, before.revenue) },
+  { label: 'Rendez-vous honorés', value: String(now.done), evo: evo(now.done, before.done) },
+  { label: 'Panier moyen', value: now.done ? money(avg) : '—', evo: null },
+  { label: 'Nouvelles clientes', value: String(now.newClients), evo: evo(now.newClients, before.newClients) },
+  { label: 'Taux d’annulation', value: pct(rate(now.cancelled, now.created)), evo: null, hint: `${now.cancelled} sur ${now.created} réservations` },
+  { label: 'Absences', value: String(now.noShows), evo: null, hint: `${pct(rate(now.noShows, now.done + now.noShows))} des rendez-vous passés` },
+  { label: 'Rendez-vous à venir', value: String(now.upcoming), evo: null, hint: `${money(now.upcomingRevenue)} attendus` },
+];
+---
+<Admin title="Métriques">
+<nav class="periods" aria-label="Période">{PERIODS.map((p) => (
+  <a class="btn btn--ghost" href={`/admin/metriques?periode=${p}`} aria-current={p === days ? 'page' : undefined}>{LABEL[p]}</a>
+))}</nav>
+<p class="note">Sur les {LABEL[days]} écoulés, comparé à la période précédente. Le chiffre d’affaires compte les rendez-vous confirmés et passés, cliente venue, remises et remboursements déduits. Une visite est une personne comptée une fois par jour, sans cookie : les robots et les pages de compte ne sont pas comptés.</p>
+
+<ul class="kpis">{cards.map((c) => (
+  <li class="kpi">
+    <span class="kpi__label">{c.label}</span>
+    <strong class="kpi__value">{c.value}</strong>
+    {c.evo && <span class={`kpi__evo ${c.evo.up ? 'is-up' : 'is-down'}`}>{c.evo.text}<span class="visually-hidden"> par rapport à la période précédente</span></span>}
+    {c.hint && <span class="kpi__hint">{c.hint}</span>}
+  </li>
+))}</ul>
+
+<section aria-labelledby="h-months">
+<h2 id="h-months">Six derniers mois</h2>
+<div class="table-wrap"><table class="data-table">
+  <thead><tr><th scope="col">Mois</th><th scope="col">Visites</th><th scope="col">Rendez-vous</th><th scope="col">Chiffre d’affaires</th><th scope="col"><span class="visually-hidden">Comparaison</span></th></tr></thead>
+  <tbody>{months.map((m) => (
+    <tr>
+      <td>{monthName.format(new Date(`${m.month}-15T00:00:00Z`))}</td>
+      <td>{m.visits}</td>
+      <td>{m.n}</td>
+      <td>{money(m.revenue)}</td>
+      {/* meter et non une largeur en style : la CSP n'autorise aucun style en ligne */}
+      <td class="bar-cell"><meter min="0" max={maxMonth} value={m.revenue} aria-hidden="true"></meter></td>
+    </tr>
+  ))}</tbody>
+</table></div>
+</section>
+
+<section aria-labelledby="h-top">
+<h2 id="h-top">Prestations les plus demandées</h2>
+{top.length === 0 ? <p>Aucun rendez-vous honoré sur la période.</p> : (
+<div class="table-wrap"><table class="data-table">
+  <thead><tr><th scope="col">Prestation</th><th scope="col">Rendez-vous</th><th scope="col">Chiffre d’affaires</th></tr></thead>
+  <tbody>{top.map((s) => <tr><td>{s.name}</td><td>{s.n}</td><td>{money(s.revenue)}</td></tr>)}</tbody>
+</table></div>
+)}
+</section>
+</Admin>
+
+<style>
+  .periods{display:flex;flex-wrap:wrap;gap:.5rem;margin:0 0 1rem}
+  .periods a[aria-current="page"]{background:var(--text);color:var(--bg);border-color:var(--text)}
+  .note{margin:0 0 1.5rem;color:var(--text-soft);font-size:.9375rem}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(13rem,1fr));gap:1rem;list-style:none;margin:0 0 2.5rem;padding:0}
+  .kpi{display:grid;gap:.35rem;padding:1.1rem 1.25rem;border:1px solid var(--line-soft);border-radius:16px;background:var(--bg)}
+  .kpi__label{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-soft)}
+  .kpi__value{font:300 2rem/1.1 var(--f-title)}
+  .kpi__evo{justify-self:start;padding:.1rem .55rem;border-radius:999px;font-size:.8125rem;font-weight:500}
+  .kpi__evo.is-up{background:rgb(76 128 92 / .18)}
+  .kpi__evo.is-down{background:rgb(176 70 60 / .2)}
+  .kpi__hint{font-size:.8125rem;color:var(--text-soft)}
+  section{margin:0 0 2.5rem}
+  section h2{margin:0 0 1rem;font-size:1.5rem}
+  .bar-cell{width:40%}
+  .bar-cell meter{display:block;width:100%;height:.6rem}
+  .bar-cell meter::-webkit-meter-optimum-value{background:#C89B8C}
+  .bar-cell meter::-moz-meter-bar{background:#C89B8C}
+</style>
