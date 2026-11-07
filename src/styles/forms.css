@@ -28,3 +28,47 @@ fieldset.field{border:0;padding:0;margin:0}
 /* Annulation en deux temps sans JS (compte et admin) : le résumé déplie le bouton de confirmation */
 .cancel summary{cursor:pointer;color:var(--link);text-decoration:underline;text-underline-offset:.2em;padding:.6rem 0}
 .cancel form{margin-top:.5rem}
+
+/* Connexion / inscription : une seule carte et une lame oblique (avatar de Souade + marque). Lame à droite à la connexion,
+   à gauche à l'inscription. Au clic (auth-swap.js), elle s'étire sur toute la carte ; la page suivante la reprend là
+   (transition de vue entre documents) et la pose de l'autre côté. La lame ne tourne jamais, elle traverse. */
+.auth{--blade:46%;--slant:14%;container-type:inline-size;position:relative;display:grid;grid-template-columns:minmax(0,1fr) var(--blade);max-width:1040px;min-height:min(640px,80vh);margin-inline:auto;border:1px solid var(--line-soft);border-radius:var(--radius);overflow:hidden;background:var(--surface);box-shadow:0 30px 70px -45px rgb(59 42 39 / .45)}
+.legal .auth article{max-width:none;margin:0;border:0;border-radius:0;background:none;align-self:center}
+.auth--register{grid-template-columns:var(--blade) minmax(0,1fr)}
+.auth--register article{grid-column:2}
+.auth__blade{view-transition-name:auth-blade;position:absolute;inset:0 0 0 auto;width:var(--blade);overflow:hidden;color:#FFFBF9;background:#4E302C;
+  clip-path:polygon(var(--slant) 0,100% 0,100% 100%,0 100%)}
+.auth--register .auth__blade{inset:0 auto 0 0;clip-path:polygon(0 0,100% 0,calc(100% - var(--slant)) 100%,0 100%)}
+/* Largeur figée en unités de conteneur : quand la lame s'étire, Souade reste à sa place et seule la couleur avance */
+.auth__avatar{position:absolute;inset:0 0 auto auto;width:46cqw;height:min(100%,67cqw);object-fit:cover;object-position:50% 30%;
+  -webkit-mask-image:linear-gradient(180deg,#000 80%,transparent);mask-image:linear-gradient(180deg,#000 80%,transparent)}
+.auth--cover .auth__avatar{-webkit-mask-image:linear-gradient(90deg,transparent,#000 30%);mask-image:linear-gradient(90deg,transparent,#000 30%)}
+.auth--register .auth__avatar{inset:0 auto auto 0}
+.auth--register.auth--cover .auth__avatar{-webkit-mask-image:linear-gradient(270deg,transparent,#000 30%);mask-image:linear-gradient(270deg,transparent,#000 30%)}
+.auth__veil{position:absolute;inset:0;display:grid;align-content:end;justify-items:start;gap:.9rem;padding:clamp(1.75rem,4vw,3rem) clamp(1.75rem,3vw,2.5rem) clamp(1.75rem,4vw,3rem) calc(var(--slant) + 1.5rem);
+  background:linear-gradient(180deg,rgb(78 48 44 / 0) 45%,rgb(78 48 44 / .7) 68%,rgb(58 34 31 / .94))}
+.auth--register .auth__veil{padding-left:clamp(1.75rem,3vw,2.5rem);padding-right:calc(var(--slant) + 1.5rem)}
+.auth__blade p{margin:0;max-width:24ch;color:inherit}
+.auth__brand{font:300 clamp(2rem,2vw + 1rem,2.6rem)/1 var(--f-title);font-variation-settings:"SOFT" 100,"WONK" 0;letter-spacing:.03em}
+.auth__brand span{display:block;margin-top:-.1em;font:400 1.35em/.8 "Allura",cursive;color:#E8C9A0}
+.auth__blade .btn--ghost{color:#FFFBF9;border-color:rgb(255 251 249 / .7)}
+.auth__blade .btn--ghost:hover,.auth__blade .btn--ghost:focus-visible{background:#FFFBF9;color:#4E302C}
+/* Aller : la lame couvre toute la carte (largeur pleine, bord droit) */
+@keyframes auth-cover{to{width:100%;clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}}
+.auth--cover .auth__blade{animation:auth-cover .42s cubic-bezier(.65,0,.35,1) forwards}
+.auth--cover .auth__veil{opacity:0;transition:opacity .15s}
+@media (max-width:759px){
+  .auth,.auth--register{grid-template-columns:1fr;min-height:0}
+  .auth--register article{grid-column:auto}
+  .auth__blade,.auth--register .auth__blade{position:relative;inset:auto;width:auto;min-height:15rem;clip-path:none;order:-1}
+  .auth__avatar,.auth--register .auth__avatar{inset:0;width:100%;height:100%}
+}
+@media (prefers-reduced-motion:no-preference){
+  @view-transition{navigation:auto}
+  /* Retour : la carte couverte se découvre ; seule la lame bouge, sans fondu */
+  ::view-transition-group(auth-blade){animation-duration:.5s;animation-timing-function:cubic-bezier(.65,0,.35,1);overflow:clip;background:#4E302C}
+  ::view-transition-old(auth-blade){display:none}
+  ::view-transition-new(auth-blade){animation:none;height:100%;object-fit:none;object-position:right}
+  :root:has(.auth--register)::view-transition-new(auth-blade){object-position:left}
+}
+:root[data-motion="off"]::view-transition-group(*),:root[data-motion="off"]::view-transition-old(*),:root[data-motion="off"]::view-transition-new(*){animation:none}
