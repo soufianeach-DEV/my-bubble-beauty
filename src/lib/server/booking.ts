@@ -115,7 +115,7 @@ export async function createBooking(input: { userId: number; serviceId: number; 
         VALUES (${userId}, ${serviceId}, ${startsAt}, ${startsAt}::timestamptz + make_interval(mins => ${s.busy_min}::int),
           ${m.deposit_cents ? 'pending_payment' : 'confirmed'}, ${m.price_cents}, ${m.discount_cents}, ${m.deposit_cents}, ${promo?.id ?? null})
         RETURNING id`;
-      return { ok: true, id: b.id as number, deposit: m.deposit_cents, label: `${DEPOSIT_LABEL[lang]} — ${s.name}` } as const;
+      return { ok: true, id: b.id as number, deposit: m.deposit_cents, label: `${DEPOSIT_LABEL[lang]} - ${s.name}` } as const;
     });
   } catch (e) {
     if (isTaken(e)) return { ok: false, error: 'unavailable' };

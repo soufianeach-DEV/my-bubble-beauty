@@ -5,7 +5,7 @@
  "ogLocale": "fr_BE",
  "ui": {
   "skip": "Aller au contenu",
-  "brandAlt": "My Bubble Beauty — accueil",
+  "brandAlt": "My Bubble Beauty, accueil",
   "navLabel": "Menu",
   "nav": [
    {
@@ -44,7 +44,7 @@
   "bookShort": "Réserver"
  },
  "home": {
-  "title": "Institut de beauté à Dilbeek — My Bubble Beauty",
+  "title": "Institut de beauté à Dilbeek - My Bubble Beauty",
   "description": "Centre de beauté et de bien-être à Dilbeek, aux portes d'Anderlecht, de Molenbeek et de Berchem : soins du visage, pédicure médicale, ongles et épilation.",
   "hero": {
    "eyebrow": "Institut de beauté · Dilbeek",
@@ -317,7 +317,7 @@
     {
      "id": "micro-pen",
      "cat": "visage",
-     "title": "Micro-Pen — Collection Signature",
+     "title": "Micro-Pen - Collection Signature",
      "href": "microneed",
      "intro": "Chaque protocole est adapté aux besoins de votre peau.",
      "items": [
@@ -416,7 +416,7 @@
      "cat": "corps",
      "title": "Massages relaxants",
      "href": "massages",
-     "intro": "Une parenthèse de douceur pour prendre soin du corps et apaiser l’esprit.",
+     "intro": "Des massages relaxants et des gommages pour le corps.",
      "items": [
       {
        "name": "Chaleur & Détente",
@@ -514,7 +514,7 @@
     {
      "id": "micro-pen-corps",
      "cat": "corps",
-     "title": "Micro-Pen — soins corps",
+     "title": "Micro-Pen - soins corps",
      "href": "microneed",
      "intro": "Les tarifs varient selon la surface et la nature de la zone à traiter.",
      "items": [
@@ -611,9 +611,9 @@
     {
      "id": "laser-visage",
      "cat": "epilation",
-     "title": "Épilation laser — Visage",
+     "title": "Épilation laser - Visage",
      "href": "laserepilation",
-     "intro": "La liberté d'une peau douce. Prenez soin de votre peau, séance après séance.",
+     "intro": "Une peau plus douce, avec moins de poils au fil des séances.",
      "items": [
       {
        "name": "Lèvre supérieure",
@@ -655,7 +655,7 @@
     {
      "id": "laser-haut-du-corps",
      "cat": "epilation",
-     "title": "Épilation laser — Haut du corps",
+     "title": "Épilation laser - Haut du corps",
      "href": "laserepilation",
      "items": [
       {
@@ -703,7 +703,7 @@
     {
      "id": "laser-maillot",
      "cat": "epilation",
-     "title": "Épilation laser — Maillot",
+     "title": "Épilation laser - Maillot",
      "href": "laserepilation",
      "items": [
       {
@@ -736,7 +736,7 @@
     {
      "id": "laser-jambes",
      "cat": "epilation",
-     "title": "Épilation laser — Jambes",
+     "title": "Épilation laser - Jambes",
      "href": "laserepilation",
      "items": [
       {
@@ -764,7 +764,7 @@
     {
      "id": "laser-dos-torse",
      "cat": "epilation",
-     "title": "Épilation laser — Dos et torse",
+     "title": "Épilation laser - Dos et torse",
      "href": "laserepilation",
      "items": [
       {
@@ -914,35 +914,35 @@
      "cat": "mains",
      "title": "L'art du semi-permanent",
      "href": "semi-permanent",
-     "intro": "La beauté des ongles, tout en élégance. Chaque prestation comprend la préparation des ongles, le travail des cuticules, la mise en forme et une finition soignée.",
+     "intro": "Pose et dépose pour les mains et les pieds. Chaque prestation comprend la préparation des ongles, le travail des cuticules et la mise en forme.",
      "items": [
       {
-       "name": "Mains : pose de vernis semi-permanent",
+       "name": "Pose de vernis semi-permanent (mains)",
        "href": null,
        "amount": "30 €"
       },
       {
-       "name": "Mains : dépose seule",
+       "name": "Dépose seule (mains)",
        "href": null,
        "amount": "15 €"
       },
       {
-       "name": "Mains : dépose suivie d’une nouvelle pose",
+       "name": "Dépose et nouvelle pose (mains)",
        "href": null,
        "amount": "35 €"
       },
       {
-       "name": "Pieds : pose de vernis semi-permanent",
+       "name": "Pose de vernis semi-permanent (pieds)",
        "href": null,
        "amount": "30 €"
       },
       {
-       "name": "Pieds : dépose seule",
+       "name": "Dépose seule (pieds)",
        "href": null,
        "amount": "15 €"
       },
       {
-       "name": "Pieds : dépose suivie d’une nouvelle pose",
+       "name": "Dépose et nouvelle pose (pieds)",
        "href": null,
        "amount": "35 €"
       },
@@ -1064,9 +1064,9 @@
  "treatments": {
   "charbon": {
    "title": "Carbon Peel Bubble Signature",
-   "metaTitle": "Carbon Peel Bubble Signature, soin éclat — My Bubble Beauty",
+   "metaTitle": "Carbon Peel Bubble Signature, soin éclat - My Bubble Beauty",
    "description": "Le Carbon Peel Bubble Signature, soin éclat, pureté et qualité de peau pour le visage, le cou et le décolleté. Prestations à la carte, bénéfices et tarifs.",
-   "articleHtml": "<p>Le Carbon Peel Bubble Signature est un soin éclat, pureté et qualité de peau. Il associe un masque au carbone et le passage d'un laser esthétique pour purifier la peau, réduire son aspect brillant et raviver l'éclat du teint. Voici comment se déroule une séance :</p><h2>Consultation initiale</h2><p>Avant la première séance, nous observons votre peau, nous parlons de vos attentes et nous choisissons avec vous la zone à traiter.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><h2>Nettoyage de la peau</h2><p>La peau est démaquillée et nettoyée pour retirer les impuretés, le maquillage et l’excès de sébum. Elle doit être propre et sèche avant la suite du soin.</p><h2>Application du masque au carbone</h2><p>Une fine couche de crème au carbone est appliquée de façon uniforme sur la zone, puis laissée sécher quelques minutes.</p><h2>Passage du laser</h2><p>Vous portez des lunettes de protection pendant toute cette étape. Le laser est passé doucement sur la zone. Sa lumière est absorbée par les particules de carbone, qui sont retirées de la surface de la peau. Vous pouvez sentir une légère chaleur ou de petits picotements.</p><h2>Nettoyage et apaisement</h2><p>Les résidus de carbone sont retirés. Un soin apaisant puis une protection solaire terminent la séance.</p><h2>Les zones traitées</h2><ul><li><strong>Visage complet</strong> (30 à 45 min) : un soin purifiant et revitalisant, pour améliorer l’apparence des pores, réduire l’aspect brillant et raviver l’éclat du teint.</li><li><strong>Visage + cou</strong> (45 à 60 min) : un soin ciblé, pour améliorer l’aspect du grain de peau et retrouver un teint plus uniforme.</li><li><strong>Visage + cou + décolleté</strong> (60 à 75 min) : notre soin signature complet, pour travailler l’apparence de la peau sur les trois zones et lui apporter un aspect plus lumineux et harmonieux.</li><li><strong>Cou + décolleté</strong> (30 à 45 min) : un soin spécifique, pour améliorer l’apparence et l’uniformité de la peau du cou et du décolleté.</li></ul><h2>Les bénéfices recherchés</h2><p><strong>Visage.</strong> Pores moins visibles, peau d’apparence plus nette, teint plus lumineux, texture de peau améliorée.</p><p><strong>Cou.</strong> Peau d’aspect plus beau, teint moins irrégulier, aspect plus homogène.</p><p><strong>Décolleté.</strong> Grain de peau plus fin, teint visuellement plus uniforme, peau d’apparence plus lumineuse.</p><h2>Après le soin</h2><p>Une légère rougeur peut apparaître et disparaît en général en quelques heures. Les jours suivants, protégez votre peau du soleil et évitez les gommages. Le nombre de séances et leur rythme sont définis avec vous selon votre peau et vos objectifs. Les résultats varient d’une personne à l’autre.</p>",
+   "articleHtml": "<p>Le Carbon Peel Bubble Signature est un soin éclat, pureté et qualité de peau. Il associe un masque au carbone et le passage d'un laser esthétique pour purifier la peau, réduire son aspect brillant et raviver l'éclat du teint. Voici comment se déroule une séance :</p><h2>Consultation initiale</h2><p>Avant la première séance, nous observons votre peau, nous parlons de vos attentes et nous choisissons avec vous la zone à traiter.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><h2>Nettoyage de la peau</h2><p>La peau est démaquillée et nettoyée pour retirer les impuretés, le maquillage et l’excès de sébum. Elle doit être propre et sèche avant la suite du soin.</p><h2>Application du masque au carbone</h2><p>Une fine couche de crème au carbone est appliquée de façon uniforme sur la zone, puis laissée sécher quelques minutes.</p><h2>Passage du laser</h2><p>Vous portez des lunettes de protection pendant toute cette étape. Le laser est passé doucement sur la zone. Sa lumière est absorbée par les particules de carbone, qui sont retirées de la surface de la peau. Vous pouvez sentir une légère chaleur ou de petits picotements.</p><h2>Nettoyage et apaisement</h2><p>Les résidus de carbone sont retirés. Un soin apaisant puis une protection solaire terminent la séance.</p><h2>Les zones traitées</h2><ul><li><strong>Visage complet</strong> (30 à 45 min). Un soin purifiant et revitalisant, pour améliorer l’apparence des pores, réduire l’aspect brillant et raviver l’éclat du teint.</li><li><strong>Visage + cou</strong> (45 à 60 min). Un soin ciblé, pour améliorer l’aspect du grain de peau et retrouver un teint plus uniforme.</li><li><strong>Visage + cou + décolleté</strong> (60 à 75 min). Notre soin signature complet, pour travailler l’apparence de la peau sur les trois zones et lui apporter un aspect plus lumineux et harmonieux.</li><li><strong>Cou + décolleté</strong> (30 à 45 min). Un soin spécifique, pour améliorer l’apparence et l’uniformité de la peau du cou et du décolleté.</li></ul><h2>Les bénéfices recherchés</h2><p><strong>Visage.</strong> Pores moins visibles, peau d’apparence plus nette, teint plus lumineux, texture de peau améliorée.</p><p><strong>Cou.</strong> Peau d’aspect plus beau, teint moins irrégulier, aspect plus homogène.</p><p><strong>Décolleté.</strong> Grain de peau plus fin, teint visuellement plus uniforme, peau d’apparence plus lumineuse.</p><h2>Après le soin</h2><p>Une légère rougeur peut apparaître et disparaît en général en quelques heures. Les jours suivants, protégez votre peau du soleil et évitez les gommages. Le nombre de séances et leur rythme sont définis avec vous selon votre peau et vos objectifs. Les résultats varient d’une personne à l’autre.</p>",
    "priceTitle": "Tarifs",
    "prices": [
     {
@@ -1097,10 +1097,10 @@
   },
   "cire": {
    "title": "L'épilation à la cire",
-   "metaTitle": "L'épilation à la cire — My Bubble Beauty",
+   "metaTitle": "L'épilation à la cire - My Bubble Beauty",
    "description": "L'épilation à la cire chaude ou tiède retire les poils à la racine, pour une peau qui reste lisse plus longtemps qu'après un rasage. Déroulement et tarifs.",
    "articleHtml": "<p>L'épilation à la cire est une méthode d'élimination des poils non désirés qui est couramment utilisée en esthétique. Cette technique consiste à appliquer de la cire chaude ou tiède sur la peau, à la laisser durcir, puis à la retirer rapidement, emportant ainsi les poils avec elle. Voici comment fonctionne l'épilation à la cire en esthétique :</p><h2>Préparation</h2><p>Avant de commencer l'épilation à la cire, la peau est généralement nettoyée pour éliminer toute trace de saleté, d'huile ou de produits cosmétiques. Il est important que la peau soit propre et sèche avant l'application de la cire.</p><h2>Application</h2><p>La cire est chauffée pour la rendre fluide, mais elle ne doit pas être brûlante pour éviter les brûlures. Elle est ensuite appliquée sur la zone à épiler à l'aide d'un bâton ou d'une spatule. La cire adhère aux poils et à la peau.</p><h2>Durcissement</h2><p>La cire est laissée à durcir pendant quelques instants. Pendant cette période, la cire s'accroche aux poils, les enrobant complètement.</p><h2>Retrait</h2><p>Une fois la cire durcie, un professionnel de l'esthétique saisit un bord de la cire et la retire rapidement dans le sens inverse de la pousse des poils. Cette action arrache les poils à la racine, laissant la peau temporairement lisse et sans poils.</p><h2>Soin post-épilation</h2><p>Après l'épilation, il est courant d'appliquer une lotion apaisante ou une crème hydratante pour calmer la peau et minimiser les irritations. Les poils repousseront progressivement, généralement en quelques semaines.</p><p>L'épilation à la cire peut être réalisée sur différentes parties du corps, notamment les jambes, les aisselles, le maillot, le visage et d'autres zones où les poils non désirés sont présents. Cette méthode d'épilation offre plusieurs avantages, notamment une peau qui reste lisse plus longtemps qu'après un rasage, car les poils sont arrachés à la racine. Cependant, il y a aussi des inconvénients potentiels, tels que la douleur associée à l'arrachage des poils et la possibilité d'irritation de la peau.</p><p>Il existe différentes formules de cire, notamment la cire chaude, la cire tiède ou la cire froide, chacune ayant ses propres avantages et inconvénients. Certaines personnes choisissent également de réaliser l'épilation à la cire à la maison à l'aide de kits disponibles dans le commerce, bien que cela puisse nécessiter de la pratique pour obtenir de bons résultats.</p><p>Il est recommandé de faire appel à un professionnel expérimenté pour l'épilation à la cire, en particulier pour les zones sensibles, car cela réduit le risque de blessures ou d'irritations de la peau.</p>",
-   "priceTitle": "Tarif — Épilation",
+   "priceTitle": "Tarif",
    "prices": [
     {
      "name": "Sourcils",
@@ -1154,10 +1154,10 @@
   },
   "dents": {
    "title": "Le blanchiment des dents",
-   "metaTitle": "Le blanchiment des dents — My Bubble Beauty",
+   "metaTitle": "Le blanchiment des dents - My Bubble Beauty",
    "description": "Le blanchiment des dents est un soin esthétique qui vise à éclaircir la couleur des dents et à atténuer les taches. Déroulement, précautions et tarifs.",
    "articleHtml": "<p>Le blanchiment des dents est un soin esthétique conçu pour éclaircir la couleur des dents, les rendant plus blanches et plus lumineuses. Ce soin est couramment pratiqué en dentisterie esthétique pour améliorer l'apparence du sourire en atténuant les taches et les décolorations sur les dents. Voici comment fonctionne le blanchiment des dents en esthétique :</p><h2>Évaluation initiale</h2><p>Avant de commencer le processus de blanchiment des dents, un dentiste ou un professionnel de l'esthétique effectue une évaluation initiale pour déterminer si le soin vous convient. Certaines personnes peuvent ne pas être éligibles en raison de problèmes dentaires sous-jacents.</p><h2>Préparation</h2><p>Vos dents sont d'abord nettoyées pour éliminer la plaque dentaire et le tartre, qui peuvent interférer avec le blanchiment.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours, des dents sensibles ou des gencives irritées.</p><h2>Options de blanchiment</h2><p>Blanchiment à domicile : le dentiste peut fournir un kit de blanchiment à domicile contenant des gouttières personnalisées et un gel de blanchiment à faible concentration en peroxyde d'hydrogène ou en peroxyde de carbamide. Vous remplissez les gouttières avec le gel et les portez pendant une période spécifique chaque jour pendant quelques semaines. C'est un processus graduel.</p><p>Blanchiment en cabinet : cette méthode est également appelée blanchiment professionnel au fauteuil. Le dentiste applique un gel de blanchiment plus concentré sur vos dents, puis utilise une lumière spéciale ou un laser pour activer le gel. Ce processus est généralement plus rapide et peut offrir des résultats immédiats.</p><h2>Suivi</h2><p>Après le blanchiment, il peut vous être conseillé d'éviter certains aliments et boissons potentiellement tachants (comme le café, le thé, le vin rouge) pendant un certain temps pour maintenir les résultats. Un bon entretien bucco-dentaire, y compris le brossage et la soie dentaire réguliers, est également essentiel.</p><h2>Fonctionnement du blanchiment</h2><p>Le principe de base du blanchiment des dents repose sur l'utilisation de produits contenant du peroxyde d'hydrogène ou du peroxyde de carbamide. Ces substances chimiques pénètrent dans l'émail dentaire et réagissent avec les molécules responsables des taches et des décolorations, les décomposant pour éclaircir la couleur des dents. Cependant, il est important de noter que le blanchiment des dents n'est pas permanent, et les résultats peuvent varier d'une personne à l'autre en fonction de divers facteurs, notamment le type de taches dentaires et les habitudes de consommation.</p><h2>Consultation préalable</h2><p>Il est fortement recommandé de consulter un dentiste ou un professionnel de l'esthétique dentaire avant de procéder à un blanchiment des dents, car cela peut ne pas être approprié pour tout le monde, en particulier pour les personnes ayant des problèmes dentaires préexistants. De plus, le blanchiment des dents doit être effectué sous la supervision d'un professionnel pour favoriser la sécurité et l'efficacité du traitement.</p>",
-   "priceTitle": "Tarif — Blanchiment des dents",
+   "priceTitle": "Tarif",
    "prices": [
     {
      "name": "1 séance",
@@ -1179,9 +1179,9 @@
   },
   "hydra": {
    "title": "Les soins Hydra",
-   "metaTitle": "Soins Hydra, nettoyage et éclat du visage — My Bubble Beauty",
+   "metaTitle": "Soins Hydra, nettoyage et éclat du visage - My Bubble Beauty",
    "description": "HydraPure, HydraLift, HydraGlow et Hydra Signature : quatre soins du visage pour nettoyer, hydrater et illuminer la peau. Détails et tarifs.",
-   "articleHtml": "<ul><li><strong>HydraPure</strong> : le soin essentiel.</li><li><strong>HydraLift</strong> : le soin ciblé anti-âge.</li><li><strong>HydraGlow</strong> : le soin bonne mine.</li><li><strong>Hydra Signature</strong> : l'expérience complète.</li></ul><h2>HydraPure — le nettoyage profond</h2><p>Un nettoyage en profondeur pour éliminer les impuretés, désincruster les pores et retrouver une peau nette, fraîche et lumineuse.</p><p>Idéal pour les peaux encombrées, les pores dilatés et les imperfections.</p><h2>HydraLift — le soin anti-âge</h2><p>Un soin ciblé associé à un booster adapté pour hydrater intensément, repulper la peau et atténuer l'apparence des ridules.</p><p>Idéal pour les peaux matures, en manque de fermeté et présentant des signes de l'âge.</p><h2>HydraGlow — éclat & hydratation</h2><p>Un soin revitalisant qui apporte un supplément d'hydratation et d'éclat grâce à un booster sélectionné selon les besoins de votre peau.</p><p>Idéal pour les teints ternes, les peaux déshydratées et fatiguées.</p><h2>Hydra Signature — le soin complet personnalisé</h2><p>L'expérience Hydra la plus complète : nettoyage, exfoliation, extraction, hydratation et booster adapté aux besoins spécifiques de votre peau.</p><p>Idéal pour celles qui souhaitent un soin global et une prise en charge personnalisée.</p><p>Chaque peau est unique. Votre soin est adapté à vos besoins après une analyse personnalisée de votre peau.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
+   "articleHtml": "<ul><li><strong>HydraPure</strong>, le soin essentiel.</li><li><strong>HydraLift</strong>, le soin ciblé anti-âge.</li><li><strong>HydraGlow</strong>, le soin bonne mine.</li><li><strong>Hydra Signature</strong>, l'expérience complète.</li></ul><h2>HydraPure, le nettoyage profond</h2><p>Un nettoyage en profondeur pour éliminer les impuretés, désincruster les pores et retrouver une peau nette, fraîche et lumineuse.</p><p>Idéal pour les peaux encombrées, les pores dilatés et les imperfections.</p><h2>HydraLift, le soin anti-âge</h2><p>Un soin ciblé associé à un booster adapté pour hydrater intensément, repulper la peau et atténuer l'apparence des ridules.</p><p>Idéal pour les peaux matures, en manque de fermeté et présentant des signes de l'âge.</p><h2>HydraGlow, éclat & hydratation</h2><p>Un soin revitalisant qui apporte un supplément d'hydratation et d'éclat grâce à un booster sélectionné selon les besoins de votre peau.</p><p>Idéal pour les teints ternes, les peaux déshydratées et fatiguées.</p><h2>Hydra Signature, le soin complet personnalisé</h2><p>L'expérience Hydra la plus complète : nettoyage, exfoliation, extraction, hydratation et booster adapté aux besoins spécifiques de votre peau.</p><p>Idéal pour celles qui souhaitent un soin global et une prise en charge personnalisée.</p><p>Chaque peau est unique. Votre soin est adapté à vos besoins après une analyse personnalisée de votre peau.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
    "priceTitle": "Tarifs",
    "prices": [
     {
@@ -1212,9 +1212,9 @@
   },
   "laserepilation": {
    "title": "L'épilation laser",
-   "metaTitle": "Épilation laser à Dilbeek, peau douce — My Bubble Beauty",
+   "metaTitle": "Épilation laser à Dilbeek, peau douce - My Bubble Beauty",
    "description": "L'épilation laser réduit durablement la pilosité, séance après séance, pour une peau plus douce. Fonctionnement, objectifs du soin et tarifs par zone.",
-   "articleHtml": "<p>L'épilation laser est une technique qui permet de réduire durablement la pilosité grâce à une lumière concentrée qui cible la mélanine présente dans le poil.</p><p>L'énergie lumineuse est absorbée par le follicule pileux et transformée en chaleur, ce qui permet de détruire ou d'endommager les structures responsables de la repousse.</p><p>Au fil des séances, la pilosité diminue progressivement : les poils deviennent généralement moins nombreux, plus fins et moins visibles.</p><p>Le traitement nécessite plusieurs séances, car le laser est particulièrement efficace sur les poils en phase de croissance.</p><h2>Les objectifs du soin</h2><ul><li>Réduire durablement la pilosité.</li><li>Diminuer la densité des poils.</li><li>Ralentir la repousse.</li><li>Obtenir une peau plus douce.</li><li>Limiter les poils incarnés et les irritations liées au rasage.</li><li>Réduire les contraintes de l'épilation traditionnelle.</li></ul><h2>La liberté d'une peau douce</h2><p>Découvrez l'épilation laser, une technologie esthétique qui permet de réduire durablement la pilosité et de retrouver une peau plus douce au quotidien.</p><p>Grâce à un traitement adapté à votre peau et à votre pilosité, les séances permettent de diminuer progressivement la repousse des poils, de limiter les irritations et de réduire les contraintes de l'épilation traditionnelle.</p><p>Offrez-vous le confort d'une peau douce et une nouvelle liberté au quotidien.</p><p>Prenez soin de votre peau, séance après séance.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
+   "articleHtml": "<p>L'épilation laser est une technique qui permet de réduire durablement la pilosité grâce à une lumière concentrée qui cible la mélanine présente dans le poil.</p><p>L'énergie lumineuse est absorbée par le follicule pileux et transformée en chaleur, ce qui permet de détruire ou d'endommager les structures responsables de la repousse.</p><p>Au fil des séances, la pilosité diminue progressivement : les poils deviennent généralement moins nombreux, plus fins et moins visibles.</p><p>Le traitement nécessite plusieurs séances, car le laser est particulièrement efficace sur les poils en phase de croissance.</p><h2>Les objectifs du soin</h2><ul><li>Réduire durablement la pilosité.</li><li>Diminuer la densité des poils.</li><li>Ralentir la repousse.</li><li>Obtenir une peau plus douce.</li><li>Limiter les poils incarnés et les irritations liées au rasage.</li><li>Réduire les contraintes de l'épilation traditionnelle.</li></ul><h2>Pourquoi choisir le laser</h2><p>Le laser réduit la pilosité sur la durée. La peau reste douce plus longtemps qu'avec le rasage ou la cire.</p><p>Chaque traitement est adapté à votre peau et à vos poils. Au fil des séances, la repousse diminue et les irritations aussi.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
    "priceTitle": "Tarifs",
    "prices": [
     {
@@ -1375,7 +1375,7 @@
   },
   "lipolaser": {
    "title": "Lipo Lumière : chaud, froid et lumière rouge",
-   "metaTitle": "Lipo Lumière, chaud, froid, lumière rouge — My Bubble Beauty",
+   "metaTitle": "Lipo Lumière, chaud, froid, lumière rouge - My Bubble Beauty",
    "description": "Un soin du corps non invasif avec des plaquettes qui associent chaud, froid et lumière rouge, sur le ventre, les hanches, les cuisses ou les bras. Tarifs.",
    "articleHtml": "<p>Le Rituel Lipo Lumière utilise des plaquettes posées sur les zones choisies : ventre, hanches, cuisses ou bras. L’appareil associe des fonctions de chaud et de froid à la lumière rouge.</p><h2>Les bénéfices recherchés</h2><ul><li>Un soin non invasif, sans massage mécanique.</li><li>Un moment de confort sur les zones traitées.</li><li>Un complément à vos soins silhouette.</li></ul><p>Le chaud, le froid et la lumière rouge n’agissent pas de la même façon. Ce soin ne fait pas perdre de poids et ses résultats ne sont pas garantis.</p><h2>Déroulement</h2><p>La séance dure 30 ou 60 minutes, selon le nombre de zones.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
    "priceTitle": "Tarifs",
@@ -1400,9 +1400,9 @@
   },
   "mado": {
    "title": "La madérothérapie",
-   "metaTitle": "La madérothérapie, Rituel Silhouette — My Bubble Beauty",
+   "metaTitle": "La madérothérapie, Rituel Silhouette - My Bubble Beauty",
    "description": "La madérothérapie est un massage aux instruments en bois, tonifiant et profond, qui travaille l’aspect de la peau. Déroulement, cures et tarifs.",
-   "articleHtml": "<p>La madérothérapie est une technique de massage d’origine colombienne. Elle utilise des instruments en bois conçus pour travailler les différentes zones du corps.</p><p>Les mouvements sont précis, rythmés et répétés. Ils massent les tissus, stimulent la circulation locale et travaillent l’aspect de la peau. C’est un soin apprécié pour son effet tonifiant et son massage profond.</p><h2>Les bienfaits</h2><ul><li><strong>Circulation</strong> : favorise la circulation sanguine et lymphatique locale.</li><li><strong>Aspect de la peau</strong> : peut rendre la peau visuellement plus lisse.</li><li><strong>Peau d’orange</strong> : peut améliorer temporairement l’aspect de la cellulite.</li><li><strong>Drainage</strong> : les mouvements aident à mobiliser les fluides superficiels.</li><li><strong>Tonicité</strong> : donne une sensation de tonicité et de légèreté.</li><li><strong>Détente</strong> : procure la sensation d’un massage profond.</li></ul><p>La madérothérapie ne fait pas perdre de graisse. Elle ne garantit pas une réduction durable des centimètres. Les résultats varient d’une personne à l’autre.</p><h2>Déroulement</h2><p>Avant la première séance, nous faisons un petit bilan. Nous choisissons ensemble les zones à travailler : ventre, cuisses, fesses, hanches ou bras. La pression est adaptée à votre sensibilité.</p><p>Une séance dure 60 minutes, pour travailler plusieurs zones dans de bonnes conditions. En cure de 5 ou 10 séances, nous laissons assez de temps entre deux séances selon la réaction de votre peau. Nous suivons l’évolution avec vous.</p><h2>Précautions</h2><p>Une pression trop forte peut provoquer des douleurs ou des bleus. Le soin n’est pas réalisé sur une zone avec une inflammation, une lésion ou un problème vasculaire sans avis médical. Un questionnaire est rempli avant la première séance.</p><h2>Ce que vous pouvez attendre</h2><ul><li>Une sensation de jambes plus légères.</li><li>Un moment de détente et de massage profond.</li><li>Une amélioration temporaire possible de l’aspect peau d’orange.</li><li>Une peau qui peut paraître plus lisse après le massage.</li></ul>",
+   "articleHtml": "<p>La madérothérapie est une technique de massage d’origine colombienne. Elle utilise des instruments en bois conçus pour travailler les différentes zones du corps.</p><p>Les mouvements sont précis, rythmés et répétés. Ils massent les tissus, stimulent la circulation locale et travaillent l’aspect de la peau. C’est un soin apprécié pour son effet tonifiant et son massage profond.</p><h2>Les bienfaits</h2><ul><li><strong>Circulation.</strong> Favorise la circulation sanguine et lymphatique locale.</li><li><strong>Aspect de la peau.</strong> Peut rendre la peau visuellement plus lisse.</li><li><strong>Peau d’orange.</strong> Peut améliorer temporairement l’aspect de la cellulite.</li><li><strong>Drainage.</strong> Les mouvements aident à mobiliser les fluides superficiels.</li><li><strong>Tonicité.</strong> Donne une sensation de tonicité et de légèreté.</li><li><strong>Détente.</strong> Procure la sensation d’un massage profond.</li></ul><p>La madérothérapie ne fait pas perdre de graisse. Elle ne garantit pas une réduction durable des centimètres. Les résultats varient d’une personne à l’autre.</p><h2>Déroulement</h2><p>Avant la première séance, nous faisons un petit bilan. Nous choisissons ensemble les zones à travailler : ventre, cuisses, fesses, hanches ou bras. La pression est adaptée à votre sensibilité.</p><p>Une séance dure 60 minutes, pour travailler plusieurs zones dans de bonnes conditions. En cure de 5 ou 10 séances, nous laissons assez de temps entre deux séances selon la réaction de votre peau. Nous suivons l’évolution avec vous.</p><h2>Précautions</h2><p>Une pression trop forte peut provoquer des douleurs ou des bleus. Le soin n’est pas réalisé sur une zone avec une inflammation, une lésion ou un problème vasculaire sans avis médical. Un questionnaire est rempli avant la première séance.</p><h2>Ce que vous pouvez attendre</h2><ul><li>Une sensation de jambes plus légères.</li><li>Un moment de détente et de massage profond.</li><li>Une amélioration temporaire possible de l’aspect peau d’orange.</li><li>Une peau qui peut paraître plus lisse après le massage.</li></ul>",
    "priceTitle": "Tarifs",
    "prices": [
     {
@@ -1429,9 +1429,9 @@
   },
   "microneed": {
    "title": "Le Micro-Pen",
-   "metaTitle": "Le Micro-Pen, soins visage et corps — My Bubble Beauty",
+   "metaTitle": "Le Micro-Pen, soins visage et corps - My Bubble Beauty",
    "description": "Le Micro-Pen stimule le renouvellement naturel de la peau pour travailler sa texture et son éclat. Soins visage et corps, précautions et tarifs.",
-   "articleHtml": "<p>Le Micro-Pen est une technique esthétique qui utilise de fines micro-aiguilles afin de stimuler les mécanismes naturels de renouvellement cutané.</p><p>Ce soin permet de travailler la texture de la peau, d'améliorer son éclat et de favoriser une apparence plus lisse, plus uniforme et plus lumineuse.</p><p>Chaque protocole est adapté aux besoins de votre peau pour une prise en charge personnalisée.</p><h2>Nos soins visage : la Collection Signature</h2><ul><li><strong>Signature Éclat</strong> : pour raviver la luminosité du teint et améliorer son uniformité.</li><li><strong>Signature Hydra</strong> : pour une peau visiblement plus hydratée, souple et repulpée.</li><li><strong>Signature Lift</strong> : pour travailler l'apparence des ridules et le manque de fermeté.</li><li><strong>Signature Skin</strong> : pour améliorer l'apparence du grain de peau et des irrégularités de texture.</li><li><strong>Signature Pure</strong> : pour travailler l'apparence des imperfections résiduelles et des pores dilatés.</li></ul><h2>Nos soins corps</h2><ul><li><strong>Signature Body</strong> (dès 180 €) : soin ciblé sur l'apparence des vergetures, selon la zone à traiter.</li><li><strong>Signature Scar</strong> (dès 190 €) : soin ciblé sur l'apparence des cicatrices, après évaluation de la peau.</li></ul><p>Les tarifs des soins corps varient selon la surface et la nature de la zone à traiter.</p><h2>Contre-indications et précautions</h2><p>Le Micro-Pen nécessite un bilan préalable. Certaines situations peuvent empêcher ou nécessiter le report du soin :</p><ul><li>Grossesse et allaitement, par précaution.</li><li>Herpès ou infection cutanée active.</li><li>Acné inflammatoire importante.</li><li>Eczéma, psoriasis ou rosacée en poussée sur la zone.</li><li>Plaies, brûlures ou irritation cutanée.</li><li>Tendance aux cicatrices chéloïdes.</li><li>Troubles de la coagulation ou prise d’anticoagulants.</li><li>Immunodépression ou diabète non contrôlé.</li><li>Traitement par isotrétinoïne, récent ou en cours.</li><li>Allergie connue aux produits ou matériaux utilisés.</li></ul><p>En cas de maladie, de traitement médical ou de doute, un avis médical est nécessaire avant toute prestation.</p><p>La sécurité et le respect de votre peau sont au cœur de notre expertise.</p><h2>Résultats</h2><p>Les résultats sont variables selon chaque personne. Plusieurs séances peuvent être nécessaires. Le Micro-Pen ne garantit pas la disparition des cicatrices ou des vergetures.</p>",
+   "articleHtml": "<p>Le Micro-Pen est une technique esthétique qui utilise de fines micro-aiguilles afin de stimuler les mécanismes naturels de renouvellement cutané.</p><p>Ce soin permet de travailler la texture de la peau, d'améliorer son éclat et de favoriser une apparence plus lisse, plus uniforme et plus lumineuse.</p><p>Chaque protocole est adapté aux besoins de votre peau pour une prise en charge personnalisée.</p><h2>Nos soins visage : la Collection Signature</h2><ul><li><strong>Signature Éclat</strong>, pour raviver la luminosité du teint et améliorer son uniformité.</li><li><strong>Signature Hydra</strong>, pour une peau visiblement plus hydratée, souple et repulpée.</li><li><strong>Signature Lift</strong>, pour travailler l'apparence des ridules et le manque de fermeté.</li><li><strong>Signature Skin</strong>, pour améliorer l'apparence du grain de peau et des irrégularités de texture.</li><li><strong>Signature Pure</strong>, pour travailler l'apparence des imperfections résiduelles et des pores dilatés.</li></ul><h2>Nos soins corps</h2><ul><li><strong>Signature Body</strong> (dès 180 €). Soin ciblé sur l'apparence des vergetures, selon la zone à traiter.</li><li><strong>Signature Scar</strong> (dès 190 €). Soin ciblé sur l'apparence des cicatrices, après évaluation de la peau.</li></ul><p>Les tarifs des soins corps varient selon la surface et la nature de la zone à traiter.</p><h2>Contre-indications et précautions</h2><p>Le Micro-Pen nécessite un bilan préalable. Certaines situations peuvent empêcher ou nécessiter le report du soin :</p><ul><li>Grossesse et allaitement, par précaution.</li><li>Herpès ou infection cutanée active.</li><li>Acné inflammatoire importante.</li><li>Eczéma, psoriasis ou rosacée en poussée sur la zone.</li><li>Plaies, brûlures ou irritation cutanée.</li><li>Tendance aux cicatrices chéloïdes.</li><li>Troubles de la coagulation ou prise d’anticoagulants.</li><li>Immunodépression ou diabète non contrôlé.</li><li>Traitement par isotrétinoïne, récent ou en cours.</li><li>Allergie connue aux produits ou matériaux utilisés.</li></ul><p>En cas de maladie, de traitement médical ou de doute, un avis médical est nécessaire avant toute prestation.</p><h2>Résultats</h2><p>Les résultats sont variables selon chaque personne. Plusieurs séances peuvent être nécessaires. Le Micro-Pen ne garantit pas la disparition des cicatrices ou des vergetures.</p>",
    "priceTitle": "Tarifs",
    "prices": [
     {
@@ -1492,7 +1492,7 @@
   },
   "peeling": {
    "title": "Le peeling superficiel",
-   "metaTitle": "Le peeling superficiel — My Bubble Beauty",
+   "metaTitle": "Le peeling superficiel - My Bubble Beauty",
    "description": "Le peeling superficiel, un soin exfoliant doux, vise à améliorer la texture de la peau et à uniformiser le teint. Découvrez le déroulement et le tarif.",
    "articleHtml": "<p>Le peeling superficiel est un soin esthétique qui vise à améliorer la texture de la peau, à uniformiser le teint et à atténuer certains problèmes cutanés mineurs, tels que les taches pigmentaires, les ridules et les imperfections des peaux à tendance acnéique. Cette technique utilise une solution chimique douce pour exfolier la couche superficielle de la peau, afin de stimuler le renouvellement cellulaire et de favoriser une peau plus lisse et plus éclatante. Voici comment fonctionne généralement un peeling superficiel en esthétique :</p><h2>Consultation initiale</h2><p>Avant un peeling superficiel, un professionnel de l'esthétique évalue l'état de votre peau, discute de vos préoccupations spécifiques et détermine si le peeling est adapté à votre type de peau et à vos besoins. Il existe différents types de solutions chimiques pour le peeling, et le choix dépendra de votre type de peau et de l'objectif du traitement.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><h2>Nettoyage de la peau</h2><p>Avant l'application de la solution de peeling, la peau est soigneusement nettoyée pour éliminer la saleté, le maquillage et l'excès de sébum.</p><h2>Application de la solution de peeling</h2><p>Le professionnel de l'esthétique applique ensuite la solution de peeling sur la peau, en veillant à couvrir uniformément la zone à traiter. La solution peut contenir des acides alpha-hydroxy (AHA), des acides bêta-hydroxy (BHA) ou d'autres ingrédients exfoliants doux.</p><h2>Temps de pose</h2><p>La solution de peeling est laissée sur la peau pendant une courte période de temps déterminée par le professionnel, généralement quelques minutes. La durée dépend de la concentration de la solution et de la tolérance de votre peau.</p><h2>Neutralisation</h2><p>Une fois le temps de pose écoulé, le professionnel neutralise la solution en la rinçant ou en utilisant un produit spécifique pour arrêter l'action chimique.</p><h2>Soin post-peeling</h2><p>Après le soin, il est important de suivre les instructions du professionnel de l'esthétique en matière de soins post-peeling. Cela peut inclure l'application d'une crème hydratante, l'utilisation de produits spécifiques et l'évitement du soleil pendant un certain temps, car la peau est souvent plus sensible après un peeling.</p><h2>Résultats</h2><p>Les résultats du peeling superficiel ne sont généralement pas immédiatement visibles, car la peau a besoin de temps pour se renouveler. Cependant, au fil des jours et des semaines suivant le soin, la peau devrait paraître plus lumineuse, plus uniforme et plus lisse.</p><p>Le peeling superficiel est considéré comme un soin doux et ne nécessite généralement pas de temps d'arrêt prolongé. Cependant, plusieurs séances peuvent être nécessaires pour obtenir les résultats souhaités, et il est essentiel de choisir un professionnel qualifié pour minimiser les risques et optimiser les avantages du traitement. Ce soin peut être réalisé sur différentes parties du corps, y compris le visage, le cou, le décolleté et les mains, selon vos besoins.</p>",
    "priceTitle": "Tarif",
@@ -1525,7 +1525,7 @@
   },
   "photo": {
    "title": "La photothérapie LED",
-   "metaTitle": "La photothérapie LED — My Bubble Beauty",
+   "metaTitle": "La photothérapie LED - My Bubble Beauty",
    "description": "Un soin non invasif à la lumière LED rouge ou bleue, pour accompagner les peaux ternes, matures ou à imperfections. Rituels, cures et tarifs.",
    "articleHtml": "<p>La photothérapie LED est un soin non invasif. Elle utilise différentes couleurs de lumière pour accompagner les besoins de la peau. Elle est appréciée pour les soins anti-âge, les peaux à imperfections et les peaux qui présentent des rougeurs.</p><h2>Les couleurs de lumière</h2><p><strong>Lumière rouge, éclat et fermeté.</strong> Elle accompagne les soins anti-âge. Elle peut améliorer l’apparence des ridules, la texture et la fermeté de la peau.</p><p><strong>Lumière bleue, pureté.</strong> Elle accompagne les peaux grasses et à tendance acnéique. Elle peut aider à réduire les imperfections.</p><p><strong>Lumière jaune, éclat et apaisement.</strong> Elle accompagne les peaux ternes et peut améliorer l’aspect des rougeurs.</p><p><strong>Lumière verte, uniformité du teint.</strong> Elle accompagne les teints irréguliers et peut travailler l’apparence des taches pigmentaires.</p><p>Les effets dépendent de la lumière, de la puissance et du protocole. Ils ne sont pas les mêmes pour toutes les couleurs ni pour toutes les peaux. Les résultats varient d’une personne à l’autre.</p><h2>Nos rituels lumière</h2><ul><li><strong>Éclat & Jeunesse</strong> (20 min) : lumière rouge, pour les peaux matures ou ternes.</li><li><strong>Pureté & Imperfections</strong> (20 min) : lumière bleue, pour les peaux grasses à imperfections.</li><li><strong>Double Éclat</strong> (20 min) : les deux lumières, pour les peaux qui ont à la fois des imperfections et des signes de fatigue.</li><li><strong>Lumière Signature</strong> (30 min) : lumière rouge, bleue ou les deux, choisies selon les besoins de votre peau.</li></ul><h2>Les cures</h2><p>La cure Éclat compte 5 séances, la cure Beauté 10 séances. La cure Signature compte 10 séances personnalisées de 30 minutes. La LED peut aussi compléter un soin du visage dans nos formules combinées.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
    "priceTitle": "Tarifs",
@@ -1570,10 +1570,10 @@
   },
   "plasma": {
    "title": "Le plasma pen / micropen",
-   "metaTitle": "Le plasma pen / micropen — My Bubble Beauty",
+   "metaTitle": "Le plasma pen / micropen - My Bubble Beauty",
    "description": "Appareil esthétique, le plasma pen / micropen vise à améliorer l'aspect du relâchement cutané, des rides, des cicatrices et des taches pigmentaires.",
    "articleHtml": "<p>Le plasma pen / micropen, également connu sous le nom de stylo plasma ou stylo à plasma, est un dispositif de traitement esthétique relativement récent utilisé pour améliorer l'aspect de divers problèmes de peau, y compris le relâchement cutané, les rides, les cicatrices, les vergetures et les taches pigmentaires. Ce dispositif fonctionne en générant un arc électrique de plasma à la surface de la peau, ce qui provoque une série de micro-lésions contrôlées. Voici comment fonctionne le plasma pen en esthétique :</p><h2>Principe de base</h2><p>Le plasma pen utilise l'énergie électrique pour créer un arc de plasma mince et chaud à la pointe du stylo. Le plasma est un gaz ionisé composé de particules chargées, ce qui signifie qu'il contient des ions et des électrons libres.</p><h2>Application</h2><p>Le professionnel de l'esthétique utilise le plasma pen pour cibler spécifiquement les zones de la peau qui nécessitent un traitement. Lorsque la pointe du stylo touche la peau, l'arc de plasma est dirigé vers la surface cutanée. Cela crée des micro-points brûlants extrêmement petits sur la peau, en limitant l'impact sur les tissus environnants.</p><h2>Rétraction de la peau</h2><p>L'application du plasma peut provoquer une rétraction immédiate de la peau, car la chaleur générée entraîne un resserrement des fibres de collagène dans la zone traitée. Cela peut aider à réduire l'apparence du relâchement cutané.</p><h2>Formation de croûtes et de micro-lésions</h2><p>Les micro-points créés par le plasma pen provoquent également la formation de croûtes sur la peau. Au fil des jours suivant le soin, ces croûtes finissent par se détacher, laissant place à une nouvelle peau en dessous. Pendant cette phase de récupération, la peau produit également du collagène supplémentaire, ce qui peut améliorer la texture et l'apparence générale de la peau.</p><h2>Résultats</h2><p>Les résultats du plasma pen peuvent varier en fonction du problème de peau ciblé et de la profondeur à laquelle le dispositif a été utilisé. Vous pouvez constater une amélioration de l'apparence de votre peau au fil du temps à mesure que les effets du collagène se manifestent. Cependant, plusieurs séances peuvent être nécessaires pour obtenir des résultats optimaux.</p><p>Il est important de noter que le plasma pen est un soin invasif, bien que moins invasif que certains autres soins esthétiques. Vous pouvez ressentir un certain inconfort pendant le soin, mais des anesthésiants topiques sont généralement appliqués pour minimiser l'inconfort.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><p>Le plasma pen doit être utilisé par des professionnels de l'esthétique formés et expérimentés, car une utilisation incorrecte peut entraîner des complications ou des cicatrices. Comme pour tout soin esthétique, il est conseillé de consulter un professionnel de l'esthétique pour discuter de vos besoins spécifiques et déterminer si le plasma pen est approprié pour vous.</p>",
-   "priceTitle": "Tarif — Plasma Lift",
+   "priceTitle": "Tarif",
    "prices": [
     {
      "name": "1 séance",
@@ -1591,7 +1591,7 @@
   },
   "radiofrequence": {
    "title": "Sculpt & Fermeté : vacuum et radiofréquence",
-   "metaTitle": "Sculpt & Fermeté, vacuum, radiofréquence — My Bubble Beauty",
+   "metaTitle": "Sculpt & Fermeté, vacuum, radiofréquence - My Bubble Beauty",
    "description": "Un soin du corps qui associe l’aspiration (vacuum) et la chaleur de la radiofréquence, pour une peau visuellement plus lisse et plus ferme. Tarifs.",
    "articleHtml": "<p>Le Rituel Sculpt & Fermeté associe l’aspiration mécanique, le vacuum, et la radiofréquence. Le vacuum mobilise les tissus. La radiofréquence diffuse une chaleur contrôlée dans la zone traitée.</p><h2>Les bénéfices recherchés</h2><ul><li>Améliorer l’aspect de la cellulite.</li><li>Une peau visuellement plus lisse.</li><li>Une fermeté de la peau améliorée temporairement.</li><li>Une sensation de massage et de détente.</li></ul><p>Ce soin ne fait pas perdre de poids et ne retire pas de graisse. Les résultats varient d’une personne à l’autre.</p><h2>Déroulement</h2><p>La séance dure 30 ou 60 minutes, selon le nombre de zones à travailler.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
    "priceTitle": "Tarifs",
@@ -1616,7 +1616,7 @@
   },
   "sos": {
    "title": "SOS Pureté",
-   "metaTitle": "SOS Pureté — My Bubble Beauty",
+   "metaTitle": "SOS Pureté - My Bubble Beauty",
    "description": "Le soin SOS Pureté vise à nettoyer en profondeur les peaux grasses à tendance acnéique, à réduire l'excès de sébum et à désobstruer les pores.",
    "articleHtml": "<p>Un soin SOS Pureté en esthétique est un traitement spécialement conçu pour les personnes ayant des problèmes de peau liés à l'excès de sébum, à une tendance acnéique, aux points noirs et à d'autres imperfections cutanées. Ce type de soin vise à nettoyer en profondeur la peau, à réduire l'excès de sébum, à désobstruer les pores et à favoriser une peau plus nette et plus saine. Voici comment un soin SOS Pureté en esthétique peut fonctionner :</p><h2>Nettoyage en profondeur</h2><p>Le traitement commence généralement par un nettoyage en profondeur du visage pour éliminer les impuretés, l'excès de sébum et les cellules mortes de la peau.</p><h2>Exfoliation</h2><p>Une exfoliation douce peut être effectuée pour éliminer les cellules mortes de la peau, favorisant ainsi une peau plus lisse.</p><h2>Extraction des comédons</h2><p>Les esthéticiennes ou les professionnels de la peau utilisent souvent des techniques d'extraction manuelle ou des dispositifs d'extraction pour éliminer les points noirs et les comédons. Cela permet de désobstruer les pores et d'améliorer la texture de la peau.</p><h2>Application de produits adaptés</h2><p>Des produits spécifiques contenant des ingrédients tels que l'acide salicylique, connu pour ses propriétés purifiantes, peuvent être appliqués sur la peau pour aider à apaiser les rougeurs et à limiter l'apparition de nouvelles imperfections.</p><h2>Masques et traitements ciblés</h2><p>Des masques purifiants ou d'autres traitements ciblés peuvent être utilisés pour calmer la peau, réduire l'excès de sébum et favoriser une meilleure régulation de la production de sébum.</p><h2>Hydratation</h2><p>Même si vous avez des problèmes de peau liés à l'excès de sébum, il est essentiel de maintenir une hydratation adéquate de la peau pour éviter qu'elle ne devienne trop sèche en réponse aux traitements. Des produits hydratants légers et non comédogènes peuvent être utilisés.</p><h2>Protection solaire</h2><p>Comme pour de nombreux traitements de la peau, l'application d'un écran solaire ou d'un produit de protection solaire est importante pour protéger la peau des dommages causés par les rayons UV.</p>",
    "priceTitle": "Tarif",
@@ -1637,9 +1637,9 @@
   },
   "massages": {
    "title": "Massages et gommages",
-   "metaTitle": "Massages et gommages corps — My Bubble Beauty",
+   "metaTitle": "Massages et gommages corps - My Bubble Beauty",
    "description": "Massages aux pierres chaudes, au bambou, à l’huile d’argan, par effleurage ou prénatal, gommages lavande et miel, rituels signature. Durées et tarifs.",
-   "articleHtml": "<p>Offrez-vous une parenthèse de douceur. Un instant précieux pour prendre soin de votre corps et apaiser votre esprit.</p><h2>Nos massages relaxants</h2><p><strong>Rituel Chaleur & Détente : massage aux pierres chaudes.</strong> Un massage profondément relaxant. La chaleur des pierres volcaniques s’associe à des mouvements enveloppants. Elle aide à relâcher les tensions musculaires et procure une sensation de bien-être absolu. 60 minutes.</p><p><strong>Rituel Bambou & Équilibre : massage au bois de bambou.</strong> Un massage rythmé et enveloppant, réalisé avec des bambous. Il travaille les tensions du corps, stimule les tissus et apporte une agréable sensation de légèreté. 60 minutes.</p><p><strong>Rituel Or & Douceur : massage à l’huile d’argan.</strong> Un massage délicat à l’huile d’argan, qui nourrit la peau et l’enveloppe de douceur. Ses gestes fluides invitent au lâcher-prise. 60 minutes.</p><p><strong>Rituel Plume & Sérénité : massage par effleurage.</strong> Des mouvements lents, légers et harmonieux. Une vraie invitation à la détente, pour apaiser le corps et l’esprit. 45 minutes.</p><p><strong>Rituel Maman Douceur : massage prénatal.</strong> Un moment dédié à la future maman. Des mouvements doux, adaptés à la grossesse, pour la détente et le confort. 60 minutes.</p><h2>Nos gommages corps</h2><p><strong>Rituel Lavande & Douceur.</strong> Un gommage délicatement parfumé à la lavande. Il aide à éliminer les cellules mortes et laisse la peau douce et soyeuse. 30 minutes.</p><p><strong>Rituel Miel & Velours.</strong> Un gommage gourmand qui associe la douceur du miel à un rituel délicat. La peau retrouve douceur, souplesse et confort. 30 minutes.</p><h2>Nos rituels signature</h2><p>Pour prolonger le plaisir, nous associons un gommage et un massage.</p><ul><li><strong>Éveil des Sens</strong> : gommage lavande et massage par effleurage.</li><li><strong>Douceur Précieuse</strong> : gommage miel et massage à l’huile d’argan.</li><li><strong>Évasion Absolue</strong> : gommage au choix et massage aux pierres chaudes.</li></ul><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
+   "articleHtml": "<p>Nos massages aident à relâcher les tensions. Nos gommages laissent la peau douce.</p><h2>Nos massages relaxants</h2><p><strong>Rituel Chaleur & Détente : massage aux pierres chaudes.</strong> Un massage profondément relaxant. La chaleur des pierres volcaniques s’associe à des mouvements enveloppants. Elle aide à relâcher les tensions musculaires et procure une sensation de bien-être absolu. 60 minutes.</p><p><strong>Rituel Bambou & Équilibre : massage au bois de bambou.</strong> Un massage rythmé et enveloppant, réalisé avec des bambous. Il travaille les tensions du corps, stimule les tissus et apporte une agréable sensation de légèreté. 60 minutes.</p><p><strong>Rituel Or & Douceur : massage à l’huile d’argan.</strong> Un massage délicat à l’huile d’argan, qui nourrit la peau et l’enveloppe de douceur. Ses gestes fluides invitent au lâcher-prise. 60 minutes.</p><p><strong>Rituel Plume & Sérénité : massage par effleurage.</strong> Des mouvements lents, légers et harmonieux. Une vraie invitation à la détente, pour apaiser le corps et l’esprit. 45 minutes.</p><p><strong>Rituel Maman Douceur : massage prénatal.</strong> Un moment dédié à la future maman. Des mouvements doux, adaptés à la grossesse, pour la détente et le confort. 60 minutes.</p><h2>Nos gommages corps</h2><p><strong>Rituel Lavande & Douceur.</strong> Un gommage délicatement parfumé à la lavande. Il aide à éliminer les cellules mortes et laisse la peau douce et soyeuse. 30 minutes.</p><p><strong>Rituel Miel & Velours.</strong> Un gommage gourmand qui associe la douceur du miel à un rituel délicat. La peau retrouve douceur, souplesse et confort. 30 minutes.</p><h2>Nos rituels signature</h2><p>Pour prolonger le plaisir, nous associons un gommage et un massage.</p><ul><li><strong>Éveil des Sens.</strong> Gommage lavande et massage par effleurage.</li><li><strong>Douceur Précieuse.</strong> Gommage miel et massage à l’huile d’argan.</li><li><strong>Évasion Absolue.</strong> Gommage au choix et massage aux pierres chaudes.</li></ul><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
    "priceTitle": "Tarifs",
    "prices": [
     {
@@ -1694,7 +1694,7 @@
   },
   "brosse": {
    "title": "Rituel Pureté : la brosse rotative",
-   "metaTitle": "Rituel Pureté, soin visage à la brosse — My Bubble Beauty",
+   "metaTitle": "Rituel Pureté, soin visage à la brosse - My Bubble Beauty",
    "description": "Un soin du visage nettoyant et exfoliant à la brosse rotative, pour une peau plus douce et plus lumineuse. Bienfaits, types de peau et tarifs.",
    "articleHtml": "<p>Le Rituel Pureté est un soin du visage à la brosse rotative. La brosse réalise un nettoyage mécanique et une exfoliation superficielle. Elle débarrasse la peau des impuretés et des cellules mortes accumulées à sa surface.</p><h2>Les bienfaits du soin</h2><ul><li>Élimine les cellules mortes en surface.</li><li>Aide à désincruster les impuretés.</li><li>Affine visuellement le grain de peau.</li><li>Rend la peau plus douce et plus lisse.</li><li>Apporte de l’éclat au teint.</li><li>Prépare la peau à recevoir les soins.</li><li>Aide à améliorer l’aspect des zones rugueuses.</li></ul><h2>Deux formules</h2><p>Le nettoyage dure 30 minutes. Le soin complet dure 45 minutes : nettoyage, brosse rotative, masque adapté et crème de finition. Le soin peut aussi se combiner avec la photothérapie LED.</p><h2>Pour quels types de peau ?</h2><p>Le soin convient aux peaux normales, mixtes et épaisses, selon leur sensibilité. Nous l’évitons sur les peaux très sensibles ou irritées, ou en cas de couperose marquée, de rosacée inflammatoire, d’eczéma, de lésions ou d’acné inflammatoire importante.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
    "priceTitle": "Tarifs",
@@ -1723,10 +1723,10 @@
   },
   "regard": {
    "title": "Beauté du regard : sourcils et cils",
-   "metaTitle": "Beauté du regard, sourcils et cils — My Bubble Beauty",
+   "metaTitle": "Beauté du regard, sourcils et cils - My Bubble Beauty",
    "description": "Reconstruction du sourcil, teinture des sourcils et des cils, Brow Lift et forfaits regard : des soins adaptés à votre beauté naturelle. Détails et tarifs.",
    "priceTitle": "Tarifs",
-   "articleHtml": "<p>Révélez toute l’intensité de votre regard grâce à des soins adaptés à votre beauté naturelle.</p><h2>Reconstruction du sourcil</h2><p>Une prestation personnalisée qui permet de redessiner et harmoniser la ligne des sourcils selon la morphologie du visage. Elle comprend la restructuration et l’épilation afin d’obtenir une forme équilibrée et adaptée à chaque regard.</p><h2>Teinture des sourcils</h2><p>La teinture permet d’intensifier la couleur naturelle des sourcils, de mieux définir leur ligne et de donner davantage de profondeur au regard. La teinte est choisie en fonction de votre couleur naturelle et du résultat souhaité.</p><h2>Teinture des cils</h2><p>Ce soin permet de foncer les cils naturels pour intensifier le regard et apporter un effet mascara discret, sans maquillage. Idéal pour mettre en valeur les yeux au quotidien.</p><h2>Brow Lift</h2><p>Le Brow Lift est une technique qui consiste à discipliner et repositionner les poils des sourcils vers le haut afin de leur donner un effet plus fourni, lifté et structuré. Il permet d’obtenir des sourcils plus harmonieux et un regard naturellement ouvert.</p><h2>Forfaits beauté du regard</h2><p>Pour un résultat harmonieux et un regard sublimé, profitez de nos prestations combinées.</p><p><strong>Votre regard, notre priorité.</strong> La beauté réside dans les détails.</p>",
+   "articleHtml": "<p>Des soins pour les sourcils et les cils, adaptés à votre visage.</p><h2>Reconstruction du sourcil</h2><p>Une prestation personnalisée qui permet de redessiner et harmoniser la ligne des sourcils selon la morphologie du visage. Elle comprend la restructuration et l’épilation afin d’obtenir une forme équilibrée et adaptée à chaque regard.</p><h2>Teinture des sourcils</h2><p>La teinture permet d’intensifier la couleur naturelle des sourcils, de mieux définir leur ligne et de donner davantage de profondeur au regard. La teinte est choisie en fonction de votre couleur naturelle et du résultat souhaité.</p><h2>Teinture des cils</h2><p>Ce soin permet de foncer les cils naturels pour intensifier le regard et apporter un effet mascara discret, sans maquillage. Idéal pour mettre en valeur les yeux au quotidien.</p><h2>Brow Lift</h2><p>Le Brow Lift est une technique qui consiste à discipliner et repositionner les poils des sourcils vers le haut afin de leur donner un effet plus fourni, lifté et structuré. Il permet d’obtenir des sourcils plus harmonieux et un regard naturellement ouvert.</p><h2>Forfaits beauté du regard</h2><p>Pour un résultat harmonieux et un regard sublimé, profitez de nos prestations combinées.</p><p><strong>Votre regard, notre priorité.</strong> La beauté réside dans les détails.</p>",
    "prices": [
     {
      "name": "Reconstruction du sourcil",
@@ -1761,33 +1761,33 @@
   },
   "semi-permanent": {
    "title": "L'art du semi-permanent",
-   "metaTitle": "L'art du semi-permanent, mains et pieds — My Bubble Beauty",
+   "metaTitle": "L'art du semi-permanent, mains et pieds - My Bubble Beauty",
    "description": "Vernis semi-permanent pour les mains et les pieds : couleur intense, brillance longue durée et finition soignée. Prestations, contre-indications et tarifs.",
-   "articleHtml": "<p>La beauté des ongles, tout en élégance.</p><p>Offrez à vos mains et à vos pieds une mise en beauté délicate et soignée grâce au vernis semi-permanent.</p><p>Cette technique permet d’obtenir une couleur intense, une brillance longue durée et une finition impeccable, tout en conservant un résultat naturel et élégant.</p><p>Un moment de beauté pour prendre soin de soi jusqu’au bout des ongles.</p><h2>Nos prestations</h2><p>Chaque prestation comprend la préparation des ongles, le travail des cuticules, la mise en forme et une finition soignée.</p><h2>Contre-indications</h2><p>Afin de préserver la santé et la beauté de vos ongles, certaines situations ne permettent pas la réalisation d’une pose de semi-permanent :</p><ul><li>Mycose ou infection de l’ongle.</li><li>Ongles présentant une inflammation ou une blessure.</li><li>Plaies, irritations ou lésions autour des ongles.</li><li>Allergie connue aux composants des produits utilisés, notamment aux acrylates.</li><li>Ongles fortement abîmés ou présentant une anomalie nécessitant un avis médical.</li></ul><p>En cas de doute, la prestation sera reportée et un avis médical pourra être recommandé.</p><p>La santé de vos ongles reste notre priorité. Merci de votre confiance et de votre fidélité.</p>",
+   "articleHtml": "<p>Le vernis semi-permanent donne une couleur intense et brillante qui tient longtemps.</p><p>Nous le posons sur les mains et sur les pieds. Le résultat reste naturel.</p><h2>Nos prestations</h2><p>Chaque prestation comprend la préparation des ongles, le travail des cuticules, la mise en forme et une finition soignée.</p><h2>Contre-indications</h2><p>Afin de préserver la santé et la beauté de vos ongles, certaines situations ne permettent pas la réalisation d’une pose de semi-permanent :</p><ul><li>Mycose ou infection de l’ongle.</li><li>Ongles présentant une inflammation ou une blessure.</li><li>Plaies, irritations ou lésions autour des ongles.</li><li>Allergie connue aux composants des produits utilisés, notamment aux acrylates.</li><li>Ongles fortement abîmés ou présentant une anomalie nécessitant un avis médical.</li></ul><p>En cas de doute, la prestation sera reportée et un avis médical pourra être recommandé.</p>",
    "priceTitle": "Tarifs",
    "prices": [
     {
-     "name": "Mains : pose de vernis semi-permanent",
+     "name": "Pose de vernis semi-permanent (mains)",
      "amount": "30 €"
     },
     {
-     "name": "Mains : dépose seule",
+     "name": "Dépose seule (mains)",
      "amount": "15 €"
     },
     {
-     "name": "Mains : dépose suivie d’une nouvelle pose",
+     "name": "Dépose et nouvelle pose (mains)",
      "amount": "35 €"
     },
     {
-     "name": "Pieds : pose de vernis semi-permanent",
+     "name": "Pose de vernis semi-permanent (pieds)",
      "amount": "30 €"
     },
     {
-     "name": "Pieds : dépose seule",
+     "name": "Dépose seule (pieds)",
      "amount": "15 €"
     },
     {
-     "name": "Pieds : dépose suivie d’une nouvelle pose",
+     "name": "Dépose et nouvelle pose (pieds)",
      "amount": "35 €"
     },
     {

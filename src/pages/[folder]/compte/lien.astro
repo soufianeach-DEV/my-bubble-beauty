@@ -33,7 +33,7 @@ if (Astro.request.method === 'POST') {
 }
 const valid = !failed && TOKEN.safeParse(token).success;
 ---
-<Base lang={lang} pageKey="home" route="compte/lien" title={`${t.title} — My Bubble Beauty`} description={t.description} noindex mainClass="legal">
+<Base lang={lang} pageKey="home" route="compte/lien" title={`${t.title} - My Bubble Beauty`} description={t.description} noindex mainClass="legal">
 <Fragment slot="head"><meta name="referrer" content="no-referrer"></Fragment>
 <div class="wrap"><article>
 <h1>{t.title}</h1>

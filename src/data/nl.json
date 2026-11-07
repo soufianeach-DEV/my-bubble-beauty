@@ -5,7 +5,7 @@
  "ogLocale": "nl_BE",
  "ui": {
   "skip": "Naar de inhoud",
-  "brandAlt": "My Bubble Beauty — home",
+  "brandAlt": "My Bubble Beauty, home",
   "navLabel": "Menu",
   "nav": [
    {
@@ -44,7 +44,7 @@
   "bookShort": "Reserveren"
  },
  "home": {
-  "title": "Schoonheidssalon in Dilbeek — My Bubble Beauty",
+  "title": "Schoonheidssalon in Dilbeek - My Bubble Beauty",
   "description": "Schoonheids- en welzijnscentrum in Dilbeek, vlak bij Anderlecht, Molenbeek en Berchem: gezichtsverzorging, medische pedicure, nagels en ontharing.",
   "hero": {
    "eyebrow": "Schoonheidsinstituut · Dilbeek",
@@ -317,7 +317,7 @@
     {
      "id": "micro-pen",
      "cat": "visage",
-     "title": "Micro-Pen — Signature-collectie",
+     "title": "Micro-Pen - Signature-collectie",
      "href": "microneed",
      "intro": "Elk protocol wordt afgestemd op de noden van je huid.",
      "items": [
@@ -416,7 +416,7 @@
      "cat": "corps",
      "title": "Ontspannende massages",
      "href": "massages",
-     "intro": "Een zacht moment om voor uw lichaam te zorgen en uw geest tot rust te brengen.",
+     "intro": "Ontspannende massages en scrubs voor het lichaam.",
      "items": [
       {
        "name": "Warmte & Ontspanning",
@@ -514,7 +514,7 @@
     {
      "id": "micro-pen-corps",
      "cat": "corps",
-     "title": "Micro-Pen — lichaamsbehandelingen",
+     "title": "Micro-Pen - lichaamsbehandelingen",
      "href": "microneed",
      "intro": "De tarieven hangen af van de oppervlakte en de aard van de te behandelen zone.",
      "items": [
@@ -611,9 +611,9 @@
     {
      "id": "laser-visage",
      "cat": "epilation",
-     "title": "Laserontharing — Gezicht",
+     "title": "Laserontharing - Gezicht",
      "href": "laserepilation",
-     "intro": "De vrijheid van een zachte huid. Zorg voor je huid, sessie na sessie.",
+     "intro": "Een zachtere huid, met minder haargroei na elke sessie.",
      "items": [
       {
        "name": "Bovenlip",
@@ -655,7 +655,7 @@
     {
      "id": "laser-haut-du-corps",
      "cat": "epilation",
-     "title": "Laserontharing — Bovenlichaam",
+     "title": "Laserontharing - Bovenlichaam",
      "href": "laserepilation",
      "items": [
       {
@@ -703,7 +703,7 @@
     {
      "id": "laser-maillot",
      "cat": "epilation",
-     "title": "Laserontharing — Bikinilijn",
+     "title": "Laserontharing - Bikinilijn",
      "href": "laserepilation",
      "items": [
       {
@@ -736,7 +736,7 @@
     {
      "id": "laser-jambes",
      "cat": "epilation",
-     "title": "Laserontharing — Benen",
+     "title": "Laserontharing - Benen",
      "href": "laserepilation",
      "items": [
       {
@@ -764,7 +764,7 @@
     {
      "id": "laser-dos-torse",
      "cat": "epilation",
-     "title": "Laserontharing — Rug en borst",
+     "title": "Laserontharing - Rug en borst",
      "href": "laserepilation",
      "items": [
       {
@@ -914,35 +914,35 @@
      "cat": "mains",
      "title": "De kunst van semi-permanente lak",
      "href": "semi-permanent",
-     "intro": "Mooie nagels, met elegantie. Elke behandeling omvat de voorbereiding van de nagels, de verzorging van de nagelriemen, het vormgeven en een verzorgde afwerking.",
+     "intro": "Lakken en verwijderen voor handen en voeten. Elke behandeling omvat de voorbereiding van de nagels, de verzorging van de nagelriemen en het vormgeven.",
      "items": [
       {
-       "name": "Handen: semi-permanente lak",
+       "name": "Semi-permanente lak (handen)",
        "href": null,
        "amount": "30 €"
       },
       {
-       "name": "Handen: enkel verwijderen",
+       "name": "Enkel verwijderen (handen)",
        "href": null,
        "amount": "15 €"
       },
       {
-       "name": "Handen: verwijderen en opnieuw lakken",
+       "name": "Verwijderen en opnieuw lakken (handen)",
        "href": null,
        "amount": "35 €"
       },
       {
-       "name": "Voeten: semi-permanente lak",
+       "name": "Semi-permanente lak (voeten)",
        "href": null,
        "amount": "30 €"
       },
       {
-       "name": "Voeten: enkel verwijderen",
+       "name": "Enkel verwijderen (voeten)",
        "href": null,
        "amount": "15 €"
       },
       {
-       "name": "Voeten: verwijderen en opnieuw lakken",
+       "name": "Verwijderen en opnieuw lakken (voeten)",
        "href": null,
        "amount": "35 €"
       },
@@ -1064,9 +1064,9 @@
  "treatments": {
   "charbon": {
    "title": "Carbon Peel Bubble Signature",
-   "metaTitle": "Carbon Peel Bubble Signature, huidglans — My Bubble Beauty",
+   "metaTitle": "Carbon Peel Bubble Signature, huidglans - My Bubble Beauty",
    "description": "De Carbon Peel Bubble Signature: een behandeling voor glans, zuiverheid en huidkwaliteit van gezicht, hals en decolleté. Behandelingen à la carte, voordelen en tarieven.",
-   "articleHtml": "<p>De Carbon Peel Bubble Signature is een behandeling voor glans, zuiverheid en huidkwaliteit. Ze combineert een koolstofmasker met een esthetische laser om de huid te zuiveren, de glans te verminderen en de teint op te frissen. Zo verloopt een sessie:</p><h2>Eerste consultatie</h2><p>Vóór de eerste sessie bekijken we je huid, bespreken we je verwachtingen en kiezen we samen de zone die behandeld wordt.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><h2>Reiniging van de huid</h2><p>De huid wordt afgeschminkt en gereinigd om onzuiverheden, make-up en overtollig talg te verwijderen. Ze moet schoon en droog zijn voor de rest van de behandeling.</p><h2>Het koolstofmasker aanbrengen</h2><p>Een dun laagje koolstofcrème wordt gelijkmatig op de zone aangebracht en enkele minuten gelaten om te drogen.</p><h2>De laser</h2><p>Tijdens deze hele stap draag je een beschermbril. De laser wordt zacht over de zone bewogen. Het licht wordt opgenomen door de koolstofdeeltjes, die van het huidoppervlak verwijderd worden. Je kan een lichte warmte of kleine prikjes voelen.</p><h2>Reiniging en kalmering</h2><p>De koolstofresten worden verwijderd. Een kalmerende verzorging en daarna een zonnebescherming sluiten de sessie af.</p><h2>De behandelde zones</h2><ul><li><strong>Volledig gezicht</strong> (30 tot 45 min): een zuiverende en revitaliserende behandeling, om de poriën er beter uit te laten zien, de glans te verminderen en de teint op te frissen.</li><li><strong>Gezicht + hals</strong> (45 tot 60 min): een gerichte behandeling, voor een fijner ogende huidstructuur en een egalere teint.</li><li><strong>Gezicht + hals + decolleté</strong> (60 tot 75 min): onze volledige signature-behandeling, die het uitzicht van de huid op de drie zones verzorgt en ze stralender en harmonieuzer laat ogen.</li><li><strong>Hals + decolleté</strong> (30 tot 45 min): een specifieke behandeling om het uitzicht en de egaliteit van de huid van hals en decolleté te verbeteren.</li></ul><h2>De beoogde voordelen</h2><p><strong>Gezicht.</strong> Minder zichtbare poriën, een zuiverder ogende huid, een stralendere teint, een verbeterde huidtextuur.</p><p><strong>Hals.</strong> Een mooier uitzicht van de huid, een minder onregelmatige teint, een egaler uitzicht.</p><p><strong>Decolleté.</strong> Een fijner ogende huidstructuur, een visueel egalere teint, een stralender ogende huid.</p><h2>Na de behandeling</h2><p>Er kan een lichte roodheid verschijnen, die meestal na enkele uren verdwijnt. Bescherm je huid de volgende dagen tegen de zon en vermijd scrubs. Het aantal sessies en hun ritme worden samen met jou bepaald, volgens je huid en je doelen. De resultaten verschillen van persoon tot persoon.</p>",
+   "articleHtml": "<p>De Carbon Peel Bubble Signature is een behandeling voor glans, zuiverheid en huidkwaliteit. Ze combineert een koolstofmasker met een esthetische laser om de huid te zuiveren, de glans te verminderen en de teint op te frissen. Zo verloopt een sessie:</p><h2>Eerste consultatie</h2><p>Vóór de eerste sessie bekijken we je huid, bespreken we je verwachtingen en kiezen we samen de zone die behandeld wordt.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><h2>Reiniging van de huid</h2><p>De huid wordt afgeschminkt en gereinigd om onzuiverheden, make-up en overtollig talg te verwijderen. Ze moet schoon en droog zijn voor de rest van de behandeling.</p><h2>Het koolstofmasker aanbrengen</h2><p>Een dun laagje koolstofcrème wordt gelijkmatig op de zone aangebracht en enkele minuten gelaten om te drogen.</p><h2>De laser</h2><p>Tijdens deze hele stap draag je een beschermbril. De laser wordt zacht over de zone bewogen. Het licht wordt opgenomen door de koolstofdeeltjes, die van het huidoppervlak verwijderd worden. Je kan een lichte warmte of kleine prikjes voelen.</p><h2>Reiniging en kalmering</h2><p>De koolstofresten worden verwijderd. Een kalmerende verzorging en daarna een zonnebescherming sluiten de sessie af.</p><h2>De behandelde zones</h2><ul><li><strong>Volledig gezicht</strong> (30 tot 45 min). Een zuiverende en revitaliserende behandeling, om de poriën er beter uit te laten zien, de glans te verminderen en de teint op te frissen.</li><li><strong>Gezicht + hals</strong> (45 tot 60 min). Een gerichte behandeling, voor een fijner ogende huidstructuur en een egalere teint.</li><li><strong>Gezicht + hals + decolleté</strong> (60 tot 75 min). Onze volledige signature-behandeling, die het uitzicht van de huid op de drie zones verzorgt en ze stralender en harmonieuzer laat ogen.</li><li><strong>Hals + decolleté</strong> (30 tot 45 min). Een specifieke behandeling om het uitzicht en de egaliteit van de huid van hals en decolleté te verbeteren.</li></ul><h2>De beoogde voordelen</h2><p><strong>Gezicht.</strong> Minder zichtbare poriën, een zuiverder ogende huid, een stralendere teint, een verbeterde huidtextuur.</p><p><strong>Hals.</strong> Een mooier uitzicht van de huid, een minder onregelmatige teint, een egaler uitzicht.</p><p><strong>Decolleté.</strong> Een fijner ogende huidstructuur, een visueel egalere teint, een stralender ogende huid.</p><h2>Na de behandeling</h2><p>Er kan een lichte roodheid verschijnen, die meestal na enkele uren verdwijnt. Bescherm je huid de volgende dagen tegen de zon en vermijd scrubs. Het aantal sessies en hun ritme worden samen met jou bepaald, volgens je huid en je doelen. De resultaten verschillen van persoon tot persoon.</p>",
    "priceTitle": "Tarieven",
    "prices": [
     {
@@ -1097,10 +1097,10 @@
   },
   "cire": {
    "title": "Het waxen van ongewenst haar",
-   "metaTitle": "Het waxen van ongewenst haar — My Bubble Beauty",
+   "metaTitle": "Het waxen van ongewenst haar - My Bubble Beauty",
    "description": "Waxen met warme of lauwe was trekt de haren met wortel en al uit, voor een huid die langer glad blijft dan na het scheren. Verloop en tarieven.",
    "articleHtml": "<p>Het waxen van ongewenst haar is een veelgebruikte methode voor het verwijderen van lichaamshaar in de schoonheidsverzorging. Deze techniek omvat het aanbrengen van warme of lauwe was op de huid, het laten stollen en vervolgens het snel verwijderen, waarbij het haar wordt meegetrokken. Zo werkt waxen doorgaans in de schoonheidsverzorging:</p><h2>Voorbereiding</h2><p>Voordat het waxen begint, wordt de huid meestal grondig gereinigd om vuil, olie en cosmetische producten te verwijderen. Het is belangrijk dat de huid schoon en droog is voordat de was wordt aangebracht.</p><h2>Aanbrengen</h2><p>De was wordt verwarmd om deze vloeibaar te maken, maar mag niet te heet zijn om brandwonden te voorkomen. Vervolgens wordt hij op het te ontharen gebied aangebracht met een stokje of spatel. De was hecht zich aan de haren en de huid.</p><h2>Uitharden</h2><p>Men laat de was enkele ogenblikken uitharden. Tijdens deze periode hecht de was zich aan de haren, waarbij ze volledig worden bedekt.</p><h2>Verwijdering</h2><p>Zodra de was is uitgehard, neemt een schoonheidsspecialist een rand van de was vast en trekt hem snel weg, tegen de haargroei in. Deze handeling trekt de haren met wortel en al uit en laat de huid tijdelijk glad en haarvrij achter.</p><h2>Nazorg</h2><p>Na het waxen is het gebruikelijk om een kalmerende lotion of vochtinbrengende crème aan te brengen om de huid te kalmeren en irritatie te minimaliseren. De haren groeien geleidelijk terug, meestal binnen enkele weken.</p><p>Waxen kan worden toegepast op verschillende delen van het lichaam, waaronder benen, oksels, de bikinilijn, het gezicht en andere gebieden met ongewenst haar. Deze ontharingsmethode biedt verschillende voordelen, zoals een huid die langer glad blijft dan na het scheren, omdat de haren met wortel en al worden uitgetrokken. Er zijn echter ook potentiële nadelen, zoals de pijn die gepaard gaat met het uittrekken van de haren en de mogelijkheid van huidirritatie.</p><p>Er zijn verschillende soorten was, waaronder hete was, lauwe was en koude was, elk met zijn eigen voor- en nadelen. Sommige mensen kiezen er ook voor om zelf thuis te waxen met behulp van in de handel verkrijgbare waxkits, hoewel dit wat oefening kan vereisen voor goede resultaten.</p><p>Voor waxen wordt aanbevolen om een ervaren professional in te schakelen, vooral voor gevoelige gebieden, om het risico op verwondingen of huidirritatie te verminderen.</p>",
-   "priceTitle": "Tarief — Ontharing",
+   "priceTitle": "Tarief",
    "prices": [
     {
      "name": "Wenkbrauwen",
@@ -1154,10 +1154,10 @@
   },
   "dents": {
    "title": "Tandenbleken",
-   "metaTitle": "Tandenbleken — My Bubble Beauty",
+   "metaTitle": "Tandenbleken - My Bubble Beauty",
    "description": "Tandenbleken is een cosmetische behandeling die de kleur van de tanden lichter wil maken en vlekken wil verminderen. Verloop, voorzorgen en tarieven.",
    "articleHtml": "<p>Tandenbleken is een cosmetische behandeling die is ontworpen om de kleur van de tanden lichter te maken, waardoor ze witter en helderder worden. Deze behandeling wordt veelvuldig uitgevoerd in de esthetische tandheelkunde om de uitstraling van een glimlach te verbeteren door vlekken en verkleuringen op de tanden te verminderen. Zo werkt tandenbleken in de esthetiek:</p><h2>Initiële evaluatie</h2><p>Voordat het tandenbleekproces begint, voert een tandarts of schoonheidsspecialist een initiële evaluatie uit om te bepalen of de behandeling voor u geschikt is. Sommige mensen komen mogelijk niet in aanmerking vanwege onderliggende tandproblemen.</p><h2>Voorbereiding</h2><p>Eerst worden uw tanden gereinigd om tandplak en tandsteen te verwijderen, die het bleken kunnen belemmeren.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling, gevoelige tanden of geïrriteerd tandvlees.</p><h2>Bleekopties</h2><p>Thuisbleken: De tandarts kan een thuisbleekkit verstrekken met op maat gemaakte bitjes en een bleekgel met een lage concentratie waterstofperoxide of carbamideperoxide. U vult de bitjes met de gel en draagt ze gedurende een bepaalde periode elke dag gedurende enkele weken. Dit is een geleidelijk proces.</p><p>Praktijkbleken: Deze methode wordt ook wel professioneel in de behandelstoel bleken genoemd. De tandarts brengt een meer geconcentreerde bleekgel aan op uw tanden en gebruikt vervolgens speciaal licht of een laser om de gel te activeren. Dit proces is meestal sneller en kan onmiddellijke resultaten opleveren.</p><h2>Nazorg</h2><p>Na het bleken kan u worden aangeraden om bepaalde mogelijk verkleurende voedingsmiddelen en dranken (zoals koffie, thee en rode wijn) een tijdje te vermijden om de resultaten te behouden. Goede mondverzorging, waaronder regelmatig poetsen en flossen, is ook essentieel.</p><h2>Werking van tandenbleken</h2><p>Het basisprincipe van tandenbleken is gebaseerd op het gebruik van producten die waterstofperoxide of carbamideperoxide bevatten. Deze chemische stoffen dringen door in het tandglazuur en reageren met de moleculen die verantwoordelijk zijn voor vlekken en verkleuringen, waarbij ze worden afgebroken om de kleur van de tanden lichter te maken. Het is echter belangrijk op te merken dat tandenbleken niet permanent is en de resultaten kunnen variëren van persoon tot persoon, afhankelijk van verschillende factoren, waaronder het type tandvlekken en eetgewoonten.</p><h2>Voorafgaand advies</h2><p>Het is ten zeerste aanbevolen om een tandarts of een esthetische tandheelkundige professional te raadplegen voordat u tandenbleken overweegt, aangezien dit mogelijk niet geschikt is voor iedereen, vooral voor mensen met bestaande tandproblemen. Bovendien moet het tandenbleken worden uitgevoerd onder toezicht van een professional om de veiligheid en effectiviteit van de behandeling te bevorderen.</p>",
-   "priceTitle": "Tarief — Tandenbleken",
+   "priceTitle": "Tarief",
    "prices": [
     {
      "name": "1 sessie",
@@ -1179,9 +1179,9 @@
   },
   "hydra": {
    "title": "De Hydra-behandelingen",
-   "metaTitle": "Hydra-behandelingen voor het gezicht — My Bubble Beauty",
+   "metaTitle": "Hydra-behandelingen voor het gezicht - My Bubble Beauty",
    "description": "HydraPure, HydraLift, HydraGlow en Hydra Signature: vier gezichtsbehandelingen om de huid te reinigen, te hydrateren en te laten stralen. Details en tarieven.",
-   "articleHtml": "<ul><li><strong>HydraPure</strong>: de essentiële behandeling.</li><li><strong>HydraLift</strong>: de gerichte anti-agingbehandeling.</li><li><strong>HydraGlow</strong>: de behandeling voor een frisse look.</li><li><strong>Hydra Signature</strong>: de volledige ervaring.</li></ul><h2>HydraPure — de dieptereiniging</h2><p>Een grondige reiniging om onzuiverheden te verwijderen, de poriën uit te zuiveren en een zuivere, frisse en stralende huid terug te vinden.</p><p>Ideaal voor een onzuivere huid, verwijde poriën en oneffenheden.</p><h2>HydraLift — de anti-agingbehandeling</h2><p>Een gerichte behandeling met een aangepaste booster om de huid intens te hydrateren, op te vullen en fijne lijntjes minder zichtbaar te maken.</p><p>Ideaal voor een rijpere huid die stevigheid mist en tekenen van veroudering vertoont.</p><h2>HydraGlow — glans & hydratatie</h2><p>Een revitaliserende behandeling die extra hydratatie en glans geeft dankzij een booster die volgens de noden van je huid wordt gekozen.</p><p>Ideaal voor een doffe, uitgedroogde en vermoeide huid.</p><h2>Hydra Signature — de volledige behandeling op maat</h2><p>De meest volledige Hydra-ervaring: reiniging, exfoliatie, extractie, hydratatie en een booster afgestemd op de specifieke noden van je huid.</p><p>Ideaal als je een totaalbehandeling en een persoonlijke aanpak wenst.</p><p>Elke huid is uniek. Je behandeling wordt afgestemd op je noden na een persoonlijke huidanalyse.</p><p>Voor de behandeling overlopen we samen de mogelijke contra-indicaties, bijvoorbeeld een zwangerschap, een lopende medische behandeling of beschadigde huid.</p>",
+   "articleHtml": "<ul><li><strong>HydraPure</strong>, de essentiële behandeling.</li><li><strong>HydraLift</strong>, de gerichte anti-agingbehandeling.</li><li><strong>HydraGlow</strong>, de behandeling voor een frisse look.</li><li><strong>Hydra Signature</strong>, de volledige ervaring.</li></ul><h2>HydraPure, de dieptereiniging</h2><p>Een grondige reiniging om onzuiverheden te verwijderen, de poriën uit te zuiveren en een zuivere, frisse en stralende huid terug te vinden.</p><p>Ideaal voor een onzuivere huid, verwijde poriën en oneffenheden.</p><h2>HydraLift, de anti-agingbehandeling</h2><p>Een gerichte behandeling met een aangepaste booster om de huid intens te hydrateren, op te vullen en fijne lijntjes minder zichtbaar te maken.</p><p>Ideaal voor een rijpere huid die stevigheid mist en tekenen van veroudering vertoont.</p><h2>HydraGlow, glans & hydratatie</h2><p>Een revitaliserende behandeling die extra hydratatie en glans geeft dankzij een booster die volgens de noden van je huid wordt gekozen.</p><p>Ideaal voor een doffe, uitgedroogde en vermoeide huid.</p><h2>Hydra Signature, de volledige behandeling op maat</h2><p>De meest volledige Hydra-ervaring: reiniging, exfoliatie, extractie, hydratatie en een booster afgestemd op de specifieke noden van je huid.</p><p>Ideaal als je een totaalbehandeling en een persoonlijke aanpak wenst.</p><p>Elke huid is uniek. Je behandeling wordt afgestemd op je noden na een persoonlijke huidanalyse.</p><p>Voor de behandeling overlopen we samen de mogelijke contra-indicaties, bijvoorbeeld een zwangerschap, een lopende medische behandeling of beschadigde huid.</p>",
    "priceTitle": "Tarieven",
    "prices": [
     {
@@ -1212,9 +1212,9 @@
   },
   "laserepilation": {
    "title": "Laserontharing",
-   "metaTitle": "Laserontharing in Dilbeek, zachte huid — My Bubble Beauty",
+   "metaTitle": "Laserontharing in Dilbeek, zachte huid - My Bubble Beauty",
    "description": "Laserontharing vermindert de haargroei blijvend, sessie na sessie, voor een zachtere huid. Werking, doelen van de behandeling en tarieven per zone.",
-   "articleHtml": "<p>Laserontharing is een techniek die de haargroei blijvend vermindert met geconcentreerd licht dat de melanine in het haar viseert.</p><p>De lichtenergie wordt opgenomen door de haarzakjes en omgezet in warmte, waardoor de structuren die voor de hergroei zorgen, worden vernietigd of beschadigd.</p><p>Sessie na sessie vermindert de haargroei geleidelijk: de haartjes worden doorgaans minder talrijk, fijner en minder zichtbaar.</p><p>De behandeling vraagt meerdere sessies, omdat de laser vooral werkt op haartjes in de groeifase.</p><h2>De doelen van de behandeling</h2><ul><li>De haargroei blijvend verminderen.</li><li>De haardichtheid verlagen.</li><li>De hergroei vertragen.</li><li>Een zachtere huid krijgen.</li><li>Ingegroeide haartjes en irritaties door scheren beperken.</li><li>Minder last van klassieke ontharing.</li></ul><h2>De vrijheid van een zachte huid</h2><p>Ontdek laserontharing, een esthetische technologie die de haargroei blijvend vermindert, voor een zachtere huid in het dagelijkse leven.</p><p>Met een behandeling afgestemd op je huid en je haargroei verminderen de sessies geleidelijk de hergroei, beperken ze irritaties en verlichten ze de nadelen van klassieke ontharing.</p><p>Gun jezelf het comfort van een zachte huid en een nieuwe vrijheid in het dagelijkse leven.</p><p>Zorg voor je huid, sessie na sessie.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p>",
+   "articleHtml": "<p>Laserontharing is een techniek die de haargroei blijvend vermindert met geconcentreerd licht dat de melanine in het haar viseert.</p><p>De lichtenergie wordt opgenomen door de haarzakjes en omgezet in warmte, waardoor de structuren die voor de hergroei zorgen, worden vernietigd of beschadigd.</p><p>Sessie na sessie vermindert de haargroei geleidelijk: de haartjes worden doorgaans minder talrijk, fijner en minder zichtbaar.</p><p>De behandeling vraagt meerdere sessies, omdat de laser vooral werkt op haartjes in de groeifase.</p><h2>De doelen van de behandeling</h2><ul><li>De haargroei blijvend verminderen.</li><li>De haardichtheid verlagen.</li><li>De hergroei vertragen.</li><li>Een zachtere huid krijgen.</li><li>Ingegroeide haartjes en irritaties door scheren beperken.</li><li>Minder last van klassieke ontharing.</li></ul><h2>Waarom kiezen voor laser</h2><p>De laser vermindert de haargroei op lange termijn. De huid blijft langer zacht dan na scheren of waxen.</p><p>Elke behandeling wordt afgestemd op je huid en je haar. Na elke sessie groeien de haartjes minder terug en zijn er minder irritaties.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p>",
    "priceTitle": "Tarieven",
    "prices": [
     {
@@ -1375,7 +1375,7 @@
   },
   "lipolaser": {
    "title": "Lipo Licht: warmte, koude en rood licht",
-   "metaTitle": "Lipo Licht, warmte, koude en rood licht — My Bubble Beauty",
+   "metaTitle": "Lipo Licht, warmte, koude en rood licht - My Bubble Beauty",
    "description": "Een niet-invasieve lichaamsbehandeling met plaatjes die warmte, koude en rood licht combineren, op buik, heupen, dijen of armen. Tarieven.",
    "articleHtml": "<p>Het ritueel Lipo Licht gebruikt plaatjes die op de gekozen zones worden gelegd: buik, heupen, dijen of armen. Het toestel combineert warmte en koude met rood licht.</p><h2>Wat we beogen</h2><ul><li>Een niet-invasieve behandeling, zonder mechanische massage.</li><li>Een comfortabel moment op de behandelde zones.</li><li>Een aanvulling op uw silhouetbehandelingen.</li></ul><p>Warmte, koude en rood licht werken niet op dezelfde manier. Deze behandeling doet geen gewicht verliezen en de resultaten zijn niet gegarandeerd.</p><h2>Verloop</h2><p>Een sessie duurt 30 of 60 minuten, volgens het aantal zones.</p><p>Voor de behandeling overlopen we samen de mogelijke contra-indicaties, bijvoorbeeld een zwangerschap, een lopende medische behandeling of beschadigde huid.</p>",
    "priceTitle": "Tarieven",
@@ -1400,9 +1400,9 @@
   },
   "mado": {
    "title": "Maderotherapie",
-   "metaTitle": "Maderotherapie, Silhouet-ritueel — My Bubble Beauty",
+   "metaTitle": "Maderotherapie, Silhouet-ritueel - My Bubble Beauty",
    "description": "Maderotherapie is een diepe, verstevigende massage met houten instrumenten die werkt op het uitzicht van de huid. Verloop, kuren en tarieven.",
-   "articleHtml": "<p>Maderotherapie is een massagetechniek uit Colombia. Ze gebruikt houten instrumenten die ontworpen zijn om de verschillende zones van het lichaam te behandelen.</p><p>De bewegingen zijn precies, ritmisch en herhaald. Ze masseren de weefsels, stimuleren de plaatselijke doorbloeding en werken op het uitzicht van de huid. De behandeling is geliefd om haar verstevigende effect en diepe massage.</p><h2>De voordelen</h2><ul><li><strong>Doorbloeding</strong>: bevordert de plaatselijke bloed- en lymfecirculatie.</li><li><strong>Huid</strong>: kan de huid er gladder laten uitzien.</li><li><strong>Sinaasappelhuid</strong>: kan het uitzicht van cellulitis tijdelijk verbeteren.</li><li><strong>Drainage</strong>: de bewegingen helpen oppervlakkige vochten te verplaatsen.</li><li><strong>Stevigheid</strong>: geeft een gevoel van stevigheid en lichtheid.</li><li><strong>Ontspanning</strong>: voelt aan als een diepe massage.</li></ul><p>Maderotherapie doet geen vet verliezen. Ze garandeert geen blijvend verlies van centimeters. De resultaten verschillen van persoon tot persoon.</p><h2>Verloop</h2><p>Voor de eerste sessie maken we een korte balans op. Samen kiezen we de zones: buik, dijen, billen, heupen of armen. De druk wordt aangepast aan uw gevoeligheid.</p><p>Een sessie duurt 60 minuten, om meerdere zones goed te behandelen. In een kuur van 5 of 10 sessies laten we genoeg tijd tussen twee sessies, volgens de reactie van uw huid. We volgen de evolutie samen met u op.</p><h2>Voorzorgen</h2><p>Te veel druk kan pijn of blauwe plekken geven. We behandelen geen zone met een ontsteking, een letsel of een vaatprobleem zonder medisch advies. Voor de eerste sessie vult u een vragenlijst in.</p><h2>Wat u mag verwachten</h2><ul><li>Benen die lichter aanvoelen.</li><li>Een moment van ontspanning en diepe massage.</li><li>Een mogelijke tijdelijke verbetering van het uitzicht van sinaasappelhuid.</li><li>Een huid die er na de massage gladder kan uitzien.</li></ul>",
+   "articleHtml": "<p>Maderotherapie is een massagetechniek uit Colombia. Ze gebruikt houten instrumenten die ontworpen zijn om de verschillende zones van het lichaam te behandelen.</p><p>De bewegingen zijn precies, ritmisch en herhaald. Ze masseren de weefsels, stimuleren de plaatselijke doorbloeding en werken op het uitzicht van de huid. De behandeling is geliefd om haar verstevigende effect en diepe massage.</p><h2>De voordelen</h2><ul><li><strong>Doorbloeding.</strong> Bevordert de plaatselijke bloed- en lymfecirculatie.</li><li><strong>Huid.</strong> Kan de huid er gladder laten uitzien.</li><li><strong>Sinaasappelhuid.</strong> Kan het uitzicht van cellulitis tijdelijk verbeteren.</li><li><strong>Drainage.</strong> De bewegingen helpen oppervlakkige vochten te verplaatsen.</li><li><strong>Stevigheid.</strong> Geeft een gevoel van stevigheid en lichtheid.</li><li><strong>Ontspanning.</strong> Voelt aan als een diepe massage.</li></ul><p>Maderotherapie doet geen vet verliezen. Ze garandeert geen blijvend verlies van centimeters. De resultaten verschillen van persoon tot persoon.</p><h2>Verloop</h2><p>Voor de eerste sessie maken we een korte balans op. Samen kiezen we de zones: buik, dijen, billen, heupen of armen. De druk wordt aangepast aan uw gevoeligheid.</p><p>Een sessie duurt 60 minuten, om meerdere zones goed te behandelen. In een kuur van 5 of 10 sessies laten we genoeg tijd tussen twee sessies, volgens de reactie van uw huid. We volgen de evolutie samen met u op.</p><h2>Voorzorgen</h2><p>Te veel druk kan pijn of blauwe plekken geven. We behandelen geen zone met een ontsteking, een letsel of een vaatprobleem zonder medisch advies. Voor de eerste sessie vult u een vragenlijst in.</p><h2>Wat u mag verwachten</h2><ul><li>Benen die lichter aanvoelen.</li><li>Een moment van ontspanning en diepe massage.</li><li>Een mogelijke tijdelijke verbetering van het uitzicht van sinaasappelhuid.</li><li>Een huid die er na de massage gladder kan uitzien.</li></ul>",
    "priceTitle": "Tarieven",
    "prices": [
     {
@@ -1429,9 +1429,9 @@
   },
   "microneed": {
    "title": "De Micro-Pen",
-   "metaTitle": "Micro-Pen, gezicht en lichaam — My Bubble Beauty",
+   "metaTitle": "Micro-Pen, gezicht en lichaam - My Bubble Beauty",
    "description": "De Micro-Pen stimuleert de natuurlijke vernieuwing van de huid om aan de textuur en de glans te werken. Gezicht en lichaam, voorzorgen en tarieven.",
-   "articleHtml": "<p>De Micro-Pen is een esthetische techniek die fijne micronaaldjes gebruikt om de natuurlijke vernieuwingsmechanismen van de huid te stimuleren.</p><p>Met deze behandeling werk je aan de textuur van de huid, verbeter je de glans en krijgt de huid een gladder, egaler en stralender uitzicht.</p><p>Elk protocol wordt afgestemd op de noden van je huid, voor een persoonlijke aanpak.</p><h2>Onze gezichtsbehandelingen: de Signature-collectie</h2><ul><li><strong>Signature Éclat</strong>: om de teint weer te laten stralen en egaler te maken.</li><li><strong>Signature Hydra</strong>: voor een zichtbaar beter gehydrateerde, soepele en opgevulde huid.</li><li><strong>Signature Lift</strong>: om te werken aan het uitzicht van fijne lijntjes en een gebrek aan stevigheid.</li><li><strong>Signature Skin</strong>: om het uitzicht van de huidstructuur en oneffenheden in de textuur te verbeteren.</li><li><strong>Signature Pure</strong>: om te werken aan het uitzicht van resterende onzuiverheden en verwijde poriën.</li></ul><h2>Onze lichaamsbehandelingen</h2><ul><li><strong>Signature Body</strong> (vanaf 180 €): gerichte behandeling voor het uitzicht van striemen, volgens de te behandelen zone.</li><li><strong>Signature Scar</strong> (vanaf 190 €): gerichte behandeling voor het uitzicht van littekens, na beoordeling van de huid.</li></ul><p>De tarieven van de lichaamsbehandelingen hangen af van de oppervlakte en de aard van de te behandelen zone.</p><h2>Contra-indicaties en voorzorgen</h2><p>De Micro-Pen vraagt een voorafgaande huidcheck. In sommige situaties kan de behandeling niet doorgaan of moet ze worden uitgesteld:</p><ul><li>Zwangerschap en borstvoeding, uit voorzorg.</li><li>Herpes of een actieve huidinfectie.</li><li>Ernstige ontstoken acne.</li><li>Eczeem, psoriasis of rosacea in opstoot op de zone.</li><li>Wonden, brandwonden of huidirritatie.</li><li>Neiging tot keloïdlittekens.</li><li>Stollingsstoornissen of gebruik van antistollingsmiddelen.</li><li>Verminderde weerstand of slecht geregelde diabetes.</li><li>Behandeling met isotretinoïne, recent of lopend.</li><li>Gekende allergie voor de gebruikte producten of materialen.</li></ul><p>Bij ziekte, een medische behandeling of twijfel is een medisch advies nodig vóór elke behandeling.</p><p>De veiligheid en het respect voor je huid staan centraal in onze aanpak.</p><h2>Resultaten</h2><p>De resultaten verschillen van persoon tot persoon. Meerdere sessies kunnen nodig zijn. De Micro-Pen garandeert niet dat littekens of striemen verdwijnen.</p>",
+   "articleHtml": "<p>De Micro-Pen is een esthetische techniek die fijne micronaaldjes gebruikt om de natuurlijke vernieuwingsmechanismen van de huid te stimuleren.</p><p>Met deze behandeling werk je aan de textuur van de huid, verbeter je de glans en krijgt de huid een gladder, egaler en stralender uitzicht.</p><p>Elk protocol wordt afgestemd op de noden van je huid, voor een persoonlijke aanpak.</p><h2>Onze gezichtsbehandelingen: de Signature-collectie</h2><ul><li><strong>Signature Éclat</strong>, om de teint weer te laten stralen en egaler te maken.</li><li><strong>Signature Hydra</strong>, voor een zichtbaar beter gehydrateerde, soepele en opgevulde huid.</li><li><strong>Signature Lift</strong>, om te werken aan het uitzicht van fijne lijntjes en een gebrek aan stevigheid.</li><li><strong>Signature Skin</strong>, om het uitzicht van de huidstructuur en oneffenheden in de textuur te verbeteren.</li><li><strong>Signature Pure</strong>, om te werken aan het uitzicht van resterende onzuiverheden en verwijde poriën.</li></ul><h2>Onze lichaamsbehandelingen</h2><ul><li><strong>Signature Body</strong> (vanaf 180 €). Gerichte behandeling voor het uitzicht van striemen, volgens de te behandelen zone.</li><li><strong>Signature Scar</strong> (vanaf 190 €). Gerichte behandeling voor het uitzicht van littekens, na beoordeling van de huid.</li></ul><p>De tarieven van de lichaamsbehandelingen hangen af van de oppervlakte en de aard van de te behandelen zone.</p><h2>Contra-indicaties en voorzorgen</h2><p>De Micro-Pen vraagt een voorafgaande huidcheck. In sommige situaties kan de behandeling niet doorgaan of moet ze worden uitgesteld:</p><ul><li>Zwangerschap en borstvoeding, uit voorzorg.</li><li>Herpes of een actieve huidinfectie.</li><li>Ernstige ontstoken acne.</li><li>Eczeem, psoriasis of rosacea in opstoot op de zone.</li><li>Wonden, brandwonden of huidirritatie.</li><li>Neiging tot keloïdlittekens.</li><li>Stollingsstoornissen of gebruik van antistollingsmiddelen.</li><li>Verminderde weerstand of slecht geregelde diabetes.</li><li>Behandeling met isotretinoïne, recent of lopend.</li><li>Gekende allergie voor de gebruikte producten of materialen.</li></ul><p>Bij ziekte, een medische behandeling of twijfel is een medisch advies nodig vóór elke behandeling.</p><h2>Resultaten</h2><p>De resultaten verschillen van persoon tot persoon. Meerdere sessies kunnen nodig zijn. De Micro-Pen garandeert niet dat littekens of striemen verdwijnen.</p>",
    "priceTitle": "Tarieven",
    "prices": [
     {
@@ -1492,7 +1492,7 @@
   },
   "peeling": {
    "title": "De oppervlakkige peeling",
-   "metaTitle": "De oppervlakkige peeling — My Bubble Beauty",
+   "metaTitle": "De oppervlakkige peeling - My Bubble Beauty",
    "description": "Een oppervlakkige peeling is een milde exfoliatie om de huidtextuur te verbeteren en de teint te egaliseren. Ontdek het verloop en het tarief.",
    "articleHtml": "<p>De oppervlakkige peeling is een esthetische behandeling die tot doel heeft de huidtextuur te verbeteren, de teint gelijkmatiger te maken en bepaalde kleine huidproblemen, zoals pigmentvlekken, fijne lijntjes en onzuiverheden bij een huid met neiging tot acne, te verminderen. Deze techniek maakt gebruik van een milde chemische oplossing om de bovenste laag van de huid te exfoliëren, met als doel de celvernieuwing te stimuleren en bij te dragen aan een gladdere en stralendere huid. Zo werkt doorgaans een oppervlakkige peeling in de esthetiek:</p><h2>Eerste consultatie</h2><p>Voorafgaand aan een oppervlakkige peeling evalueert een schoonheidsspecialist de toestand van uw huid, bespreekt uw specifieke zorgen en bepaalt of de peeling geschikt is voor uw huidtype en behoeften. Er zijn verschillende soorten chemische oplossingen voor peelings, en de keuze hangt af van uw huidtype en het doel van de behandeling.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><h2>Reiniging van de huid</h2><p>Voor het aanbrengen van de peelingoplossing wordt de huid zorgvuldig gereinigd om vuil, make-up en overtollige talg te verwijderen.</p><h2>Toepassing van de peelingoplossing</h2><p>Vervolgens brengt de schoonheidsspecialist de peelingoplossing op de huid aan en zorgt ervoor dat het te behandelen gebied gelijkmatig wordt bedekt. De oplossing kan alfahydroxyzuren (AHA's), bètahydroxyzuren (BHA's) of andere milde exfoliërende ingrediënten bevatten.</p><h2>Inwerktijd</h2><p>De peelingoplossing blijft gedurende een korte, door de professional bepaalde tijd op de huid, meestal enkele minuten. De duur hangt af van de concentratie van de oplossing en de tolerantie van uw huid.</p><h2>Neutralisatie</h2><p>Nadat de inwerktijd is verstreken, neutraliseert de professional de oplossing door deze af te spoelen of door een specifiek product te gebruiken om de chemische werking te stoppen.</p><h2>Verzorging na de peeling</h2><p>Na de behandeling is het belangrijk om de nazorginstructies van de schoonheidsspecialist op te volgen. Dit kan het aanbrengen van een vochtinbrengende crème, het gebruik van specifieke producten en het vermijden van blootstelling aan de zon gedurende enige tijd omvatten, omdat de huid vaak gevoeliger is na een peeling.</p><h2>Resultaten</h2><p>De resultaten van een oppervlakkige peeling zijn meestal niet onmiddellijk zichtbaar, omdat de huid tijd nodig heeft om zich te vernieuwen. In de dagen en weken na de behandeling zou de huid er echter stralender, egaler en gladder moeten uitzien.</p><p>Een oppervlakkige peeling wordt beschouwd als een milde behandeling en vereist meestal geen langdurige hersteltijd. Meerdere sessies kunnen echter nodig zijn om de gewenste resultaten te bereiken, en het is essentieel om een gekwalificeerde professional te kiezen om de risico's te minimaliseren en de voordelen van de behandeling te optimaliseren. Deze behandeling kan worden toegepast op verschillende delen van het lichaam, zoals het gezicht, de hals, het decolleté en de handen, afhankelijk van uw behoeften.</p>",
    "priceTitle": "Tarief",
@@ -1525,7 +1525,7 @@
   },
   "photo": {
    "title": "Led-lichttherapie",
-   "metaTitle": "Led-lichttherapie — My Bubble Beauty",
+   "metaTitle": "Led-lichttherapie - My Bubble Beauty",
    "description": "Een niet-invasieve behandeling met rood of blauw ledlicht, voor een doffe, rijpe huid of een huid met onzuiverheden. Rituelen, kuren en tarieven.",
    "articleHtml": "<p>Led-lichttherapie is een niet-invasieve behandeling. Ze gebruikt verschillende kleuren licht om de noden van de huid te ondersteunen. Ze is geliefd voor anti-agingverzorging, een huid met onzuiverheden en een huid met roodheid.</p><h2>De kleuren licht</h2><p><strong>Rood licht, glans en stevigheid.</strong> Het ondersteunt anti-agingverzorging. Het kan fijne lijntjes, de huidstructuur en de stevigheid er beter laten uitzien.</p><p><strong>Blauw licht, zuiverheid.</strong> Het ondersteunt een vette huid met neiging tot acne. Het kan helpen onzuiverheden te verminderen.</p><p><strong>Geel licht, glans en rust.</strong> Het ondersteunt een doffe huid en kan roodheid er beter laten uitzien.</p><p><strong>Groen licht, egale teint.</strong> Het ondersteunt een onregelmatige teint en kan werken op het uitzicht van pigmentvlekken.</p><p>Het effect hangt af van het licht, het vermogen en het protocol. Het is niet hetzelfde voor elke kleur of elke huid. De resultaten verschillen van persoon tot persoon.</p><h2>Onze lichtrituelen</h2><ul><li><strong>Glans & Jeugd</strong> (20 min): rood licht, voor een rijpe of doffe huid.</li><li><strong>Puur & Onzuiverheden</strong> (20 min): blauw licht, voor een vette huid met onzuiverheden.</li><li><strong>Dubbele Glans</strong> (20 min): beide lichten, voor een huid met onzuiverheden en tekenen van vermoeidheid.</li><li><strong>Signature Licht</strong> (30 min): rood licht, blauw licht of beide, gekozen volgens uw huid.</li></ul><h2>De kuren</h2><p>De kuur Glans telt 5 sessies, de kuur Schoonheid 10 sessies. De kuur Signature telt 10 sessies op maat van 30 minuten. Led kan ook een gezichtsbehandeling aanvullen in onze gecombineerde formules.</p><p>Voor de behandeling overlopen we samen de mogelijke contra-indicaties, bijvoorbeeld een zwangerschap, een lopende medische behandeling of beschadigde huid.</p>",
    "priceTitle": "Tarieven",
@@ -1570,10 +1570,10 @@
   },
   "plasma": {
    "title": "De plasma pen / micropen",
-   "metaTitle": "De plasma pen / micropen — My Bubble Beauty",
+   "metaTitle": "De plasma pen / micropen - My Bubble Beauty",
    "description": "De plasma pen / micropen is een esthetisch apparaat om het uiterlijk van een verslapte huid, rimpels, littekens en pigmentvlekken te verbeteren.",
    "articleHtml": "<p>De plasma pen / micropen, ook wel bekend als plasmapen, is een relatief recent esthetisch behandelingsapparaat dat wordt gebruikt om het uiterlijk van verschillende huidproblemen te verbeteren, waaronder een verslapte huid, rimpels, littekens, striae en pigmentvlekken. Dit apparaat werkt door een boog van plasma aan het huidoppervlak te genereren, wat resulteert in gecontroleerde microletsels. Zo werkt de plasma pen doorgaans in de esthetiek:</p><h2>Basisprincipe</h2><p>De plasma pen gebruikt elektrische energie om een dunne, hete plasmaboog aan het uiteinde van de pen te creëren. Plasma is een geïoniseerd gas dat bestaat uit geladen deeltjes, wat betekent dat het ionen en vrije elektronen bevat.</p><h2>Toepassing</h2><p>De schoonheidsspecialist gebruikt de plasma pen om specifieke gebieden van de huid te behandelen. Wanneer de penpunt de huid raakt, wordt de plasmaboog naar het huidoppervlak gericht. Dit creëert uiterst kleine, brandende micropunten op de huid, waarbij de omliggende weefsels zoveel mogelijk worden gespaard.</p><h2>Huidverstrakking</h2><p>De toepassing van plasma kan resulteren in onmiddellijke huidverstrakking, doordat de gegenereerde warmte leidt tot samentrekking van de collageenvezels in het behandelde gebied. Dit kan helpen om de zichtbaarheid van een verslapte huid te verminderen.</p><h2>Vorming van korstjes en microletsels</h2><p>De micropunten die door de plasma pen worden gecreëerd, leiden ook tot de vorming van korstjes op de huid. In de dagen na de behandeling vallen deze korstjes vanzelf af en laten nieuwe huid eronder zien. Tijdens deze herstelfase produceert de huid ook extra collageen, wat de textuur en algehele uitstraling van de huid kan verbeteren.</p><h2>Resultaten</h2><p>De resultaten van de plasma pen kunnen variëren, afhankelijk van het huidprobleem waarop de behandeling gericht is en van de diepte waarop het apparaat is gebruikt. U kunt na verloop van tijd verbeteringen zien in de uitstraling van uw huid naarmate de effecten van collageen zichtbaar worden. Meerdere sessies kunnen echter nodig zijn om optimale resultaten te behalen.</p><p>Het is belangrijk op te merken dat de plasma pen een invasieve behandeling is, zij het minder invasief dan sommige andere esthetische behandelingen. U kunt tijdens de behandeling enig ongemak ervaren, maar doorgaans worden plaatselijke verdovingsmiddelen aangebracht om dit ongemak te minimaliseren.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><p>De plasma pen moet worden gebruikt door opgeleide en ervaren schoonheidsspecialisten, aangezien onjuist gebruik complicaties of littekens kan veroorzaken. Zoals bij elke esthetische behandeling wordt aanbevolen om een schoonheidsspecialist te raadplegen om uw specifieke behoeften te bespreken en te bepalen of de plasma pen voor u geschikt is.</p>",
-   "priceTitle": "Tarief — Plasma Lift",
+   "priceTitle": "Tarief",
    "prices": [
     {
      "name": "1 sessie",
@@ -1591,7 +1591,7 @@
   },
   "radiofrequence": {
    "title": "Sculpt & Stevigheid: vacuüm en radiofrequentie",
-   "metaTitle": "Sculpt & Stevigheid met radiofrequentie — My Bubble Beauty",
+   "metaTitle": "Sculpt & Stevigheid met radiofrequentie - My Bubble Beauty",
    "description": "Een lichaamsbehandeling die aanzuiging (vacuüm) combineert met de warmte van radiofrequentie, voor een huid die gladder en steviger oogt. Tarieven.",
    "articleHtml": "<p>Het ritueel Sculpt & Stevigheid combineert mechanische aanzuiging, het vacuüm, met radiofrequentie. Het vacuüm mobiliseert de weefsels. De radiofrequentie verspreidt een gecontroleerde warmte in de behandelde zone.</p><h2>Wat we beogen</h2><ul><li>Het uitzicht van cellulitis verbeteren.</li><li>Een huid die gladder oogt.</li><li>Een tijdelijk stevigere huid.</li><li>Een gevoel van massage en ontspanning.</li></ul><p>Deze behandeling doet geen gewicht verliezen en verwijdert geen vet. De resultaten verschillen van persoon tot persoon.</p><h2>Verloop</h2><p>Een sessie duurt 30 of 60 minuten, volgens het aantal zones.</p><p>Voor de behandeling overlopen we samen de mogelijke contra-indicaties, bijvoorbeeld een zwangerschap, een lopende medische behandeling of beschadigde huid.</p>",
    "priceTitle": "Tarieven",
@@ -1616,7 +1616,7 @@
   },
   "sos": {
    "title": "SOS Zuiverheid",
-   "metaTitle": "SOS Zuiverheid — My Bubble Beauty",
+   "metaTitle": "SOS Zuiverheid - My Bubble Beauty",
    "description": "Een SOS Zuiverheid-behandeling is speciaal ontwikkeld voor wie last heeft van overtollige talg, een neiging tot acne, mee-eters en andere onzuiverheden.",
    "articleHtml": "<p>Een SOS Zuiverheid-behandeling in de schoonheidszorg is speciaal ontwikkeld voor mensen met huidproblemen door overtollige talg, een neiging tot acne, mee-eters en andere onzuiverheden. Deze behandeling is bedoeld om de huid grondig te reinigen, overtollige talg te verminderen, de poriën te ontstoppen en bij te dragen tot een zuiverdere, gezondere huid. Zo verloopt een SOS Zuiverheid-behandeling:</p><h2>Grondige reiniging</h2><p>De behandeling begint meestal met een grondige reiniging van het gezicht om onzuiverheden, overtollige talg en dode huidcellen te verwijderen.</p><h2>Exfoliatie</h2><p>Een zachte exfoliatie kan dode huidcellen verwijderen, waardoor de huid gladder wordt.</p><h2>Verwijderen van comedonen</h2><p>Schoonheidsspecialisten of huidprofessionals gebruiken vaak manuele technieken of extractie-instrumenten om mee-eters en comedonen te verwijderen. Zo worden de poriën ontstopt en verbetert de huidtextuur.</p><h2>Aangepaste producten</h2><p>Specifieke producten met ingrediënten zoals salicylzuur, bekend om zijn zuiverende werking, kunnen op de huid worden aangebracht om roodheid te helpen kalmeren en nieuwe onzuiverheden te helpen beperken.</p><h2>Maskers en gerichte behandelingen</h2><p>Zuiverende maskers of andere gerichte behandelingen kunnen de huid kalmeren, overtollige talg verminderen en de talgproductie beter helpen regelen.</p><h2>Hydratatie</h2><p>Ook bij een vette huid blijft voldoende hydratatie essentieel, zodat de huid niet te droog wordt door de behandelingen. Daarvoor kunnen lichte, niet-comedogene hydraterende producten worden gebruikt.</p><h2>Zonnebescherming</h2><p>Zoals bij veel huidbehandelingen is een zonnecrème of een ander beschermend product belangrijk om de huid te beschermen tegen schade door uv-stralen.</p>",
    "priceTitle": "Tarief",
@@ -1637,9 +1637,9 @@
   },
   "massages": {
    "title": "Massages en lichaamsscrubs",
-   "metaTitle": "Massages en lichaamsscrubs — My Bubble Beauty",
+   "metaTitle": "Massages en lichaamsscrubs - My Bubble Beauty",
    "description": "Massage met warme stenen, bamboe, arganolie, strijkmassage of zwangerschapsmassage, scrubs met lavendel en honing, signature-rituelen. Duur en tarieven.",
-   "articleHtml": "<p>Gun uzelf een zacht moment. Een kostbaar ogenblik om voor uw lichaam te zorgen en uw geest tot rust te brengen.</p><h2>Onze ontspannende massages</h2><p><strong>Ritueel Warmte & Ontspanning: massage met warme stenen.</strong> Een diep ontspannende massage. De warmte van vulkanische stenen gaat samen met omhullende bewegingen. Ze helpt spierspanning los te laten en geeft een gevoel van volledig welzijn. 60 minuten.</p><p><strong>Ritueel Bamboe & Evenwicht: bamboemassage.</strong> Een ritmische, omhullende massage met bamboestokken. Ze werkt op spanningen in het lichaam, stimuleert de weefsels en geeft een aangenaam licht gevoel. 60 minuten.</p><p><strong>Ritueel Goud & Zachtheid: massage met arganolie.</strong> Een zachte massage met arganolie, die de huid voedt en omhult. De vloeiende bewegingen helpen u los te laten. 60 minuten.</p><p><strong>Ritueel Veer & Sereniteit: strijkmassage.</strong> Trage, lichte en harmonieuze bewegingen. Een echte uitnodiging tot ontspanning, voor lichaam en geest. 45 minuten.</p><p><strong>Ritueel Zachte Mama: zwangerschapsmassage.</strong> Een moment voor de aanstaande moeder. Zachte bewegingen, aangepast aan de zwangerschap, voor ontspanning en comfort. 60 minuten.</p><h2>Onze lichaamsscrubs</h2><p><strong>Ritueel Lavendel & Zachtheid.</strong> Een scrub met een zachte lavendelgeur. Hij helpt dode huidcellen te verwijderen en maakt de huid zacht en zijdeachtig. 30 minuten.</p><p><strong>Ritueel Honing & Fluweel.</strong> Een verwennende scrub die de zachtheid van honing combineert met een delicaat ritueel. De huid wordt weer zacht, soepel en comfortabel. 30 minuten.</p><h2>Onze signature-rituelen</h2><p>Om langer te genieten, combineren we een scrub met een massage.</p><ul><li><strong>Ontwaken van de Zintuigen</strong>: lavendelscrub en strijkmassage.</li><li><strong>Kostbare Zachtheid</strong>: honingscrub en massage met arganolie.</li><li><strong>Totale Ontsnapping</strong>: scrub naar keuze en massage met warme stenen.</li></ul><p>Voor de behandeling overlopen we samen de mogelijke contra-indicaties, bijvoorbeeld een zwangerschap, een lopende medische behandeling of beschadigde huid.</p>",
+   "articleHtml": "<p>Onze massages helpen spanningen los te laten. Onze scrubs maken de huid zacht.</p><h2>Onze ontspannende massages</h2><p><strong>Ritueel Warmte & Ontspanning: massage met warme stenen.</strong> Een diep ontspannende massage. De warmte van vulkanische stenen gaat samen met omhullende bewegingen. Ze helpt spierspanning los te laten en geeft een gevoel van volledig welzijn. 60 minuten.</p><p><strong>Ritueel Bamboe & Evenwicht: bamboemassage.</strong> Een ritmische, omhullende massage met bamboestokken. Ze werkt op spanningen in het lichaam, stimuleert de weefsels en geeft een aangenaam licht gevoel. 60 minuten.</p><p><strong>Ritueel Goud & Zachtheid: massage met arganolie.</strong> Een zachte massage met arganolie, die de huid voedt en omhult. De vloeiende bewegingen helpen u los te laten. 60 minuten.</p><p><strong>Ritueel Veer & Sereniteit: strijkmassage.</strong> Trage, lichte en harmonieuze bewegingen. Een echte uitnodiging tot ontspanning, voor lichaam en geest. 45 minuten.</p><p><strong>Ritueel Zachte Mama: zwangerschapsmassage.</strong> Een moment voor de aanstaande moeder. Zachte bewegingen, aangepast aan de zwangerschap, voor ontspanning en comfort. 60 minuten.</p><h2>Onze lichaamsscrubs</h2><p><strong>Ritueel Lavendel & Zachtheid.</strong> Een scrub met een zachte lavendelgeur. Hij helpt dode huidcellen te verwijderen en maakt de huid zacht en zijdeachtig. 30 minuten.</p><p><strong>Ritueel Honing & Fluweel.</strong> Een verwennende scrub die de zachtheid van honing combineert met een delicaat ritueel. De huid wordt weer zacht, soepel en comfortabel. 30 minuten.</p><h2>Onze signature-rituelen</h2><p>Om langer te genieten, combineren we een scrub met een massage.</p><ul><li><strong>Ontwaken van de Zintuigen.</strong> Lavendelscrub en strijkmassage.</li><li><strong>Kostbare Zachtheid.</strong> Honingscrub en massage met arganolie.</li><li><strong>Totale Ontsnapping.</strong> Scrub naar keuze en massage met warme stenen.</li></ul><p>Voor de behandeling overlopen we samen de mogelijke contra-indicaties, bijvoorbeeld een zwangerschap, een lopende medische behandeling of beschadigde huid.</p>",
    "priceTitle": "Tarieven",
    "prices": [
     {
@@ -1694,7 +1694,7 @@
   },
   "brosse": {
    "title": "Puur Ritueel: de roterende borstel",
-   "metaTitle": "Puur Ritueel met roterende borstel — My Bubble Beauty",
+   "metaTitle": "Puur Ritueel met roterende borstel - My Bubble Beauty",
    "description": "Een reinigende en exfoliërende gezichtsbehandeling met roterende borstel, voor een zachtere en stralendere huid. Voordelen, huidtypes en tarieven.",
    "articleHtml": "<p>Het Puur Ritueel is een gezichtsbehandeling met een roterende borstel. De borstel reinigt mechanisch en exfolieert licht. Hij verwijdert onzuiverheden en de dode cellen die zich op de huid opstapelen.</p><h2>De voordelen</h2><ul><li>Verwijdert dode cellen aan de oppervlakte.</li><li>Helpt onzuiverheden los te maken.</li><li>Verfijnt zichtbaar de huidstructuur.</li><li>Maakt de huid zachter en gladder.</li><li>Geeft de teint meer glans.</li><li>Bereidt de huid voor op de verzorging.</li><li>Helpt ruwe zones er beter te laten uitzien.</li></ul><h2>Twee formules</h2><p>De reiniging duurt 30 minuten. De volledige behandeling duurt 45 minuten: reiniging, roterende borstel, aangepast masker en afwerkingscrème. U kunt ze ook combineren met led-lichttherapie.</p><h2>Voor welke huidtypes?</h2><p>De behandeling past bij een normale, gemengde en dikke huid, volgens de gevoeligheid. We vermijden ze bij een zeer gevoelige of geïrriteerde huid, en bij uitgesproken couperose, ontstoken rosacea, eczeem, letsels of ernstige ontstoken acne.</p><p>Voor de behandeling overlopen we samen de mogelijke contra-indicaties, bijvoorbeeld een zwangerschap, een lopende medische behandeling of beschadigde huid.</p>",
    "priceTitle": "Tarieven",
@@ -1723,10 +1723,10 @@
   },
   "regard": {
    "title": "Schoonheid van de blik: wenkbrauwen en wimpers",
-   "metaTitle": "Mooie blik, wenkbrauwen en wimpers — My Bubble Beauty",
+   "metaTitle": "Mooie blik, wenkbrauwen en wimpers - My Bubble Beauty",
    "description": "Wenkbrauwreconstructie, wenkbrauwen en wimpers verven, Brow Lift en combinatiepakketten: verzorging afgestemd op je natuurlijke schoonheid. Details en tarieven.",
    "priceTitle": "Tarieven",
-   "articleHtml": "<p>Breng de volle intensiteit van je blik naar voren met behandelingen die afgestemd zijn op je natuurlijke schoonheid.</p><h2>Wenkbrauwreconstructie</h2><p>Een behandeling op maat om de lijn van de wenkbrauwen opnieuw te tekenen en in harmonie te brengen met de vorm van je gezicht. Ze omvat het herstructureren en epileren, voor een evenwichtige vorm die bij elke blik past.</p><h2>Wenkbrauwen verven</h2><p>Het verven versterkt de natuurlijke kleur van de wenkbrauwen, tekent hun lijn beter af en geeft meer diepte aan de blik. De tint wordt gekozen volgens je natuurlijke kleur en het gewenste resultaat.</p><h2>Wimpers verven</h2><p>Deze behandeling maakt de natuurlijke wimpers donkerder om de blik te versterken en geeft een subtiel mascara-effect, zonder make-up. Ideaal om je ogen elke dag in de verf te zetten.</p><h2>Brow Lift</h2><p>De Brow Lift is een techniek waarbij de wenkbrauwharen in model worden gebracht en naar boven worden gezet, voor een vollere, gelifte en gestructureerde look. Zo krijg je harmonieuzere wenkbrauwen en een natuurlijk open blik.</p><h2>Combinatiepakketten</h2><p>Voor een harmonieus resultaat en een stralende blik combineer je onze behandelingen.</p><p><strong>Jouw blik, onze prioriteit.</strong> Schoonheid zit in de details.</p>",
+   "articleHtml": "<p>Verzorging voor wenkbrauwen en wimpers, afgestemd op je gezicht.</p><h2>Wenkbrauwreconstructie</h2><p>Een behandeling op maat om de lijn van de wenkbrauwen opnieuw te tekenen en in harmonie te brengen met de vorm van je gezicht. Ze omvat het herstructureren en epileren, voor een evenwichtige vorm die bij elke blik past.</p><h2>Wenkbrauwen verven</h2><p>Het verven versterkt de natuurlijke kleur van de wenkbrauwen, tekent hun lijn beter af en geeft meer diepte aan de blik. De tint wordt gekozen volgens je natuurlijke kleur en het gewenste resultaat.</p><h2>Wimpers verven</h2><p>Deze behandeling maakt de natuurlijke wimpers donkerder om de blik te versterken en geeft een subtiel mascara-effect, zonder make-up. Ideaal om je ogen elke dag in de verf te zetten.</p><h2>Brow Lift</h2><p>De Brow Lift is een techniek waarbij de wenkbrauwharen in model worden gebracht en naar boven worden gezet, voor een vollere, gelifte en gestructureerde look. Zo krijg je harmonieuzere wenkbrauwen en een natuurlijk open blik.</p><h2>Combinatiepakketten</h2><p>Voor een harmonieus resultaat en een stralende blik combineer je onze behandelingen.</p><p><strong>Jouw blik, onze prioriteit.</strong> Schoonheid zit in de details.</p>",
    "prices": [
     {
      "name": "Wenkbrauwreconstructie",
@@ -1761,33 +1761,33 @@
   },
   "semi-permanent": {
    "title": "De kunst van semi-permanente lak",
-   "metaTitle": "Semi-permanente lak, handen en voeten — My Bubble Beauty",
+   "metaTitle": "Semi-permanente lak, handen en voeten - My Bubble Beauty",
    "description": "Semi-permanente lak voor handen en voeten: intense kleur, langdurige glans en een verzorgde afwerking. Behandelingen, contra-indicaties en tarieven.",
-   "articleHtml": "<p>Mooie nagels, met elegantie.</p><p>Gun je handen en voeten een verfijnde, verzorgde make-over met semi-permanente lak.</p><p>Deze techniek geeft een intense kleur, langdurige glans en een perfecte afwerking, met een natuurlijk en elegant resultaat.</p><p>Een moment van schoonheid om tot in je vingertoppen voor jezelf te zorgen.</p><h2>Onze behandelingen</h2><p>Elke behandeling omvat de voorbereiding van de nagels, de verzorging van de nagelriemen, het vormgeven en een verzorgde afwerking.</p><h2>Contra-indicaties</h2><p>Om de gezondheid en schoonheid van je nagels te beschermen, is semi-permanente lak in sommige situaties niet mogelijk:</p><ul><li>Schimmel of infectie van de nagel.</li><li>Nagels met een ontsteking of een wonde.</li><li>Wonden, irritaties of letsels rond de nagels.</li><li>Gekende allergie voor bestanddelen van de gebruikte producten, met name acrylaten.</li><li>Sterk beschadigde nagels of een afwijking waarvoor medisch advies nodig is.</li></ul><p>Bij twijfel wordt de behandeling uitgesteld en kan een medisch advies aangeraden worden.</p><p>De gezondheid van je nagels blijft onze prioriteit. Bedankt voor je vertrouwen en je trouw.</p>",
+   "articleHtml": "<p>Semi-permanente lak geeft een intense, glanzende kleur die lang mooi blijft.</p><p>We brengen hem aan op handen en voeten. Het resultaat blijft natuurlijk.</p><h2>Onze behandelingen</h2><p>Elke behandeling omvat de voorbereiding van de nagels, de verzorging van de nagelriemen, het vormgeven en een verzorgde afwerking.</p><h2>Contra-indicaties</h2><p>Om de gezondheid en schoonheid van je nagels te beschermen, is semi-permanente lak in sommige situaties niet mogelijk:</p><ul><li>Schimmel of infectie van de nagel.</li><li>Nagels met een ontsteking of een wonde.</li><li>Wonden, irritaties of letsels rond de nagels.</li><li>Gekende allergie voor bestanddelen van de gebruikte producten, met name acrylaten.</li><li>Sterk beschadigde nagels of een afwijking waarvoor medisch advies nodig is.</li></ul><p>Bij twijfel wordt de behandeling uitgesteld en kan een medisch advies aangeraden worden.</p>",
    "priceTitle": "Tarieven",
    "prices": [
     {
-     "name": "Handen: semi-permanente lak",
+     "name": "Semi-permanente lak (handen)",
      "amount": "30 €"
     },
     {
-     "name": "Handen: enkel verwijderen",
+     "name": "Enkel verwijderen (handen)",
      "amount": "15 €"
     },
     {
-     "name": "Handen: verwijderen en opnieuw lakken",
+     "name": "Verwijderen en opnieuw lakken (handen)",
      "amount": "35 €"
     },
     {
-     "name": "Voeten: semi-permanente lak",
+     "name": "Semi-permanente lak (voeten)",
      "amount": "30 €"
     },
     {
-     "name": "Voeten: enkel verwijderen",
+     "name": "Enkel verwijderen (voeten)",
      "amount": "15 €"
     },
     {
-     "name": "Voeten: verwijderen en opnieuw lakken",
+     "name": "Verwijderen en opnieuw lakken (voeten)",
      "amount": "35 €"
     },
     {

@@ -5,7 +5,7 @@
  "ogLocale": "en_GB",
  "ui": {
   "skip": "Skip to content",
-  "brandAlt": "My Bubble Beauty — home",
+  "brandAlt": "My Bubble Beauty, home",
   "navLabel": "Menu",
   "nav": [
    {
@@ -44,7 +44,7 @@
   "bookShort": "Book"
  },
  "home": {
-  "title": "Beauty salon in Dilbeek — My Bubble Beauty",
+  "title": "Beauty salon in Dilbeek - My Bubble Beauty",
   "description": "Beauty and wellness centre in Dilbeek, close to Anderlecht, Molenbeek and Berchem: facials, medical pedicure, nails and hair removal.",
   "hero": {
    "eyebrow": "Beauty salon · Dilbeek",
@@ -317,7 +317,7 @@
     {
      "id": "micro-pen",
      "cat": "visage",
-     "title": "Micro-Pen — Signature Collection",
+     "title": "Micro-Pen - Signature Collection",
      "href": "microneed",
      "intro": "Each protocol is tailored to your skin’s needs.",
      "items": [
@@ -416,7 +416,7 @@
      "cat": "corps",
      "title": "Relaxing massages",
      "href": "massages",
-     "intro": "A gentle break to care for your body and calm your mind.",
+     "intro": "Relaxing massages and body scrubs.",
      "items": [
       {
        "name": "Warmth & Relaxation",
@@ -514,7 +514,7 @@
     {
      "id": "micro-pen-corps",
      "cat": "corps",
-     "title": "Micro-Pen — body treatments",
+     "title": "Micro-Pen - body treatments",
      "href": "microneed",
      "intro": "Prices depend on the size and type of the area treated.",
      "items": [
@@ -611,9 +611,9 @@
     {
      "id": "laser-visage",
      "cat": "epilation",
-     "title": "Laser hair removal — Face",
+     "title": "Laser hair removal - Face",
      "href": "laserepilation",
-     "intro": "The freedom of smooth skin. Take care of your skin, session after session.",
+     "intro": "Smoother skin, with less hair after each session.",
      "items": [
       {
        "name": "Upper lip",
@@ -655,7 +655,7 @@
     {
      "id": "laser-haut-du-corps",
      "cat": "epilation",
-     "title": "Laser hair removal — Upper body",
+     "title": "Laser hair removal - Upper body",
      "href": "laserepilation",
      "items": [
       {
@@ -703,7 +703,7 @@
     {
      "id": "laser-maillot",
      "cat": "epilation",
-     "title": "Laser hair removal — Bikini area",
+     "title": "Laser hair removal - Bikini area",
      "href": "laserepilation",
      "items": [
       {
@@ -736,7 +736,7 @@
     {
      "id": "laser-jambes",
      "cat": "epilation",
-     "title": "Laser hair removal — Legs",
+     "title": "Laser hair removal - Legs",
      "href": "laserepilation",
      "items": [
       {
@@ -764,7 +764,7 @@
     {
      "id": "laser-dos-torse",
      "cat": "epilation",
-     "title": "Laser hair removal — Back and chest",
+     "title": "Laser hair removal - Back and chest",
      "href": "laserepilation",
      "items": [
       {
@@ -914,35 +914,35 @@
      "cat": "mains",
      "title": "The art of semi-permanent polish",
      "href": "semi-permanent",
-     "intro": "Beautiful nails, with elegance. Each service includes nail preparation, cuticle care, shaping and a neat finish.",
+     "intro": "Application and removal for hands and feet. Each service includes nail preparation, cuticle care and shaping.",
      "items": [
       {
-       "name": "Hands: semi-permanent polish",
+       "name": "Semi-permanent polish (hands)",
        "href": null,
        "amount": "30 €"
       },
       {
-       "name": "Hands: removal only",
+       "name": "Removal only (hands)",
        "href": null,
        "amount": "15 €"
       },
       {
-       "name": "Hands: removal and new application",
+       "name": "Removal and new application (hands)",
        "href": null,
        "amount": "35 €"
       },
       {
-       "name": "Feet: semi-permanent polish",
+       "name": "Semi-permanent polish (feet)",
        "href": null,
        "amount": "30 €"
       },
       {
-       "name": "Feet: removal only",
+       "name": "Removal only (feet)",
        "href": null,
        "amount": "15 €"
       },
       {
-       "name": "Feet: removal and new application",
+       "name": "Removal and new application (feet)",
        "href": null,
        "amount": "35 €"
       },
@@ -1064,9 +1064,9 @@
  "treatments": {
   "charbon": {
    "title": "Carbon Peel Bubble Signature",
-   "metaTitle": "Carbon Peel Bubble Signature, radiance — My Bubble Beauty",
+   "metaTitle": "Carbon Peel Bubble Signature, radiance - My Bubble Beauty",
    "description": "Carbon Peel Bubble Signature: a treatment for radiance, purity and skin quality on the face, neck and décolleté. À la carte options, benefits and prices.",
-   "articleHtml": "<p>Carbon Peel Bubble Signature is a treatment for radiance, purity and skin quality. It combines a carbon mask with an aesthetic laser to purify the skin, reduce shine and revive the radiance of your complexion. Here is how a session goes:</p><h2>Initial consultation</h2><p>Before the first session, we look at your skin, talk about what you would like and choose the area to treat together.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p><h2>Cleansing the skin</h2><p>Make-up is removed and the skin is cleansed of impurities and excess sebum. It must be clean and dry before the rest of the treatment.</p><h2>Applying the carbon mask</h2><p>A thin layer of carbon cream is spread evenly over the area, then left to dry for a few minutes.</p><h2>The laser</h2><p>You wear protective glasses throughout this step. The laser is moved gently over the area. Its light is absorbed by the carbon particles, which are removed from the surface of the skin. You may feel slight warmth or small tingles.</p><h2>Cleansing and soothing</h2><p>The carbon residue is removed. A soothing treatment followed by sun protection ends the session.</p><h2>The areas treated</h2><ul><li><strong>Full face</strong> (30 to 45 min): a purifying, revitalising treatment that aims to improve the look of pores, reduce shine and revive the radiance of your complexion.</li><li><strong>Face + neck</strong> (45 to 60 min): a targeted treatment to refine the look of the skin’s texture and even out your complexion.</li><li><strong>Face + neck + décolleté</strong> (60 to 75 min): our complete signature treatment, working on the look of the skin across all three areas for a brighter, more harmonious appearance.</li><li><strong>Neck + décolleté</strong> (30 to 45 min): a dedicated treatment to improve the look and evenness of the skin on the neck and décolleté.</li></ul><h2>The benefits we aim for</h2><p><strong>Face.</strong> Less visible pores, clearer-looking skin, a brighter complexion, improved skin texture.</p><p><strong>Neck.</strong> Better-looking skin, a more even tone, a more uniform appearance.</p><p><strong>Décolleté.</strong> A finer-looking skin texture, a visibly more even tone, brighter-looking skin.</p><h2>After the treatment</h2><p>Slight redness may appear and usually fades within a few hours. Over the following days, protect your skin from the sun and avoid scrubs. The number of sessions and their frequency are set with you according to your skin and goals. Results vary from person to person.</p>",
+   "articleHtml": "<p>Carbon Peel Bubble Signature is a treatment for radiance, purity and skin quality. It combines a carbon mask with an aesthetic laser to purify the skin, reduce shine and revive the radiance of your complexion. Here is how a session goes:</p><h2>Initial consultation</h2><p>Before the first session, we look at your skin, talk about what you would like and choose the area to treat together.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p><h2>Cleansing the skin</h2><p>Make-up is removed and the skin is cleansed of impurities and excess sebum. It must be clean and dry before the rest of the treatment.</p><h2>Applying the carbon mask</h2><p>A thin layer of carbon cream is spread evenly over the area, then left to dry for a few minutes.</p><h2>The laser</h2><p>You wear protective glasses throughout this step. The laser is moved gently over the area. Its light is absorbed by the carbon particles, which are removed from the surface of the skin. You may feel slight warmth or small tingles.</p><h2>Cleansing and soothing</h2><p>The carbon residue is removed. A soothing treatment followed by sun protection ends the session.</p><h2>The areas treated</h2><ul><li><strong>Full face</strong> (30 to 45 min). A purifying, revitalising treatment that aims to improve the look of pores, reduce shine and revive the radiance of your complexion.</li><li><strong>Face + neck</strong> (45 to 60 min). A targeted treatment to refine the look of the skin’s texture and even out your complexion.</li><li><strong>Face + neck + décolleté</strong> (60 to 75 min). Our complete signature treatment, working on the look of the skin across all three areas for a brighter, more harmonious appearance.</li><li><strong>Neck + décolleté</strong> (30 to 45 min). A dedicated treatment to improve the look and evenness of the skin on the neck and décolleté.</li></ul><h2>The benefits we aim for</h2><p><strong>Face.</strong> Less visible pores, clearer-looking skin, a brighter complexion, improved skin texture.</p><p><strong>Neck.</strong> Better-looking skin, a more even tone, a more uniform appearance.</p><p><strong>Décolleté.</strong> A finer-looking skin texture, a visibly more even tone, brighter-looking skin.</p><h2>After the treatment</h2><p>Slight redness may appear and usually fades within a few hours. Over the following days, protect your skin from the sun and avoid scrubs. The number of sessions and their frequency are set with you according to your skin and goals. Results vary from person to person.</p>",
    "priceTitle": "Prices",
    "prices": [
     {
@@ -1097,10 +1097,10 @@
   },
   "cire": {
    "title": "Waxing Unwanted Hair",
-   "metaTitle": "Waxing Unwanted Hair — My Bubble Beauty",
+   "metaTitle": "Waxing Unwanted Hair - My Bubble Beauty",
    "description": "Waxing with warm or lukewarm wax pulls hair out by the root, for skin that stays smooth for longer than after shaving. Procedure and prices.",
    "articleHtml": "<p>Waxing unwanted hair is a commonly used method for hair removal in the field of beauty care. This technique involves the application of warm or lukewarm wax to the skin, allowing it to harden and then swiftly removing it, along with the hair. Here's how waxing typically works in beauty care:</p><h2>Preparation</h2><p>Before waxing begins, the skin is usually thoroughly cleaned to remove dirt, oil, and cosmetic products. It's important for the skin to be clean and dry before the wax is applied.</p><h2>Application</h2><p>The wax is heated to make it liquid but should not be too hot to avoid burns. It is then applied to the area to be waxed using a stick or spatula. The wax adheres to the hair and the skin.</p><h2>Hardening</h2><p>The wax is allowed to harden for a few moments. During this period, the wax adheres to the hair, completely covering it.</p><h2>Removal</h2><p>Once the wax has hardened, a beauty professional grips an edge of the wax and quickly pulls it off against the direction of hair growth. This action pulls the hair out by the root, leaving the skin temporarily smooth and hair-free.</p><h2>Aftercare</h2><p>After waxing, it's common to apply a soothing lotion or moisturizing cream to calm the skin and minimize irritation. Hair gradually regrows, usually within a few weeks.</p><p>Waxing can be applied to various parts of the body, including legs, underarms, the bikini line, the face, and other areas with unwanted hair. This hair removal method offers several benefits, such as skin that stays smooth for longer than after shaving, since the hair is pulled out by the root. However, there are also potential downsides, such as the pain associated with hair removal and the possibility of skin irritation.</p><p>There are different types of wax, including hot wax, lukewarm wax, and cold wax, each with its own pros and cons. Some people also choose to wax at home using commercially available wax kits, although this may require some practice for good results.</p><p>For waxing, it's recommended to seek an experienced professional, especially for sensitive areas, to reduce the risk of injuries or skin irritation.</p>",
-   "priceTitle": "Price — Hair Removal",
+   "priceTitle": "Price",
    "prices": [
     {
      "name": "Eyebrows",
@@ -1154,10 +1154,10 @@
   },
   "dents": {
    "title": "Teeth Whitening",
-   "metaTitle": "Teeth Whitening — My Bubble Beauty",
+   "metaTitle": "Teeth Whitening - My Bubble Beauty",
    "description": "Teeth whitening is a cosmetic treatment that aims to lighten the colour of the teeth and reduce stains. Procedure, precautions and prices.",
    "articleHtml": "<p>Teeth whitening is a cosmetic treatment designed to brighten the colour of teeth, making them whiter and brighter. This treatment is commonly performed in aesthetic dentistry to enhance the appearance of a smile by reducing stains and discolourations on the teeth. Here is how teeth whitening works in aesthetics:</p><h2>Initial Evaluation</h2><p>Before the teeth whitening process begins, a dentist or aesthetic professional conducts an initial evaluation to determine whether the treatment is suitable for you. Some individuals may not qualify due to underlying dental issues.</p><h2>Preparation</h2><p>First, your teeth are cleaned to remove plaque and tartar, which could hinder the bleaching process.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment, sensitive teeth or irritated gums.</p><h2>Whitening Options</h2><p>At-Home Whitening: The dentist may provide an at-home whitening kit with custom-made trays and a bleaching gel containing a low concentration of hydrogen peroxide or carbamide peroxide. You fill the trays with the gel and wear them for a specified period daily over a few weeks. This is a gradual process.</p><p>In-Office Whitening: This method is also known as professional in-chair bleaching. The dentist applies a more concentrated bleaching gel to your teeth and then uses a special light or a laser to activate the gel. This process is usually faster and may provide immediate results.</p><h2>Aftercare</h2><p>After whitening, you may be advised to avoid certain potentially staining foods and beverages (such as coffee, tea, and red wine) for a while to maintain the results. Good oral care, including regular brushing and flossing, is also essential.</p><h2>Mechanism of Teeth Whitening</h2><p>The fundamental principle of teeth whitening is based on the use of products containing hydrogen peroxide or carbamide peroxide. These chemicals penetrate the tooth enamel and react with the molecules responsible for stains and discolourations, breaking them down to brighten the teeth's colour. However, it's important to note that teeth whitening is not permanent, and the results can vary from person to person, depending on various factors, including the type of tooth stains and dietary habits.</p><h2>Pre-Treatment Advice</h2><p>It is highly recommended to consult a dentist or an aesthetic dental professional before considering teeth whitening, as it may not be suitable for everyone, especially those with existing dental issues. Furthermore, teeth whitening should be performed under the supervision of a professional to help ensure the safety and effectiveness of the treatment.</p>",
-   "priceTitle": "Price — Teeth Whitening",
+   "priceTitle": "Price",
    "prices": [
     {
      "name": "1 Session",
@@ -1179,9 +1179,9 @@
   },
   "hydra": {
    "title": "Hydra treatments",
-   "metaTitle": "Hydra facial treatments, cleanse and glow — My Bubble Beauty",
+   "metaTitle": "Hydra facial treatments, cleanse and glow - My Bubble Beauty",
    "description": "HydraPure, HydraLift, HydraGlow and Hydra Signature: four facial treatments to cleanse, hydrate and brighten the skin. Details and prices.",
-   "articleHtml": "<ul><li><strong>HydraPure</strong>: the essential treatment.</li><li><strong>HydraLift</strong>: the targeted anti-ageing treatment.</li><li><strong>HydraGlow</strong>: the healthy-glow treatment.</li><li><strong>Hydra Signature</strong>: the complete experience.</li></ul><h2>HydraPure — the deep cleanse</h2><p>A deep cleanse to remove impurities, clear the pores and get back clean, fresh and radiant skin.</p><p>Ideal for congested skin, enlarged pores and blemishes.</p><h2>HydraLift — the anti-ageing treatment</h2><p>A targeted treatment with a tailored booster to deeply hydrate, plump the skin and soften the look of fine lines.</p><p>Ideal for mature skin lacking firmness and showing signs of ageing.</p><h2>HydraGlow — radiance & hydration</h2><p>A revitalising treatment that adds extra hydration and radiance with a booster chosen for your skin’s needs.</p><p>Ideal for dull, dehydrated and tired skin.</p><h2>Hydra Signature — the complete personalised treatment</h2><p>The most complete Hydra experience: cleansing, exfoliation, extraction, hydration and a booster tailored to your skin’s specific needs.</p><p>Ideal if you want an all-round treatment and personalised care.</p><p>Every skin is unique. Your treatment is tailored to your needs after a personalised skin analysis.</p><p>Before the treatment, we check any contraindications with you, for example pregnancy, ongoing medical treatment or damaged skin.</p>",
+   "articleHtml": "<ul><li><strong>HydraPure</strong>, the essential treatment.</li><li><strong>HydraLift</strong>, the targeted anti-ageing treatment.</li><li><strong>HydraGlow</strong>, the healthy-glow treatment.</li><li><strong>Hydra Signature</strong>, the complete experience.</li></ul><h2>HydraPure, the deep cleanse</h2><p>A deep cleanse to remove impurities, clear the pores and get back clean, fresh and radiant skin.</p><p>Ideal for congested skin, enlarged pores and blemishes.</p><h2>HydraLift, the anti-ageing treatment</h2><p>A targeted treatment with a tailored booster to deeply hydrate, plump the skin and soften the look of fine lines.</p><p>Ideal for mature skin lacking firmness and showing signs of ageing.</p><h2>HydraGlow, radiance & hydration</h2><p>A revitalising treatment that adds extra hydration and radiance with a booster chosen for your skin’s needs.</p><p>Ideal for dull, dehydrated and tired skin.</p><h2>Hydra Signature, the complete personalised treatment</h2><p>The most complete Hydra experience: cleansing, exfoliation, extraction, hydration and a booster tailored to your skin’s specific needs.</p><p>Ideal if you want an all-round treatment and personalised care.</p><p>Every skin is unique. Your treatment is tailored to your needs after a personalised skin analysis.</p><p>Before the treatment, we check any contraindications with you, for example pregnancy, ongoing medical treatment or damaged skin.</p>",
    "priceTitle": "Prices",
    "prices": [
     {
@@ -1212,9 +1212,9 @@
   },
   "laserepilation": {
    "title": "Laser hair removal",
-   "metaTitle": "Laser hair removal in Dilbeek — My Bubble Beauty",
+   "metaTitle": "Laser hair removal in Dilbeek - My Bubble Beauty",
    "description": "Laser hair removal reduces hair growth over the long term, session after session, for smoother skin. How it works, treatment goals and prices by area.",
-   "articleHtml": "<p>Laser hair removal is a technique that reduces hair growth over the long term, using concentrated light that targets the melanin in the hair.</p><p>The light energy is absorbed by the hair follicle and turned into heat, which destroys or damages the structures responsible for regrowth.</p><p>Session after session, hair growth gradually decreases: hairs usually become fewer, finer and less visible.</p><p>The treatment requires several sessions, as the laser works best on hairs in their growth phase.</p><h2>Treatment goals</h2><ul><li>Reduce hair growth over the long term.</li><li>Lower hair density.</li><li>Slow down regrowth.</li><li>Get smoother skin.</li><li>Limit ingrown hairs and shaving irritation.</li><li>Ease the hassle of traditional hair removal.</li></ul><h2>The freedom of smooth skin</h2><p>Discover laser hair removal, an aesthetic technology that reduces hair growth over the long term for smoother skin every day.</p><p>With a treatment tailored to your skin and hair, the sessions gradually reduce regrowth, limit irritation and ease the hassle of traditional hair removal.</p><p>Treat yourself to the comfort of smooth skin and a new everyday freedom.</p><p>Take care of your skin, session after session.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p>",
+   "articleHtml": "<p>Laser hair removal is a technique that reduces hair growth over the long term, using concentrated light that targets the melanin in the hair.</p><p>The light energy is absorbed by the hair follicle and turned into heat, which destroys or damages the structures responsible for regrowth.</p><p>Session after session, hair growth gradually decreases: hairs usually become fewer, finer and less visible.</p><p>The treatment requires several sessions, as the laser works best on hairs in their growth phase.</p><h2>Treatment goals</h2><ul><li>Reduce hair growth over the long term.</li><li>Lower hair density.</li><li>Slow down regrowth.</li><li>Get smoother skin.</li><li>Limit ingrown hairs and shaving irritation.</li><li>Ease the hassle of traditional hair removal.</li></ul><h2>Why choose laser</h2><p>Laser reduces hair growth over the long term. Your skin stays smooth longer than after shaving or waxing.</p><p>Each treatment is tailored to your skin and hair. Session by session, regrowth decreases and so does irritation.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p>",
    "priceTitle": "Prices",
    "prices": [
     {
@@ -1375,7 +1375,7 @@
   },
   "lipolaser": {
    "title": "Lipo Light: heat, cold and red light",
-   "metaTitle": "Lipo Light, heat, cold and red light pads — My Bubble Beauty",
+   "metaTitle": "Lipo Light, heat, cold and red light pads - My Bubble Beauty",
    "description": "A non-invasive body treatment with pads that combine heat, cold and red light, on the stomach, hips, thighs or arms. Prices.",
    "articleHtml": "<p>The Lipo Light Ritual uses pads placed on the chosen areas: stomach, hips, thighs or arms. The device combines heat and cold functions with red light.</p><h2>The aims</h2><ul><li>A non-invasive treatment, with no mechanical massage.</li><li>A moment of comfort on the treated areas.</li><li>A complement to your silhouette treatments.</li></ul><p>Heat, cold and red light do not work in the same way. This treatment does not make you lose weight and its results are not guaranteed.</p><h2>How it works</h2><p>A session lasts 30 or 60 minutes, depending on the number of areas.</p><p>Before the treatment, we check any contraindications with you, for example pregnancy, ongoing medical treatment or damaged skin.</p>",
    "priceTitle": "Prices",
@@ -1400,9 +1400,9 @@
   },
   "mado": {
    "title": "Maderotherapy",
-   "metaTitle": "Maderotherapy, Silhouette Ritual — My Bubble Beauty",
+   "metaTitle": "Maderotherapy, Silhouette Ritual - My Bubble Beauty",
    "description": "Maderotherapy is a deep, toning massage with wooden tools that works on the look of the skin. How it works, courses and prices.",
-   "articleHtml": "<p>Maderotherapy is a massage technique from Colombia. It uses wooden tools designed to work on the different areas of the body.</p><p>The movements are precise, rhythmic and repeated. They massage the tissues, stimulate local circulation and work on the look of the skin. It is popular for its toning effect and deep massage.</p><h2>The benefits</h2><ul><li><strong>Circulation</strong>: supports local blood and lymph circulation.</li><li><strong>Skin</strong>: can make the skin look smoother.</li><li><strong>Orange-peel skin</strong>: can temporarily improve the look of cellulite.</li><li><strong>Drainage</strong>: the movements help move surface fluids.</li><li><strong>Tone</strong>: brings a feeling of tone and lightness.</li><li><strong>Relaxation</strong>: feels like a deep massage.</li></ul><p>Maderotherapy does not make you lose fat. It does not guarantee a lasting loss of centimetres. Results vary from person to person.</p><h2>How it works</h2><p>Before the first session, we do a short assessment. Together we choose the areas to work on: stomach, thighs, buttocks, hips or arms. The pressure is adapted to your sensitivity.</p><p>A session lasts 60 minutes, to work on several areas properly. In a course of 5 or 10 sessions, we leave enough time between sessions depending on how your skin reacts. We follow the progress with you.</p><h2>Precautions</h2><p>Too much pressure can cause pain or bruising. We do not treat an area with inflammation, a lesion or a vascular problem without medical advice. You fill in a questionnaire before the first session.</p><h2>What you can expect</h2><ul><li>Legs that feel lighter.</li><li>A moment of relaxation and deep massage.</li><li>A possible temporary improvement in the look of orange-peel skin.</li><li>Skin that can look smoother after the massage.</li></ul>",
+   "articleHtml": "<p>Maderotherapy is a massage technique from Colombia. It uses wooden tools designed to work on the different areas of the body.</p><p>The movements are precise, rhythmic and repeated. They massage the tissues, stimulate local circulation and work on the look of the skin. It is popular for its toning effect and deep massage.</p><h2>The benefits</h2><ul><li><strong>Circulation.</strong> Supports local blood and lymph circulation.</li><li><strong>Skin.</strong> Can make the skin look smoother.</li><li><strong>Orange-peel skin.</strong> Can temporarily improve the look of cellulite.</li><li><strong>Drainage.</strong> The movements help move surface fluids.</li><li><strong>Tone.</strong> Brings a feeling of tone and lightness.</li><li><strong>Relaxation.</strong> Feels like a deep massage.</li></ul><p>Maderotherapy does not make you lose fat. It does not guarantee a lasting loss of centimetres. Results vary from person to person.</p><h2>How it works</h2><p>Before the first session, we do a short assessment. Together we choose the areas to work on: stomach, thighs, buttocks, hips or arms. The pressure is adapted to your sensitivity.</p><p>A session lasts 60 minutes, to work on several areas properly. In a course of 5 or 10 sessions, we leave enough time between sessions depending on how your skin reacts. We follow the progress with you.</p><h2>Precautions</h2><p>Too much pressure can cause pain or bruising. We do not treat an area with inflammation, a lesion or a vascular problem without medical advice. You fill in a questionnaire before the first session.</p><h2>What you can expect</h2><ul><li>Legs that feel lighter.</li><li>A moment of relaxation and deep massage.</li><li>A possible temporary improvement in the look of orange-peel skin.</li><li>Skin that can look smoother after the massage.</li></ul>",
    "priceTitle": "Prices",
    "prices": [
     {
@@ -1429,9 +1429,9 @@
   },
   "microneed": {
    "title": "Micro-Pen",
-   "metaTitle": "Micro-Pen, face and body treatments — My Bubble Beauty",
+   "metaTitle": "Micro-Pen, face and body treatments - My Bubble Beauty",
    "description": "Micro-Pen stimulates the skin’s natural renewal to work on its texture and radiance. Face and body treatments, precautions and prices.",
-   "articleHtml": "<p>Micro-Pen is an aesthetic technique that uses fine micro-needles to stimulate the skin’s natural renewal mechanisms.</p><p>This treatment works on skin texture, improves radiance and helps the skin look smoother, more even and brighter.</p><p>Each protocol is tailored to your skin’s needs for personalised care.</p><h2>Our face treatments: the Signature Collection</h2><ul><li><strong>Signature Éclat</strong>: to revive the radiance of your complexion and even it out.</li><li><strong>Signature Hydra</strong>: for visibly more hydrated, supple and plumper skin.</li><li><strong>Signature Lift</strong>: to work on the look of fine lines and loss of firmness.</li><li><strong>Signature Skin</strong>: to improve the look of skin texture and uneven areas.</li><li><strong>Signature Pure</strong>: to work on the look of residual blemishes and enlarged pores.</li></ul><h2>Our body treatments</h2><ul><li><strong>Signature Body</strong> (from 180 €): a targeted treatment for the look of stretch marks, depending on the area.</li><li><strong>Signature Scar</strong> (from 190 €): a targeted treatment for the look of scars, after a skin assessment.</li></ul><p>Body treatment prices depend on the size and type of the area treated.</p><h2>Contraindications and precautions</h2><p>Micro-Pen requires a prior skin assessment. Some situations may prevent the treatment or require it to be postponed:</p><ul><li>Pregnancy and breastfeeding, as a precaution.</li><li>Herpes or an active skin infection.</li><li>Severe inflammatory acne.</li><li>Eczema, psoriasis or rosacea flaring on the area.</li><li>Wounds, burns or skin irritation.</li><li>A tendency to keloid scars.</li><li>Clotting disorders or anticoagulant medication.</li><li>Weakened immunity or uncontrolled diabetes.</li><li>Isotretinoin treatment, recent or ongoing.</li><li>Known allergy to the products or materials used.</li></ul><p>If you are ill, under medical treatment or in any doubt, medical advice is needed before any treatment.</p><p>The safety of your skin is at the heart of our expertise.</p><h2>Results</h2><p>Results vary from person to person. Several sessions may be needed. Micro-Pen does not guarantee that scars or stretch marks will disappear.</p>",
+   "articleHtml": "<p>Micro-Pen is an aesthetic technique that uses fine micro-needles to stimulate the skin’s natural renewal mechanisms.</p><p>This treatment works on skin texture, improves radiance and helps the skin look smoother, more even and brighter.</p><p>Each protocol is tailored to your skin’s needs for personalised care.</p><h2>Our face treatments: the Signature Collection</h2><ul><li><strong>Signature Éclat</strong>, to revive the radiance of your complexion and even it out.</li><li><strong>Signature Hydra</strong>, for visibly more hydrated, supple and plumper skin.</li><li><strong>Signature Lift</strong>, to work on the look of fine lines and loss of firmness.</li><li><strong>Signature Skin</strong>, to improve the look of skin texture and uneven areas.</li><li><strong>Signature Pure</strong>, to work on the look of residual blemishes and enlarged pores.</li></ul><h2>Our body treatments</h2><ul><li><strong>Signature Body</strong> (from 180 €). A targeted treatment for the look of stretch marks, depending on the area.</li><li><strong>Signature Scar</strong> (from 190 €). A targeted treatment for the look of scars, after a skin assessment.</li></ul><p>Body treatment prices depend on the size and type of the area treated.</p><h2>Contraindications and precautions</h2><p>Micro-Pen requires a prior skin assessment. Some situations may prevent the treatment or require it to be postponed:</p><ul><li>Pregnancy and breastfeeding, as a precaution.</li><li>Herpes or an active skin infection.</li><li>Severe inflammatory acne.</li><li>Eczema, psoriasis or rosacea flaring on the area.</li><li>Wounds, burns or skin irritation.</li><li>A tendency to keloid scars.</li><li>Clotting disorders or anticoagulant medication.</li><li>Weakened immunity or uncontrolled diabetes.</li><li>Isotretinoin treatment, recent or ongoing.</li><li>Known allergy to the products or materials used.</li></ul><p>If you are ill, under medical treatment or in any doubt, medical advice is needed before any treatment.</p><h2>Results</h2><p>Results vary from person to person. Several sessions may be needed. Micro-Pen does not guarantee that scars or stretch marks will disappear.</p>",
    "priceTitle": "Prices",
    "prices": [
     {
@@ -1492,7 +1492,7 @@
   },
   "peeling": {
    "title": "Superficial Peel",
-   "metaTitle": "Superficial Peel — My Bubble Beauty",
+   "metaTitle": "Superficial Peel - My Bubble Beauty",
    "description": "A superficial peel is a gentle exfoliating treatment that aims to improve skin texture and even out skin tone. Find out how it works and the price.",
    "articleHtml": "<p>A superficial peel is an aesthetic treatment aimed at improving skin texture, creating a more even tone, and reducing certain minor skin issues such as pigmentation, fine lines, and blemishes on acne-prone skin. This technique uses a mild chemical solution to exfoliate the top layer of the skin, with the aim of stimulating cell renewal and promoting smoother, more radiant skin. Here's how a superficial peel usually works:</p><h2>Initial Consultation</h2><p>Prior to a superficial peel, an aesthetic professional assesses the condition of your skin, discusses your specific concerns, and determines whether the peel is suitable for your skin type and needs. There are various types of chemical solutions for peels, and the choice depends on your skin type and the treatment's purpose.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p><h2>Skin Cleansing</h2><p>Before applying the peel solution, the skin is carefully cleansed to remove dirt, makeup, and oils.</p><h2>Application of the Peel Solution</h2><p>Next, the aesthetic professional applies the peel solution to the skin, ensuring that the treated area is evenly covered. The solution may contain alpha hydroxy acids (AHAs), beta hydroxy acids (BHAs), or other mild exfoliating ingredients.</p><h2>Contact Time</h2><p>The peel solution remains on the skin for a short time determined by the professional, usually for several minutes. The duration depends on the solution's concentration and your skin's tolerance.</p><h2>Neutralization</h2><p>After the contact time has passed, the professional neutralizes the solution by rinsing it off or using a specific product to stop the chemical action.</p><h2>Post-Peel Care</h2><p>After the treatment, it's essential to follow the post-peel instructions provided by the aesthetic professional. This may include applying a moisturizing cream, using specific products, and avoiding sun exposure for some time, as the skin is often more sensitive after a peel.</p><h2>Results</h2><p>The results of a superficial peel are usually not immediately visible, as the skin needs time to renew itself. However, in the days and weeks following the treatment, the skin should appear brighter, more even, and smoother.</p><p>A superficial peel is considered a mild treatment and typically doesn't require extended recovery time. However, multiple sessions may be necessary to achieve the desired results, and it's essential to choose a qualified professional to minimize risks and optimize the benefits of the treatment. This treatment can be applied to various body parts, such as the face, neck, décolletage, and hands, depending on your needs.</p>",
    "priceTitle": "Price",
@@ -1525,7 +1525,7 @@
   },
   "photo": {
    "title": "LED light therapy",
-   "metaTitle": "LED light therapy — My Bubble Beauty",
+   "metaTitle": "LED light therapy - My Bubble Beauty",
    "description": "A non-invasive treatment with red or blue LED light, for dull, mature or blemish-prone skin. Rituals, courses and prices.",
    "articleHtml": "<p>LED light therapy is a non-invasive treatment. It uses different colours of light to support the needs of the skin. It is popular for anti-ageing care, blemish-prone skin and skin with redness.</p><h2>The colours of light</h2><p><strong>Red light, radiance and firmness.</strong> It supports anti-ageing care. It can improve the look of fine lines, skin texture and firmness.</p><p><strong>Blue light, purity.</strong> It supports oily and acne-prone skin. It can help reduce blemishes.</p><p><strong>Yellow light, radiance and soothing.</strong> It supports dull skin and can improve the look of redness.</p><p><strong>Green light, even complexion.</strong> It supports uneven skin tone and can work on the look of dark spots.</p><p>The effects depend on the light, the power and the protocol. They are not the same for every colour or every skin. Results vary from person to person.</p><h2>Our light rituals</h2><ul><li><strong>Radiance & Youth</strong> (20 min): red light, for mature or dull skin.</li><li><strong>Purity & Blemishes</strong> (20 min): blue light, for oily, blemish-prone skin.</li><li><strong>Double Radiance</strong> (20 min): both lights, for skin with blemishes and signs of tiredness.</li><li><strong>Signature Light</strong> (30 min): red light, blue light or both, chosen for your skin.</li></ul><h2>The courses</h2><p>The Radiance course has 5 sessions and the Beauty course 10 sessions. The Signature course has 10 tailored 30-minute sessions. LED can also complete a facial in our combined packages.</p><p>Before the treatment, we check any contraindications with you, for example pregnancy, ongoing medical treatment or damaged skin.</p>",
    "priceTitle": "Prices",
@@ -1570,10 +1570,10 @@
   },
   "plasma": {
    "title": "The Plasma Pen / Micropen",
-   "metaTitle": "The Plasma Pen / Micropen — My Bubble Beauty",
+   "metaTitle": "The Plasma Pen / Micropen - My Bubble Beauty",
    "description": "The plasma pen / micropen is an aesthetic device that aims to improve the appearance of sagging skin, wrinkles, scars and pigmentation spots.",
    "articleHtml": "<p>The plasma pen / micropen is a relatively recent aesthetic treatment device used to improve the appearance of various skin concerns, including sagging skin, wrinkles, scars, stretch marks, and pigmentation spots. This device works by generating a plasma arc on the skin's surface, resulting in controlled micro-injuries. This is how the plasma pen typically works in aesthetics:</p><h2>Basic Principle</h2><p>The plasma pen uses electrical energy to create a thin, hot plasma arc at the tip of the pen. Plasma is ionized gas composed of charged particles, which means it contains ions and free electrons.</p><h2>Application</h2><p>The aesthetic professional uses the plasma pen to treat specific areas of the skin. When the pen's tip touches the skin, the plasma arc is directed onto the skin's surface, creating extremely small, burning micro-points on the skin while limiting the impact on the surrounding tissues.</p><h2>Skin Tightening</h2><p>The application of plasma can result in immediate skin tightening as the generated heat causes contraction of collagen fibres in the treated area. This can help reduce the appearance of sagging skin.</p><h2>Formation of Scabs and Micro-Injuries</h2><p>The micro-points created by the plasma pen also lead to the formation of scabs on the skin. In the days following the treatment, these scabs naturally fall off, revealing new skin underneath. During this recovery phase, the skin also produces additional collagen, which can improve skin texture and overall appearance.</p><h2>Results</h2><p>The results of the plasma pen can vary depending on the targeted skin concern and the depth at which the device is used. You may see improvements in the appearance of your skin over time as the effects of collagen become visible. However, multiple sessions may be needed to achieve optimal results.</p><p>It's important to note that the plasma pen is an invasive treatment, albeit less invasive than some other aesthetic treatments. You may experience some discomfort during the treatment, but local anaesthetics are typically applied to minimize this discomfort.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p><p>The plasma pen should be used by trained and experienced aesthetic professionals, as improper use can lead to complications or scarring. As with any aesthetic treatment, it's recommended to consult with an aesthetic professional to discuss your specific needs and determine if the plasma pen is suitable for you.</p>",
-   "priceTitle": "Price — Plasma Lift",
+   "priceTitle": "Price",
    "prices": [
     {
      "name": "1 Session",
@@ -1591,7 +1591,7 @@
   },
   "radiofrequence": {
    "title": "Sculpt & Firm: vacuum and radiofrequency",
-   "metaTitle": "Sculpt & Firm, vacuum and radiofrequency — My Bubble Beauty",
+   "metaTitle": "Sculpt & Firm, vacuum and radiofrequency - My Bubble Beauty",
    "description": "A body treatment that combines suction (vacuum) with the warmth of radiofrequency, for skin that looks smoother and firmer. Prices.",
    "articleHtml": "<p>The Sculpt & Firm Ritual combines mechanical suction, the vacuum, with radiofrequency. The vacuum mobilises the tissues. Radiofrequency spreads a controlled warmth in the treated area.</p><h2>The aims</h2><ul><li>Improve the look of cellulite.</li><li>Skin that looks smoother.</li><li>Temporarily firmer-looking skin.</li><li>A feeling of massage and relaxation.</li></ul><p>This treatment does not make you lose weight and does not remove fat. Results vary from person to person.</p><h2>How it works</h2><p>A session lasts 30 or 60 minutes, depending on the number of areas.</p><p>Before the treatment, we check any contraindications with you, for example pregnancy, ongoing medical treatment or damaged skin.</p>",
    "priceTitle": "Prices",
@@ -1616,7 +1616,7 @@
   },
   "sos": {
    "title": "SOS Purity Treatment",
-   "metaTitle": "SOS Purity Treatment — My Bubble Beauty",
+   "metaTitle": "SOS Purity Treatment - My Bubble Beauty",
    "description": "The SOS Purity treatment aims to deeply cleanse oily, acne-prone skin, reduce excess sebum and unclog pores. Discover how a session works.",
    "articleHtml": "<p>An SOS Purity treatment in aesthetics is specially designed for individuals with skin issues related to excess sebum, a tendency towards acne, blackheads, and other skin imperfections. This type of treatment aims to deeply cleanse the skin, reduce excess sebum, unclog pores, and promote clearer and healthier skin. Here's how an SOS Purity treatment in aesthetics may work:</p><h2>Deep Cleansing</h2><p>The treatment typically begins with a thorough cleansing of the face to remove impurities, excess sebum, and dead skin cells.</p><h2>Exfoliation</h2><p>Gentle exfoliation may be performed to eliminate dead skin cells, promoting smoother skin.</p><h2>Blackhead Extraction</h2><p>Aestheticians or skin professionals often use manual extraction techniques or extraction devices to remove blackheads and comedones. This helps unclog pores and improve skin texture.</p><h2>Application of Suitable Products</h2><p>Specific products containing ingredients such as salicylic acid, known for its purifying properties, may be applied to the skin to help calm redness and limit the appearance of new blemishes.</p><h2>Masks and Targeted Treatments</h2><p>Purifying masks or other targeted treatments may be used to soothe the skin, reduce excess sebum, and promote better sebum production regulation.</p><h2>Hydration</h2><p>Even if you have skin issues related to excess sebum, it's essential to maintain proper skin hydration to prevent it from becoming too dry in response to treatments. Lightweight and non-comedogenic moisturizing products can be used.</p><h2>Sun Protection</h2><p>As with many skin treatments, applying sunscreen or sun protection products is important to shield the skin from UV damage.</p>",
    "priceTitle": "Price",
@@ -1637,9 +1637,9 @@
   },
   "massages": {
    "title": "Massages and body scrubs",
-   "metaTitle": "Massages and body scrubs — My Bubble Beauty",
+   "metaTitle": "Massages and body scrubs - My Bubble Beauty",
    "description": "Hot stone, bamboo, argan oil, light-stroke and pregnancy massages, lavender and honey body scrubs, signature rituals. Durations and prices.",
-   "articleHtml": "<p>Treat yourself to a gentle break. A precious moment to care for your body and calm your mind.</p><h2>Our relaxing massages</h2><p><strong>Warmth & Relaxation Ritual: hot stone massage.</strong> A deeply relaxing massage. The warmth of volcanic stones meets enveloping movements. It helps release muscle tension and brings a feeling of complete well-being. 60 minutes.</p><p><strong>Bamboo & Balance Ritual: bamboo massage.</strong> A rhythmic, enveloping massage with bamboo sticks. It works on body tension, stimulates the tissues and leaves a pleasant feeling of lightness. 60 minutes.</p><p><strong>Gold & Softness Ritual: argan oil massage.</strong> A delicate massage with argan oil, which nourishes the skin and wraps it in softness. Its flowing movements help you let go. 60 minutes.</p><p><strong>Feather & Serenity Ritual: light-stroke massage.</strong> Slow, light and harmonious movements. A true invitation to relax, to calm body and mind. 45 minutes.</p><p><strong>Gentle Mum Ritual: pregnancy massage.</strong> A moment for the mother-to-be. Gentle movements adapted to pregnancy, for relaxation and comfort. 60 minutes.</p><h2>Our body scrubs</h2><p><strong>Lavender & Softness Ritual.</strong> A scrub delicately scented with lavender. It helps remove dead skin cells and leaves the skin soft and silky. 30 minutes.</p><p><strong>Honey & Velvet Ritual.</strong> An indulgent scrub that pairs the softness of honey with a delicate ritual. The skin feels soft, supple and comfortable again. 30 minutes.</p><h2>Our signature rituals</h2><p>To make the moment last, we pair a scrub with a massage.</p><ul><li><strong>Awakening of the Senses</strong>: lavender scrub and light-stroke massage.</li><li><strong>Precious Softness</strong>: honey scrub and argan oil massage.</li><li><strong>Total Escape</strong>: scrub of your choice and hot stone massage.</li></ul><p>Before the treatment, we check any contraindications with you, for example pregnancy, ongoing medical treatment or damaged skin.</p>",
+   "articleHtml": "<p>Our massages help release tension. Our scrubs leave the skin soft.</p><h2>Our relaxing massages</h2><p><strong>Warmth & Relaxation Ritual: hot stone massage.</strong> A deeply relaxing massage. The warmth of volcanic stones meets enveloping movements. It helps release muscle tension and brings a feeling of complete well-being. 60 minutes.</p><p><strong>Bamboo & Balance Ritual: bamboo massage.</strong> A rhythmic, enveloping massage with bamboo sticks. It works on body tension, stimulates the tissues and leaves a pleasant feeling of lightness. 60 minutes.</p><p><strong>Gold & Softness Ritual: argan oil massage.</strong> A delicate massage with argan oil, which nourishes the skin and wraps it in softness. Its flowing movements help you let go. 60 minutes.</p><p><strong>Feather & Serenity Ritual: light-stroke massage.</strong> Slow, light and harmonious movements. A true invitation to relax, to calm body and mind. 45 minutes.</p><p><strong>Gentle Mum Ritual: pregnancy massage.</strong> A moment for the mother-to-be. Gentle movements adapted to pregnancy, for relaxation and comfort. 60 minutes.</p><h2>Our body scrubs</h2><p><strong>Lavender & Softness Ritual.</strong> A scrub delicately scented with lavender. It helps remove dead skin cells and leaves the skin soft and silky. 30 minutes.</p><p><strong>Honey & Velvet Ritual.</strong> An indulgent scrub that pairs the softness of honey with a delicate ritual. The skin feels soft, supple and comfortable again. 30 minutes.</p><h2>Our signature rituals</h2><p>To make the moment last, we pair a scrub with a massage.</p><ul><li><strong>Awakening of the Senses.</strong> Lavender scrub and light-stroke massage.</li><li><strong>Precious Softness.</strong> Honey scrub and argan oil massage.</li><li><strong>Total Escape.</strong> Scrub of your choice and hot stone massage.</li></ul><p>Before the treatment, we check any contraindications with you, for example pregnancy, ongoing medical treatment or damaged skin.</p>",
    "priceTitle": "Prices",
    "prices": [
     {
@@ -1694,7 +1694,7 @@
   },
   "brosse": {
    "title": "Purity Ritual: the rotating brush",
-   "metaTitle": "Purity Ritual, rotating brush facial — My Bubble Beauty",
+   "metaTitle": "Purity Ritual, rotating brush facial - My Bubble Beauty",
    "description": "A cleansing and exfoliating facial with a rotating brush, for softer, brighter-looking skin. Benefits, skin types and prices.",
    "articleHtml": "<p>The Purity Ritual is a facial with a rotating brush. The brush gives a mechanical cleanse and a light exfoliation. It clears the skin of impurities and of the dead cells that build up on its surface.</p><h2>The benefits</h2><ul><li>Removes dead cells from the surface.</li><li>Helps clear out impurities.</li><li>Visibly refines skin texture.</li><li>Leaves the skin softer and smoother.</li><li>Brings radiance to the complexion.</li><li>Prepares the skin for the next products.</li><li>Helps improve the look of rough areas.</li></ul><h2>Two options</h2><p>The cleanse takes 30 minutes. The full treatment takes 45 minutes: cleanse, rotating brush, suitable mask and finishing cream. It can also be combined with LED light therapy.</p><h2>Which skin types?</h2><p>It suits normal, combination and thick skin, depending on how sensitive it is. We avoid it on very sensitive or irritated skin, and with marked couperose, inflammatory rosacea, eczema, lesions or significant inflammatory acne.</p><p>Before the treatment, we check any contraindications with you, for example pregnancy, ongoing medical treatment or damaged skin.</p>",
    "priceTitle": "Prices",
@@ -1723,10 +1723,10 @@
   },
   "regard": {
    "title": "Eye & Brow Beauty: brows and lashes",
-   "metaTitle": "Eye & Brow Beauty, brows and lashes — My Bubble Beauty",
+   "metaTitle": "Eye & Brow Beauty, brows and lashes - My Bubble Beauty",
    "description": "Brow reconstruction, brow and lash tinting, Brow Lift and combined packages: treatments tailored to your natural beauty. Details and prices.",
    "priceTitle": "Prices",
-   "articleHtml": "<p>Bring out the full intensity of your eyes with treatments tailored to your natural beauty.</p><h2>Brow reconstruction</h2><p>A personalised treatment that reshapes and balances the line of your brows to suit the shape of your face. It includes restructuring and hair removal, for a balanced shape that suits every look.</p><h2>Brow tint</h2><p>Tinting deepens the natural colour of your brows, defines their line and gives more depth to your eyes. The shade is chosen to match your natural colour and the result you want.</p><h2>Lash tint</h2><p>This treatment darkens your natural lashes to make your eyes stand out, with a subtle mascara effect and no make-up. Ideal for enhancing your eyes every day.</p><h2>Brow Lift</h2><p>Brow Lift is a technique that tames the brow hairs and sets them upwards, for a fuller, lifted and structured look. It gives more harmonious brows and naturally open eyes.</p><h2>Combined packages</h2><p>For a harmonious result and beautifully enhanced eyes, combine our treatments.</p><p><strong>Your eyes, our priority.</strong> Beauty lies in the details.</p>",
+   "articleHtml": "<p>Brow and lash treatments, tailored to your face.</p><h2>Brow reconstruction</h2><p>A personalised treatment that reshapes and balances the line of your brows to suit the shape of your face. It includes restructuring and hair removal, for a balanced shape that suits every look.</p><h2>Brow tint</h2><p>Tinting deepens the natural colour of your brows, defines their line and gives more depth to your eyes. The shade is chosen to match your natural colour and the result you want.</p><h2>Lash tint</h2><p>This treatment darkens your natural lashes to make your eyes stand out, with a subtle mascara effect and no make-up. Ideal for enhancing your eyes every day.</p><h2>Brow Lift</h2><p>Brow Lift is a technique that tames the brow hairs and sets them upwards, for a fuller, lifted and structured look. It gives more harmonious brows and naturally open eyes.</p><h2>Combined packages</h2><p>For a harmonious result and beautifully enhanced eyes, combine our treatments.</p><p><strong>Your eyes, our priority.</strong> Beauty lies in the details.</p>",
    "prices": [
     {
      "name": "Brow reconstruction",
@@ -1761,33 +1761,33 @@
   },
   "semi-permanent": {
    "title": "The art of semi-permanent polish",
-   "metaTitle": "Semi-permanent polish, hands and feet — My Bubble Beauty",
+   "metaTitle": "Semi-permanent polish, hands and feet - My Bubble Beauty",
    "description": "Semi-permanent polish for hands and feet: intense colour, long-lasting shine and a neat finish. Services, contraindications and prices.",
-   "articleHtml": "<p>Beautiful nails, with elegance.</p><p>Treat your hands and feet to a delicate, polished look with semi-permanent nail polish.</p><p>This technique gives an intense colour, long-lasting shine and a flawless finish, while keeping a natural and elegant result.</p><p>A beauty moment to take care of yourself, right down to your fingertips.</p><h2>Our services</h2><p>Each service includes nail preparation, cuticle care, shaping and a neat finish.</p><h2>Contraindications</h2><p>To protect the health and beauty of your nails, semi-permanent polish cannot be applied in some situations:</p><ul><li>Fungal or other nail infection.</li><li>Nails with inflammation or an injury.</li><li>Wounds, irritation or lesions around the nails.</li><li>Known allergy to ingredients in the products used, especially acrylates.</li><li>Badly damaged nails or an abnormality that needs medical advice.</li></ul><p>If in doubt, the service will be postponed and medical advice may be recommended.</p><p>The health of your nails remains our priority. Thank you for your trust and loyalty.</p>",
+   "articleHtml": "<p>Semi-permanent polish gives an intense, glossy colour that lasts.</p><p>We apply it on hands and feet. The result stays natural.</p><h2>Our services</h2><p>Each service includes nail preparation, cuticle care, shaping and a neat finish.</p><h2>Contraindications</h2><p>To protect the health and beauty of your nails, semi-permanent polish cannot be applied in some situations:</p><ul><li>Fungal or other nail infection.</li><li>Nails with inflammation or an injury.</li><li>Wounds, irritation or lesions around the nails.</li><li>Known allergy to ingredients in the products used, especially acrylates.</li><li>Badly damaged nails or an abnormality that needs medical advice.</li></ul><p>If in doubt, the service will be postponed and medical advice may be recommended.</p>",
    "priceTitle": "Prices",
    "prices": [
     {
-     "name": "Hands: semi-permanent polish",
+     "name": "Semi-permanent polish (hands)",
      "amount": "30 €"
     },
     {
-     "name": "Hands: removal only",
+     "name": "Removal only (hands)",
      "amount": "15 €"
     },
     {
-     "name": "Hands: removal and new application",
+     "name": "Removal and new application (hands)",
      "amount": "35 €"
     },
     {
-     "name": "Feet: semi-permanent polish",
+     "name": "Semi-permanent polish (feet)",
      "amount": "30 €"
     },
     {
-     "name": "Feet: removal only",
+     "name": "Removal only (feet)",
      "amount": "15 €"
     },
     {
-     "name": "Feet: removal and new application",
+     "name": "Removal and new application (feet)",
      "amount": "35 €"
     },
     {

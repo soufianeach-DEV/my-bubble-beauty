@@ -98,7 +98,7 @@ const jsonld = {
   {part.groups.map((g) => (
     <section class="price-group" data-cat={g.cat} id={`tarif-${g.id}`} aria-labelledby={`h-tarif-${g.id}`}>
       <h4 id={`h-tarif-${g.id}`}>{g.href
-        ? <a href={treat(g.href)}>{g.title}<Icon name="info" class="i-info" /><span class="visually-hidden"> — {ui.moreInfo}</span></a>
+        ? <a href={treat(g.href)}>{g.title}<Icon name="info" class="i-info" /><span class="visually-hidden">, {ui.moreInfo}</span></a>
         : g.title}</h4>
       {g.intro && <p class="price-group__intro">{g.intro}</p>}
       <ul class="prices">{g.items.map((it) => {
@@ -108,7 +108,7 @@ const jsonld = {
         const line2 = isFormule ? [it.duration, it.note].filter(Boolean).join(' · ') : '';
         return (
           <li class="sheen"><span class="name">{it.href
-            ? <a href={treat(it.href)}>{it.name}<Icon name="info" class="i-info" /><span class="visually-hidden"> — {ui.moreInfo}</span></a>
+            ? <a href={treat(it.href)}>{it.name}<Icon name="info" class="i-info" /><span class="visually-hidden">, {ui.moreInfo}</span></a>
             : it.name}{it.badge && <span class="price-badge">{it.badge}</span>}{line1 && <small>{line1}</small>}{line2 && <small class="price-note">{line2}</small>}</span><span class="dots" aria-hidden="true"></span><span class="amount">{it.amount}{it.was && <s class="was"><span class="visually-hidden"> {h.tarifs.wasLabel} </span>{it.was}</s>}</span></li>
         );
       })}</ul>

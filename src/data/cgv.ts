@@ -1,4 +1,4 @@
-// Conditions générales de vente — FR / NL / EN.
+// Conditions générales de vente - FR / NL / EN.
 // Délais, moyens de paiement et durées : choix commerciaux à faire valider par My Bubble avant la mise en ligne sur le domaine officiel.
 import type { Lang } from '../lib/site';
 

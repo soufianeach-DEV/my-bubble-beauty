@@ -51,7 +51,7 @@ if (b && !Astro.url.searchParams.get('jour') && Astro.request.method !== 'POST')
 const list = b ? await slots(b.service_id, day, user.id, b.id) : [];
 const link = (x: string) => `${self}?id=${b?.id}&jour=${x}`;
 ---
-<Base lang={lang} pageKey="home" route="compte/deplacer" title={`${tm.title} — My Bubble Beauty`} description={tm.description} noindex mainClass="legal">
+<Base lang={lang} pageKey="home" route="compte/deplacer" title={`${tm.title} - My Bubble Beauty`} description={tm.description} noindex mainClass="legal">
 <div class="wrap"><article>
 <h1>{tm.title}</h1>
 {!b ? (

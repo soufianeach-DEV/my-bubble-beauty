@@ -17,7 +17,7 @@ const { key } = Astro.props as { key: Key };
 const lang = langOfFolder(Astro.params.folder!);
 const doc = key === 'cgv' ? CGV[lang] : LEGAL[lang][key];
 const title = doc.title;
-const metaTitle = `${doc.title} — My Bubble Beauty`;
+const metaTitle = `${doc.title} - My Bubble Beauty`;
 const description = doc.description;
 // Confidentialité : la 4e rubrique (mesure d'audience) décrit GoatCounter dès qu'il est activé.
 const sections = doc.sections.map((s, i) => (key === 'privacy' && i === 3 && GOATCOUNTER ? { ...s, html: AUDIENCE_GC[lang] } : s));

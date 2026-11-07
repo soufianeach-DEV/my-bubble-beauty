@@ -36,7 +36,7 @@ const error = problem ? tx.problem[problem] : Astro.request.method === 'POST' &&
 const invalid = (k: string) => (bad.has(k) ? 'true' : undefined);
 const [t0, cgv, t2, privacy, t4] = t.terms;
 ---
-<Base lang={lang} pageKey="home" route="compte/inscription" title={`${t.title} — My Bubble Beauty`} description={t.description} noindex mainClass="legal">
+<Base lang={lang} pageKey="home" route="compte/inscription" title={`${t.title} - My Bubble Beauty`} description={t.description} noindex mainClass="legal">
 <Fragment slot="head"><script is:inline src={`/assets/js/password.js?v=${JS_VERSION}`} defer></script><script is:inline src={`/assets/js/auth-swap.js?v=${JS_VERSION}`}></script></Fragment>
 <div class="wrap"><div class="auth auth--register"><article>
 <h1>{t.title}</h1>

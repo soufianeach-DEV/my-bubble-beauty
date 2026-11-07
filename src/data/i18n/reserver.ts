@@ -51,7 +51,7 @@ type Texts = {
 export const RESERVER: Record<Lang, Texts> = {
   fr: {
     locale: 'fr-BE',
-    metaTitle: 'Prendre rendez-vous — My Bubble Beauty',
+    metaTitle: 'Prendre rendez-vous - My Bubble Beauty',
     description: 'Réservez votre soin en ligne chez My Bubble Beauty à Dilbeek.',
     h1: 'Prendre rendez-vous',
     step: (n) => `Étape ${n} sur 3`,
@@ -113,7 +113,7 @@ export const RESERVER: Record<Lang, Texts> = {
   },
   nl: {
     locale: 'nl-BE',
-    metaTitle: 'Afspraak maken — My Bubble Beauty',
+    metaTitle: 'Afspraak maken - My Bubble Beauty',
     description: 'Boek uw behandeling online bij My Bubble Beauty in Dilbeek.',
     h1: 'Afspraak maken',
     step: (n) => `Stap ${n} van 3`,
@@ -175,7 +175,7 @@ export const RESERVER: Record<Lang, Texts> = {
   },
   en: {
     locale: 'en-GB',
-    metaTitle: 'Book an appointment — My Bubble Beauty',
+    metaTitle: 'Book an appointment - My Bubble Beauty',
     description: 'Book your treatment online at My Bubble Beauty in Dilbeek.',
     h1: 'Book an appointment',
     step: (n) => `Step ${n} of 3`,

@@ -116,7 +116,7 @@ const history = bookings.filter((b) => !b.upcoming || b.status === 'cancelled');
 const invalid = (k: string) => (bad.has(k) ? 'true' : undefined);
 const price = (b: (typeof bookings)[number]) => euros(b.price_cents - b.discount_cents, lang);
 ---
-<Base lang={lang} pageKey="home" route="compte" title={`${ta.title} — My Bubble Beauty`} description={ta.description} noindex mainClass="legal">
+<Base lang={lang} pageKey="home" route="compte" title={`${ta.title} - My Bubble Beauty`} description={ta.description} noindex mainClass="legal">
 <Fragment slot="head"><script is:inline src={`/assets/js/password.js?v=${JS_VERSION}`} defer></script></Fragment>
 <div class="wrap"><article>
 <h1>{ta.title}</h1>

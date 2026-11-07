@@ -16,7 +16,7 @@ const when = (d: Date, lang: Lang) => new Intl.DateTimeFormat(LOCALE[lang], { ti
 
 function build(kind: string, lang: Lang, subject: string, lines: (string | false)[], link: [label: string, url: string]): Mail {
   const body = lines.filter((l): l is string => !!l);
-  const foot = `My Bubble Beauty — ${ADDRESS} — ${CONTACT.phoneLabel}`;
+  const foot = `My Bubble Beauty - ${ADDRESS} - ${CONTACT.phoneLabel}`;
   return {
     kind,
     subject,
