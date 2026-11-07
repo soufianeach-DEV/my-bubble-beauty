@@ -88,7 +88,7 @@
   },
   "soins": {
    "title": "Treatments",
-   "intro": "Our personalised treatments aim to restore your skin's radiance: HydraFacial, mesotherapy and peels.",
+   "intro": "Our personalised treatments aim to restore your skin's radiance: Hydra Signature, Micro Pen and peels.",
    "cards": [
     {
      "title": "Face",
@@ -172,59 +172,6 @@
    ],
    "groups": [
     {
-     "id": "soin-visage",
-     "cat": "visage",
-     "title": "Facial Treatments",
-     "href": null,
-     "items": [
-      {
-       "name": "SOS Purity",
-       "href": "sos",
-       "amount": "35 €"
-      },
-      {
-       "name": "Anti-Aging",
-       "href": null,
-       "amount": "70 €"
-      },
-      {
-       "name": "HydraFacial",
-       "href": "hydra",
-       "amount": "110 €"
-      },
-      {
-       "name": "HydraFacial Anti-Aging",
-       "href": null,
-       "amount": "130 €"
-      },
-      {
-       "name": "Mesotherapy",
-       "href": null,
-       "amount": "150 €"
-      },
-      {
-       "name": "Micro Pen",
-       "href": "microneed",
-       "amount": "150 €"
-      },
-      {
-       "name": "Carbon Laser",
-       "href": "charbon",
-       "amount": "150 €"
-      },
-      {
-       "name": "BB Glow",
-       "href": "bbglow",
-       "amount": "120 €"
-      },
-      {
-       "name": "Superficial Peel",
-       "href": "peeling",
-       "amount": "90 €"
-      }
-     ]
-    },
-    {
      "id": "purete",
      "cat": "visage",
      "title": "Purity Ritual",
@@ -241,6 +188,31 @@
        "duration": "45 min",
        "desc": "Cleanse, rotating brush, mask and cream",
        "amount": "50 €"
+      }
+     ]
+    },
+    {
+     "id": "combines-visage",
+     "cat": "visage",
+     "title": "Combined facials",
+     "intro": "45 to 60 minutes depending on the package.",
+     "items": [
+      {
+       "name": "Purity & Light",
+       "detail": "Rotating brush + LED",
+       "amount": "60 €"
+      },
+      {
+       "name": "Radiance & Youth",
+       "detail": "Cleanse + mask + red LED",
+       "amount": "70 €",
+       "was": "75 €",
+       "note": "save €5 (–7%)"
+      },
+      {
+       "name": "Clear Skin",
+       "detail": "Cleanse + blue LED",
+       "amount": "60 €"
       }
      ]
     },
@@ -277,35 +249,74 @@
      ]
     },
     {
-     "id": "serum",
+     "id": "cures-led",
      "cat": "visage",
-     "title": "Serum",
-     "href": null,
+     "title": "LED light therapy courses",
+     "href": "photo",
      "items": [
       {
-       "name": "Anti-Aging",
-       "href": null,
-       "amount": "75 €"
+       "name": "Radiance course",
+       "detail": "5 sessions",
+       "duration": "5 × 20 min",
+       "amount": "110 €",
+       "note": "€22 per session · save €15 (–12%)",
+       "was": "125 €"
       },
       {
-       "name": "Booster",
-       "href": null,
-       "amount": "125 €"
+       "name": "Beauty course",
+       "detail": "10 sessions",
+       "duration": "10 × 20 min",
+       "amount": "200 €",
+       "note": "€20 per session · save €50 (–20%)",
+       "was": "250 €",
+       "badge": "Best price per session"
       },
       {
-       "name": "Vitamin",
+       "name": "Signature course",
+       "detail": "10 tailored sessions",
+       "duration": "10 × 30 min",
+       "amount": "280 €",
+       "note": "€28 per session · save €70 (–20%)",
+       "was": "350 €"
+      }
+     ]
+    },
+    {
+     "id": "carbon-peel",
+     "cat": "visage",
+     "title": "Carbon Peel Signature",
+     "href": "charbon",
+     "items": [
+      {
+       "name": "Full face",
        "href": null,
-       "amount": "100 €"
+       "duration": "30 to 45 min",
+       "amount": "120 €"
       },
       {
-       "name": "Wellness",
+       "name": "Face + neck",
        "href": null,
-       "amount": "80 €"
+       "duration": "45 to 60 min",
+       "amount": "160 €"
       },
       {
-       "name": "Mesotherapy",
+       "name": "Face + neck + décolleté",
        "href": null,
-       "amount": "180 €"
+       "duration": "60 to 75 min",
+       "amount": "195 €"
+      }
+     ]
+    },
+    {
+     "id": "peeling",
+     "cat": "visage",
+     "title": "Superficial Peel",
+     "href": "peeling",
+     "items": [
+      {
+       "name": "Superficial Peel",
+       "href": null,
+       "amount": "90 €"
       }
      ]
     },
@@ -441,29 +452,6 @@
      ]
     },
     {
-     "id": "gloss",
-     "cat": "sourire",
-     "title": "Gloss",
-     "href": null,
-     "items": [
-      {
-       "name": "Argan",
-       "href": null,
-       "amount": "12.50 €"
-      },
-      {
-       "name": "Raspberry",
-       "href": null,
-       "amount": "12.50 €"
-      },
-      {
-       "name": "Aloe Vera",
-       "href": null,
-       "amount": "12.50 €"
-      }
-     ]
-    },
-    {
      "id": "epilation",
      "cat": "epilation",
      "title": "Hair Removal",
@@ -575,68 +563,45 @@
      ]
     },
     {
-     "id": "electrolyse",
-     "cat": "epilation",
-     "title": "Electrolysis",
-     "href": null,
-     "items": [
-      {
-       "name": "5 minutes",
-       "href": null,
-       "amount": "15 €"
-      },
-      {
-       "name": "10 minutes",
-       "href": null,
-       "amount": "25 €"
-      },
-      {
-       "name": "20 minutes",
-       "href": null,
-       "amount": "45 €"
-      },
-      {
-       "name": "25 minutes",
-       "href": null,
-       "amount": "50 €"
-      },
-      {
-       "name": "30 minutes",
-       "href": null,
-       "amount": "60 €"
-      }
-     ]
-    },
-    {
      "id": "beaute-des-yeux",
      "cat": "regard",
-     "title": "Eye Care",
-     "href": null,
+     "title": "Eye & Brow Beauty",
+     "href": "regard",
      "items": [
       {
-       "name": "Lash Lift",
+       "name": "Brow reconstruction",
        "href": null,
-       "amount": "35 €"
+       "amount": "20 €"
       },
       {
-       "name": "Lash Tint",
+       "name": "Brow tint",
        "href": null,
        "amount": "15 €"
       },
       {
-       "name": "Brow Tint",
+       "name": "Lash tint",
        "href": null,
-       "amount": "15 €"
-      },
-      {
-       "name": "Fast Lashes",
-       "href": null,
-       "amount": "40 €"
+       "amount": "20 €"
       },
       {
        "name": "Brow Lift",
        "href": null,
+       "amount": "40 €"
+      },
+      {
+       "name": "Brow Lift + tint",
+       "href": null,
+       "amount": "50 €"
+      },
+      {
+       "name": "Brow + lash tint",
+       "href": null,
        "amount": "30 €"
+      },
+      {
+       "name": "Brow Lift + lash tint",
+       "href": null,
+       "amount": "55 €"
       }
      ]
     },
@@ -647,21 +612,31 @@
      "href": null,
      "items": [
       {
-       "name": "Cosmetic Manicure",
+       "name": "Essential manicure",
        "href": null,
-       "amount": "25 €"
+       "desc": "Nail shaping, cuticle care and a neat finish.",
+       "amount": "30 €"
       },
       {
-       "name": "Spa",
+       "name": "Spa manicure",
        "href": null,
-       "amount": "35 €"
+       "desc": "Classic manicure, scrub, nourishing mask and relaxing hand massage.",
+       "amount": "45 €"
       },
       {
-       "name": "Semi-Permanent Nail Polish",
+       "name": "Beauty manicure",
        "href": null,
-       "amount": "25 €"
+       "desc": "Nail preparation, cuticle care and semi-permanent polish.",
+       "amount": "55 €"
+      },
+      {
+       "name": "Signature manicure",
+       "href": null,
+       "desc": "A complete ritual combining nail and cuticle care, exfoliation, a moisturising mask, massage and a beauty finish.",
+       "amount": "65 €"
       }
-     ]
+     ],
+     "intro": "Well-groomed hands, beautifully and delicately enhanced."
     },
     {
      "id": "beaute-des-pieds",
@@ -670,85 +645,43 @@
      "href": null,
      "items": [
       {
-       "name": "Cosmetic Pedicure",
+       "name": "Essential pedicure",
        "href": null,
+       "desc": "Nail shaping, cuticle care, cleansing and a neat finish.",
        "amount": "35 €"
       },
       {
-       "name": "Spa",
+       "name": "Spa pedicure",
        "href": null,
-       "amount": "45 €"
+       "desc": "Classic pedicure with a scrub, moisturising care and a relaxing massage.",
+       "amount": "50 €"
       },
       {
-       "name": "Semi-Permanent Nail Polish",
+       "name": "Beauty pedicure",
        "href": null,
-       "amount": "25 €"
+       "desc": "Nail and cuticle care, shaping and semi-permanent polish.",
+       "amount": "55 €"
+      },
+      {
+       "name": "Signature pedicure",
+       "href": null,
+       "desc": "A complete ritual with nail care, cosmetic foot care, exfoliation, a moisturising mask and a relaxing massage.",
+       "amount": "70 €"
+      },
+      {
+       "name": "Signature ritual",
+       "href": null,
+       "desc": "The pleasure of taking care of yourself: a manicure and a pedicure for perfectly cared-for hands and feet.",
+       "amount": "110 €"
       }
-     ]
+     ],
+     "intro": "Beautiful, soft and perfectly cared-for feet."
     }
    ],
    "eyebrow": "Our prices",
    "partPresta": "Treatments",
    "partFormules": "Packages & courses",
    "formulas": [
-    {
-     "id": "combines-visage",
-     "cat": "visage",
-     "title": "Combined facials",
-     "intro": "45 to 60 minutes depending on the package.",
-     "items": [
-      {
-       "name": "Purity & Light",
-       "detail": "Rotating brush + LED",
-       "amount": "60 €"
-      },
-      {
-       "name": "Radiance & Youth",
-       "detail": "Cleanse + mask + red LED",
-       "amount": "70 €",
-       "was": "75 €",
-       "note": "save €5 (–7%)"
-      },
-      {
-       "name": "Clear Skin",
-       "detail": "Cleanse + blue LED",
-       "amount": "60 €"
-      }
-     ]
-    },
-    {
-     "id": "cures-led",
-     "cat": "visage",
-     "title": "LED light therapy courses",
-     "href": "photo",
-     "items": [
-      {
-       "name": "Radiance course",
-       "detail": "5 sessions",
-       "duration": "5 × 20 min",
-       "amount": "110 €",
-       "note": "€22 per session · save €15 (–12%)",
-       "was": "125 €"
-      },
-      {
-       "name": "Beauty course",
-       "detail": "10 sessions",
-       "duration": "10 × 20 min",
-       "amount": "200 €",
-       "note": "€20 per session · save €50 (–20%)",
-       "was": "250 €",
-       "badge": "Best price per session"
-      },
-      {
-       "name": "Signature course",
-       "detail": "10 tailored sessions",
-       "duration": "10 × 30 min",
-       "amount": "280 €",
-       "note": "€28 per session · save €70 (–20%)",
-       "was": "350 €"
-      }
-     ]
-    },
     {
      "id": "rituels-signature",
      "cat": "corps",
@@ -857,7 +790,7 @@
    "title": "The BB Glow Treatment in Aesthetics",
    "metaTitle": "The BB Glow Treatment in Aesthetics — My Bubble Beauty",
    "description": "The BB Glow treatment aims to improve the look of the complexion, even out skin tone and give the skin a radiant, fresh appearance. Procedure and prices.",
-   "articleHtml": "<p>The BB Glow treatment in aesthetics is a skincare technique aimed at improving the complexion, making the skin tone more even, reducing imperfections, and giving the skin a radiant and fresh look. The name refers to BB cream (Blemish Balm), as the treatment likewise aims for a more even-looking complexion.</p><h2>Skin Preparation</h2><p>Prior to the treatment, the skin is thoroughly cleansed to remove impurities, sebum, and dead skin cells. The treatment may include a mild exfoliation for better product absorption.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p><h2>Application of Serums</h2><p>Specially formulated serums for the BB Glow treatment are applied to the skin. These serums typically contain ingredients such as pigments, hyaluronic acid, peptides, and vitamins. Pigments help even out the skin tone, conceal imperfections, and provide a more radiant complexion.</p><h2>Microneedling</h2><p>Microneedling is an essential part of the BB Glow treatment. This technique entails using a device with fine needles to create micro-perforations in the skin. These micro-perforations facilitate better serum absorption and may also stimulate collagen production, contributing to improved skin texture.</p><h2>Application</h2><p>After microneedling is completed, a soothing mask or additional treatments may be applied to calm the skin and enhance the benefits of the treatment.</p><h2>Masks and Targeted Treatments</h2><p>Cleansing masks or other targeted treatments can be used to soothe the skin, reduce excess sebum, and promote better sebum production regulation.</p><h2>Hydration and Sun Protection</h2><p>The treatment is typically concluded with the application of moisturizing products and sun protection to safeguard the newly treated skin from UV rays.</p><p>The results of the BB Glow treatment can vary from person to person, but generally, clients report an improvement in skin texture, a reduction in the visibility of imperfections, a more even complexion, and a brighter skin tone. The effects of the treatment are temporary and may last for several weeks to a few months, depending on the skin type and aftercare.</p>",
+   "articleHtml": "<p>The BB Glow treatment in aesthetics is a skincare technique aimed at improving the complexion, making the skin tone more even, reducing imperfections, and giving the skin a radiant and fresh look. The name refers to BB cream (Blemish Balm), as the treatment likewise aims for a more even-looking complexion.</p><h2>Skin Preparation</h2><p>Prior to the treatment, the skin is thoroughly cleansed to remove impurities, sebum, and dead skin cells. The treatment may include a mild exfoliation for better product absorption.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p><h2>Application of Serums</h2><p>Specially formulated serums for the BB Glow treatment are applied to the skin. These serums typically contain ingredients such as pigments, hyaluronic acid, peptides, and vitamins. Pigments help even out the skin tone, conceal imperfections, and provide a more radiant complexion.</p><h2>Micro Pen</h2><p>Micro Pen is an essential part of the BB Glow treatment. This technique entails using a device with fine needles to create micro-perforations in the skin. These micro-perforations facilitate better serum absorption and may also stimulate collagen production, contributing to improved skin texture.</p><h2>Application</h2><p>After the Micro Pen step, a soothing mask or additional treatments may be applied to calm the skin and enhance the benefits of the treatment.</p><h2>Masks and Targeted Treatments</h2><p>Cleansing masks or other targeted treatments can be used to soothe the skin, reduce excess sebum, and promote better sebum production regulation.</p><h2>Hydration and Sun Protection</h2><p>The treatment is typically concluded with the application of moisturizing products and sun protection to safeguard the newly treated skin from UV rays.</p><p>The results of the BB Glow treatment can vary from person to person, but generally, clients report an improvement in skin texture, a reduction in the visibility of imperfections, a more even complexion, and a brighter skin tone. The effects of the treatment are temporary and may last for several weeks to a few months, depending on the skin type and aftercare.</p>",
    "priceTitle": "Price",
    "prices": [
     {
@@ -875,15 +808,23 @@
    ]
   },
   "charbon": {
-   "title": "Activated Carbon Laser",
-   "metaTitle": "Activated Carbon Laser — My Bubble Beauty",
-   "description": "Laser treatment with activated carbon aims to improve the appearance of certain skin imperfections, such as pigmented spots. Procedure and prices.",
-   "articleHtml": "<p>Activated carbon is sometimes used in combination with laser treatments to improve the appearance of certain skin imperfections. Laser treatment can help reduce the appearance of various marks on the skin, including pigmentation and tattoos. Here's how a laser treatment with activated carbon typically works:</p><h2>Application of Activated Carbon</h2><p>A mask based on activated carbon is applied to the area of the skin to be treated. Activated carbon absorbs laser light, allowing for more targeted treatment of pigmentation or tattoos.</p><h2>Laser Treatment</h2><p>Subsequently, the laser is used to emit pulses of intense light in fractions of a second. This light is selectively absorbed by pigment particles, such as tattoo pigments or melanin in pigmented spots.</p><h2>Pigment Fragmentation</h2><p>When the laser light is absorbed by the pigments, its energy is converted into heat, leading to the fragmentation of the pigments into smaller particles.</p><h2>Natural Removal</h2><p>The fragmented pigment particles are then naturally eliminated by the body over time, primarily through the lymphatic system.</p><h2>Results</h2><p>The final outcome depends on the type of skin imperfection concerned. For tattoos, for example, the laser can help break down tattoo pigments, allowing the body to gradually remove them and reduce the appearance of the tattoo. For pigmented spots, this treatment can help lighten or fade the spots.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p><p>It's important to note that laser treatments, regardless of the specific technique used, should be performed by a qualified aesthetic professional. These professionals can assess your skin, determine the appropriate treatment method, and ensure that the treatment is performed with risks kept to a minimum, for a result suited to your skin. If you are considering a laser treatment for a specific skin issue, we recommend consulting an aesthetic professional to discuss your specific needs and obtain detailed information about the treatment.</p>",
-   "priceTitle": "Price",
+   "title": "Carbon Peel Signature",
+   "metaTitle": "Carbon Peel Signature, radiance and purity — My Bubble Beauty",
+   "description": "Carbon Peel Signature: a treatment for radiance, purity and skin quality on the face, neck and décolleté. À la carte options, benefits and prices.",
+   "articleHtml": "<p>A treatment for radiance, purity and skin quality.</p><h2>À la carte options</h2><h3>Carbon Peel – Full face</h3><p>A purifying, revitalising treatment that aims to improve the look of pores, reduce shine and revive the radiance of your complexion. 30 to 45 min.</p><h3>Carbon Peel – Face + neck</h3><p>A targeted treatment for the face and neck, to refine the look of the skin's texture and even out your complexion. 45 to 60 min.</p><h3>Carbon Peel – Face + neck + décolleté</h3><p>Our complete signature treatment, working on the look of the skin across all three areas for a brighter, more harmonious appearance. 60 to 75 min.</p><h3>Carbon Peel – Neck + décolleté</h3><p>A dedicated treatment to improve the look and evenness of the skin on the neck and décolleté. 30 to 45 min.</p><h2>The benefits we aim for, area by area</h2><h3>Face</h3><ul><li>Better-looking pores.</li><li>Clearer-looking skin.</li><li>A brighter complexion.</li><li>Improved skin texture.</li></ul><h3>Neck</h3><ul><li>Better-looking skin.</li><li>Works on an uneven skin tone.</li><li>A more even appearance.</li></ul><h3>Décolleté</h3><ul><li>A finer-looking skin texture.</li><li>A visibly more even tone.</li><li>Brighter-looking skin.</li></ul><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p>",
+   "priceTitle": "Prices",
    "prices": [
     {
-     "name": "Carbon Laser",
-     "amount": "150 €"
+     "name": "Full face (30 to 45 min)",
+     "amount": "120 €"
+    },
+    {
+     "name": "Face + neck (45 to 60 min)",
+     "amount": "160 €"
+    },
+    {
+     "name": "Face + neck + décolleté (60 to 75 min)",
+     "amount": "195 €"
     }
    ],
    "figures": [
@@ -891,7 +832,7 @@
      "src": "soins/charbon.webp",
      "w": 743,
      "h": 782,
-     "alt": "Client wearing a carbon mask and protective goggles during a laser treatment"
+     "alt": "Client wearing protective glasses during a Carbon Peel treatment"
     }
    ]
   },
@@ -978,14 +919,14 @@
    ]
   },
   "hydra": {
-   "title": "HydraFacial",
-   "metaTitle": "HydraFacial — My Bubble Beauty",
-   "description": "A HydraFacial is a non-invasive aesthetic treatment that aims to improve the appearance of facial skin through cleansing, exfoliation and hydration.",
-   "articleHtml": "<p>A HydraFacial is a non-invasive aesthetic treatment designed to improve the appearance of facial skin by combining various techniques, including exfoliation, deep cleansing, hydration, and protection. It is designed to soften the look of various skin concerns such as blemishes on acne-prone skin, wrinkles, pigmentation spots, and uneven skin texture.</p><h2>Working Principle</h2><p>Cleansing: The process begins with a deep cleansing of the skin to remove impurities, excess sebum, and dead skin cells.</p><p>Exfoliation: Next, a gentle exfoliating solution is applied to the skin to remove dead skin cells from the skin's surface for a fresher, smoother complexion.</p><p>Extraction: The HydraFacial system uses gentle suction to remove impurities from the skin pores, which can help reduce blemishes and unclog pores.</p><p>Hydration: Subsequently, a hydrating solution enriched with antioxidants, peptides, and hyaluronic acid is applied to deeply nourish and moisturize the skin.</p><p>Protection: Finally, sunscreen or sun protection products are often applied to protect the freshly treated skin from harmful UV rays.</p><h2>Results</h2><p>The entire treatment is relatively quick and minimally uncomfortable. Many describe it as enjoyable and relaxing. Results from a HydraFacial can vary from person to person. The treatment aims for an immediate improvement in the appearance of the skin, with a brighter, softer complexion and a more even tone.</p><p>Source: HydraFacial UK</p>",
+   "title": "Hydra Signature",
+   "metaTitle": "Hydra Signature — My Bubble Beauty",
+   "description": "A Hydra Signature is a non-invasive aesthetic treatment that aims to improve the appearance of facial skin through cleansing, exfoliation and hydration.",
+   "articleHtml": "<p>A Hydra Signature is a non-invasive aesthetic treatment designed to improve the appearance of facial skin by combining various techniques, including exfoliation, deep cleansing, hydration, and protection. It is designed to soften the look of various skin concerns such as blemishes on acne-prone skin, wrinkles, pigmentation spots, and uneven skin texture.</p><h2>Working Principle</h2><p>Cleansing: The process begins with a deep cleansing of the skin to remove impurities, excess sebum, and dead skin cells.</p><p>Exfoliation: Next, a gentle exfoliating solution is applied to the skin to remove dead skin cells from the skin's surface for a fresher, smoother complexion.</p><p>Extraction: The Hydra Signature system uses gentle suction to remove impurities from the skin pores, which can help reduce blemishes and unclog pores.</p><p>Hydration: Subsequently, a hydrating solution enriched with antioxidants, peptides, and hyaluronic acid is applied to deeply nourish and moisturize the skin.</p><p>Protection: Finally, sunscreen or sun protection products are often applied to protect the freshly treated skin from harmful UV rays.</p><h2>Results</h2><p>The entire treatment is relatively quick and minimally uncomfortable. Many describe it as enjoyable and relaxing. Results from a Hydra Signature can vary from person to person. The treatment aims for an immediate improvement in the appearance of the skin, with a brighter, softer complexion and a more even tone.</p>",
    "priceTitle": "Price",
    "prices": [
     {
-     "name": "HydraFacial",
+     "name": "Hydra Signature",
      "amount": "110 €"
     }
    ],
@@ -994,7 +935,7 @@
      "src": "soins/hydrafacial.webp",
      "w": 900,
      "h": 600,
-     "alt": "Beautician performing a HydraFacial treatment on a client's face"
+     "alt": "Beautician performing a Hydra Signature treatment on a client's face"
     }
    ]
   },
@@ -1136,10 +1077,10 @@
    ]
   },
   "microneed": {
-   "title": "Microneedling/Micropen",
-   "metaTitle": "Microneedling/Micropen — My Bubble Beauty",
-   "description": "Microneedling uses fine needles to make tiny, controlled openings in the skin to improve its texture and appearance. Find out how it works and the price.",
-   "articleHtml": "<p>Microneedling/Micropen is an aesthetic treatment that utilizes a device with fine needles to create controlled, tiny openings in the skin. This technique is also known as microperforation. Here's how microneedling works:</p><h2>Preparation</h2><p>Prior to the treatment, your aesthetic professional thoroughly cleanses your skin, and a numbing gel may be applied to minimize discomfort. The needle depth is adjusted based on your specific needs and the areas to be treated.</p><h2>Micro-Punctures</h2><p>The microneedling device is gently moved across the skin, creating small punctures. These punctures are so tiny that they are usually barely visible to the naked eye. The device typically features various needle lengths to reach different layers of the skin, depending on the goal of the treatment.</p><h2>Stimulation of Collagen</h2><p>The microperforations aim to stimulate the skin's natural response, in particular the production of collagen and elastin. Collagen is an essential protein that provides firmness and elasticity to the skin, while elastin helps keep the skin supple. This collagen stimulation may help improve the skin's texture and appearance.</p><h2>Aftercare</h2><p>Following the treatment, your aesthetic professional may apply specific topical products, such as moisturizing serums or growth factors, to soothe and hydrate the skin. It is also recommended to avoid excessive sun exposure and use sunscreen to protect the freshly treated skin.</p><h2>Benefits</h2><p>Microneedling can be used to improve the appearance of a variety of skin issues, including wrinkles and fine lines, acne scars, pigment spots, loss of skin firmness, and other skin imperfections. Results are usually not immediately visible, as collagen production takes time. You may notice gradual improvements in the appearance of your skin in the weeks following the treatment.</p><h2>Multiple Sessions</h2><p>The number of sessions required depends on your treatment goals and the condition of your skin. Your aesthetic professional will create a customized treatment plan to meet your specific needs.</p><h2>Prior Consultation</h2><p>It is important to consult a qualified professional for microneedling, as improper device usage or unsuitable needles can lead to complications. This treatment is typically considered safe when performed by an experienced professional.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p>",
+   "title": "Micro Pen",
+   "metaTitle": "Micro Pen — My Bubble Beauty",
+   "description": "Micro Pen uses fine needles to make tiny, controlled openings in the skin to improve its texture and appearance. Find out how it works and the price.",
+   "articleHtml": "<p>Micro Pen is an aesthetic treatment that utilizes a device with fine needles to create controlled, tiny openings in the skin. This technique is also known as microperforation. Here's how Micro Pen works:</p><h2>Preparation</h2><p>Prior to the treatment, your aesthetic professional thoroughly cleanses your skin, and a numbing gel may be applied to minimize discomfort. The needle depth is adjusted based on your specific needs and the areas to be treated.</p><h2>Micro-Punctures</h2><p>The Micro Pen is gently moved across the skin, creating small punctures. These punctures are so tiny that they are usually barely visible to the naked eye. The device typically features various needle lengths to reach different layers of the skin, depending on the goal of the treatment.</p><h2>Stimulation of Collagen</h2><p>The microperforations aim to stimulate the skin's natural response, in particular the production of collagen and elastin. Collagen is an essential protein that provides firmness and elasticity to the skin, while elastin helps keep the skin supple. This collagen stimulation may help improve the skin's texture and appearance.</p><h2>Aftercare</h2><p>Following the treatment, your aesthetic professional may apply specific topical products, such as moisturizing serums or growth factors, to soothe and hydrate the skin. It is also recommended to avoid excessive sun exposure and use sunscreen to protect the freshly treated skin.</p><h2>Benefits</h2><p>Micro Pen can be used to improve the appearance of a variety of skin issues, including wrinkles and fine lines, acne scars, pigment spots, loss of skin firmness, and other skin imperfections. Results are usually not immediately visible, as collagen production takes time. You may notice gradual improvements in the appearance of your skin in the weeks following the treatment.</p><h2>Multiple Sessions</h2><p>The number of sessions required depends on your treatment goals and the condition of your skin. Your aesthetic professional will create a customized treatment plan to meet your specific needs.</p><h2>Prior Consultation</h2><p>It is important to consult a qualified professional for Micro Pen, as improper device usage or unsuitable needles can lead to complications. This treatment is typically considered safe when performed by an experienced professional.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p>",
    "priceTitle": "Price",
    "prices": [
     {
@@ -1152,25 +1093,25 @@
      "src": "soins/microneed.webp",
      "w": 800,
      "h": 650,
-     "alt": "Diagram of the skin before microneedling"
+     "alt": "Diagram of the skin before Micro Pen"
     },
     {
      "src": "soins/microneed2.webp",
      "w": 800,
      "h": 650,
-     "alt": "Diagram of the skin during microneedling: the pen creates tiny perforations"
+     "alt": "Diagram of the skin during Micro Pen: the pen creates tiny perforations"
     },
     {
      "src": "soins/microneedling3.webp",
      "w": 800,
      "h": 650,
-     "alt": "Diagram of the skin during microneedling: a serum penetrates through the perforations"
+     "alt": "Diagram of the skin during Micro Pen: a serum penetrates through the perforations"
     },
     {
      "src": "soins/microneedling4.webp",
      "w": 800,
      "h": 650,
-     "alt": "Diagram of the skin four to six weeks after microneedling"
+     "alt": "Diagram of the skin four to six weeks after Micro Pen"
     }
    ]
   },
@@ -1404,6 +1345,44 @@
      "alt": "Facial in the treatment room"
     }
    ]
+  },
+  "regard": {
+   "title": "Eye & Brow Beauty: brows and lashes",
+   "metaTitle": "Eye & Brow Beauty, brows and lashes — My Bubble Beauty",
+   "description": "Brow reconstruction, brow and lash tinting, Brow Lift and combined packages: treatments tailored to your natural beauty. Details and prices.",
+   "priceTitle": "Prices",
+   "articleHtml": "<p>Bring out the full intensity of your eyes with treatments tailored to your natural beauty.</p><h2>Brow reconstruction</h2><p>A personalised treatment that reshapes and balances the line of your brows to suit the shape of your face. It includes restructuring and hair removal, for a balanced shape that suits every look.</p><h2>Brow tint</h2><p>Tinting deepens the natural colour of your brows, defines their line and gives more depth to your eyes. The shade is chosen to match your natural colour and the result you want.</p><h2>Lash tint</h2><p>This treatment darkens your natural lashes to make your eyes stand out, with a subtle mascara effect and no make-up. Ideal for enhancing your eyes every day.</p><h2>Brow Lift</h2><p>Brow Lift is a technique that tames the brow hairs and sets them upwards, for a fuller, lifted and structured look. It gives more harmonious brows and naturally open eyes.</p><h2>Combined packages</h2><p>For a harmonious result and beautifully enhanced eyes, combine our treatments.</p><p><strong>Your eyes, our priority.</strong> Beauty lies in the details.</p>",
+   "prices": [
+    {
+     "name": "Brow reconstruction",
+     "amount": "20 €"
+    },
+    {
+     "name": "Brow tint",
+     "amount": "15 €"
+    },
+    {
+     "name": "Lash tint",
+     "amount": "20 €"
+    },
+    {
+     "name": "Brow Lift",
+     "amount": "40 €"
+    },
+    {
+     "name": "Brow Lift + tint",
+     "amount": "50 €"
+    },
+    {
+     "name": "Brow + lash tint",
+     "amount": "30 €"
+    },
+    {
+     "name": "Brow Lift + lash tint",
+     "amount": "55 €"
+    }
+   ],
+   "figures": []
   }
  }
 }

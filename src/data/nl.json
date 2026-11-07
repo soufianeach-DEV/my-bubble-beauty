@@ -88,7 +88,7 @@
   },
   "soins": {
    "title": "Behandelingen",
-   "intro": "Onze behandelingen op maat zijn erop gericht uw huid haar glans terug te geven: HydraFacial, mesotherapie en peeling.",
+   "intro": "Onze behandelingen op maat zijn erop gericht uw huid haar glans terug te geven: Hydra Signature, Micro Pen en peeling.",
    "cards": [
     {
      "title": "Gezicht",
@@ -172,59 +172,6 @@
    ],
    "groups": [
     {
-     "id": "soin-visage",
-     "cat": "visage",
-     "title": "Gezichtsbehandeling",
-     "href": null,
-     "items": [
-      {
-       "name": "SOS Zuiverheid",
-       "href": "sos",
-       "amount": "35 €"
-      },
-      {
-       "name": "Anti-aging",
-       "href": null,
-       "amount": "70 €"
-      },
-      {
-       "name": "HydraFacial",
-       "href": "hydra",
-       "amount": "110 €"
-      },
-      {
-       "name": "HydraFacial anti-aging",
-       "href": null,
-       "amount": "130 €"
-      },
-      {
-       "name": "Mesotherapie",
-       "href": null,
-       "amount": "150 €"
-      },
-      {
-       "name": "Micro Pen",
-       "href": "microneed",
-       "amount": "150 €"
-      },
-      {
-       "name": "Koolstoflaser",
-       "href": "charbon",
-       "amount": "150 €"
-      },
-      {
-       "name": "BB Glow",
-       "href": "bbglow",
-       "amount": "120 €"
-      },
-      {
-       "name": "Oppervlakkige peeling",
-       "href": "peeling",
-       "amount": "90 €"
-      }
-     ]
-    },
-    {
      "id": "purete",
      "cat": "visage",
      "title": "Puur Ritueel",
@@ -241,6 +188,31 @@
        "duration": "45 min",
        "desc": "Reiniging, roterende borstel, masker en crème",
        "amount": "50 €"
+      }
+     ]
+    },
+    {
+     "id": "combines-visage",
+     "cat": "visage",
+     "title": "Gecombineerde gezichtsbehandelingen",
+     "intro": "45 tot 60 minuten, volgens de formule.",
+     "items": [
+      {
+       "name": "Puur & Licht",
+       "detail": "Roterende borstel + led",
+       "amount": "60 €"
+      },
+      {
+       "name": "Glans & Jeugd",
+       "detail": "Reiniging + masker + rood ledlicht",
+       "amount": "70 €",
+       "was": "75 €",
+       "note": "5 € voordeel (–7 %)"
+      },
+      {
+       "name": "Zuivere Huid",
+       "detail": "Reiniging + blauw ledlicht",
+       "amount": "60 €"
       }
      ]
     },
@@ -277,35 +249,74 @@
      ]
     },
     {
-     "id": "serum",
+     "id": "cures-led",
      "cat": "visage",
-     "title": "Serum",
-     "href": null,
+     "title": "Kuren led-lichttherapie",
+     "href": "photo",
      "items": [
       {
-       "name": "Anti-aging",
-       "href": null,
-       "amount": "75 €"
+       "name": "Kuur Glans",
+       "detail": "5 sessies",
+       "duration": "5 × 20 min",
+       "amount": "110 €",
+       "note": "22 € per sessie · 15 € voordeel (–12 %)",
+       "was": "125 €"
       },
       {
-       "name": "Booster",
-       "href": null,
-       "amount": "125 €"
+       "name": "Kuur Schoonheid",
+       "detail": "10 sessies",
+       "duration": "10 × 20 min",
+       "amount": "200 €",
+       "note": "20 € per sessie · 50 € voordeel (–20 %)",
+       "was": "250 €",
+       "badge": "Beste prijs per sessie"
       },
       {
-       "name": "Vitamine",
+       "name": "Kuur Signature",
+       "detail": "10 sessies op maat",
+       "duration": "10 × 30 min",
+       "amount": "280 €",
+       "note": "28 € per sessie · 70 € voordeel (–20 %)",
+       "was": "350 €"
+      }
+     ]
+    },
+    {
+     "id": "carbon-peel",
+     "cat": "visage",
+     "title": "Carbon Peel Signature",
+     "href": "charbon",
+     "items": [
+      {
+       "name": "Volledig gezicht",
        "href": null,
-       "amount": "100 €"
+       "duration": "30 tot 45 min",
+       "amount": "120 €"
       },
       {
-       "name": "Welzijn",
+       "name": "Gezicht + hals",
        "href": null,
-       "amount": "80 €"
+       "duration": "45 tot 60 min",
+       "amount": "160 €"
       },
       {
-       "name": "Mesotherapie",
+       "name": "Gezicht + hals + decolleté",
        "href": null,
-       "amount": "180 €"
+       "duration": "60 tot 75 min",
+       "amount": "195 €"
+      }
+     ]
+    },
+    {
+     "id": "peeling",
+     "cat": "visage",
+     "title": "Oppervlakkige peeling",
+     "href": "peeling",
+     "items": [
+      {
+       "name": "Oppervlakkige peeling",
+       "href": null,
+       "amount": "90 €"
       }
      ]
     },
@@ -441,29 +452,6 @@
      ]
     },
     {
-     "id": "gloss",
-     "cat": "sourire",
-     "title": "Lipgloss",
-     "href": null,
-     "items": [
-      {
-       "name": "Arganolie",
-       "href": null,
-       "amount": "12,50 €"
-      },
-      {
-       "name": "Frambozensmaak",
-       "href": null,
-       "amount": "12,50 €"
-      },
-      {
-       "name": "Aloë vera",
-       "href": null,
-       "amount": "12,50 €"
-      }
-     ]
-    },
-    {
      "id": "epilation",
      "cat": "epilation",
      "title": "Ontharing",
@@ -575,53 +563,15 @@
      ]
     },
     {
-     "id": "electrolyse",
-     "cat": "epilation",
-     "title": "Elektrolyse",
-     "href": null,
-     "items": [
-      {
-       "name": "5 minuten",
-       "href": null,
-       "amount": "15 €"
-      },
-      {
-       "name": "10 minuten",
-       "href": null,
-       "amount": "25 €"
-      },
-      {
-       "name": "20 minuten",
-       "href": null,
-       "amount": "45 €"
-      },
-      {
-       "name": "25 minuten",
-       "href": null,
-       "amount": "50 €"
-      },
-      {
-       "name": "30 minuten",
-       "href": null,
-       "amount": "60 €"
-      }
-     ]
-    },
-    {
      "id": "beaute-des-yeux",
      "cat": "regard",
-     "title": "Oogverzorging",
-     "href": null,
+     "title": "Schoonheid van de blik",
+     "href": "regard",
      "items": [
       {
-       "name": "Wimperlifting",
+       "name": "Wenkbrauwreconstructie",
        "href": null,
-       "amount": "35 €"
-      },
-      {
-       "name": "Wimpers verven",
-       "href": null,
-       "amount": "15 €"
+       "amount": "20 €"
       },
       {
        "name": "Wenkbrauwen verven",
@@ -629,14 +579,29 @@
        "amount": "15 €"
       },
       {
-       "name": "Fast Lashes",
+       "name": "Wimpers verven",
        "href": null,
-       "amount": "40 €"
+       "amount": "20 €"
       },
       {
        "name": "Brow Lift",
        "href": null,
+       "amount": "40 €"
+      },
+      {
+       "name": "Brow Lift + verven",
+       "href": null,
+       "amount": "50 €"
+      },
+      {
+       "name": "Wenkbrauwen + wimpers verven",
+       "href": null,
        "amount": "30 €"
+      },
+      {
+       "name": "Brow Lift + wimpers verven",
+       "href": null,
+       "amount": "55 €"
       }
      ]
     },
@@ -647,21 +612,31 @@
      "href": null,
      "items": [
       {
-       "name": "Esthetische manicure",
+       "name": "Manicure essentieel",
        "href": null,
-       "amount": "25 €"
+       "desc": "Vormgeven van de nagels, verzorging van de nagelriemen en een verzorgde afwerking.",
+       "amount": "30 €"
       },
       {
-       "name": "Spa",
+       "name": "Manicure spa",
        "href": null,
-       "amount": "35 €"
+       "desc": "Klassieke manicure, scrub, voedend masker en ontspannende handmassage.",
+       "amount": "45 €"
       },
       {
-       "name": "Semipermanente nagellak",
+       "name": "Manicure beauté",
        "href": null,
-       "amount": "25 €"
+       "desc": "Voorbereiding van de nagels, verzorging van de nagelriemen en semi-permanente lak.",
+       "amount": "55 €"
+      },
+      {
+       "name": "Manicure signature",
+       "href": null,
+       "desc": "Een volledig ritueel met verzorging van nagels en nagelriemen, exfoliatie, hydraterend masker, massage en een mooie afwerking.",
+       "amount": "65 €"
       }
-     ]
+     ],
+     "intro": "Verzorgde handen, met zorg mooi gemaakt."
     },
     {
      "id": "beaute-des-pieds",
@@ -670,85 +645,43 @@
      "href": null,
      "items": [
       {
-       "name": "Esthetische pedicure",
+       "name": "Pedicure essentieel",
        "href": null,
+       "desc": "Vormgeven van de nagels, verzorging van de nagelriemen, reiniging en een verzorgde afwerking.",
        "amount": "35 €"
       },
       {
-       "name": "Spa",
+       "name": "Pedicure spa",
        "href": null,
-       "amount": "45 €"
+       "desc": "Klassieke pedicure met scrub, hydraterende verzorging en ontspannende massage.",
+       "amount": "50 €"
       },
       {
-       "name": "Semipermanente nagellak",
+       "name": "Pedicure beauté",
        "href": null,
-       "amount": "25 €"
+       "desc": "Verzorging van nagels en nagelriemen, vormgeven en semi-permanente lak.",
+       "amount": "55 €"
+      },
+      {
+       "name": "Pedicure signature",
+       "href": null,
+       "desc": "Een volledig ritueel met nagelverzorging, esthetische voetverzorging, exfoliatie, hydraterend masker en ontspannende massage.",
+       "amount": "70 €"
+      },
+      {
+       "name": "Ritueel signature",
+       "href": null,
+       "desc": "Het plezier om voor jezelf te zorgen: een manicure en een pedicure voor perfect verzorgde handen en voeten.",
+       "amount": "110 €"
       }
-     ]
+     ],
+     "intro": "Mooie, zachte en perfect verzorgde voeten."
     }
    ],
    "eyebrow": "Onze tarieven",
    "partPresta": "Behandelingen",
    "partFormules": "Formules & kuren",
    "formulas": [
-    {
-     "id": "combines-visage",
-     "cat": "visage",
-     "title": "Gecombineerde gezichtsbehandelingen",
-     "intro": "45 tot 60 minuten, volgens de formule.",
-     "items": [
-      {
-       "name": "Puur & Licht",
-       "detail": "Roterende borstel + led",
-       "amount": "60 €"
-      },
-      {
-       "name": "Glans & Jeugd",
-       "detail": "Reiniging + masker + rood ledlicht",
-       "amount": "70 €",
-       "was": "75 €",
-       "note": "5 € voordeel (–7 %)"
-      },
-      {
-       "name": "Zuivere Huid",
-       "detail": "Reiniging + blauw ledlicht",
-       "amount": "60 €"
-      }
-     ]
-    },
-    {
-     "id": "cures-led",
-     "cat": "visage",
-     "title": "Kuren led-lichttherapie",
-     "href": "photo",
-     "items": [
-      {
-       "name": "Kuur Glans",
-       "detail": "5 sessies",
-       "duration": "5 × 20 min",
-       "amount": "110 €",
-       "note": "22 € per sessie · 15 € voordeel (–12 %)",
-       "was": "125 €"
-      },
-      {
-       "name": "Kuur Schoonheid",
-       "detail": "10 sessies",
-       "duration": "10 × 20 min",
-       "amount": "200 €",
-       "note": "20 € per sessie · 50 € voordeel (–20 %)",
-       "was": "250 €",
-       "badge": "Beste prijs per sessie"
-      },
-      {
-       "name": "Kuur Signature",
-       "detail": "10 sessies op maat",
-       "duration": "10 × 30 min",
-       "amount": "280 €",
-       "note": "28 € per sessie · 70 € voordeel (–20 %)",
-       "was": "350 €"
-      }
-     ]
-    },
     {
      "id": "rituels-signature",
      "cat": "corps",
@@ -857,7 +790,7 @@
    "title": "De BB Glow-behandeling in de esthetiek",
    "metaTitle": "De BB Glow-behandeling in de esthetiek — My Bubble Beauty",
    "description": "De BB Glow-behandeling wil de teint verfraaien, de huidskleur egaliseren en de huid een stralende, frisse uitstraling geven. Verloop en tarieven.",
-   "articleHtml": "<p>De BB Glow-behandeling in de esthetiek is een huidbehandelingstechniek die tot doel heeft de teint te verbeteren, de huidskleur gelijkmatiger te maken, onvolkomenheden te verminderen en de huid een stralende en frisse uitstraling te geven. De naam verwijst naar BB-cream (Blemish Balm), want ook deze behandeling streeft naar een egaler ogende teint.</p><h2>Huidvoorbereiding</h2><p>Voor aanvang van de behandeling wordt de huid grondig gereinigd om onzuiverheden, talg en dode huidcellen te verwijderen. De behandeling kan een lichte exfoliatie omvatten voor een betere opname van producten.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><h2>Toepassing van serums</h2><p>Speciaal geformuleerde serums voor de BB Glow-behandeling worden op de huid aangebracht. Deze serums bevatten meestal ingrediënten zoals pigmenten, hyaluronzuur, peptiden en vitamines. De pigmenten helpen de huidskleur gelijkmatiger te maken, onvolkomenheden te camoufleren en een stralendere uitstraling te geven.</p><h2>Microneedling</h2><p>Microneedling is een essentieel onderdeel van de BB Glow-behandeling. Deze techniek houdt in dat een apparaat met fijne naalden wordt gebruikt om microperforaties in de huid te creëren. Deze microperforaties zorgen voor een betere opname van serums en kunnen ook de collageenproductie stimuleren, wat kan bijdragen aan de verbetering van de huidtextuur.</p><h2>Toepassing</h2><p>Na de microneedling kunnen een kalmerend masker of aanvullende behandelingen worden toegepast om de huid te kalmeren en de voordelen van de behandeling te versterken.</p><h2>Maskers en gerichte behandelingen</h2><p>Reinigende maskers of andere gerichte behandelingen kunnen worden gebruikt om de huid te kalmeren, overtollige talg te verminderen en een betere regulatie van talgproductie te bevorderen.</p><h2>Hydratatie en zonnebescherming</h2><p>De behandeling wordt meestal afgerond met de toepassing van hydraterende producten en zonnebescherming om de pas behandelde huid te beschermen tegen UV-stralen.</p><p>De resultaten van de BB Glow-behandeling kunnen variëren van persoon tot persoon, maar over het algemeen melden klanten een verbetering van de huidtextuur, een vermindering van de zichtbaarheid van onvolkomenheden, een egalere teint en een helderdere huidskleur. De effecten van de behandeling zijn tijdelijk en kunnen enkele weken tot enkele maanden aanhouden, afhankelijk van het huidtype en de nazorg.</p>",
+   "articleHtml": "<p>De BB Glow-behandeling in de esthetiek is een huidbehandelingstechniek die tot doel heeft de teint te verbeteren, de huidskleur gelijkmatiger te maken, onvolkomenheden te verminderen en de huid een stralende en frisse uitstraling te geven. De naam verwijst naar BB-cream (Blemish Balm), want ook deze behandeling streeft naar een egaler ogende teint.</p><h2>Huidvoorbereiding</h2><p>Voor aanvang van de behandeling wordt de huid grondig gereinigd om onzuiverheden, talg en dode huidcellen te verwijderen. De behandeling kan een lichte exfoliatie omvatten voor een betere opname van producten.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><h2>Toepassing van serums</h2><p>Speciaal geformuleerde serums voor de BB Glow-behandeling worden op de huid aangebracht. Deze serums bevatten meestal ingrediënten zoals pigmenten, hyaluronzuur, peptiden en vitamines. De pigmenten helpen de huidskleur gelijkmatiger te maken, onvolkomenheden te camoufleren en een stralendere uitstraling te geven.</p><h2>Micro Pen</h2><p>De Micro Pen is een essentieel onderdeel van de BB Glow-behandeling. Deze techniek houdt in dat een apparaat met fijne naalden wordt gebruikt om microperforaties in de huid te creëren. Deze microperforaties zorgen voor een betere opname van serums en kunnen ook de collageenproductie stimuleren, wat kan bijdragen aan de verbetering van de huidtextuur.</p><h2>Toepassing</h2><p>Na de Micro Pen-behandeling kunnen een kalmerend masker of aanvullende behandelingen worden toegepast om de huid te kalmeren en de voordelen van de behandeling te versterken.</p><h2>Maskers en gerichte behandelingen</h2><p>Reinigende maskers of andere gerichte behandelingen kunnen worden gebruikt om de huid te kalmeren, overtollige talg te verminderen en een betere regulatie van talgproductie te bevorderen.</p><h2>Hydratatie en zonnebescherming</h2><p>De behandeling wordt meestal afgerond met de toepassing van hydraterende producten en zonnebescherming om de pas behandelde huid te beschermen tegen UV-stralen.</p><p>De resultaten van de BB Glow-behandeling kunnen variëren van persoon tot persoon, maar over het algemeen melden klanten een verbetering van de huidtextuur, een vermindering van de zichtbaarheid van onvolkomenheden, een egalere teint en een helderdere huidskleur. De effecten van de behandeling zijn tijdelijk en kunnen enkele weken tot enkele maanden aanhouden, afhankelijk van het huidtype en de nazorg.</p>",
    "priceTitle": "Tarief",
    "prices": [
     {
@@ -875,15 +808,23 @@
    ]
   },
   "charbon": {
-   "title": "Actieve koolstoflaser",
-   "metaTitle": "Actieve koolstoflaser — My Bubble Beauty",
-   "description": "Een laserbehandeling met actieve koolstof wil het uiterlijk van bepaalde huidonvolkomenheden, zoals pigmentvlekken, verbeteren. Verloop en tarieven.",
-   "articleHtml": "<p>Actieve koolstof wordt soms gebruikt in combinatie met laserbehandelingen om het uiterlijk van bepaalde huidonvolkomenheden te verbeteren. Laserbehandeling kan helpen om de zichtbaarheid van verschillende huidonvolkomenheden te verminderen, waaronder pigmentvlekken en tatoeages. Zo werkt een laserbehandeling met actieve koolstof doorgaans:</p><h2>Toepassing van actieve koolstof</h2><p>Op het te behandelen huidgebied wordt een masker op basis van actieve koolstof aangebracht. Actieve koolstof absorbeert laserlicht en maakt een gerichtere behandeling van pigmentvlekken of tatoeages mogelijk.</p><h2>Laserbehandeling</h2><p>Vervolgens wordt de laser gebruikt om pulsen van intens licht in fracties van een seconde uit te zenden. Dit licht wordt selectief geabsorbeerd door pigmentdeeltjes, zoals tatoeagepigmenten of melanine in pigmentvlekken.</p><h2>Pigmentfragmentatie</h2><p>Wanneer het laserlicht wordt geabsorbeerd door de pigmenten, wordt de energie ervan omgezet in warmte, wat leidt tot de fragmentatie van de pigmenten in kleinere deeltjes.</p><h2>Natuurlijke verwijdering</h2><p>De gefragmenteerde pigmentdeeltjes worden vervolgens in de loop van de tijd op natuurlijke wijze door het lichaam geëlimineerd, voornamelijk via het lymfestelsel.</p><h2>Resultaten</h2><p>Het uiteindelijke resultaat hangt af van het type huidonvolkomenheid. In het geval van tatoeages kan de laser bijvoorbeeld helpen om de tatoeagepigmenten af te breken, waardoor het lichaam ze geleidelijk kan verwijderen en zo het uiterlijk van de tatoeage kan verminderen. Voor pigmentvlekken kan deze behandeling helpen om de vlekken lichter te maken of te laten vervagen.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><p>Het is belangrijk op te merken dat laserbehandelingen, ongeacht de specifieke techniek die wordt gebruikt, moeten worden uitgevoerd door een gekwalificeerde schoonheidsspecialist. Deze specialisten kunnen uw huid beoordelen, de juiste behandelingsmethode bepalen en ervoor zorgen dat de behandeling met zo weinig mogelijk risico wordt uitgevoerd, voor een resultaat dat bij uw huid past. Als u een laserbehandeling voor een specifiek huidprobleem overweegt, raden we u aan een schoonheidsspecialist te raadplegen om uw specifieke behoeften te bespreken en gedetailleerde informatie over de behandeling te verkrijgen.</p>",
-   "priceTitle": "Tarief",
+   "title": "Carbon Peel Signature",
+   "metaTitle": "Carbon Peel Signature, voor glans en zuiverheid — My Bubble Beauty",
+   "description": "De Carbon Peel Signature: een behandeling voor glans, zuiverheid en huidkwaliteit van gezicht, hals en decolleté. Behandelingen à la carte, voordelen en tarieven.",
+   "articleHtml": "<p>Een behandeling voor glans, zuiverheid en huidkwaliteit.</p><h2>Behandelingen à la carte</h2><h3>Carbon Peel – Volledig gezicht</h3><p>Een zuiverende en revitaliserende behandeling om de poriën er beter uit te laten zien, de glans van de huid te verminderen en de teint op te frissen. 30 tot 45 min.</p><h3>Carbon Peel – Gezicht + hals</h3><p>Een gerichte behandeling voor gezicht en hals, voor een fijner ogende huidstructuur en een egalere teint. 45 tot 60 min.</p><h3>Carbon Peel – Gezicht + hals + decolleté</h3><p>Onze volledige signature-behandeling, die het uitzicht van de huid op de drie zones verzorgt en ze stralender en harmonieuzer laat ogen. 60 tot 75 min.</p><h3>Carbon Peel – Hals + decolleté</h3><p>Een specifieke behandeling om het uitzicht en de egaliteit van de huid van hals en decolleté te verbeteren. 30 tot 45 min.</p><h2>De beoogde voordelen per zone</h2><h3>Gezicht</h3><ul><li>Poriën die er beter uitzien.</li><li>Een zuiverder ogende huid.</li><li>Een stralendere teint.</li><li>Een verbeterde huidtextuur.</li></ul><h3>Hals</h3><ul><li>Een beter uitzicht van de huid.</li><li>Werkt aan een onregelmatige teint.</li><li>Een egaler uitzicht.</li></ul><h3>Decolleté</h3><ul><li>Een fijner ogende huidstructuur.</li><li>Een visueel egalere teint.</li><li>Een stralender ogende huid.</li></ul><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p>",
+   "priceTitle": "Tarieven",
    "prices": [
     {
-     "name": "Koolstoflaser",
-     "amount": "150 €"
+     "name": "Volledig gezicht (30 tot 45 min)",
+     "amount": "120 €"
+    },
+    {
+     "name": "Gezicht + hals (45 tot 60 min)",
+     "amount": "160 €"
+    },
+    {
+     "name": "Gezicht + hals + decolleté (60 tot 75 min)",
+     "amount": "195 €"
     }
    ],
    "figures": [
@@ -891,7 +832,7 @@
      "src": "soins/charbon.webp",
      "w": 743,
      "h": 782,
-     "alt": "Klant met een koolstofmasker en een veiligheidsbril tijdens een laserbehandeling"
+     "alt": "Cliënte met een beschermbril tijdens een Carbon Peel-behandeling"
     }
    ]
   },
@@ -978,14 +919,14 @@
    ]
   },
   "hydra": {
-   "title": "HydraFacial",
-   "metaTitle": "HydraFacial — My Bubble Beauty",
-   "description": "Een HydraFacial is een niet-invasieve behandeling die de uitstraling van de gezichtshuid wil verbeteren met reiniging, exfoliatie en hydratatie.",
-   "articleHtml": "<p>Een HydraFacial is een niet-invasieve esthetische behandeling die tot doel heeft de uitstraling van de gezichtshuid te verbeteren door verschillende technieken te combineren, waaronder exfoliatie, dieptereiniging, hydratatie en bescherming. Het is ontworpen om verschillende huidproblemen minder zichtbaar te maken, zoals onzuiverheden bij een acnegevoelige huid, rimpels, pigmentvlekken en een oneffen huidtextuur.</p><h2>Werkingsprincipe</h2><p>Reiniging: Het proces begint met een dieptereiniging van de huid om onzuiverheden, overtollige talg en dode huidcellen te verwijderen.</p><p>Exfoliatie: Vervolgens wordt een zachte exfoliërende oplossing op de huid aangebracht om dode huidcellen van het huidoppervlak te verwijderen voor een frissere en gladdere huid.</p><p>Extractie: Het HydraFacial-systeem maakt gebruik van zachte zuigkracht om onzuiverheden uit de huidporiën te verwijderen, wat kan helpen bij het verminderen van huidimperfecties en het ontstoppen van poriën.</p><p>Hydratatie: Vervolgens wordt een hydraterende oplossing verrijkt met antioxidanten, peptiden en hyaluronzuur aangebracht om de huid diep te voeden en te hydrateren.</p><p>Bescherming: Ten slotte wordt vaak een zonnebrandcrème of zonnebeschermingsproduct aangebracht om de vers behandelde huid te beschermen tegen schadelijke UV-stralen.</p><h2>Resultaten</h2><p>De hele behandeling is relatief snel en weinig ongemakkelijk. Velen beschrijven het als plezierig en ontspannend. De resultaten van een HydraFacial kunnen variëren per persoon. De behandeling beoogt een onmiddellijke verbetering van de uitstraling van de huid, met een helderdere, zachtere huid en een egalere teint.</p><p>Bron: HydraFacial UK</p>",
+   "title": "Hydra Signature",
+   "metaTitle": "Hydra Signature — My Bubble Beauty",
+   "description": "Een Hydra Signature is een niet-invasieve behandeling die de uitstraling van de gezichtshuid wil verbeteren met reiniging, exfoliatie en hydratatie.",
+   "articleHtml": "<p>Een Hydra Signature is een niet-invasieve esthetische behandeling die tot doel heeft de uitstraling van de gezichtshuid te verbeteren door verschillende technieken te combineren, waaronder exfoliatie, dieptereiniging, hydratatie en bescherming. Het is ontworpen om verschillende huidproblemen minder zichtbaar te maken, zoals onzuiverheden bij een acnegevoelige huid, rimpels, pigmentvlekken en een oneffen huidtextuur.</p><h2>Werkingsprincipe</h2><p>Reiniging: Het proces begint met een dieptereiniging van de huid om onzuiverheden, overtollige talg en dode huidcellen te verwijderen.</p><p>Exfoliatie: Vervolgens wordt een zachte exfoliërende oplossing op de huid aangebracht om dode huidcellen van het huidoppervlak te verwijderen voor een frissere en gladdere huid.</p><p>Extractie: Het Hydra Signature-systeem maakt gebruik van zachte zuigkracht om onzuiverheden uit de huidporiën te verwijderen, wat kan helpen bij het verminderen van huidimperfecties en het ontstoppen van poriën.</p><p>Hydratatie: Vervolgens wordt een hydraterende oplossing verrijkt met antioxidanten, peptiden en hyaluronzuur aangebracht om de huid diep te voeden en te hydrateren.</p><p>Bescherming: Ten slotte wordt vaak een zonnebrandcrème of zonnebeschermingsproduct aangebracht om de vers behandelde huid te beschermen tegen schadelijke UV-stralen.</p><h2>Resultaten</h2><p>De hele behandeling is relatief snel en weinig ongemakkelijk. Velen beschrijven het als plezierig en ontspannend. De resultaten van een Hydra Signature kunnen variëren per persoon. De behandeling beoogt een onmiddellijke verbetering van de uitstraling van de huid, met een helderdere, zachtere huid en een egalere teint.</p>",
    "priceTitle": "Tarief",
    "prices": [
     {
-     "name": "HydraFacial",
+     "name": "Hydra Signature",
      "amount": "110 €"
     }
    ],
@@ -994,7 +935,7 @@
      "src": "soins/hydrafacial.webp",
      "w": 900,
      "h": 600,
-     "alt": "Schoonheidsspecialiste voert een HydraFacial-behandeling uit op het gezicht van een klant"
+     "alt": "Schoonheidsspecialiste voert een Hydra Signature-behandeling uit op het gezicht van een klant"
     }
    ]
   },
@@ -1136,10 +1077,10 @@
    ]
   },
   "microneed": {
-   "title": "Microneedling/Micropen",
-   "metaTitle": "Microneedling/Micropen — My Bubble Beauty",
-   "description": "Microneedling maakt met fijne naalden minuscule openingen in de huid om de textuur en het uiterlijk te verbeteren. Ontdek het verloop en het tarief.",
-   "articleHtml": "<p>Microneedling/Micropen is een esthetische behandeling waarbij gebruik wordt gemaakt van een apparaat met fijne naalden om gecontroleerde, minuscule openingen in de huid te creëren. Deze techniek staat ook bekend als microperforatie. Zo werkt microneedling:</p><h2>Voorbereiding</h2><p>Voorafgaand aan de behandeling reinigt uw schoonheidsspecialist uw huid grondig en kan een verdovende gel worden aangebracht om ongemak te minimaliseren. De naalddiepte wordt aangepast op basis van uw specifieke behoeften en de te behandelen gebieden.</p><h2>Microprikken</h2><p>Het microneedlingapparaat wordt zachtjes over de huid bewogen, waarbij kleine prikjes worden gemaakt. Deze prikjes zijn zo klein dat ze meestal nauwelijks met het blote oog zichtbaar zijn. Het apparaat is doorgaans voorzien van verschillende naaldlengtes om verschillende huidlagen te bereiken, afhankelijk van het doel van de behandeling.</p><h2>Stimulatie van collageen</h2><p>De microperforaties zijn bedoeld om de natuurlijke reactie van de huid te stimuleren, met name de aanmaak van collageen en elastine. Collageen is een essentieel eiwit dat de huid stevigheid en elasticiteit geeft, terwijl elastine helpt om de huid soepel te houden. Deze collageenstimulatie kan bijdragen aan een betere textuur en een mooier uiterlijk van de huid.</p><h2>Nazorg</h2><p>Na de behandeling kan uw schoonheidsspecialist specifieke topische producten aanbrengen, zoals hydraterende serums of groeifactoren, om de huid te kalmeren en te hydrateren. Het wordt ook aanbevolen om overmatige blootstelling aan de zon te vermijden en zonnebrandcrème te gebruiken om de pas behandelde huid te beschermen.</p><h2>Voordelen</h2><p>Microneedling kan worden gebruikt om het uiterlijk van verschillende huidproblemen te verbeteren, waaronder rimpels en fijne lijntjes, acnelittekens, pigmentvlekken, verlies van huidstevigheid en andere huidonvolkomenheden. De resultaten zijn meestal niet onmiddellijk zichtbaar, aangezien de productie van collageen tijd kost. U kunt geleidelijke verbeteringen in het uiterlijk van uw huid in de weken na de behandeling opmerken.</p><h2>Meerdere sessies</h2><p>Het aantal benodigde sessies is afhankelijk van uw behandelingsdoelen en de toestand van uw huid. Uw schoonheidsspecialist zal een aangepast behandelingsplan opstellen om aan uw specifieke behoeften te voldoen.</p><h2>Voorafgaande consultatie</h2><p>Het is belangrijk om een gekwalificeerde professional te raadplegen voor microneedling, omdat onjuist gebruik van het apparaat of ongeschikte naalden complicaties kan veroorzaken. Deze behandeling wordt doorgaans als veilig beschouwd wanneer ze wordt uitgevoerd door een ervaren professional.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p>",
+   "title": "Micro Pen",
+   "metaTitle": "Micro Pen — My Bubble Beauty",
+   "description": "De Micro Pen maakt met fijne naalden minuscule openingen in de huid om de textuur en het uiterlijk te verbeteren. Ontdek het verloop en het tarief.",
+   "articleHtml": "<p>Micro Pen is een esthetische behandeling waarbij gebruik wordt gemaakt van een apparaat met fijne naalden om gecontroleerde, minuscule openingen in de huid te creëren. Deze techniek staat ook bekend als microperforatie. Zo werkt de Micro Pen:</p><h2>Voorbereiding</h2><p>Voorafgaand aan de behandeling reinigt uw schoonheidsspecialist uw huid grondig en kan een verdovende gel worden aangebracht om ongemak te minimaliseren. De naalddiepte wordt aangepast op basis van uw specifieke behoeften en de te behandelen gebieden.</p><h2>Microprikken</h2><p>De Micro Pen wordt zachtjes over de huid bewogen, waarbij kleine prikjes worden gemaakt. Deze prikjes zijn zo klein dat ze meestal nauwelijks met het blote oog zichtbaar zijn. Het apparaat is doorgaans voorzien van verschillende naaldlengtes om verschillende huidlagen te bereiken, afhankelijk van het doel van de behandeling.</p><h2>Stimulatie van collageen</h2><p>De microperforaties zijn bedoeld om de natuurlijke reactie van de huid te stimuleren, met name de aanmaak van collageen en elastine. Collageen is een essentieel eiwit dat de huid stevigheid en elasticiteit geeft, terwijl elastine helpt om de huid soepel te houden. Deze collageenstimulatie kan bijdragen aan een betere textuur en een mooier uiterlijk van de huid.</p><h2>Nazorg</h2><p>Na de behandeling kan uw schoonheidsspecialist specifieke topische producten aanbrengen, zoals hydraterende serums of groeifactoren, om de huid te kalmeren en te hydrateren. Het wordt ook aanbevolen om overmatige blootstelling aan de zon te vermijden en zonnebrandcrème te gebruiken om de pas behandelde huid te beschermen.</p><h2>Voordelen</h2><p>De Micro Pen kan worden gebruikt om het uiterlijk van verschillende huidproblemen te verbeteren, waaronder rimpels en fijne lijntjes, acnelittekens, pigmentvlekken, verlies van huidstevigheid en andere huidonvolkomenheden. De resultaten zijn meestal niet onmiddellijk zichtbaar, aangezien de productie van collageen tijd kost. U kunt geleidelijke verbeteringen in het uiterlijk van uw huid in de weken na de behandeling opmerken.</p><h2>Meerdere sessies</h2><p>Het aantal benodigde sessies is afhankelijk van uw behandelingsdoelen en de toestand van uw huid. Uw schoonheidsspecialist zal een aangepast behandelingsplan opstellen om aan uw specifieke behoeften te voldoen.</p><h2>Voorafgaande consultatie</h2><p>Het is belangrijk om een gekwalificeerde professional te raadplegen voor de Micro Pen, omdat onjuist gebruik van het apparaat of ongeschikte naalden complicaties kan veroorzaken. Deze behandeling wordt doorgaans als veilig beschouwd wanneer ze wordt uitgevoerd door een ervaren professional.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p>",
    "priceTitle": "Tarief",
    "prices": [
     {
@@ -1152,25 +1093,25 @@
      "src": "soins/microneed.webp",
      "w": 800,
      "h": 650,
-     "alt": "Schema van de huid vóór de microneedling"
+     "alt": "Schema van de huid vóór de Micro Pen-behandeling"
     },
     {
      "src": "soins/microneed2.webp",
      "w": 800,
      "h": 650,
-     "alt": "Schema van de huid tijdens de microneedling: de pen maakt kleine perforaties"
+     "alt": "Schema van de huid tijdens de Micro Pen-behandeling: de pen maakt kleine perforaties"
     },
     {
      "src": "soins/microneedling3.webp",
      "w": 800,
      "h": 650,
-     "alt": "Schema van de huid tijdens de microneedling: een serum dringt via de perforaties binnen"
+     "alt": "Schema van de huid tijdens de Micro Pen-behandeling: een serum dringt via de perforaties binnen"
     },
     {
      "src": "soins/microneedling4.webp",
      "w": 800,
      "h": 650,
-     "alt": "Schema van de huid vier tot zes weken na de microneedling"
+     "alt": "Schema van de huid vier tot zes weken na de Micro Pen-behandeling"
     }
    ]
   },
@@ -1404,6 +1345,44 @@
      "alt": "Gezichtsbehandeling in de behandelruimte"
     }
    ]
+  },
+  "regard": {
+   "title": "Schoonheid van de blik: wenkbrauwen en wimpers",
+   "metaTitle": "Schoonheid van de blik, wenkbrauwen en wimpers — My Bubble Beauty",
+   "description": "Wenkbrauwreconstructie, wenkbrauwen en wimpers verven, Brow Lift en combinatiepakketten: verzorging afgestemd op je natuurlijke schoonheid. Details en tarieven.",
+   "priceTitle": "Tarieven",
+   "articleHtml": "<p>Breng de volle intensiteit van je blik naar voren met behandelingen die afgestemd zijn op je natuurlijke schoonheid.</p><h2>Wenkbrauwreconstructie</h2><p>Een behandeling op maat om de lijn van de wenkbrauwen opnieuw te tekenen en in harmonie te brengen met de vorm van je gezicht. Ze omvat het herstructureren en epileren, voor een evenwichtige vorm die bij elke blik past.</p><h2>Wenkbrauwen verven</h2><p>Het verven versterkt de natuurlijke kleur van de wenkbrauwen, tekent hun lijn beter af en geeft meer diepte aan de blik. De tint wordt gekozen volgens je natuurlijke kleur en het gewenste resultaat.</p><h2>Wimpers verven</h2><p>Deze behandeling maakt de natuurlijke wimpers donkerder om de blik te versterken en geeft een subtiel mascara-effect, zonder make-up. Ideaal om je ogen elke dag in de verf te zetten.</p><h2>Brow Lift</h2><p>De Brow Lift is een techniek waarbij de wenkbrauwharen in model worden gebracht en naar boven worden gezet, voor een vollere, gelifte en gestructureerde look. Zo krijg je harmonieuzere wenkbrauwen en een natuurlijk open blik.</p><h2>Combinatiepakketten</h2><p>Voor een harmonieus resultaat en een stralende blik combineer je onze behandelingen.</p><p><strong>Jouw blik, onze prioriteit.</strong> Schoonheid zit in de details.</p>",
+   "prices": [
+    {
+     "name": "Wenkbrauwreconstructie",
+     "amount": "20 €"
+    },
+    {
+     "name": "Wenkbrauwen verven",
+     "amount": "15 €"
+    },
+    {
+     "name": "Wimpers verven",
+     "amount": "20 €"
+    },
+    {
+     "name": "Brow Lift",
+     "amount": "40 €"
+    },
+    {
+     "name": "Brow Lift + verven",
+     "amount": "50 €"
+    },
+    {
+     "name": "Wenkbrauwen + wimpers verven",
+     "amount": "30 €"
+    },
+    {
+     "name": "Brow Lift + wimpers verven",
+     "amount": "55 €"
+    }
+   ],
+   "figures": []
   }
  }
 }

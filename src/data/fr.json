@@ -88,7 +88,7 @@
   },
   "soins": {
    "title": "Nos soins esthétiques",
-   "intro": "Nos soins personnalisés visent à redonner de l'éclat à votre peau : HydraFacial, mésothérapie et peeling.",
+   "intro": "Nos soins personnalisés visent à redonner de l'éclat à votre peau : Hydra Signature, Micro Pen et peeling.",
    "cards": [
     {
      "title": "Visage",
@@ -172,59 +172,6 @@
    ],
    "groups": [
     {
-     "id": "soin-visage",
-     "cat": "visage",
-     "title": "Soin visage",
-     "href": null,
-     "items": [
-      {
-       "name": "SOS Pureté",
-       "href": "sos",
-       "amount": "35 €"
-      },
-      {
-       "name": "Anti-âge",
-       "href": null,
-       "amount": "70 €"
-      },
-      {
-       "name": "HydraFacial",
-       "href": "hydra",
-       "amount": "110 €"
-      },
-      {
-       "name": "HydraFacial anti-âge",
-       "href": null,
-       "amount": "130 €"
-      },
-      {
-       "name": "Mésothérapie",
-       "href": null,
-       "amount": "150 €"
-      },
-      {
-       "name": "Micro Pen",
-       "href": "microneed",
-       "amount": "150 €"
-      },
-      {
-       "name": "Laser charbon",
-       "href": "charbon",
-       "amount": "150 €"
-      },
-      {
-       "name": "BB Glow",
-       "href": "bbglow",
-       "amount": "120 €"
-      },
-      {
-       "name": "Peeling superficiel",
-       "href": "peeling",
-       "amount": "90 €"
-      }
-     ]
-    },
-    {
      "id": "purete",
      "cat": "visage",
      "title": "Rituel Pureté",
@@ -241,6 +188,31 @@
        "duration": "45 min",
        "desc": "Nettoyage, brosse rotative, masque et crème",
        "amount": "50 €"
+      }
+     ]
+    },
+    {
+     "id": "combines-visage",
+     "cat": "visage",
+     "title": "Soins visage combinés",
+     "intro": "45 à 60 minutes selon la formule.",
+     "items": [
+      {
+       "name": "Pureté & Lumière",
+       "detail": "Brosse rotative + LED",
+       "amount": "60 €"
+      },
+      {
+       "name": "Éclat & Jeunesse",
+       "detail": "Nettoyage + masque + LED rouge",
+       "amount": "70 €",
+       "was": "75 €",
+       "note": "5 € d’économie (–7 %)"
+      },
+      {
+       "name": "Peau Nette",
+       "detail": "Nettoyage + LED bleue",
+       "amount": "60 €"
       }
      ]
     },
@@ -277,35 +249,74 @@
      ]
     },
     {
-     "id": "serum",
+     "id": "cures-led",
      "cat": "visage",
-     "title": "Sérum",
-     "href": null,
+     "title": "Cures photothérapie LED",
+     "href": "photo",
      "items": [
       {
-       "name": "Anti-âge",
-       "href": null,
-       "amount": "75 €"
+       "name": "Cure Éclat",
+       "detail": "5 séances",
+       "duration": "5 × 20 min",
+       "amount": "110 €",
+       "note": "22 € la séance · 15 € d’économie (–12 %)",
+       "was": "125 €"
       },
       {
-       "name": "Booster",
-       "href": null,
-       "amount": "125 €"
+       "name": "Cure Beauté",
+       "detail": "10 séances",
+       "duration": "10 × 20 min",
+       "amount": "200 €",
+       "note": "20 € la séance · 50 € d’économie (–20 %)",
+       "was": "250 €",
+       "badge": "Meilleur prix par séance"
       },
       {
-       "name": "Vitaminé",
+       "name": "Cure Signature",
+       "detail": "10 séances personnalisées",
+       "duration": "10 × 30 min",
+       "amount": "280 €",
+       "note": "28 € la séance · 70 € d’économie (–20 %)",
+       "was": "350 €"
+      }
+     ]
+    },
+    {
+     "id": "carbon-peel",
+     "cat": "visage",
+     "title": "Carbon Peel Signature",
+     "href": "charbon",
+     "items": [
+      {
+       "name": "Visage complet",
        "href": null,
-       "amount": "100 €"
+       "duration": "30 à 45 min",
+       "amount": "120 €"
       },
       {
-       "name": "Bien-être",
+       "name": "Visage + cou",
        "href": null,
-       "amount": "80 €"
+       "duration": "45 à 60 min",
+       "amount": "160 €"
       },
       {
-       "name": "Mésothérapie",
+       "name": "Visage + cou + décolleté",
        "href": null,
-       "amount": "180 €"
+       "duration": "60 à 75 min",
+       "amount": "195 €"
+      }
+     ]
+    },
+    {
+     "id": "peeling",
+     "cat": "visage",
+     "title": "Peeling superficiel",
+     "href": "peeling",
+     "items": [
+      {
+       "name": "Peeling superficiel",
+       "href": null,
+       "amount": "90 €"
       }
      ]
     },
@@ -441,29 +452,6 @@
      ]
     },
     {
-     "id": "gloss",
-     "cat": "sourire",
-     "title": "Gloss",
-     "href": null,
-     "items": [
-      {
-       "name": "Argan",
-       "href": null,
-       "amount": "12,50 €"
-      },
-      {
-       "name": "Framboise",
-       "href": null,
-       "amount": "12,50 €"
-      },
-      {
-       "name": "Aloe vera",
-       "href": null,
-       "amount": "12,50 €"
-      }
-     ]
-    },
-    {
      "id": "epilation",
      "cat": "epilation",
      "title": "Épilation",
@@ -575,53 +563,15 @@
      ]
     },
     {
-     "id": "electrolyse",
-     "cat": "epilation",
-     "title": "Électrolyse",
-     "href": null,
-     "items": [
-      {
-       "name": "5 minutes",
-       "href": null,
-       "amount": "15 €"
-      },
-      {
-       "name": "10 minutes",
-       "href": null,
-       "amount": "25 €"
-      },
-      {
-       "name": "20 minutes",
-       "href": null,
-       "amount": "45 €"
-      },
-      {
-       "name": "25 minutes",
-       "href": null,
-       "amount": "50 €"
-      },
-      {
-       "name": "30 minutes",
-       "href": null,
-       "amount": "60 €"
-      }
-     ]
-    },
-    {
      "id": "beaute-des-yeux",
      "cat": "regard",
-     "title": "Beauté des yeux",
-     "href": null,
+     "title": "Beauté du regard",
+     "href": "regard",
      "items": [
       {
-       "name": "Rehaussement des cils",
+       "name": "Reconstruction du sourcil",
        "href": null,
-       "amount": "35 €"
-      },
-      {
-       "name": "Teinture des cils",
-       "href": null,
-       "amount": "15 €"
+       "amount": "20 €"
       },
       {
        "name": "Teinture des sourcils",
@@ -629,14 +579,29 @@
        "amount": "15 €"
       },
       {
-       "name": "Fast Lashes",
+       "name": "Teinture des cils",
        "href": null,
-       "amount": "40 €"
+       "amount": "20 €"
       },
       {
        "name": "Brow Lift",
        "href": null,
+       "amount": "40 €"
+      },
+      {
+       "name": "Brow Lift + teinture",
+       "href": null,
+       "amount": "50 €"
+      },
+      {
+       "name": "Teinture sourcils + cils",
+       "href": null,
        "amount": "30 €"
+      },
+      {
+       "name": "Brow Lift + teinture des cils",
+       "href": null,
+       "amount": "55 €"
       }
      ]
     },
@@ -647,21 +612,31 @@
      "href": null,
      "items": [
       {
-       "name": "Esthétique",
+       "name": "Manucure essentielle",
        "href": null,
-       "amount": "25 €"
+       "desc": "Mise en forme des ongles, soin des cuticules et finition soignée.",
+       "amount": "30 €"
       },
       {
-       "name": "Spa",
+       "name": "Manucure spa",
        "href": null,
-       "amount": "35 €"
+       "desc": "Manucure classique, gommage, masque nourrissant et massage relaxant des mains.",
+       "amount": "45 €"
       },
       {
-       "name": "Vernis semi-permanent",
+       "name": "Manucure beauté",
        "href": null,
-       "amount": "25 €"
+       "desc": "Préparation des ongles, soin des cuticules et pose de vernis semi-permanent.",
+       "amount": "55 €"
+      },
+      {
+       "name": "Manucure signature",
+       "href": null,
+       "desc": "Un rituel complet associant soin des ongles et cuticules, exfoliation, masque hydratant, massage et finition beauté.",
+       "amount": "65 €"
       }
-     ]
+     ],
+     "intro": "Des mains soignées, sublimées et délicatement mises en beauté."
     },
     {
      "id": "beaute-des-pieds",
@@ -670,85 +645,43 @@
      "href": null,
      "items": [
       {
-       "name": "Esthétique",
+       "name": "Pédicure essentielle",
        "href": null,
+       "desc": "Mise en forme des ongles, soin des cuticules, nettoyage et finition soignée.",
        "amount": "35 €"
       },
       {
-       "name": "Spa",
+       "name": "Pédicure spa",
        "href": null,
-       "amount": "45 €"
+       "desc": "Pédicure classique accompagnée d'un gommage, d'un soin hydratant et d'un massage relaxant.",
+       "amount": "50 €"
       },
       {
-       "name": "Vernis semi-permanent",
+       "name": "Pédicure beauté",
        "href": null,
-       "amount": "25 €"
+       "desc": "Soin des ongles et des cuticules, mise en forme et pose de vernis semi-permanent.",
+       "amount": "55 €"
+      },
+      {
+       "name": "Pédicure signature",
+       "href": null,
+       "desc": "Un rituel complet comprenant le soin des ongles, l'entretien esthétique des pieds, l'exfoliation, un masque hydratant et un massage relaxant.",
+       "amount": "70 €"
+      },
+      {
+       "name": "Rituel signature",
+       "href": null,
+       "desc": "Le plaisir de prendre soin de soi : une manucure et une pédicure pour des mains et des pieds parfaitement soignés.",
+       "amount": "110 €"
       }
-     ]
+     ],
+     "intro": "Des pieds sublimés, doux et parfaitement entretenus."
     }
    ],
    "eyebrow": "Nos tarifs",
    "partPresta": "Prestations",
    "partFormules": "Formules & cures",
    "formulas": [
-    {
-     "id": "combines-visage",
-     "cat": "visage",
-     "title": "Soins visage combinés",
-     "intro": "45 à 60 minutes selon la formule.",
-     "items": [
-      {
-       "name": "Pureté & Lumière",
-       "detail": "Brosse rotative + LED",
-       "amount": "60 €"
-      },
-      {
-       "name": "Éclat & Jeunesse",
-       "detail": "Nettoyage + masque + LED rouge",
-       "amount": "70 €",
-       "was": "75 €",
-       "note": "5 € d’économie (–7 %)"
-      },
-      {
-       "name": "Peau Nette",
-       "detail": "Nettoyage + LED bleue",
-       "amount": "60 €"
-      }
-     ]
-    },
-    {
-     "id": "cures-led",
-     "cat": "visage",
-     "title": "Cures photothérapie LED",
-     "href": "photo",
-     "items": [
-      {
-       "name": "Cure Éclat",
-       "detail": "5 séances",
-       "duration": "5 × 20 min",
-       "amount": "110 €",
-       "note": "22 € la séance · 15 € d’économie (–12 %)",
-       "was": "125 €"
-      },
-      {
-       "name": "Cure Beauté",
-       "detail": "10 séances",
-       "duration": "10 × 20 min",
-       "amount": "200 €",
-       "note": "20 € la séance · 50 € d’économie (–20 %)",
-       "was": "250 €",
-       "badge": "Meilleur prix par séance"
-      },
-      {
-       "name": "Cure Signature",
-       "detail": "10 séances personnalisées",
-       "duration": "10 × 30 min",
-       "amount": "280 €",
-       "note": "28 € la séance · 70 € d’économie (–20 %)",
-       "was": "350 €"
-      }
-     ]
-    },
     {
      "id": "rituels-signature",
      "cat": "corps",
@@ -857,7 +790,7 @@
    "title": "Le soin BB Glow en esthétique",
    "metaTitle": "Le soin BB Glow en esthétique — My Bubble Beauty",
    "description": "Le soin BB Glow vise à améliorer l'apparence du teint, à unifier la couleur de la peau et à lui donner un aspect radieux et frais. Déroulement et tarifs.",
-   "articleHtml": "<p>Le soin BB Glow en esthétique est une technique de traitement de la peau qui vise à améliorer l'apparence du teint, à uniformiser la couleur de la peau, à réduire les imperfections et à donner à la peau un aspect radieux et frais. Son nom fait référence à la BB cream (« Blemish Balm »), car ce soin vise lui aussi un teint d'apparence plus uniforme.</p><h2>Préparation de la peau</h2><p>Avant de commencer le traitement, la peau est nettoyée en profondeur pour éliminer les impuretés, le sébum et les cellules mortes de la peau. Le soin peut inclure une exfoliation légère pour une meilleure absorption des produits.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><h2>Application de sérums</h2><p>Des sérums spécialement formulés pour le traitement BB Glow sont appliqués sur la peau. Ces sérums contiennent généralement des ingrédients tels que des pigments, de l'acide hyaluronique, des peptides et des vitamines. Les pigments aident à uniformiser la couleur de la peau, à camoufler les imperfections et à donner un aspect plus éclatant.</p><h2>Microneedling</h2><p>Le microneedling est une étape essentielle du soin BB Glow. Cette technique consiste à utiliser un dispositif doté de fines aiguilles pour créer des micro-perforations dans la peau. Ces micro-perforations permettent une meilleure absorption des sérums et peuvent également stimuler la production de collagène, contribuant ainsi à améliorer la texture de la peau.</p><h2>Application</h2><p>Après le microneedling, un masque apaisant ou des traitements supplémentaires peuvent être appliqués pour calmer la peau et renforcer les bienfaits du traitement.</p><h2>Masques et traitements ciblés</h2><p>Des masques purifiants ou d'autres traitements ciblés peuvent être utilisés pour calmer la peau, réduire l'excès de sébum et favoriser une meilleure régulation de la production de sébum.</p><h2>Hydratation et protection solaire</h2><p>Le traitement est généralement complété par l'application de produits hydratants et d'un écran solaire pour protéger la peau nouvellement traitée des rayons UV.</p><p>Les résultats du soin BB Glow peuvent varier d'une personne à l'autre, mais de manière générale, les clients rapportent une amélioration de la texture de la peau, une réduction de l'apparence des imperfections, une coloration plus uniforme et un teint plus lumineux. Les effets du traitement sont temporaires et peuvent durer de quelques semaines à quelques mois, selon le type de peau et les soins après-traitement.</p>",
+   "articleHtml": "<p>Le soin BB Glow en esthétique est une technique de traitement de la peau qui vise à améliorer l'apparence du teint, à uniformiser la couleur de la peau, à réduire les imperfections et à donner à la peau un aspect radieux et frais. Son nom fait référence à la BB cream (« Blemish Balm »), car ce soin vise lui aussi un teint d'apparence plus uniforme.</p><h2>Préparation de la peau</h2><p>Avant de commencer le traitement, la peau est nettoyée en profondeur pour éliminer les impuretés, le sébum et les cellules mortes de la peau. Le soin peut inclure une exfoliation légère pour une meilleure absorption des produits.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><h2>Application de sérums</h2><p>Des sérums spécialement formulés pour le traitement BB Glow sont appliqués sur la peau. Ces sérums contiennent généralement des ingrédients tels que des pigments, de l'acide hyaluronique, des peptides et des vitamines. Les pigments aident à uniformiser la couleur de la peau, à camoufler les imperfections et à donner un aspect plus éclatant.</p><h2>Micro Pen</h2><p>Le Micro Pen est une étape essentielle du soin BB Glow. Cette technique consiste à utiliser un dispositif doté de fines aiguilles pour créer des micro-perforations dans la peau. Ces micro-perforations permettent une meilleure absorption des sérums et peuvent également stimuler la production de collagène, contribuant ainsi à améliorer la texture de la peau.</p><h2>Application</h2><p>Après le soin Micro Pen, un masque apaisant ou des traitements supplémentaires peuvent être appliqués pour calmer la peau et renforcer les bienfaits du traitement.</p><h2>Masques et traitements ciblés</h2><p>Des masques purifiants ou d'autres traitements ciblés peuvent être utilisés pour calmer la peau, réduire l'excès de sébum et favoriser une meilleure régulation de la production de sébum.</p><h2>Hydratation et protection solaire</h2><p>Le traitement est généralement complété par l'application de produits hydratants et d'un écran solaire pour protéger la peau nouvellement traitée des rayons UV.</p><p>Les résultats du soin BB Glow peuvent varier d'une personne à l'autre, mais de manière générale, les clients rapportent une amélioration de la texture de la peau, une réduction de l'apparence des imperfections, une coloration plus uniforme et un teint plus lumineux. Les effets du traitement sont temporaires et peuvent durer de quelques semaines à quelques mois, selon le type de peau et les soins après-traitement.</p>",
    "priceTitle": "Tarif",
    "prices": [
     {
@@ -875,15 +808,23 @@
    ]
   },
   "charbon": {
-   "title": "Le laser charbon actif",
-   "metaTitle": "Le laser charbon actif — My Bubble Beauty",
-   "description": "Le laser associé au charbon actif vise à améliorer l'aspect de certaines imperfections de la peau, comme les taches pigmentaires. Déroulement et tarifs.",
-   "articleHtml": "<p>Le charbon actif est parfois utilisé en combinaison avec des traitements au laser pour améliorer l'aspect de certaines imperfections de la peau. Le laser peut aider à atténuer l'apparence de diverses marques sur la peau, notamment les taches pigmentaires et les tatouages. Voici comment fonctionne généralement un traitement au laser avec du charbon actif :</p><h2>Application du charbon actif</h2><p>Un masque à base de charbon actif est appliqué sur la peau de la zone à traiter. Le charbon actif absorbe la lumière laser et permet un meilleur ciblage des taches pigmentaires ou des tatouages.</p><h2>Traitement au laser</h2><p>Le laser est ensuite utilisé pour émettre des impulsions de lumière intense en une fraction de seconde. Cette lumière est absorbée sélectivement par les particules de pigments, telles que les pigments de tatouage ou la mélanine dans les taches pigmentaires.</p><h2>Fragmentation des pigments</h2><p>Lorsque la lumière laser est absorbée par les pigments, son énergie se transforme en chaleur, provoquant la fragmentation des pigments en particules plus petites.</p><h2>Élimination naturelle</h2><p>Les particules de pigments fragmentés sont ensuite éliminées naturellement par le corps au fil du temps, principalement par le système lymphatique.</p><h2>Résultats</h2><p>Le résultat final dépend du type d'imperfection concernée. Dans le cas des tatouages, par exemple, le laser peut aider à briser les pigments du tatouage, ce qui permet au corps de les éliminer progressivement, réduisant ainsi l'apparence du tatouage. Pour les taches pigmentaires, ce traitement peut aider à éclaircir ou à atténuer les taches.</p><p>Il est important de noter que les traitements au laser, quelle que soit la technique spécifique utilisée, doivent être réalisés par un professionnel de l'esthétique qualifié. Ces professionnels peuvent évaluer votre peau, déterminer la méthode de traitement appropriée et s'assurer que le traitement est effectué en limitant les risques, pour un résultat adapté à votre peau.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><p>Si vous envisagez un traitement au laser pour un problème de peau particulier, nous vous recommandons de consulter un professionnel de l'esthétique pour discuter de vos besoins spécifiques et obtenir des informations détaillées sur le traitement.</p>",
-   "priceTitle": "Tarif",
+   "title": "Carbon Peel Signature",
+   "metaTitle": "Carbon Peel Signature, soin éclat et pureté — My Bubble Beauty",
+   "description": "Le Carbon Peel Signature, soin éclat, pureté et qualité de peau pour le visage, le cou et le décolleté. Prestations à la carte, bénéfices et tarifs.",
+   "articleHtml": "<p>Soin éclat, pureté et qualité de peau.</p><h2>Prestations à la carte</h2><h3>Carbon Peel – Visage complet</h3><p>Soin purifiant et revitalisant visant à améliorer l'apparence des pores, réduire l'aspect brillant et raviver l'éclat du teint. 30 à 45 min.</p><h3>Carbon Peel – Visage + Cou</h3><p>Un soin ciblé sur le visage et le cou pour améliorer l'aspect du grain de peau et retrouver un teint plus uniforme. 45 à 60 min.</p><h3>Carbon Peel – Visage + Cou + Décolleté</h3><p>Notre soin signature complet pour travailler l'apparence de la peau sur les trois zones et leur apporter un aspect plus lumineux et harmonieux. 60 à 75 min.</p><h3>Carbon Peel – Cou + Décolleté</h3><p>Un soin spécifique pour améliorer l'apparence et l'uniformité de la peau du cou et du décolleté. 30 à 45 min.</p><h2>Les bénéfices recherchés selon les zones</h2><h3>Visage</h3><ul><li>Amélioration de l'apparence des pores.</li><li>Peau d'apparence plus nette.</li><li>Teint plus lumineux.</li><li>Amélioration de la texture cutanée.</li></ul><h3>Cou</h3><ul><li>Amélioration de l'aspect de la peau.</li><li>Travail sur l'irrégularité du teint.</li><li>Aspect plus homogène.</li></ul><h3>Décolleté</h3><ul><li>Amélioration de l'apparence du grain de peau.</li><li>Teint visuellement plus uniforme.</li><li>Peau d'apparence plus lumineuse.</li></ul><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
+   "priceTitle": "Tarifs",
    "prices": [
     {
-     "name": "Laser charbon",
-     "amount": "150 €"
+     "name": "Visage complet (30 à 45 min)",
+     "amount": "120 €"
+    },
+    {
+     "name": "Visage + cou (45 à 60 min)",
+     "amount": "160 €"
+    },
+    {
+     "name": "Visage + cou + décolleté (60 à 75 min)",
+     "amount": "195 €"
     }
    ],
    "figures": [
@@ -891,7 +832,7 @@
      "src": "soins/charbon.webp",
      "w": 743,
      "h": 782,
-     "alt": "Cliente avec un masque au charbon et des lunettes de protection pendant un soin laser"
+     "alt": "Cliente avec des lunettes de protection pendant un soin Carbon Peel"
     }
    ]
   },
@@ -978,14 +919,14 @@
    ]
   },
   "hydra": {
-   "title": "HydraFacial",
-   "metaTitle": "HydraFacial — My Bubble Beauty",
-   "description": "Un HydraFacial est un soin esthétique non invasif qui vise à améliorer l'apparence de la peau du visage par le nettoyage, l'exfoliation et l'hydratation.",
-   "articleHtml": "<p>Un HydraFacial est un traitement esthétique non invasif qui vise à améliorer l'apparence de la peau du visage en combinant plusieurs techniques, notamment l'exfoliation, le nettoyage en profondeur, l'hydratation et la protection. Il est conçu pour atténuer l'aspect de divers problèmes de peau, tels que les imperfections des peaux à tendance acnéique, les rides, les taches pigmentaires et la texture inégale de la peau.</p><h2>Fonctionnement</h2><p>Nettoyage : Le processus commence par un nettoyage en profondeur de la peau pour éliminer les impuretés, l'excès de sébum et les cellules mortes de la peau.</p><p>Exfoliation : Ensuite, une solution d'exfoliation douce est appliquée sur la peau pour éliminer les cellules mortes de la surface et révéler une peau plus fraîche et plus lisse.</p><p>Extraction : Le système HydraFacial utilise une aspiration douce pour extraire les impuretés des pores de la peau, ce qui peut contribuer à réduire les imperfections et à désobstruer les pores.</p><p>Hydratation : Une solution hydratante enrichie en antioxydants, en peptides et en acide hyaluronique est ensuite appliquée pour nourrir et hydrater la peau en profondeur.</p><p>Protection : Enfin, un écran solaire ou un produit de protection solaire est souvent appliqué pour protéger la peau fraîchement traitée des rayons UV nocifs.</p><h2>Résultats</h2><p>L'ensemble du traitement est relativement rapide et peu inconfortable. Il est souvent décrit comme agréable et relaxant par les personnes qui le reçoivent. Les résultats d'un HydraFacial peuvent varier en fonction de la personne. Le soin vise une amélioration immédiate de l'apparence de la peau, avec une peau plus lumineuse, plus douce et un teint plus uniforme.</p><p>Source : HydraFacial UK</p>",
+   "title": "Hydra Signature",
+   "metaTitle": "Hydra Signature — My Bubble Beauty",
+   "description": "Un Hydra Signature est un soin esthétique non invasif qui vise à améliorer l'apparence de la peau du visage par le nettoyage, l'exfoliation et l'hydratation.",
+   "articleHtml": "<p>Un Hydra Signature est un traitement esthétique non invasif qui vise à améliorer l'apparence de la peau du visage en combinant plusieurs techniques, notamment l'exfoliation, le nettoyage en profondeur, l'hydratation et la protection. Il est conçu pour atténuer l'aspect de divers problèmes de peau, tels que les imperfections des peaux à tendance acnéique, les rides, les taches pigmentaires et la texture inégale de la peau.</p><h2>Fonctionnement</h2><p>Nettoyage : Le processus commence par un nettoyage en profondeur de la peau pour éliminer les impuretés, l'excès de sébum et les cellules mortes de la peau.</p><p>Exfoliation : Ensuite, une solution d'exfoliation douce est appliquée sur la peau pour éliminer les cellules mortes de la surface et révéler une peau plus fraîche et plus lisse.</p><p>Extraction : Le système Hydra Signature utilise une aspiration douce pour extraire les impuretés des pores de la peau, ce qui peut contribuer à réduire les imperfections et à désobstruer les pores.</p><p>Hydratation : Une solution hydratante enrichie en antioxydants, en peptides et en acide hyaluronique est ensuite appliquée pour nourrir et hydrater la peau en profondeur.</p><p>Protection : Enfin, un écran solaire ou un produit de protection solaire est souvent appliqué pour protéger la peau fraîchement traitée des rayons UV nocifs.</p><h2>Résultats</h2><p>L'ensemble du traitement est relativement rapide et peu inconfortable. Il est souvent décrit comme agréable et relaxant par les personnes qui le reçoivent. Les résultats d'un Hydra Signature peuvent varier en fonction de la personne. Le soin vise une amélioration immédiate de l'apparence de la peau, avec une peau plus lumineuse, plus douce et un teint plus uniforme.</p>",
    "priceTitle": "Tarif",
    "prices": [
     {
-     "name": "HydraFacial",
+     "name": "Hydra Signature",
      "amount": "110 €"
     }
    ],
@@ -994,7 +935,7 @@
      "src": "soins/hydrafacial.webp",
      "w": 900,
      "h": 600,
-     "alt": "Esthéticienne réalisant un soin HydraFacial sur le visage d'une cliente"
+     "alt": "Esthéticienne réalisant un soin Hydra Signature sur le visage d'une cliente"
     }
    ]
   },
@@ -1136,10 +1077,10 @@
    ]
   },
   "microneed": {
-   "title": "Le microneedling/micropen",
-   "metaTitle": "Le microneedling/micropen — My Bubble Beauty",
-   "description": "Le microneedling crée de fines perforations contrôlées dans la peau pour en améliorer la texture et l'apparence. Découvrez le déroulement et le tarif.",
-   "articleHtml": "<p>Le microneedling/micropen est un soin esthétique qui consiste à utiliser un appareil équipé de fines aiguilles pour créer de minuscules perforations contrôlées dans la peau. Cette technique est également connue sous le nom de microperforation. Voici comment fonctionne le microneedling :</p><h2>Préparation</h2><p>Avant le soin, votre professionnel de l'esthétique nettoie soigneusement votre peau et peut appliquer un gel topique anesthésiant pour minimiser l'inconfort. La profondeur des aiguilles est réglée en fonction de vos besoins spécifiques et des zones à traiter.</p><h2>Micropiqûres</h2><p>L'appareil de microneedling est passé doucement sur la peau, créant de petites piqûres. Ces piqûres sont si petites qu'elles sont généralement à peine visibles à l'œil nu. L'appareil est généralement muni de différentes longueurs d'aiguilles pour cibler différentes profondeurs de peau en fonction de l'objectif du soin.</p><h2>Stimulation du collagène</h2><p>Les microperforations visent à stimuler la réponse naturelle de la peau, en particulier la production de collagène et d'élastine. Le collagène est une protéine essentielle qui confère à la peau sa fermeté et son élasticité, tandis que l'élastine contribue à maintenir la peau souple. Cette stimulation du collagène peut contribuer à améliorer la texture et l'apparence de la peau.</p><h2>Soins post-traitement</h2><p>Après le soin, votre professionnel peut appliquer des produits topiques spécifiques, tels que des sérums hydratants ou des facteurs de croissance, pour apaiser et hydrater la peau. Il est également recommandé d'éviter une exposition excessive au soleil et d'utiliser un écran solaire pour protéger la peau nouvellement traitée.</p><h2>Avantages</h2><p>Le microneedling peut être utilisé pour améliorer l'apparence de différents problèmes de peau, notamment les rides et les ridules, les cicatrices d'acné, les taches pigmentaires, la perte de fermeté de la peau et d'autres imperfections cutanées. Les résultats ne sont généralement pas immédiatement visibles, car la production de collagène prend du temps. Vous pouvez constater une amélioration progressive de l'apparence de votre peau au fil des semaines suivant le soin.</p><h2>Séries de séances</h2><p>Le nombre de séances nécessaires dépend de vos objectifs de traitement et de l'état de votre peau. Votre professionnel de l'esthétique élaborera un plan de traitement personnalisé pour répondre à vos besoins spécifiques.</p><h2>Consultation préalable</h2><p>Il est important de consulter un professionnel qualifié pour le microneedling, car une mauvaise utilisation de l'appareil ou des aiguilles inappropriées peut entraîner des complications. Ce soin est généralement considéré comme sûr lorsqu'il est réalisé par un professionnel expérimenté.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
+   "title": "Le Micro Pen",
+   "metaTitle": "Le Micro Pen — My Bubble Beauty",
+   "description": "Le Micro Pen crée de fines perforations contrôlées dans la peau pour en améliorer la texture et l'apparence. Découvrez le déroulement et le tarif.",
+   "articleHtml": "<p>Le Micro Pen est un soin esthétique qui consiste à utiliser un appareil équipé de fines aiguilles pour créer de minuscules perforations contrôlées dans la peau. Cette technique est également connue sous le nom de microperforation. Voici comment fonctionne le soin Micro Pen :</p><h2>Préparation</h2><p>Avant le soin, votre professionnel de l'esthétique nettoie soigneusement votre peau et peut appliquer un gel topique anesthésiant pour minimiser l'inconfort. La profondeur des aiguilles est réglée en fonction de vos besoins spécifiques et des zones à traiter.</p><h2>Micropiqûres</h2><p>Le Micro Pen est passé doucement sur la peau, créant de petites piqûres. Ces piqûres sont si petites qu'elles sont généralement à peine visibles à l'œil nu. L'appareil est généralement muni de différentes longueurs d'aiguilles pour cibler différentes profondeurs de peau en fonction de l'objectif du soin.</p><h2>Stimulation du collagène</h2><p>Les microperforations visent à stimuler la réponse naturelle de la peau, en particulier la production de collagène et d'élastine. Le collagène est une protéine essentielle qui confère à la peau sa fermeté et son élasticité, tandis que l'élastine contribue à maintenir la peau souple. Cette stimulation du collagène peut contribuer à améliorer la texture et l'apparence de la peau.</p><h2>Soins post-traitement</h2><p>Après le soin, votre professionnel peut appliquer des produits topiques spécifiques, tels que des sérums hydratants ou des facteurs de croissance, pour apaiser et hydrater la peau. Il est également recommandé d'éviter une exposition excessive au soleil et d'utiliser un écran solaire pour protéger la peau nouvellement traitée.</p><h2>Avantages</h2><p>Le Micro Pen peut être utilisé pour améliorer l'apparence de différents problèmes de peau, notamment les rides et les ridules, les cicatrices d'acné, les taches pigmentaires, la perte de fermeté de la peau et d'autres imperfections cutanées. Les résultats ne sont généralement pas immédiatement visibles, car la production de collagène prend du temps. Vous pouvez constater une amélioration progressive de l'apparence de votre peau au fil des semaines suivant le soin.</p><h2>Séries de séances</h2><p>Le nombre de séances nécessaires dépend de vos objectifs de traitement et de l'état de votre peau. Votre professionnel de l'esthétique élaborera un plan de traitement personnalisé pour répondre à vos besoins spécifiques.</p><h2>Consultation préalable</h2><p>Il est important de consulter un professionnel qualifié pour le soin Micro Pen, car une mauvaise utilisation de l'appareil ou des aiguilles inappropriées peut entraîner des complications. Ce soin est généralement considéré comme sûr lorsqu'il est réalisé par un professionnel expérimenté.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
    "priceTitle": "Tarif",
    "prices": [
     {
@@ -1152,25 +1093,25 @@
      "src": "soins/microneed.webp",
      "w": 800,
      "h": 650,
-     "alt": "Schéma de la peau avant le microneedling"
+     "alt": "Schéma de la peau avant le soin Micro Pen"
     },
     {
      "src": "soins/microneed2.webp",
      "w": 800,
      "h": 650,
-     "alt": "Schéma de la peau pendant le microneedling : le stylo crée de fines perforations"
+     "alt": "Schéma de la peau pendant le soin Micro Pen : le stylo crée de fines perforations"
     },
     {
      "src": "soins/microneedling3.webp",
      "w": 800,
      "h": 650,
-     "alt": "Schéma de la peau pendant le microneedling : un sérum pénètre par les perforations"
+     "alt": "Schéma de la peau pendant le soin Micro Pen : un sérum pénètre par les perforations"
     },
     {
      "src": "soins/microneedling4.webp",
      "w": 800,
      "h": 650,
-     "alt": "Schéma de la peau quatre à six semaines après le microneedling"
+     "alt": "Schéma de la peau quatre à six semaines après le soin Micro Pen"
     }
    ]
   },
@@ -1404,6 +1345,44 @@
      "alt": "Soin du visage en cabine"
     }
    ]
+  },
+  "regard": {
+   "title": "Beauté du regard : sourcils et cils",
+   "metaTitle": "Beauté du regard, sourcils et cils — My Bubble Beauty",
+   "description": "Reconstruction du sourcil, teinture des sourcils et des cils, Brow Lift et forfaits regard : des soins adaptés à votre beauté naturelle. Détails et tarifs.",
+   "priceTitle": "Tarifs",
+   "articleHtml": "<p>Révélez toute l’intensité de votre regard grâce à des soins adaptés à votre beauté naturelle.</p><h2>Reconstruction du sourcil</h2><p>Une prestation personnalisée qui permet de redessiner et harmoniser la ligne des sourcils selon la morphologie du visage. Elle comprend la restructuration et l’épilation afin d’obtenir une forme équilibrée et adaptée à chaque regard.</p><h2>Teinture des sourcils</h2><p>La teinture permet d’intensifier la couleur naturelle des sourcils, de mieux définir leur ligne et de donner davantage de profondeur au regard. La teinte est choisie en fonction de votre couleur naturelle et du résultat souhaité.</p><h2>Teinture des cils</h2><p>Ce soin permet de foncer les cils naturels pour intensifier le regard et apporter un effet mascara discret, sans maquillage. Idéal pour mettre en valeur les yeux au quotidien.</p><h2>Brow Lift</h2><p>Le Brow Lift est une technique qui consiste à discipliner et repositionner les poils des sourcils vers le haut afin de leur donner un effet plus fourni, lifté et structuré. Il permet d’obtenir des sourcils plus harmonieux et un regard naturellement ouvert.</p><h2>Forfaits beauté du regard</h2><p>Pour un résultat harmonieux et un regard sublimé, profitez de nos prestations combinées.</p><p><strong>Votre regard, notre priorité.</strong> La beauté réside dans les détails.</p>",
+   "prices": [
+    {
+     "name": "Reconstruction du sourcil",
+     "amount": "20 €"
+    },
+    {
+     "name": "Teinture des sourcils",
+     "amount": "15 €"
+    },
+    {
+     "name": "Teinture des cils",
+     "amount": "20 €"
+    },
+    {
+     "name": "Brow Lift",
+     "amount": "40 €"
+    },
+    {
+     "name": "Brow Lift + teinture",
+     "amount": "50 €"
+    },
+    {
+     "name": "Teinture sourcils + cils",
+     "amount": "30 €"
+    },
+    {
+     "name": "Brow Lift + teinture des cils",
+     "amount": "55 €"
+    }
+   ],
+   "figures": []
   }
  }
 }
