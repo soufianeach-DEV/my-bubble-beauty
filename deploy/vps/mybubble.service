@@ -10,7 +10,7 @@ Requires=postgresql.service
 Type=simple
 User=mybubble
 Group=mybubble
-WorkingDirectory=/srv/mybubble/current
+WorkingDirectory=/opt/mybubble/current
 EnvironmentFile=/etc/mybubble/env
 Environment=NODE_ENV=production HOST=127.0.0.1 PORT=10000 TZ=Europe/Brussels
 ExecStart=/usr/bin/node server.mjs

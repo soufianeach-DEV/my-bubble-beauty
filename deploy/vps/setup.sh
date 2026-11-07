@@ -52,8 +52,8 @@ systemctl restart systemd-journald
 echo "== Utilisateur du site"
 id mybubble >/dev/null 2>&1 || useradd --system --home-dir "$APP" --shell /usr/sbin/nologin mybubble
 install -d -o mybubble -g mybubble "$APP"
-# Versions construites : dossier à root, chaque version est figée après son build (deploy.sh)
-install -d -m 0755 -o root -g root "$APP/releases"
+# Versions construites et lien « current » hors de tout dossier à mybubble : il ne peut ni les remplacer ni les détourner
+install -d -m 0755 -o root -g root /opt/mybubble /opt/mybubble/releases
 [ -d "$APP/repo/.git" ] || runuser -u mybubble -- git clone -q "$REPO" "$APP/repo"
 
 echo "== Base Postgres (locale, joignable seulement depuis la machine)"

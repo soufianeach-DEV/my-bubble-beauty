@@ -8,7 +8,7 @@ Internet ─► Caddy (443, HTTPS automatique) ─► Node server.mjs (127.0.0.1
 
 | Élément | Où |
 | --- | --- |
-| Code | `/srv/mybubble/releases/<commit>`, version active : `/srv/mybubble/current` |
+| Code | `/opt/mybubble/releases/<commit>`, version active : `/opt/mybubble/current` |
 | Secrets | `/etc/mybubble/env` (jamais dans Git) |
 | Sauvegardes | `/var/backups/mybubble/` (chaque nuit à 3 h 30, 14 jours) |
 | Journaux | `journalctl -u mybubble` (gardés 14 jours) |
@@ -94,9 +94,9 @@ Dès que le DNS répond, Caddy obtient le certificat HTTPS tout seul (`journalct
 | Mettre à jour le site | `sudo mybubble-deploy main` |
 | Voir les erreurs | `journalctl -u mybubble -n 100` |
 | Redémarrer | `sudo systemctl restart mybubble` |
-| Revenir à une version | `ls /srv/mybubble/releases`, puis `ln -sfn /srv/mybubble/releases/<commit> /srv/mybubble/current && systemctl restart mybubble` |
+| Revenir à une version | `ls /opt/mybubble/releases`, puis `ln -sfn /opt/mybubble/releases/<commit> /opt/mybubble/current && systemctl restart mybubble` |
 | Sauvegarde tout de suite | `sudo systemctl start mybubble-backup` |
-| `mybubble.service` a changé dans le dépôt | le relire sur GitHub, puis `install -m 644 /srv/mybubble/current/deploy/vps/mybubble.service /etc/systemd/system/ && systemctl daemon-reload && systemctl restart mybubble` (jamais automatique : le build exécute du code de paquets npm) |
+| `mybubble.service` a changé dans le dépôt | le relire sur GitHub, puis `install -m 644 /opt/mybubble/current/deploy/vps/mybubble.service /etc/systemd/system/ && systemctl daemon-reload && systemctl restart mybubble` (jamais automatique : le build exécute du code de paquets npm) |
 
 ## Sauvegardes
 
