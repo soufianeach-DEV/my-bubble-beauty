@@ -5,10 +5,10 @@ import { readdirSync, readFileSync } from 'node:fs';
 
 const PAGES = new URL('../../pages/', import.meta.url);
 // admin.astro et api.ts comptent aussi, pas seulement les dossiers admin/ et api/
-const GUARDED = /^(admin|api)(\/|\.)|^\[folder\]\/(compte|reserver)/;
+const GUARDED = /^(admin|api|oauth)(\/|\.)|^\[folder\]\/(compte|reserver)/;
 
 test('motif des routes gardées : fichiers et dossiers admin, api, compte et réserver', () => {
-  for (const f of ['admin.astro', 'admin/code.astro', 'api.ts', 'api/stripe/webhook.ts', '[folder]/compte.astro', '[folder]/compte/connexion.astro', '[folder]/reserver.astro'])
+  for (const f of ['admin.astro', 'admin/code.astro', 'api.ts', 'api/stripe/webhook.ts', 'oauth/[provider].ts', 'oauth/[provider]/retour.ts', '[folder]/compte.astro', '[folder]/compte/connexion.astro', '[folder]/reserver.astro'])
     assert.match(f, GUARDED, f);
   for (const f of ['404.astro', 'index.astro', 'sitemap.xml.ts', 'administration.astro', '[folder]/index.astro', '[folder]/subPages/[slug].astro'])
     assert.doesNotMatch(f, GUARDED, f);

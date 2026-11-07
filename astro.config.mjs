@@ -37,6 +37,11 @@ export default defineConfig({
       STRIPE_WEBHOOK_SECRET: secret({ optional: true, startsWith: 'whsec_' }),
       RESEND_API_KEY: secret({ optional: true }),
       MAIL_FROM: secret({ optional: true }),
+      // Connexion par Google et Microsoft : bouton affiché seulement si l'identifiant et le secret sont tous deux présents
+      GOOGLE_CLIENT_ID: secret({ optional: true }),
+      GOOGLE_CLIENT_SECRET: secret({ optional: true }),
+      MICROSOFT_CLIENT_ID: secret({ optional: true }),
+      MICROSOFT_CLIENT_SECRET: secret({ optional: true }),
     },
   },
   build: {

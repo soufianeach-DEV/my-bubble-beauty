@@ -41,4 +41,13 @@ services:
         sync: false
       - key: MAIL_FROM
         sync: false
+      # Connexion par Google et Microsoft (facultatif : sans ces quatre valeurs, les boutons n'apparaissent pas)
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: MICROSOFT_CLIENT_ID
+        sync: false
+      - key: MICROSOFT_CLIENT_SECRET
+        sync: false
 

@@ -6,6 +6,7 @@ import { SITE_URL } from 'astro:env/server';
 import { z } from 'astro/zod';
 import Base from '../../../layouts/Base.astro';
 import PasswordField from './_password-field.astro';
+import External from './_external.astro';
 import '../../../styles/forms.css';
 import { COMPTE } from '../../../data/i18n/compte.ts';
 import { FOLDER, JS_VERSION, langOfFolder } from '../../../lib/site';
@@ -21,6 +22,8 @@ if (Astro.locals.user && Astro.request.method === 'GET') return Astro.redirect(b
 
 let email = '';
 let failed = false;
+// Retour d'un échec chez Google ou Microsoft (/oauth/…/retour)
+const externe = Astro.url.searchParams.get('externe');
 if (Astro.request.method === 'POST') {
   // Format d'adresse non contrôlé ici : une adresse fausse reçoit le même échec et compte dans les mêmes limites
   const { data, raw } = await readForm(Astro.request, z.object({ email: z.string().max(254), password: PASSWORD }));
@@ -31,10 +34,12 @@ if (Astro.request.method === 'POST') {
 }
 ---
 <Base lang={lang} pageKey="home" route="compte/connexion" title={`${tx.login.title} — My Bubble Beauty`} description={tx.login.description} noindex mainClass="legal">
-<Fragment slot="head"><script is:inline src={`/assets/js/password.js?v=${JS_VERSION}`} defer></script><script is:inline src={`/assets/js/auth-swap.js?v=${JS_VERSION}`} defer></script></Fragment>
+<Fragment slot="head"><script is:inline src={`/assets/js/password.js?v=${JS_VERSION}`} defer></script><script is:inline src={`/assets/js/auth-swap.js?v=${JS_VERSION}`}></script></Fragment>
 <div class="wrap"><div class="auth"><article>
 <h1>{tx.login.title}</h1>
 {failed && <p class="notice notice--error" role="alert">{tx.login.failed}</p>}
+{!failed && externe === 'echec' && <p class="notice notice--error" role="alert">{tx.ext.failed}</p>}
+{!failed && externe === 'annule' && <p class="notice" role="status">{tx.ext.cancelled}</p>}
 <p>{tx.login.intro}</p>
 <form class="form" method="post">
 <div class="field">
@@ -45,6 +50,7 @@ if (Astro.request.method === 'POST') {
 <button class="btn btn--solid" type="submit">{tx.login.submit}</button>
 </form>
 <p><a href={`/${d}/compte/mot-de-passe-oublie`}>{tx.login.forgot}</a></p>
+<External lang={lang} back={back} link />
 </article>
 {/* Lame de marque : glisse de droite à gauche vers l'inscription (transition de vue, voir forms.css) */}
 <aside class="auth__blade"><img class="auth__avatar" src="/assets/img/auth-table-800.webp" srcset="/assets/img/auth-table-480.webp 480w, /assets/img/auth-table-800.webp 800w" sizes="(max-width:759px) 100vw, 480px" width="800" height="1169" alt="" decoding="async"><div class="auth__veil"><p class="auth__brand">My Bubble <span>Beauty</span></p><p>{tx.login.noAccount}</p><a class="btn btn--ghost" href={`/${d}/compte/inscription`}>{tx.login.register}</a></div></aside>

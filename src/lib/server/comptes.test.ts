@@ -189,6 +189,53 @@ test('comptes, réservations et sécurité sur une vraie base', { skip: !url && 
       const rows = await sql`SELECT client_erased, user_id FROM bookings WHERE service_id = ${svc.id} AND client_erased`;
       assert.ok(rows.length >= 3 && rows.every((r) => r.user_id === null));
     });
+
+    const accounts = await import('./accounts.ts');
+    const { hashToken, newToken } = await import('./cookie.ts');
+    const who = (sub: string, email: string, emailVerified = true) => ({ provider: 'google' as const, subject: `${tag}${sub}`, email, emailVerified, name: 'Test' });
+
+    await t.test("Google : nouveau compte vérifié, puis même identité = même compte même si l'adresse change", async () => {
+      const first = await accounts.signInExternal(cookies(), who('g1', `${tag}g1@gmail.test`), 'fr', '127.0.0.1', null);
+      assert.ok(first);
+      const [u] = await sql`SELECT email_verified_at FROM users WHERE id = ${first.id}`;
+      assert.ok(u.email_verified_at);
+      const again = await accounts.signInExternal(cookies(), who('g1', `${tag}autre@gmail.test`), 'fr', '127.0.0.1', null);
+      assert.equal(again?.id, first.id);
+    });
+
+    await t.test('Google : compte existant de même adresse relié, sans toucher à son mot de passe', async () => {
+      const c = await mkUser('lie');
+      const r = await accounts.signInExternal(cookies(), who('g2', c.email), 'fr', '127.0.0.1', null);
+      assert.equal(r?.id, c.id);
+      assert.ok(await login(c.email, password, '127.0.0.2'));
+    });
+
+    await t.test("compte jamais confirmé : repris par la propriétaire de l'adresse, le mot de passe choisi par un tiers ne marche plus", async () => {
+      const email = `${tag}squat@test.local`;
+      const [s] = await sql`INSERT INTO users (email, password_hash) VALUES (${email}, ${hash}) RETURNING id`;
+      const r = await accounts.signInExternal(cookies(), who('g3', email), 'fr', '127.0.0.1', null);
+      assert.equal(r?.id, s.id);
+      assert.equal(await login(email, password, '127.0.0.3'), null);
+    });
+
+    await t.test('refusés : adresse non garantie par le fournisseur, adresse de la gérante, compte bloqué', async () => {
+      assert.equal(await accounts.signInExternal(cookies(), who('g4', `${tag}nv@test.local`, false), 'fr', '127.0.0.1', null), null);
+      assert.equal(await accounts.signInExternal(cookies(), who('g5', 'gerante@test.local'), 'fr', '127.0.0.1', null), null);
+      const c = await mkUser('bloque');
+      await sql`UPDATE users SET blocked_at = now() WHERE id = ${c.id}`;
+      assert.equal(await accounts.signInExternal(cookies(), who('g6', c.email), 'fr', '127.0.0.1', null), null);
+    });
+
+    await t.test('lien de connexion : ouvre la session une seule fois, refusé expiré', async () => {
+      const c = await mkUser('lien');
+      const token = newToken();
+      await sql`INSERT INTO email_tokens (token_hash, user_id, purpose, expires_at) VALUES (${hashToken(token)}, ${c.id}, 'login', now() + interval '15 minutes')`;
+      assert.equal((await accounts.signInWithLink(cookies(), token, '127.0.0.1', null))?.id, c.id);
+      assert.equal(await accounts.signInWithLink(cookies(), token, '127.0.0.1', null), null);
+      const old = newToken();
+      await sql`INSERT INTO email_tokens (token_hash, user_id, purpose, expires_at) VALUES (${hashToken(old)}, ${c.id}, 'login', now() - interval '1 minute')`;
+      assert.equal(await accounts.signInWithLink(cookies(), old, '127.0.0.1', null), null);
+    });
   } finally {
     await sql.end();
   }

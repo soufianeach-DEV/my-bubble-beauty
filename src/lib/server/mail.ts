@@ -31,6 +31,7 @@ const T = {
     verify: ['Confirmez votre adresse e-mail', 'Pour activer votre compte My Bubble Beauty, ouvrez le lien ci-dessous puis saisissez votre mot de passe. Il est valable 24 heures.', "Si vous n'avez pas créé de compte, ignorez simplement cet e-mail.", 'Confirmer mon adresse'],
     exists: ['Vous avez déjà un compte', "Une inscription vient d'être demandée avec cette adresse, qui a déjà un compte chez My Bubble Beauty. Connectez-vous avec votre mot de passe habituel.", 'Mot de passe oublié ? Choisissez-en un nouveau avec le lien ci-dessous.', "Si ce n'était pas vous, ignorez cet e-mail : rien n'a changé.", 'Choisir un nouveau mot de passe'],
     reset: ['Choisissez un nouveau mot de passe', 'Vous avez demandé à changer de mot de passe. Le lien ci-dessous est valable 30 minutes et ne sert qu\'une fois.', "Si vous n'avez rien demandé, ignorez cet e-mail : votre mot de passe reste le même.", 'Choisir mon mot de passe'],
+    login: ['Votre lien de connexion', "Voici votre lien pour vous connecter à votre compte My Bubble Beauty. Il est valable 15 minutes et ne sert qu'une fois.", "Si vous n'avez rien demandé, ignorez cet e-mail : personne ne peut se connecter sans ce lien.", 'Me connecter'],
     changed: ['Votre mot de passe a été modifié', "Le mot de passe de votre compte My Bubble Beauty vient d'être modifié.", `Si ce n'est pas vous, choisissez tout de suite un nouveau mot de passe avec le lien ci-dessous, puis appelez-nous au ${CONTACT.phoneLabel}.`, 'Choisir un nouveau mot de passe'],
     confirmed: 'Votre rendez-vous est confirmé',
     confirmedIntro: 'Votre rendez-vous chez My Bubble Beauty est confirmé.',
@@ -59,6 +60,7 @@ const T = {
     verify: ['Bevestig uw e-mailadres', 'Open de link hieronder en vul uw wachtwoord in om uw account bij My Bubble Beauty te activeren. De link is 24 uur geldig.', 'Hebt u geen account aangemaakt? Dan kunt u deze e-mail negeren.', 'Mijn adres bevestigen'],
     exists: ['U hebt al een account', 'Er werd net een registratie aangevraagd met dit adres, dat al een account heeft bij My Bubble Beauty. Log in met uw gewone wachtwoord.', 'Wachtwoord vergeten? Kies een nieuw wachtwoord via de link hieronder.', 'Was u dit niet? Negeer dan deze e-mail: er is niets gewijzigd.', 'Nieuw wachtwoord kiezen'],
     reset: ['Kies een nieuw wachtwoord', 'U hebt gevraagd om uw wachtwoord te wijzigen. De link hieronder is 30 minuten geldig en werkt maar één keer.', 'Hebt u niets gevraagd? Negeer dan deze e-mail: uw wachtwoord blijft hetzelfde.', 'Mijn wachtwoord kiezen'],
+    login: ['Uw inloglink', 'Met de link hieronder logt u in op uw account bij My Bubble Beauty. Hij is 15 minuten geldig en werkt maar één keer.', 'Hebt u niets gevraagd? Negeer dan deze e-mail: zonder deze link kan niemand inloggen.', 'Inloggen'],
     changed: ['Uw wachtwoord is gewijzigd', 'Het wachtwoord van uw account bij My Bubble Beauty is net gewijzigd.', `Was u dit niet? Kies dan meteen een nieuw wachtwoord via de link hieronder en bel ons op ${CONTACT.phoneLabel}.`, 'Nieuw wachtwoord kiezen'],
     confirmed: 'Uw afspraak is bevestigd',
     confirmedIntro: 'Uw afspraak bij My Bubble Beauty is bevestigd.',
@@ -87,6 +89,7 @@ const T = {
     verify: ['Confirm your email address', 'To activate your My Bubble Beauty account, open the link below and enter your password. The link is valid for 24 hours.', 'If you did not create an account, just ignore this email.', 'Confirm my address'],
     exists: ['You already have an account', 'Someone just asked to sign up with this address, which already has a My Bubble Beauty account. Log in with your usual password.', 'Forgot your password? Choose a new one with the link below.', "If this wasn't you, ignore this email: nothing has changed.", 'Choose a new password'],
     reset: ['Choose a new password', 'You asked to change your password. The link below is valid for 30 minutes and works only once.', "If you didn't ask for this, ignore this email: your password stays the same.", 'Choose my password'],
+    login: ['Your login link', 'Here is your link to log in to your My Bubble Beauty account. It is valid for 15 minutes and works only once.', "If you didn't ask for this, ignore this email: nobody can log in without this link.", 'Log in'],
     changed: ['Your password has been changed', 'The password of your My Bubble Beauty account has just been changed.', `If this wasn't you, choose a new password right away with the link below, then call us on ${CONTACT.phoneLabel}.`, 'Choose a new password'],
     confirmed: 'Your appointment is confirmed',
     confirmedIntro: 'Your appointment at My Bubble Beauty is confirmed.',
@@ -126,6 +129,11 @@ export function existsMail(lang: Lang): Mail {
 export function resetMail(lang: Lang, token: string): Mail {
   const [subject, a, b, label] = T[lang].reset;
   return build('reset', lang, subject, [T[lang].hello, a, b], [label, accountUrl(lang, `/nouveau-mot-de-passe?token=${token}`)]);
+}
+
+export function loginLinkMail(lang: Lang, token: string): Mail {
+  const [subject, a, b, label] = T[lang].login;
+  return build('login_link', lang, subject, [T[lang].hello, a, b], [label, accountUrl(lang, `/lien?token=${token}`)]);
 }
 
 export function passwordChangedMail(lang: Lang): Mail {

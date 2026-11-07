@@ -12,6 +12,9 @@ const PUBLIC = new Set([
   '/[folder]/compte/verification',
   '/[folder]/compte/mot-de-passe-oublie',
   '/[folder]/compte/nouveau-mot-de-passe',
+  '/[folder]/compte/lien',
+  '/oauth/[provider]',
+  '/oauth/[provider]/retour',
   '/api/stripe/webhook',
 ]);
 // Seules routes ouvertes à l'admin avant le code TOTP : le code lui-même, et la déconnexion pour en sortir

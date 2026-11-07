@@ -5,6 +5,7 @@ export const prerender = false;
 import { z } from 'astro/zod';
 import Base from '../../../layouts/Base.astro';
 import PasswordField from './_password-field.astro';
+import External from './_external.astro';
 import '../../../styles/forms.css';
 import { COMPTE } from '../../../data/i18n/compte.ts';
 import { FOLDER, JS_VERSION, langOfFolder, pagePath } from '../../../lib/site';
@@ -36,7 +37,7 @@ const invalid = (k: string) => (bad.has(k) ? 'true' : undefined);
 const [t0, cgv, t2, privacy, t4] = t.terms;
 ---
 <Base lang={lang} pageKey="home" route="compte/inscription" title={`${t.title} — My Bubble Beauty`} description={t.description} noindex mainClass="legal">
-<Fragment slot="head"><script is:inline src={`/assets/js/password.js?v=${JS_VERSION}`} defer></script><script is:inline src={`/assets/js/auth-swap.js?v=${JS_VERSION}`} defer></script></Fragment>
+<Fragment slot="head"><script is:inline src={`/assets/js/password.js?v=${JS_VERSION}`} defer></script><script is:inline src={`/assets/js/auth-swap.js?v=${JS_VERSION}`}></script></Fragment>
 <div class="wrap"><div class="auth auth--register"><article>
 <h1>{t.title}</h1>
 {sent ? (
@@ -49,12 +50,14 @@ const [t0, cgv, t2, privacy, t4] = t.terms;
 <Fragment>
 {error && <p class="notice notice--error" role="alert">{error}</p>}
 <p>{t.intro}</p>
+<External lang={lang} back={`/${d}/compte`} compact />
 <form class="form" method="post">
 <div class="field">
 <label for="email">{tx.email}</label>
 <input id="email" name="email" type="email" required maxlength="254" autocomplete="username" value={(raw.email ?? '').slice(0, 254)} aria-invalid={invalid('email')}>
 </div>
 <PasswordField id="password" name="password" label={tx.pw.label} lang={lang} isNew invalid={bad.has('password')} />
+<div class="form__row">
 <div class="field">
 <label for="name">{t.name}</label>
 <input id="name" name="name" type="text" required maxlength="100" autocomplete="name" value={(raw.name ?? '').slice(0, 100)} aria-invalid={invalid('name')}>
@@ -63,6 +66,7 @@ const [t0, cgv, t2, privacy, t4] = t.terms;
 <label for="phone">{t.phone} <span class="hint">{tx.optional}</span></label>
 <input id="phone" name="phone" type="tel" maxlength="30" autocomplete="tel" value={(raw.phone ?? '').slice(0, 30)} aria-invalid={invalid('phone')} aria-describedby="phone-hint">
 <p class="hint" id="phone-hint">{t.phoneHint}</p>
+</div>
 </div>
 <div class="check">
 <input id="terms" name="terms" type="checkbox" required checked={raw.terms === 'on'} aria-invalid={invalid('terms')}>

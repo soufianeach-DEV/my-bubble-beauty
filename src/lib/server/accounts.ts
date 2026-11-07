@@ -7,7 +7,8 @@ import { DEVICE, DEVICE_COOKIE, hashToken, newToken } from './cookie.ts';
 import { sql } from './db.ts';
 import { journal } from './journal.ts';
 import { log } from './log.ts';
-import { existsMail, passwordChangedMail, resetMail, sendMail, verifyMail, type Mail } from './mail.ts';
+import { existsMail, loginLinkMail, passwordChangedMail, resetMail, sendMail, verifyMail, type Mail } from './mail.ts';
+import type { Identity } from './oidc.ts';
 import { badEmail } from './password.ts';
 import { blocked, hit } from './rate.ts';
 import { isAdminEmail, openSession, revokeOthers, type SessionUser } from './session.ts';
@@ -19,7 +20,7 @@ export type PasswordProblem = 'short' | 'long' | 'pwned';
 const mailAllowed = (email: string, ip: string) => !hit('mailIp', ip) && !hit('mailTo', email);
 
 // Jeton d'e-mail créé puis envoyé sans être attendu : la réponse ne trahit pas l'existence du compte
-function mailWithToken(userId: number, email: string, purpose: 'verify' | 'reset', minutes: number, mail: (token: string) => Mail) {
+function mailWithToken(userId: number, email: string, purpose: 'verify' | 'reset' | 'login', minutes: number, mail: (token: string) => Mail) {
   const token = newToken();
   sql`INSERT INTO email_tokens (token_hash, user_id, purpose, expires_at) VALUES (${hashToken(token)}, ${userId}, ${purpose}, now() + make_interval(mins => ${minutes}::int))`
     .then(() => sendMail(email, mail(token)))
@@ -167,4 +168,104 @@ export async function signOutOthers(userId: number, password: string, keep: Buff
 export async function updateProfile(userId: number, p: { name: string | null; phone: string | null }): Promise<void> {
   await sql`UPDATE users SET name = ${p.name || null}, phone = ${p.phone || null}, updated_at = now() WHERE id = ${userId}`;
   journal('profile_updated', { actor: userId, client: userId });
+}
+
+// --- Connexion sans mot de passe : Google, Microsoft, lien par e-mail ---------------------------------------------------------
+// Jamais pour la gérante : son compte exige mot de passe + code de l'appli d'authentification.
+
+type Tx = Parameters<Parameters<typeof sql.begin>[0]>[0];
+
+// Compte créé avec cette adresse mais jamais confirmé : quelqu'un d'autre a pu en choisir le mot de passe. La personne qui vient de
+// prouver l'adresse prend le compte : mot de passe remplacé par un aléatoire (« mot de passe oublié » en donne un), sessions et liens tombent.
+async function claimUnverified(tx: Tx, userId: number) {
+  const fresh = await hashPassword(newToken());
+  await tx`UPDATE users SET password_hash = ${fresh}, email_verified_at = now(), updated_at = now() WHERE id = ${userId}`;
+  await tx`DELETE FROM sessions WHERE user_id = ${userId}`;
+  await tx`UPDATE email_tokens SET used_at = now() WHERE user_id = ${userId} AND used_at IS NULL`;
+}
+
+// Dernières vérifications puis session : bloqué ou supprimé depuis plus de 30 jours = même échec que les autres.
+// Un compte en suppression (moins de 30 jours) ouvre la session : le middleware l'envoie vers « Réactiver ».
+async function finishSignIn(cookies: AstroCookies, userId: number, via: string, ip: string, userAgent: string | null): Promise<LoginUser | null> {
+  const [u] = await sql<{ id: number; email: string; locale: Lang; blocked: boolean; gone: boolean }[]>`
+    SELECT id, email, locale, blocked_at IS NOT NULL AS blocked, deleted_at IS NOT NULL AND deleted_at <= now() - interval '30 days' AS gone
+    FROM users WHERE id = ${userId}`;
+  if (!u || u.gone || isAdminEmail(u.email)) return null;
+  if (u.blocked) {
+    journal('login_blocked', { client: u.id, ip, details: { via } });
+    return null;
+  }
+  journal('login_ok', { actor: u.id, client: u.id, ip, details: { via } });
+  await openSession(cookies, u.id, userAgent);
+  return { id: u.id, email: u.email, locale: u.locale };
+}
+
+// Retour de Google ou Microsoft. Ordre : identité déjà liée ; sinon compte de même adresse (adresse garantie par le fournisseur
+// seulement) ; sinon nouveau compte, adresse tenue pour vérifiée. Le lien (fournisseur, sujet) ne dépend plus ensuite de l'adresse.
+export async function signInExternal(cookies: AstroCookies, who: Identity, lang: Lang, ip: string, userAgent: string | null): Promise<LoginUser | null> {
+  if (hit('loginIp', ip)) {
+    log('login_locked', { ip });
+    return null;
+  }
+  if (isAdminEmail(who.email)) {
+    log('oauth_admin_refused', { provider: who.provider, ip });
+    return null;
+  }
+  const userId = await sql.begin(async (tx) => {
+    const [linked] = await tx<{ user_id: number }[]>`SELECT user_id FROM user_identities WHERE provider = ${who.provider} AND subject = ${who.subject}`;
+    if (linked) return linked.user_id;
+    if (!who.emailVerified || badEmail(who.email)) {
+      log('oauth_email_unverified', { provider: who.provider, ip });
+      return null;
+    }
+    const [u] = await tx<{ id: number; verified: boolean }[]>`SELECT id, email_verified_at IS NOT NULL AS verified FROM users WHERE email = ${who.email} FOR UPDATE`;
+    let id = u?.id;
+    if (u && !u.verified) await claimUnverified(tx, u.id);
+    if (!u) {
+      const [n] = await tx<{ id: number }[]>`
+        INSERT INTO users (email, password_hash, name, locale, email_verified_at)
+        VALUES (${who.email}, ${await hashPassword(newToken())}, ${who.name}, ${lang}, now()) RETURNING id`;
+      id = n.id;
+      journal('register', { actor: id, client: id, ip, details: { via: who.provider } });
+    }
+    await tx`INSERT INTO user_identities (provider, subject, user_id) VALUES (${who.provider}, ${who.subject}, ${id!}) ON CONFLICT DO NOTHING`;
+    return id!;
+  });
+  if (!userId) return null;
+  return finishSignIn(cookies, userId, who.provider, ip, userAgent);
+}
+
+// « Recevoir un lien de connexion » : rien n'est dit sur l'existence du compte, mêmes limites d'envoi que l'inscription.
+// Lien de 15 minutes à usage unique ; aucun pour la gérante.
+export async function requestLoginLink(email: string, lang: Lang, ip: string): Promise<void> {
+  email = email.trim().toLowerCase();
+  if (badEmail(email) || isAdminEmail(email)) return;
+  if (!mailAllowed(email, ip)) {
+    log('login_link_limited', { ip });
+    return;
+  }
+  const [u] = await sql<{ id: number }[]>`SELECT id FROM users WHERE email = ${email} AND blocked_at IS NULL`;
+  log('login_link_requested', { user_id: u?.id ?? null, ip });
+  if (u) mailWithToken(u.id, email, 'login', 15, (t) => loginLinkMail(lang, t));
+}
+
+// POST de /compte/lien : le jeton est consommé ici, jamais par un simple GET (les antivirus de messagerie ouvrent les liens)
+export async function signInWithLink(cookies: AstroCookies, token: string, ip: string, userAgent: string | null): Promise<LoginUser | null> {
+  if (hit('loginIp', ip)) {
+    log('login_locked', { ip });
+    return null;
+  }
+  const userId = await sql.begin(async (tx) => {
+    const [t] = await tx<{ user_id: number }[]>`UPDATE email_tokens SET used_at = now()
+      WHERE token_hash = ${hashToken(token)} AND purpose = 'login' AND used_at IS NULL AND expires_at > now() RETURNING user_id`;
+    if (!t) return null;
+    const [u] = await tx<{ verified: boolean }[]>`SELECT email_verified_at IS NOT NULL AS verified FROM users WHERE id = ${t.user_id} FOR UPDATE`;
+    if (u && !u.verified) await claimUnverified(tx, t.user_id);
+    return t.user_id;
+  });
+  if (!userId) {
+    log('login_link_invalid', { ip });
+    return null;
+  }
+  return finishSignIn(cookies, userId, 'lien', ip, userAgent);
 }
