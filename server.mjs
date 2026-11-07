@@ -17,6 +17,8 @@ if (missing.length || process.env.SITE_URL?.endsWith('/')) {
   log('config_invalid', { missing, siteUrlTrailingSlash: !!process.env.SITE_URL?.endsWith('/') });
   process.exit(1);
 }
+// Render crée les variables du Blueprint même laissées vides ; Astro n'accepte une variable facultative qu'absente (sinon « sk_ » attendu)
+for (const k of ['STRIPE_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET', 'RESEND_API_KEY', 'MAIL_FROM']) if (process.env[k] === '') delete process.env[k];
 
 const sql = postgres(process.env.DATABASE_URL, { max: 1, idle_timeout: 60, onnotice: () => {}, connection: { TimeZone: 'Europe/Brussels' } });
 log('migrations', { applied: await migrate(sql) });
