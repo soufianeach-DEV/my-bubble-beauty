@@ -603,55 +603,188 @@
      ]
     },
     {
-     "id": "epilation-definitive",
+     "id": "laser-visage",
      "cat": "epilation",
-     "title": "Épilation laser longue durée",
+     "title": "Épilation laser — Visage",
      "href": "laserepilation",
+     "intro": "La liberté d'une peau douce. Prenez soin de votre peau, séance après séance.",
      "items": [
+      {
+       "name": "Lèvre supérieure",
+       "href": null,
+       "amount": "45 €"
+      },
       {
        "name": "Menton",
        "href": null,
        "amount": "50 €"
       },
       {
-       "name": "Lèvre supérieure",
+       "name": "Joues",
+       "href": null,
+       "amount": "55 €"
+      },
+      {
+       "name": "Favoris",
        "href": null,
        "amount": "50 €"
       },
       {
+       "name": "Cou",
+       "href": null,
+       "amount": "60 €"
+      },
+      {
        "name": "Visage complet",
-       "href": null,
-       "amount": "120 €"
-      },
-      {
-       "name": "Aisselles",
-       "href": null,
-       "amount": "90 €"
-      },
-      {
-       "name": "Avant-bras",
        "href": null,
        "amount": "110 €"
       },
       {
-       "name": "Bras complet",
+       "name": "Visage + cou",
        "href": null,
-       "amount": "180 €"
+       "amount": "135 €"
+      }
+     ]
+    },
+    {
+     "id": "laser-haut-du-corps",
+     "cat": "epilation",
+     "title": "Épilation laser — Haut du corps",
+     "href": "laserepilation",
+     "items": [
+      {
+       "name": "Aisselles",
+       "href": null,
+       "amount": "65 €"
       },
       {
-       "name": "Bikini",
+       "name": "Avant-bras",
        "href": null,
-       "amount": "100 €"
+       "amount": "75 €"
+      },
+      {
+       "name": "Bras complets",
+       "href": null,
+       "amount": "130 €"
+      },
+      {
+       "name": "Mains et doigts",
+       "href": null,
+       "amount": "40 €"
+      },
+      {
+       "name": "Ligne du ventre",
+       "href": null,
+       "amount": "40 €"
+      },
+      {
+       "name": "Ventre complet",
+       "href": null,
+       "amount": "90 €"
+      },
+      {
+       "name": "Aréoles",
+       "href": null,
+       "amount": "45 €"
+      },
+      {
+       "name": "Décolleté",
+       "href": null,
+       "amount": "75 €"
+      }
+     ]
+    },
+    {
+     "id": "laser-maillot",
+     "cat": "epilation",
+     "title": "Épilation laser — Maillot",
+     "href": "laserepilation",
+     "items": [
+      {
+       "name": "Bikini classique",
+       "href": null,
+       "amount": "65 €"
+      },
+      {
+       "name": "Bikini échancré",
+       "href": null,
+       "amount": "75 €"
+      },
+      {
+       "name": "Bikini intégral",
+       "href": null,
+       "amount": "95 €"
+      },
+      {
+       "name": "Sillon interfessier",
+       "href": null,
+       "amount": "45 €"
+      },
+      {
+       "name": "Fesses",
+       "href": null,
+       "amount": "85 €"
+      }
+     ]
+    },
+    {
+     "id": "laser-jambes",
+     "cat": "epilation",
+     "title": "Épilation laser — Jambes",
+     "href": "laserepilation",
+     "items": [
+      {
+       "name": "Cuisses",
+       "href": null,
+       "amount": "120 €"
       },
       {
        "name": "Demi-jambes",
        "href": null,
-       "amount": "180 €"
+       "amount": "120 €"
       },
       {
        "name": "Jambes complètes",
        "href": null,
-       "amount": "250 €"
+       "amount": "200 €"
+      },
+      {
+       "name": "Pieds et orteils",
+       "href": null,
+       "amount": "40 €"
+      }
+     ]
+    },
+    {
+     "id": "laser-dos-torse",
+     "cat": "epilation",
+     "title": "Épilation laser — Dos et torse",
+     "href": "laserepilation",
+     "items": [
+      {
+       "name": "Bas du dos",
+       "href": null,
+       "amount": "75 €"
+      },
+      {
+       "name": "Dos complet",
+       "href": null,
+       "amount": "180 €"
+      },
+      {
+       "name": "Poitrine",
+       "href": null,
+       "amount": "100 €"
+      },
+      {
+       "name": "Ventre",
+       "href": null,
+       "amount": "90 €"
+      },
+      {
+       "name": "Épaules",
+       "href": null,
+       "amount": "80 €"
       }
      ]
     },
@@ -1068,47 +1201,127 @@
    ]
   },
   "laserepilation": {
-   "title": "L'épilation au laser longue durée en esthétique",
-   "metaTitle": "Épilation laser longue durée — My Bubble Beauty",
-   "description": "L'épilation laser longue durée utilise une lumière absorbée par la mélanine du poil pour freiner sa repousse. Plusieurs séances espacées sont nécessaires.",
-   "articleHtml": "<p>L'épilation au laser fonctionne en utilisant un laser spécifique qui émet une lumière intense. Cette lumière est absorbée par la mélanine présente dans les follicules pileux. L'énergie absorbée par la mélanine se transforme en chaleur, ce qui endommage le follicule pileux. Cela inhibe la croissance future des poils.</p><h2>Types de lasers</h2><p>Il existe différents types de lasers utilisés pour l'épilation, notamment les lasers Alexandrite, les lasers Nd:YAG et les lasers diode. Le choix dépend souvent de la couleur de votre peau et de vos poils.</p><h2>Séance d'épilation au laser</h2><p>Pendant une séance d'épilation au laser, le professionnel de l'esthétique applique le laser sur la zone à traiter. Vous portez généralement des lunettes de protection pour protéger vos yeux de la lumière intense. La séance peut être légèrement inconfortable, mais elle est généralement bien tolérée par la plupart des clients.</p><h2>Séries de séances</h2><p>L'épilation au laser n'est pas un soin ponctuel. Pour obtenir des résultats optimaux, plusieurs séances espacées de quelques semaines sont nécessaires, car les poils poussent en différents cycles.</p><h2>Résultats</h2><p>Les résultats de l'épilation au laser varient d'une personne à l'autre, mais de nombreux clients constatent une réduction significative de la croissance des poils après quelques séances. Une grande partie des poils peut être éliminée de manière durable, bien que des retouches occasionnelles puissent être nécessaires pour traiter les poils résiduels.</p><h2>Sécurité</h2><p>L'épilation au laser est généralement considérée comme un soin sûr lorsqu'elle est effectuée par un professionnel qualifié. Les effets secondaires courants sont temporaires et peuvent inclure une rougeur, une sensation de chaleur ou des démangeaisons dans la zone traitée.</p><h2>Avantages</h2><p>L'épilation au laser offre de nombreux avantages, notamment une réduction durable de la croissance des poils, une peau lisse et une diminution du besoin de rasage ou d'épilation à la cire.</p><h2>Consultation préalable</h2><p>Avant de subir une épilation au laser, il est recommandé de consulter un professionnel de l'esthétique pour évaluer votre type de peau, la couleur de vos poils et déterminer si vous êtes un bon candidat pour le soin.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><p>L'épilation au laser est une option populaire pour ceux qui souhaitent réduire durablement les poils indésirables. Cependant, il est essentiel de consulter un professionnel qualifié pour discuter des attentes, des résultats possibles et des précautions à prendre avant de subir ce traitement.</p><p class=\"video-link\"><a class=\"btn btn--ghost\" href=\"https://www.youtube.com/watch?v=bRvnZGqtHoc\" rel=\"noopener\">Voir la vidéo sur YouTube</a> <small>La vidéo s'ouvre sur YouTube.</small></p>",
-   "priceTitle": "Tarif — Épilation laser longue durée",
+   "title": "L'épilation laser",
+   "metaTitle": "L'épilation laser, la liberté d'une peau douce — My Bubble Beauty",
+   "description": "L'épilation laser réduit durablement la pilosité, séance après séance, pour une peau plus douce. Fonctionnement, objectifs du soin et tarifs par zone.",
+   "articleHtml": "<p>L'épilation laser est une technique qui permet de réduire durablement la pilosité grâce à une lumière concentrée qui cible la mélanine présente dans le poil.</p><p>L'énergie lumineuse est absorbée par le follicule pileux et transformée en chaleur, ce qui permet de détruire ou d'endommager les structures responsables de la repousse.</p><p>Au fil des séances, la pilosité diminue progressivement : les poils deviennent généralement moins nombreux, plus fins et moins visibles.</p><p>Le traitement nécessite plusieurs séances, car le laser est particulièrement efficace sur les poils en phase de croissance.</p><h2>Les objectifs du soin</h2><ul><li>Réduire durablement la pilosité.</li><li>Diminuer la densité des poils.</li><li>Ralentir la repousse.</li><li>Obtenir une peau plus douce.</li><li>Limiter les poils incarnés et les irritations liées au rasage.</li><li>Réduire les contraintes de l'épilation traditionnelle.</li></ul><h2>La liberté d'une peau douce</h2><p>Découvrez l'épilation laser, une technologie esthétique qui permet de réduire durablement la pilosité et de retrouver une peau plus douce au quotidien.</p><p>Grâce à un traitement adapté à votre peau et à votre pilosité, les séances permettent de diminuer progressivement la repousse des poils, de limiter les irritations et de réduire les contraintes de l'épilation traditionnelle.</p><p>Offrez-vous le confort d'une peau douce et une nouvelle liberté au quotidien.</p><p>Prenez soin de votre peau, séance après séance.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
+   "priceTitle": "Tarifs",
    "prices": [
+    {
+     "name": "Lèvre supérieure",
+     "amount": "45 €"
+    },
     {
      "name": "Menton",
      "amount": "50 €"
     },
     {
-     "name": "Lèvre supérieure",
+     "name": "Joues",
+     "amount": "55 €"
+    },
+    {
+     "name": "Favoris",
      "amount": "50 €"
     },
     {
+     "name": "Cou",
+     "amount": "60 €"
+    },
+    {
      "name": "Visage complet",
-     "amount": "120 €"
-    },
-    {
-     "name": "Aisselles",
-     "amount": "90 €"
-    },
-    {
-     "name": "Avant-bras",
      "amount": "110 €"
     },
     {
-     "name": "Bras complet",
-     "amount": "180 €"
+     "name": "Visage + cou",
+     "amount": "135 €"
     },
     {
-     "name": "Bikini",
-     "amount": "100 €"
+     "name": "Aisselles",
+     "amount": "65 €"
+    },
+    {
+     "name": "Avant-bras",
+     "amount": "75 €"
+    },
+    {
+     "name": "Bras complets",
+     "amount": "130 €"
+    },
+    {
+     "name": "Mains et doigts",
+     "amount": "40 €"
+    },
+    {
+     "name": "Ligne du ventre",
+     "amount": "40 €"
+    },
+    {
+     "name": "Ventre complet",
+     "amount": "90 €"
+    },
+    {
+     "name": "Aréoles",
+     "amount": "45 €"
+    },
+    {
+     "name": "Décolleté",
+     "amount": "75 €"
+    },
+    {
+     "name": "Bikini classique",
+     "amount": "65 €"
+    },
+    {
+     "name": "Bikini échancré",
+     "amount": "75 €"
+    },
+    {
+     "name": "Bikini intégral",
+     "amount": "95 €"
+    },
+    {
+     "name": "Sillon interfessier",
+     "amount": "45 €"
+    },
+    {
+     "name": "Fesses",
+     "amount": "85 €"
+    },
+    {
+     "name": "Cuisses",
+     "amount": "120 €"
     },
     {
      "name": "Demi-jambes",
-     "amount": "180 €"
+     "amount": "120 €"
     },
     {
      "name": "Jambes complètes",
-     "amount": "250 €"
+     "amount": "200 €"
+    },
+    {
+     "name": "Pieds et orteils",
+     "amount": "40 €"
+    },
+    {
+     "name": "Bas du dos",
+     "amount": "75 €"
+    },
+    {
+     "name": "Dos complet",
+     "amount": "180 €"
+    },
+    {
+     "name": "Poitrine",
+     "amount": "100 €"
+    },
+    {
+     "name": "Ventre",
+     "amount": "90 €"
+    },
+    {
+     "name": "Épaules",
+     "amount": "80 €"
     }
    ],
    "figures": [

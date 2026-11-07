@@ -603,55 +603,188 @@
      ]
     },
     {
-     "id": "epilation-definitive",
+     "id": "laser-visage",
      "cat": "epilation",
-     "title": "Langdurige laserontharing",
+     "title": "Laserontharing — Gezicht",
      "href": "laserepilation",
+     "intro": "De vrijheid van een zachte huid. Zorg voor je huid, sessie na sessie.",
      "items": [
+      {
+       "name": "Bovenlip",
+       "href": null,
+       "amount": "45 €"
+      },
       {
        "name": "Kin",
        "href": null,
        "amount": "50 €"
       },
       {
-       "name": "Bovenlip",
+       "name": "Wangen",
+       "href": null,
+       "amount": "55 €"
+      },
+      {
+       "name": "Bakkebaarden",
        "href": null,
        "amount": "50 €"
       },
       {
+       "name": "Hals",
+       "href": null,
+       "amount": "60 €"
+      },
+      {
        "name": "Volledig gezicht",
-       "href": null,
-       "amount": "120 €"
-      },
-      {
-       "name": "Oksels",
-       "href": null,
-       "amount": "90 €"
-      },
-      {
-       "name": "Onderarmen",
        "href": null,
        "amount": "110 €"
       },
       {
-       "name": "Volledige armen",
+       "name": "Gezicht + hals",
        "href": null,
-       "amount": "180 €"
+       "amount": "135 €"
+      }
+     ]
+    },
+    {
+     "id": "laser-haut-du-corps",
+     "cat": "epilation",
+     "title": "Laserontharing — Bovenlichaam",
+     "href": "laserepilation",
+     "items": [
+      {
+       "name": "Oksels",
+       "href": null,
+       "amount": "65 €"
       },
       {
-       "name": "Bikini",
+       "name": "Onderarmen",
        "href": null,
-       "amount": "100 €"
+       "amount": "75 €"
+      },
+      {
+       "name": "Volledige armen",
+       "href": null,
+       "amount": "130 €"
+      },
+      {
+       "name": "Handen en vingers",
+       "href": null,
+       "amount": "40 €"
+      },
+      {
+       "name": "Buiklijn",
+       "href": null,
+       "amount": "40 €"
+      },
+      {
+       "name": "Volledige buik",
+       "href": null,
+       "amount": "90 €"
+      },
+      {
+       "name": "Tepelhoven",
+       "href": null,
+       "amount": "45 €"
+      },
+      {
+       "name": "Decolleté",
+       "href": null,
+       "amount": "75 €"
+      }
+     ]
+    },
+    {
+     "id": "laser-maillot",
+     "cat": "epilation",
+     "title": "Laserontharing — Bikinilijn",
+     "href": "laserepilation",
+     "items": [
+      {
+       "name": "Klassieke bikinilijn",
+       "href": null,
+       "amount": "65 €"
+      },
+      {
+       "name": "Diepe bikinilijn",
+       "href": null,
+       "amount": "75 €"
+      },
+      {
+       "name": "Volledige bikini",
+       "href": null,
+       "amount": "95 €"
+      },
+      {
+       "name": "Bilnaad",
+       "href": null,
+       "amount": "45 €"
+      },
+      {
+       "name": "Billen",
+       "href": null,
+       "amount": "85 €"
+      }
+     ]
+    },
+    {
+     "id": "laser-jambes",
+     "cat": "epilation",
+     "title": "Laserontharing — Benen",
+     "href": "laserepilation",
+     "items": [
+      {
+       "name": "Dijen",
+       "href": null,
+       "amount": "120 €"
       },
       {
        "name": "Halve benen",
        "href": null,
-       "amount": "180 €"
+       "amount": "120 €"
       },
       {
        "name": "Volledige benen",
        "href": null,
-       "amount": "250 €"
+       "amount": "200 €"
+      },
+      {
+       "name": "Voeten en tenen",
+       "href": null,
+       "amount": "40 €"
+      }
+     ]
+    },
+    {
+     "id": "laser-dos-torse",
+     "cat": "epilation",
+     "title": "Laserontharing — Rug en borst",
+     "href": "laserepilation",
+     "items": [
+      {
+       "name": "Onderrug",
+       "href": null,
+       "amount": "75 €"
+      },
+      {
+       "name": "Volledige rug",
+       "href": null,
+       "amount": "180 €"
+      },
+      {
+       "name": "Borst",
+       "href": null,
+       "amount": "100 €"
+      },
+      {
+       "name": "Buik",
+       "href": null,
+       "amount": "90 €"
+      },
+      {
+       "name": "Schouders",
+       "href": null,
+       "amount": "80 €"
       }
      ]
     },
@@ -1068,47 +1201,127 @@
    ]
   },
   "laserepilation": {
-   "title": "Langdurige laserontharing in de esthetiek",
-   "metaTitle": "Langdurige laserontharing in de esthetiek — My Bubble Beauty",
-   "description": "Langdurige laserontharing gebruikt licht dat door de melanine in het haar wordt geabsorbeerd om de haargroei te remmen. Meerdere sessies zijn nodig.",
-   "articleHtml": "<p>Laserontharing werkt door gebruik te maken van een specifieke laser die intense lichtstraling uitzendt. Dit licht wordt geabsorbeerd door de melanine in de haarzakjes. De door de melanine geabsorbeerde energie van de laser wordt omgezet in warmte, wat de haarzakjes beschadigt. Dit remt de toekomstige haargroei.</p><h2>Soorten lasers</h2><p>Er zijn verschillende soorten lasers die worden gebruikt voor laserontharing, waaronder Alexandrite-lasers, Nd:YAG-lasers en diodelasers. De keuze is vaak afhankelijk van uw huidskleur en haarkleur.</p><h2>Laserontharingssessie</h2><p>Tijdens een laserontharingssessie brengt de schoonheidsspecialist de laser aan op het te behandelen gebied. U draagt meestal een beschermende bril om uw ogen te beschermen tegen het intense licht. De sessie kan enigszins ongemakkelijk zijn, maar wordt over het algemeen goed verdragen door de meeste klanten.</p><h2>Meerdere sessies</h2><p>Laserontharing is geen eenmalige behandeling. Om optimale resultaten te behalen, zijn meerdere sessies nodig met tussenpozen van enkele weken, omdat haren in verschillende cycli groeien.</p><h2>Resultaten</h2><p>De resultaten van laserontharing variëren van persoon tot persoon, maar veel klanten merken na enkele sessies een aanzienlijke afname van haargroei op. Een groot deel van de haren kan duurzaam worden verwijderd, hoewel af en toe bijwerken nodig kan zijn om resterende haren te behandelen.</p><h2>Veiligheid</h2><p>Laserontharing wordt over het algemeen beschouwd als een veilige behandeling wanneer ze wordt uitgevoerd door een gekwalificeerde professional. Gangbare bijwerkingen zijn tijdelijk en kunnen roodheid, warmtegevoel of jeuk op het behandelde gebied omvatten.</p><h2>Voordelen</h2><p>Laserontharing heeft veel voordelen, waaronder duurzame vermindering van haargroei, een gladde huid en verminderde behoefte aan scheren of harsen.</p><h2>Voorafgaand consult</h2><p>Voordat u laserontharing ondergaat, wordt het aanbevolen om een schoonheidsspecialist te raadplegen om uw huidtype, haarkleur en geschiktheid voor de behandeling te beoordelen.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><p>Laserontharing is een populaire keuze voor degenen die ongewenst haar duurzaam willen verminderen. Het is echter essentieel om een gekwalificeerde professional te raadplegen om de verwachtingen, mogelijke resultaten en voorzorgsmaatregelen te bespreken voordat u deze behandeling ondergaat.</p><p class=\"video-link\"><a class=\"btn btn--ghost\" href=\"https://www.youtube.com/watch?v=bRvnZGqtHoc\" rel=\"noopener\">Bekijk de video op YouTube</a> <small>De video opent op YouTube.</small></p>",
-   "priceTitle": "Tarief — Langdurige laserontharing",
+   "title": "Laserontharing",
+   "metaTitle": "Laserontharing, de vrijheid van een zachte huid — My Bubble Beauty",
+   "description": "Laserontharing vermindert de haargroei blijvend, sessie na sessie, voor een zachtere huid. Werking, doelen van de behandeling en tarieven per zone.",
+   "articleHtml": "<p>Laserontharing is een techniek die de haargroei blijvend vermindert met geconcentreerd licht dat de melanine in het haar viseert.</p><p>De lichtenergie wordt opgenomen door de haarzakjes en omgezet in warmte, waardoor de structuren die voor de hergroei zorgen, worden vernietigd of beschadigd.</p><p>Sessie na sessie vermindert de haargroei geleidelijk: de haartjes worden doorgaans minder talrijk, fijner en minder zichtbaar.</p><p>De behandeling vraagt meerdere sessies, omdat de laser vooral werkt op haartjes in de groeifase.</p><h2>De doelen van de behandeling</h2><ul><li>De haargroei blijvend verminderen.</li><li>De haardichtheid verlagen.</li><li>De hergroei vertragen.</li><li>Een zachtere huid krijgen.</li><li>Ingegroeide haartjes en irritaties door scheren beperken.</li><li>Minder last van klassieke ontharing.</li></ul><h2>De vrijheid van een zachte huid</h2><p>Ontdek laserontharing, een esthetische technologie die de haargroei blijvend vermindert, voor een zachtere huid in het dagelijkse leven.</p><p>Met een behandeling afgestemd op je huid en je haargroei verminderen de sessies geleidelijk de hergroei, beperken ze irritaties en verlichten ze de nadelen van klassieke ontharing.</p><p>Gun jezelf het comfort van een zachte huid en een nieuwe vrijheid in het dagelijkse leven.</p><p>Zorg voor je huid, sessie na sessie.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p>",
+   "priceTitle": "Tarieven",
    "prices": [
+    {
+     "name": "Bovenlip",
+     "amount": "45 €"
+    },
     {
      "name": "Kin",
      "amount": "50 €"
     },
     {
-     "name": "Bovenlip",
+     "name": "Wangen",
+     "amount": "55 €"
+    },
+    {
+     "name": "Bakkebaarden",
      "amount": "50 €"
     },
     {
+     "name": "Hals",
+     "amount": "60 €"
+    },
+    {
      "name": "Volledig gezicht",
-     "amount": "120 €"
-    },
-    {
-     "name": "Oksels",
-     "amount": "90 €"
-    },
-    {
-     "name": "Onderarmen",
      "amount": "110 €"
     },
     {
-     "name": "Volledige armen",
-     "amount": "180 €"
+     "name": "Gezicht + hals",
+     "amount": "135 €"
     },
     {
-     "name": "Bikini",
-     "amount": "100 €"
+     "name": "Oksels",
+     "amount": "65 €"
+    },
+    {
+     "name": "Onderarmen",
+     "amount": "75 €"
+    },
+    {
+     "name": "Volledige armen",
+     "amount": "130 €"
+    },
+    {
+     "name": "Handen en vingers",
+     "amount": "40 €"
+    },
+    {
+     "name": "Buiklijn",
+     "amount": "40 €"
+    },
+    {
+     "name": "Volledige buik",
+     "amount": "90 €"
+    },
+    {
+     "name": "Tepelhoven",
+     "amount": "45 €"
+    },
+    {
+     "name": "Decolleté",
+     "amount": "75 €"
+    },
+    {
+     "name": "Klassieke bikinilijn",
+     "amount": "65 €"
+    },
+    {
+     "name": "Diepe bikinilijn",
+     "amount": "75 €"
+    },
+    {
+     "name": "Volledige bikini",
+     "amount": "95 €"
+    },
+    {
+     "name": "Bilnaad",
+     "amount": "45 €"
+    },
+    {
+     "name": "Billen",
+     "amount": "85 €"
+    },
+    {
+     "name": "Dijen",
+     "amount": "120 €"
     },
     {
      "name": "Halve benen",
-     "amount": "180 €"
+     "amount": "120 €"
     },
     {
      "name": "Volledige benen",
-     "amount": "250 €"
+     "amount": "200 €"
+    },
+    {
+     "name": "Voeten en tenen",
+     "amount": "40 €"
+    },
+    {
+     "name": "Onderrug",
+     "amount": "75 €"
+    },
+    {
+     "name": "Volledige rug",
+     "amount": "180 €"
+    },
+    {
+     "name": "Borst",
+     "amount": "100 €"
+    },
+    {
+     "name": "Buik",
+     "amount": "90 €"
+    },
+    {
+     "name": "Schouders",
+     "amount": "80 €"
     }
    ],
    "figures": [

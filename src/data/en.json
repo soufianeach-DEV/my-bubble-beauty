@@ -603,55 +603,188 @@
      ]
     },
     {
-     "id": "epilation-definitive",
+     "id": "laser-visage",
      "cat": "epilation",
-     "title": "Long-Lasting Laser Hair Removal",
+     "title": "Laser hair removal — Face",
      "href": "laserepilation",
+     "intro": "The freedom of smooth skin. Take care of your skin, session after session.",
      "items": [
+      {
+       "name": "Upper lip",
+       "href": null,
+       "amount": "45 €"
+      },
       {
        "name": "Chin",
        "href": null,
        "amount": "50 €"
       },
       {
-       "name": "Upper Lip",
+       "name": "Cheeks",
+       "href": null,
+       "amount": "55 €"
+      },
+      {
+       "name": "Sideburns",
        "href": null,
        "amount": "50 €"
       },
       {
-       "name": "Full Face",
+       "name": "Neck",
        "href": null,
-       "amount": "120 €"
+       "amount": "60 €"
       },
       {
-       "name": "Underarms",
-       "href": null,
-       "amount": "90 €"
-      },
-      {
-       "name": "Forearms",
+       "name": "Full face",
        "href": null,
        "amount": "110 €"
       },
       {
-       "name": "Full Arms",
+       "name": "Face + neck",
+       "href": null,
+       "amount": "135 €"
+      }
+     ]
+    },
+    {
+     "id": "laser-haut-du-corps",
+     "cat": "epilation",
+     "title": "Laser hair removal — Upper body",
+     "href": "laserepilation",
+     "items": [
+      {
+       "name": "Underarms",
+       "href": null,
+       "amount": "65 €"
+      },
+      {
+       "name": "Forearms",
+       "href": null,
+       "amount": "75 €"
+      },
+      {
+       "name": "Full arms",
+       "href": null,
+       "amount": "130 €"
+      },
+      {
+       "name": "Hands and fingers",
+       "href": null,
+       "amount": "40 €"
+      },
+      {
+       "name": "Belly line",
+       "href": null,
+       "amount": "40 €"
+      },
+      {
+       "name": "Full abdomen",
+       "href": null,
+       "amount": "90 €"
+      },
+      {
+       "name": "Areolas",
+       "href": null,
+       "amount": "45 €"
+      },
+      {
+       "name": "Décolleté",
+       "href": null,
+       "amount": "75 €"
+      }
+     ]
+    },
+    {
+     "id": "laser-maillot",
+     "cat": "epilation",
+     "title": "Laser hair removal — Bikini area",
+     "href": "laserepilation",
+     "items": [
+      {
+       "name": "Classic bikini",
+       "href": null,
+       "amount": "65 €"
+      },
+      {
+       "name": "High-cut bikini",
+       "href": null,
+       "amount": "75 €"
+      },
+      {
+       "name": "Full bikini",
+       "href": null,
+       "amount": "95 €"
+      },
+      {
+       "name": "Intergluteal cleft",
+       "href": null,
+       "amount": "45 €"
+      },
+      {
+       "name": "Buttocks",
+       "href": null,
+       "amount": "85 €"
+      }
+     ]
+    },
+    {
+     "id": "laser-jambes",
+     "cat": "epilation",
+     "title": "Laser hair removal — Legs",
+     "href": "laserepilation",
+     "items": [
+      {
+       "name": "Thighs",
+       "href": null,
+       "amount": "120 €"
+      },
+      {
+       "name": "Half legs",
+       "href": null,
+       "amount": "120 €"
+      },
+      {
+       "name": "Full legs",
+       "href": null,
+       "amount": "200 €"
+      },
+      {
+       "name": "Feet and toes",
+       "href": null,
+       "amount": "40 €"
+      }
+     ]
+    },
+    {
+     "id": "laser-dos-torse",
+     "cat": "epilation",
+     "title": "Laser hair removal — Back and chest",
+     "href": "laserepilation",
+     "items": [
+      {
+       "name": "Lower back",
+       "href": null,
+       "amount": "75 €"
+      },
+      {
+       "name": "Full back",
        "href": null,
        "amount": "180 €"
       },
       {
-       "name": "Bikini",
+       "name": "Chest",
        "href": null,
        "amount": "100 €"
       },
       {
-       "name": "Half Legs",
+       "name": "Abdomen",
        "href": null,
-       "amount": "180 €"
+       "amount": "90 €"
       },
       {
-       "name": "Full Legs",
+       "name": "Shoulders",
        "href": null,
-       "amount": "250 €"
+       "amount": "80 €"
       }
      ]
     },
@@ -1068,47 +1201,127 @@
    ]
   },
   "laserepilation": {
-   "title": "Long-Lasting Laser Hair Removal in Aesthetics",
-   "metaTitle": "Long-Lasting Laser Hair Removal in Aesthetics — My Bubble Beauty",
-   "description": "Long-lasting laser hair removal uses light absorbed by the melanin in the hair to slow regrowth. Several sessions, a few weeks apart, are needed.",
-   "articleHtml": "<p>Laser hair removal works by using a specific laser that emits intense light radiation. This light is absorbed by the melanin in the hair follicles. The energy absorbed by the melanin is converted into heat, which damages the hair follicles, inhibiting future hair growth.</p><h2>Types of Lasers</h2><p>Various types of lasers are used for laser hair removal, including Alexandrite lasers, Nd:YAG lasers, and diode lasers. The choice often depends on your skin and hair colour.</p><h2>Laser Hair Removal Session</h2><p>During a laser hair removal session, the aesthetic professional applies the laser to the area being treated. You will typically wear protective goggles to shield your eyes from the intense light. The session can be somewhat uncomfortable but is generally well tolerated by most clients.</p><h2>Series of Sessions</h2><p>Laser hair removal is not a one-time treatment. To achieve optimal results, multiple sessions are required at intervals of several weeks, as hair grows in different cycles.</p><h2>Results</h2><p>The results of laser hair removal vary from person to person, but many clients notice a significant reduction in hair growth after several sessions. A substantial portion of the hair can be removed for the long term, although occasional touch-ups may be needed to treat any remaining hair.</p><h2>Safety</h2><p>Laser hair removal is generally considered a safe treatment when performed by a qualified professional. Common side effects are temporary and may include redness, warmth, or itching in the treated area.</p><h2>Benefits</h2><p>Laser hair removal offers many benefits, including long-lasting hair reduction, smooth skin, and a reduced need for shaving or waxing.</p><h2>Prior Consultation</h2><p>Before undergoing laser hair removal, it is recommended to consult an aesthetic professional to assess your skin type, hair colour, and suitability for the treatment.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p><p>Laser hair removal is a popular choice for those looking to reduce unwanted hair over the long term. However, it is essential to consult a qualified professional to discuss expectations, potential results, and precautions before undergoing this treatment.</p><p class=\"video-link\"><a class=\"btn btn--ghost\" href=\"https://www.youtube.com/watch?v=bRvnZGqtHoc\" rel=\"noopener\">Watch the video on YouTube</a> <small>The video opens on YouTube.</small></p>",
-   "priceTitle": "Price — Long-Lasting Laser Hair Removal",
+   "title": "Laser hair removal",
+   "metaTitle": "Laser hair removal, the freedom of smooth skin — My Bubble Beauty",
+   "description": "Laser hair removal reduces hair growth over the long term, session after session, for smoother skin. How it works, treatment goals and prices by area.",
+   "articleHtml": "<p>Laser hair removal is a technique that reduces hair growth over the long term, using concentrated light that targets the melanin in the hair.</p><p>The light energy is absorbed by the hair follicle and turned into heat, which destroys or damages the structures responsible for regrowth.</p><p>Session after session, hair growth gradually decreases: hairs usually become fewer, finer and less visible.</p><p>The treatment requires several sessions, as the laser works best on hairs in their growth phase.</p><h2>Treatment goals</h2><ul><li>Reduce hair growth over the long term.</li><li>Lower hair density.</li><li>Slow down regrowth.</li><li>Get smoother skin.</li><li>Limit ingrown hairs and shaving irritation.</li><li>Ease the hassle of traditional hair removal.</li></ul><h2>The freedom of smooth skin</h2><p>Discover laser hair removal, an aesthetic technology that reduces hair growth over the long term for smoother skin every day.</p><p>With a treatment tailored to your skin and hair, the sessions gradually reduce regrowth, limit irritation and ease the hassle of traditional hair removal.</p><p>Treat yourself to the comfort of smooth skin and a new everyday freedom.</p><p>Take care of your skin, session after session.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p>",
+   "priceTitle": "Prices",
    "prices": [
+    {
+     "name": "Upper lip",
+     "amount": "45 €"
+    },
     {
      "name": "Chin",
      "amount": "50 €"
     },
     {
-     "name": "Upper Lip",
+     "name": "Cheeks",
+     "amount": "55 €"
+    },
+    {
+     "name": "Sideburns",
      "amount": "50 €"
     },
     {
-     "name": "Full Face",
-     "amount": "120 €"
+     "name": "Neck",
+     "amount": "60 €"
     },
     {
-     "name": "Underarms",
-     "amount": "90 €"
-    },
-    {
-     "name": "Forearms",
+     "name": "Full face",
      "amount": "110 €"
     },
     {
-     "name": "Full Arms",
+     "name": "Face + neck",
+     "amount": "135 €"
+    },
+    {
+     "name": "Underarms",
+     "amount": "65 €"
+    },
+    {
+     "name": "Forearms",
+     "amount": "75 €"
+    },
+    {
+     "name": "Full arms",
+     "amount": "130 €"
+    },
+    {
+     "name": "Hands and fingers",
+     "amount": "40 €"
+    },
+    {
+     "name": "Belly line",
+     "amount": "40 €"
+    },
+    {
+     "name": "Full abdomen",
+     "amount": "90 €"
+    },
+    {
+     "name": "Areolas",
+     "amount": "45 €"
+    },
+    {
+     "name": "Décolleté",
+     "amount": "75 €"
+    },
+    {
+     "name": "Classic bikini",
+     "amount": "65 €"
+    },
+    {
+     "name": "High-cut bikini",
+     "amount": "75 €"
+    },
+    {
+     "name": "Full bikini",
+     "amount": "95 €"
+    },
+    {
+     "name": "Intergluteal cleft",
+     "amount": "45 €"
+    },
+    {
+     "name": "Buttocks",
+     "amount": "85 €"
+    },
+    {
+     "name": "Thighs",
+     "amount": "120 €"
+    },
+    {
+     "name": "Half legs",
+     "amount": "120 €"
+    },
+    {
+     "name": "Full legs",
+     "amount": "200 €"
+    },
+    {
+     "name": "Feet and toes",
+     "amount": "40 €"
+    },
+    {
+     "name": "Lower back",
+     "amount": "75 €"
+    },
+    {
+     "name": "Full back",
      "amount": "180 €"
     },
     {
-     "name": "Bikini",
+     "name": "Chest",
      "amount": "100 €"
     },
     {
-     "name": "Half Legs",
-     "amount": "180 €"
+     "name": "Abdomen",
+     "amount": "90 €"
     },
     {
-     "name": "Full Legs",
-     "amount": "250 €"
+     "name": "Shoulders",
+     "amount": "80 €"
     }
    ],
    "figures": [
