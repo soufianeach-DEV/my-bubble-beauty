@@ -91,7 +91,7 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
         {b.cancel_reason && <><br><small>{REASON[b.cancel_reason]}</small></>}
         {due(b) > 0 && b.status !== 'confirmed' && <><br><small>Acompte à rendre</small></>}
       </td>
-      <td>Prix {euros(b.price_cents - b.discount_cents)}<br>Acompte {b.deposit_cents > 0 ? `${euros(b.deposit_cents)}${b.paid ? ' payé' : ''}` : 'aucun'}{b.refunded_cents > 0 && <><br>Remboursé {euros(b.refunded_cents)}</>}</td>
+      <td>Prix {euros(b.price_cents - b.discount_cents)}{b.deposit_cents > 0 && <><br>Acompte {euros(b.deposit_cents)}{b.paid ? ' payé' : ''}</>}{b.refunded_cents > 0 && <><br>Remboursé {euros(b.refunded_cents)}</>}</td>
       <td>
         {b.status === 'confirmed' && b.past && (
           <form class="cell-form" method="post" action={self}>

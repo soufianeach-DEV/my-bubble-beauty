@@ -26,10 +26,10 @@ test('jours voisins et lundi, changements d\'heure et fin d\'année compris', ()
 });
 
 test('prestation : durée exigée pour l\'ouvrir, montants convertis', () => {
-  const base = { id: '7', name_fr: 'Soin', name_nl: 'Verzorging', name_en: 'Care', duration: '', price: '35', deposit: '0', sort: '0' };
+  const base = { id: '7', name_fr: 'Soin', name_nl: 'Verzorging', name_en: 'Care', duration: '', price: '35', sort: '0' };
   const off = serviceForm.safeParse(base);
   assert.ok(off.success);
-  assert.deepEqual(off.data, { ...base, id: 7, duration: null, buffer: 0, price: 3500, deposit: 0, sort: 0, active: false });
+  assert.deepEqual(off.data, { ...base, id: 7, duration: null, buffer: 0, price: 3500, sort: 0, active: false });
   // Temps tampon : 0 à 120 minutes
   assert.equal(serviceForm.safeParse({ ...base, buffer: '15' }).data?.buffer, 15);
   assert.match(err(serviceForm.safeParse({ ...base, buffer: '121' }))!, /tampon/);

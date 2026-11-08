@@ -49,10 +49,10 @@ export async function saveService(userId: number, form: FormData): Promise<Resul
   const s = p.data;
   const [r] = await sql`
     UPDATE services SET name_fr = ${s.name_fr}, name_nl = ${s.name_nl}, name_en = ${s.name_en}, duration_min = ${s.duration}, buffer_min = ${s.buffer},
-      price_cents = ${s.price}, deposit_cents = ${s.deposit}, sort = ${s.sort}, active = ${s.active}
+      price_cents = ${s.price}, deposit_cents = 0, sort = ${s.sort}, active = ${s.active}
     WHERE id = ${s.id} RETURNING id`;
   if (!r) return { ok: false, error: 'Prestation introuvable.' };
-  audit(userId, 'service_saved', { service_id: s.id, active: s.active, duration: s.duration, buffer: s.buffer, price: s.price, deposit: s.deposit });
+  audit(userId, 'service_saved', { service_id: s.id, active: s.active, duration: s.duration, buffer: s.buffer, price: s.price });
   return { ok: true, id: s.id };
 }
 

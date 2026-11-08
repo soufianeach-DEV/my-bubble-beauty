@@ -50,7 +50,6 @@ export const serviceForm = z
     // Vide = aucun tampon
     buffer: optInt(0, 120, 'Temps tampon : nombre de minutes de 0 à 120.').transform((v) => v ?? 0),
     price: money('Prix : montant en euros, par exemple 35 ou 12,50.'),
-    deposit: money('Acompte : montant en euros, 0 pour aucun.'),
     sort: int(0, 9999, 'Ordre : nombre entier de 0 à 9999.'),
     active: box,
   })

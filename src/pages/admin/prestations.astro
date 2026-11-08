@@ -1,6 +1,6 @@
 ---
 export const prerender = false;
-// Prestations : durée, prix, acompte, ordre, noms et ouverture à la réservation en ligne ; une ligne = un formulaire, jamais de suppression
+// Prestations : durée, prix, ordre, noms et ouverture à la réservation en ligne ; une ligne = un formulaire, jamais de suppression
 import Admin from './_layout.astro';
 import { adminId, byCategory, listServices, readForm, saveService } from '../../lib/server/admin.ts';
 import { centsInput } from '../../lib/server/admin-form.ts';
@@ -20,7 +20,7 @@ if (Astro.request.method === 'POST') {
 const groups = byCategory(await listServices());
 ---
 <Admin title="Prestations">
-<p>Une prestation n'est proposée en ligne que cochée « En ligne », et seulement avec une durée. Montants en euros (35 ou 12,50) ; acompte 0 = réservation confirmée sans paiement. Enregistrez chaque ligne séparément.</p>
+<p>Une prestation n'est proposée en ligne que cochée « En ligne », et seulement avec une durée. Prix en euros (35 ou 12,50). Aucun paiement en ligne : la cliente règle au salon. Enregistrez chaque ligne séparément.</p>
 {flash?.error && !groups.some((g) => g.items.some((s) => s.id === flash!.id)) && <p class="notice notice--error" role="alert">{flash.text}</p>}
 {groups.map((g) => (
   <section aria-labelledby={`c-${g.key}`}>
@@ -37,7 +37,6 @@ const groups = byCategory(await listServices());
           <label>Durée (min)<input name="duration" type="number" min="5" max="600" step="1" value={s.duration_min ?? ''}></label>
           <label>Tampon (min)<input name="buffer" type="number" min="0" max="120" step="5" value={s.buffer_min}></label>
           <label>Prix (€)<input name="price" inputmode="decimal" pattern="[0-9]{1,5}([.,][0-9]{1,2})?" value={centsInput(s.price_cents)} required></label>
-          <label>Acompte (€)<input name="deposit" inputmode="decimal" pattern="[0-9]{1,5}([.,][0-9]{1,2})?" value={centsInput(s.deposit_cents)} required></label>
           <label>Ordre<input name="sort" type="number" min="0" max="9999" step="1" value={s.sort} required></label>
         </div>
         <div class="end">

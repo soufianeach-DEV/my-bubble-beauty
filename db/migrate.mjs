@@ -10,7 +10,7 @@ const AMOUNT = /^(?:Dès )?(\d+)(?:,(\d{2}))? €$/;
 
 const slugify = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-// Tarifs des JSON du site : nom « groupe, item » dans les 3 langues, tous inactifs tant que la gérante n'a pas saisi durée et acompte
+// Tarifs des JSON du site : nom « groupe, item » dans les 3 langues, tous inactifs tant que la gérante n'a pas saisi la durée
 async function serviceSeed() {
   const [fr, nl, en] = await Promise.all(['fr', 'nl', 'en'].map(async (l) => JSON.parse(await readFile(new URL(`${l}.json`, DATA), 'utf8')).home.tarifs.groups));
   return fr.flatMap((g, i) => g.items.map((item, j) => {
@@ -59,7 +59,7 @@ export async function migrate(sql) {
     }
     // Tarifs du site modifiés (empreinte différente) : la réservation suit les pages. Nouvelles prestations ajoutées (inactives),
     // noms, catégorie, prix et ordre repris du site, prestations disparues retirées de la réservation (jamais supprimées : des rendez-vous y renvoient).
-    // Durée, acompte et activation restent ceux de la gérante. Rejoué seulement quand les tarifs changent, pas à chaque démarrage.
+    // Durée et activation restent celles de la gérante. Rejoué seulement quand les tarifs changent, pas à chaque démarrage.
     const step = `tarifs_site:${createHash('sha256').update(JSON.stringify(seed)).digest('hex').slice(0, 16)}`;
     if (!done.has(step)) {
       await syncServices(tx, seed);

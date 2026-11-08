@@ -1,5 +1,5 @@
 ---
-// Prise de rendez-vous en trois étapes : prestation, jour et créneau, puis récapitulatif (code promo, CGV) et acompte chez Stripe.
+// Prise de rendez-vous en trois étapes : prestation, jour et créneau, puis récapitulatif (code promo, CGV) et confirmation, sans paiement en ligne.
 // Aucun montant ne vient du formulaire : le devis et la réservation relisent tout en base à chaque POST.
 import { z } from 'astro/zod';
 import Base from '../../layouts/Base.astro';
@@ -7,7 +7,7 @@ import '../../styles/forms.css';
 import { CONTACT, FOLDER, langOfFolder, pagePath, t } from '../../lib/site';
 import { RESERVER } from '../../data/i18n/reserver';
 import { createBooking, MAX_UPCOMING, type BookingError } from '../../lib/server/booking.ts';
-import { amounts, euros, isDay, todayBrussels } from '../../lib/server/pricing.ts';
+import { euros, isDay, todayBrussels } from '../../lib/server/pricing.ts';
 import { bookingOpen, quote, type Quote } from '../../lib/server/quote.ts';
 import { bookableServices, slots, type Slot } from '../../lib/server/slots.ts';
 import { setConsent } from '../../lib/server/rgpd.ts';
@@ -156,8 +156,7 @@ const summary = error ?? promoMsg;
   <section class="group" aria-labelledby={`h-cat-${g.key}`}>
   <h3 id={`h-cat-${g.key}`}>{g.label}</h3>
   <ul class="prices">{g.items.map((s) => {
-    const dep = amounts(s.price_cents, s.deposit_cents).deposit_cents;
-    return <li><span class="name"><a href={`${base}?service=${s.id}`}>{s.name}</a><small>{L.minutes(s.duration_min)} · {dep ? L.deposit(dep) : L.noDeposit}</small></span><span class="dots" aria-hidden="true"></span><span class="amount">{euros(s.price_cents, lang)}</span></li>;
+    return <li><span class="name"><a href={`${base}?service=${s.id}`}>{s.name}</a><small>{L.minutes(s.duration_min)}</small></span><span class="dots" aria-hidden="true"></span><span class="amount">{euros(s.price_cents, lang)}</span></li>;
   })}</ul>
   </section>
 ))}
@@ -202,7 +201,6 @@ const summary = error ?? promoMsg;
 <dt>{L.duration}</dt><dd>{L.minutes(q.duration_min)}</dd>
 <dt>{L.price}</dt><dd>{euros(q.price_cents, lang)}</dd>
 {q.discount_cents > 0 && <><dt>{L.discount(q.code!)}</dt><dd>− {euros(q.discount_cents, lang)}</dd><dt>{L.final}</dt><dd>{euros(q.final_cents, lang)}</dd></>}
-<dt>{L.depositNow}</dt><dd>{q.deposit_cents ? euros(q.deposit_cents, lang) : L.none}</dd>
 <dt>{L.rest}</dt><dd>{euros(q.final_cents - q.deposit_cents, lang)}</dd>
 </dl>
 <form class="form" method="post" action={base}>

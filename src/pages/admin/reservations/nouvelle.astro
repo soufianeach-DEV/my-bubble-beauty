@@ -1,6 +1,6 @@
 ---
 export const prerender = false;
-// Rendez-vous pris par téléphone ou WhatsApp : confirmé sans acompte, hors horaires et délais, jamais sur un autre rendez-vous
+// Rendez-vous pris par téléphone ou WhatsApp : confirmé tout de suite, hors horaires et délais, jamais sur un autre rendez-vous
 import Admin from '../_layout.astro';
 import { adminId, byCategory, listServices, newBooking, readForm } from '../../../lib/server/admin.ts';
 import { todayBrussels } from '../../../lib/server/pricing.ts';
@@ -22,7 +22,7 @@ if (Astro.request.method === 'POST') {
 const groups = byCategory((await listServices()).filter((s) => s.duration_min !== null)).filter((g) => g.items.length);
 ---
 <Admin title="Nouveau rendez-vous">
-<p>Pour un rendez-vous pris par téléphone ou WhatsApp. Il est confirmé tout de suite, sans acompte, même en dehors des horaires d'ouverture. Seul un chevauchement avec un autre rendez-vous est refusé.</p>
+<p>Pour un rendez-vous pris par téléphone ou WhatsApp. Il est confirmé tout de suite, même en dehors des horaires d'ouverture. Seul un chevauchement avec un autre rendez-vous est refusé.</p>
 {error && <p class="notice notice--error" role="alert">{error}</p>}
 {groups.length === 0 ? (
   <p class="notice">Aucune prestation n'a encore de durée. Complétez d'abord les durées dans <a href="/admin/prestations">Prestations</a>.</p>

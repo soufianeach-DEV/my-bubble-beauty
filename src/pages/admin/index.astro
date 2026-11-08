@@ -89,7 +89,7 @@ const due = (r: (typeof rows)[number]) => (r.paid ? r.deposit_cents - r.refunded
             <td>
               Prix {euros(r.price_cents)}
               {r.discount_cents > 0 && <><br>Remise −{euros(r.discount_cents)}{r.promo && ` (${r.promo})`}</>}
-              <br>Acompte {r.deposit_cents > 0 ? `${euros(r.deposit_cents)}${r.paid ? ' payé' : ' non payé'}` : 'aucun'}
+              {r.deposit_cents > 0 && <><br>Acompte {euros(r.deposit_cents)}{r.paid ? ' payé' : ' non payé'}</>}
               {r.refunded_cents > 0 && <><br>Remboursé {euros(r.refunded_cents)}</>}
             </td>
             <td>

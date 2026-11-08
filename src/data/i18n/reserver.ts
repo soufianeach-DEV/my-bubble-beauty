@@ -10,8 +10,6 @@ type Texts = {
   step: (n: number) => string;
   chooseService: string;
   minutes: (n: number) => string;
-  deposit: (cents: number) => string;
-  noDeposit: string;
   chooseDay: string;
   change: string;
   day: string;
@@ -30,9 +28,7 @@ type Texts = {
   price: string;
   discount: (code: string) => string;
   final: string;
-  depositNow: string;
   rest: string;
-  none: string;
   code: string;
   apply: string;
   applied: (code: string) => string;
@@ -57,8 +53,6 @@ export const RESERVER: Record<Lang, Texts> = {
     step: (n) => `Étape ${n} sur 3`,
     chooseService: 'Choisissez votre prestation',
     minutes: (n) => `${n} min`,
-    deposit: (c) => `acompte ${euros(c, 'fr')}`,
-    noDeposit: 'sans acompte',
     chooseDay: 'Choisissez un jour et une heure',
     change: 'Changer de prestation',
     day: 'Jour',
@@ -77,9 +71,7 @@ export const RESERVER: Record<Lang, Texts> = {
     price: 'Prix',
     discount: (code) => `Remise (${code})`,
     final: 'Prix après remise',
-    depositNow: 'Acompte à payer maintenant',
     rest: 'À régler au salon',
-    none: 'Aucun',
     code: 'Code promo (facultatif)',
     apply: 'Appliquer',
     applied: (code) => `Le code ${code} est appliqué.`,
@@ -120,8 +112,6 @@ export const RESERVER: Record<Lang, Texts> = {
     step: (n) => `Stap ${n} van 3`,
     chooseService: 'Kies uw behandeling',
     minutes: (n) => `${n} min`,
-    deposit: (c) => `voorschot ${euros(c, 'nl')}`,
-    noDeposit: 'zonder voorschot',
     chooseDay: 'Kies een dag en een uur',
     change: 'Andere behandeling kiezen',
     day: 'Dag',
@@ -140,9 +130,7 @@ export const RESERVER: Record<Lang, Texts> = {
     price: 'Prijs',
     discount: (code) => `Korting (${code})`,
     final: 'Prijs na korting',
-    depositNow: 'Nu te betalen voorschot',
     rest: 'Te betalen in het salon',
-    none: 'Geen',
     code: 'Promotiecode (optioneel)',
     apply: 'Toepassen',
     applied: (code) => `De code ${code} is toegepast.`,
@@ -183,8 +171,6 @@ export const RESERVER: Record<Lang, Texts> = {
     step: (n) => `Step ${n} of 3`,
     chooseService: 'Choose your treatment',
     minutes: (n) => `${n} min`,
-    deposit: (c) => `deposit ${euros(c, 'en')}`,
-    noDeposit: 'no deposit',
     chooseDay: 'Choose a day and a time',
     change: 'Choose another treatment',
     day: 'Day',
@@ -203,9 +189,7 @@ export const RESERVER: Record<Lang, Texts> = {
     price: 'Price',
     discount: (code) => `Discount (${code})`,
     final: 'Price after discount',
-    depositNow: 'Deposit to pay now',
     rest: 'To pay at the salon',
-    none: 'None',
     code: 'Promo code (optional)',
     apply: 'Apply',
     applied: (code) => `Code ${code} applied.`,
