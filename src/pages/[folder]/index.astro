@@ -14,7 +14,7 @@ const treat = (slug: string) => pagePath(lang, `treatment:${slug}`);
 // Photo de chaque carte soin, dans l'ordre de home.soins.cards
 const CARD_IMG = ['visage', 'massage', 'epilation', 'corps', 'onglerie', 'sourire'];
 // FAQ : {hours} et {phone} viennent de site.ts, pour ne jamais diverger des horaires et du numéro affichés ailleurs
-const hoursText = hoursRows(lang).map((r) => `${r.label} : ${r.value}`).join('. ') + '.';
+const hoursText = hoursRows(lang).map((r) => `${r.label}${lang === 'fr' ? ' :' : ':'} ${r.value}`).join('. ') + '.';
 const faq = h.faq ? h.faq.items.map((it: { q: string; a: string }) => ({ q: it.q, a: it.a.replace('{hours}', hoursText).replace('{phone}', CONTACT.phoneLabel) })) : [];
 const salon = {
   '@type': 'BeautySalon', '@id': SALON_ID, name: 'My Bubble Beauty', description: h.description,

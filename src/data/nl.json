@@ -1058,6 +1058,64 @@
    "socialTitle": "Sociale media",
    "eyebrow": "Afspraak"
   },
+  "faq": {
+   "eyebrow": "Veelgestelde vragen",
+   "title": "Uw vragen, onze antwoorden",
+   "items": [
+    {
+     "q": "Waar bevindt het instituut zich?",
+     "a": "In de Palokestraat 146, 1700 Dilbeek, vlak bij Anderlecht, Sint-Jans-Molenbeek en Sint-Agatha-Berchem."
+    },
+    {
+     "q": "Wat zijn de openingsuren?",
+     "a": "{hours}"
+    },
+    {
+     "q": "Hoe maak ik een afspraak?",
+     "a": "Online via de pagina Reserveren, telefonisch op {phone} of via WhatsApp."
+    },
+    {
+     "q": "Kan ik mijn afspraak annuleren of verplaatsen?",
+     "a": "Ja, kosteloos tot 24 uur vooraf, telefonisch, per e-mail of via WhatsApp. Bij meer dan 15 minuten vertraging kan de behandeling ingekort of verplaatst worden, uit respect voor de volgende afspraken."
+    },
+    {
+     "q": "Hoe kan ik betalen?",
+     "a": "Ter plaatse, na de behandeling, contant, met Bancontact of met een bankkaart. Kuren en cadeaubonnen betaalt u bij aankoop. De vermelde prijzen zijn in euro, btw inbegrepen."
+    },
+    {
+     "q": "Bieden jullie cadeaubonnen aan?",
+     "a": "Ja. Een cadeaubon geldt voor een bepaalde behandeling of voor een bedrag, gedurende 12 maanden."
+    },
+    {
+     "q": "Hoe lang duurt een behandeling?",
+     "a": "Dat hangt af van de behandeling: 20 of 30 minuten voor een sessie led-lichttherapie, 30 of 45 minuten voor het Puur Ritueel, 30 tot 60 minuten voor een massage, 60 minuten voor maderotherapie. De duur van elke behandeling staat bij de tarieven."
+    },
+    {
+     "q": "Bieden jullie kuren aan?",
+     "a": "Ja, voor verschillende behandelingen, bijvoorbeeld 5 led-sessies voor 110 € of 5 sessies maderotherapie voor 340 €. Een kuur is persoonlijk. De geldigheidsduur wordt bij aankoop meegedeeld."
+    },
+    {
+     "q": "Wat gebeurt er vóór een eerste technische behandeling?",
+     "a": "Die begint met een consultatie: analyse van uw huid, verloop, verwachte effecten en contra-indicaties. Er kan een voorafgaande test gebeuren, en de behandeling vindt alleen plaats met uw schriftelijke toestemming. Dat geldt bijvoorbeeld voor laser, radiofrequentie, peelings en de Micro-Pen."
+    },
+    {
+     "q": "Ik ben zwanger, kan ik langskomen?",
+     "a": "Ja. Het Ritueel Zachte Mama is een massage speciaal voor de zwangerschap. Meld uw zwangerschap altijd vóór een behandeling: sommige behandelingen worden in die periode niet uitgevoerd."
+    },
+    {
+     "q": "Kan een minderjarige een behandeling krijgen?",
+     "a": "Ja, met de schriftelijke toestemming van een ouder, die aanwezig is bij de eerste afspraak. Technische behandelingen zijn voorbehouden aan meerderjarigen."
+    },
+    {
+     "q": "Moet ik reacties verwachten na een behandeling?",
+     "a": "Na sommige behandelingen zijn tijdelijke roodheid of gevoeligheid mogelijk. Volg het advies dat u na de sessie krijgt, bijvoorbeeld zonbescherming. Bij een ongewone reactie neemt u meteen contact met ons op."
+    },
+    {
+     "q": "Verkopen jullie producten voor thuisgebruik?",
+     "a": "Ja, een selectie hoogwaardige schoonheidsproducten om de behandelingen thuis te verlengen."
+    }
+   ]
+  },
   "cta": {
    "title": "Zin in een My Bubble-moment?"
   }

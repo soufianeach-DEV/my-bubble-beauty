@@ -1058,6 +1058,64 @@
    "socialTitle": "Social media",
    "eyebrow": "Appointments"
   },
+  "faq": {
+   "eyebrow": "Frequently asked questions",
+   "title": "Your questions, our answers",
+   "items": [
+    {
+     "q": "Where is the salon?",
+     "a": "At Palokestraat 146, 1700 Dilbeek, close to Anderlecht, Molenbeek-Saint-Jean and Berchem-Sainte-Agathe."
+    },
+    {
+     "q": "What are your opening hours?",
+     "a": "{hours}"
+    },
+    {
+     "q": "How do I book an appointment?",
+     "a": "Online on the Book page, by phone on {phone} or on WhatsApp."
+    },
+    {
+     "q": "Can I cancel or move my appointment?",
+     "a": "Yes, free of charge up to 24 hours before, by phone, email or WhatsApp. If you are more than 15 minutes late, the treatment may be shortened or rescheduled so that the following appointments stay on time."
+    },
+    {
+     "q": "How can I pay?",
+     "a": "On site, at the end of the treatment, in cash, by Bancontact or by bank card. Courses and gift vouchers are paid at purchase. Prices are shown in euros, VAT included."
+    },
+    {
+     "q": "Do you offer gift vouchers?",
+     "a": "Yes. A gift voucher covers a specific treatment or an amount, for 12 months."
+    },
+    {
+     "q": "How long does a treatment take?",
+     "a": "It depends on the treatment: 20 or 30 minutes for an LED light session, 30 or 45 minutes for the Purity Ritual, 30 to 60 minutes for a massage, 60 minutes for maderotherapy. The length of each treatment is shown in the price list."
+    },
+    {
+     "q": "Do you offer courses of treatments?",
+     "a": "Yes, for several treatments, for example 5 LED sessions for €110 or 5 maderotherapy sessions for €340. A course is personal to one client. Its validity is given at purchase."
+    },
+    {
+     "q": "What happens before a first technical treatment?",
+     "a": "It starts with a consultation: an analysis of your skin, how the treatment works, the expected effects and the contraindications. A preliminary test may be done, and the treatment only takes place with your written consent. This applies for example to laser, radiofrequency, peels and the Micro-Pen."
+    },
+    {
+     "q": "I am pregnant, can I come?",
+     "a": "Yes. The Gentle Mum Ritual is a massage designed for pregnancy. Always mention your pregnancy before a treatment: some treatments are not carried out during this period."
+    },
+    {
+     "q": "Can a minor have a treatment?",
+     "a": "Yes, with the written consent of a parent, who attends the first appointment. Technical treatments are for adults only."
+    },
+    {
+     "q": "Should I expect any reaction after a treatment?",
+     "a": "After some treatments, temporary redness or sensitivity is possible. Follow the advice given after the session, for example sun protection. If you notice an unusual reaction, contact us straight away."
+    },
+    {
+     "q": "Do you sell products for home use?",
+     "a": "Yes, a selection of high-end beauty products to extend your treatments at home."
+    }
+   ]
+  },
   "cta": {
    "title": "Ready for your My Bubble moment?"
   }
