@@ -54,10 +54,10 @@ fieldset.field{border:0;padding:0;margin:0}
 }
 .auth--register{grid-template-columns:var(--blade) minmax(0,1fr)}
 .auth--register article{grid-column:2}
-/* Lame claire en thème clair, brune seulement en thème sombre */
+/* Lame claire en thème clair. En sombre, la lame et son dégradé finissent sur la couleur de la carte (--surface) */
 .auth{--blade-bg:#EAD9CD;--blade-ink:#3B2A27;--blade-veil:linear-gradient(180deg,rgb(234 217 205 / 0) 45%,rgb(234 217 205 / .75) 68%,rgb(246 236 232 / .96));--blade-script:#8A5A52;--blade-line:rgb(59 42 39 / .6);--blade-hover-ink:#FFFBF9}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .auth{--blade-bg:#4E302C;--blade-ink:#FFFBF9;--blade-veil:linear-gradient(180deg,rgb(78 48 44 / 0) 45%,rgb(78 48 44 / .7) 68%,rgb(58 34 31 / .94));--blade-script:#E8C9A0;--blade-line:rgb(255 251 249 / .7);--blade-hover-ink:#4E302C}}
-:root[data-theme="dark"] .auth{--blade-bg:#4E302C;--blade-ink:#FFFBF9;--blade-veil:linear-gradient(180deg,rgb(78 48 44 / 0) 45%,rgb(78 48 44 / .7) 68%,rgb(58 34 31 / .94));--blade-script:#E8C9A0;--blade-line:rgb(255 251 249 / .7);--blade-hover-ink:#4E302C}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .auth{--blade-bg:var(--surface);--blade-ink:#FFFBF9;--blade-veil:linear-gradient(180deg,transparent 45%,color-mix(in srgb,var(--surface) 75%,transparent) 68%,var(--surface));--blade-script:#E8C9A0;--blade-line:rgb(255 251 249 / .7);--blade-hover-ink:var(--surface)}}
+:root[data-theme="dark"] .auth{--blade-bg:var(--surface);--blade-ink:#FFFBF9;--blade-veil:linear-gradient(180deg,transparent 45%,color-mix(in srgb,var(--surface) 75%,transparent) 68%,var(--surface));--blade-script:#E8C9A0;--blade-line:rgb(255 251 249 / .7);--blade-hover-ink:var(--surface)}
 .auth__blade{view-transition-name:auth-blade;position:absolute;inset:0 0 0 auto;width:var(--blade);overflow:hidden;color:var(--blade-ink);background:var(--blade-bg);
   clip-path:polygon(var(--slant) 0,100% 0,100% 100%,0 100%)}
 .auth--register .auth__blade{inset:0 auto 0 0;clip-path:polygon(0 0,100% 0,calc(100% - var(--slant)) 100%,0 100%)}
