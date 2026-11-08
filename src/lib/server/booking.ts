@@ -87,8 +87,6 @@ export async function createBooking(input: { userId: number; serviceId: number; 
       // Compte supprimé ou bloqué entre-temps (course avec la suppression) : aucune ligne, aucune réservation
       const [me] = await tx`SELECT id FROM users WHERE id = ${userId} AND deleted_at IS NULL AND blocked_at IS NULL FOR UPDATE`;
       if (!me) return { ok: false, error: 'unavailable' } as const;
-      // Lu sous le verrou de la cliente : en rafale, chaque essai voit les échecs comptés par le précédent
-      if (code && !promoTry(userId, ip)) return { ok: false, error: 'promo', promo: 'blocked' } as const;
       stale = await expirePending(tx, userId);
       const [{ n }] = await tx`SELECT count(*) AS n FROM bookings WHERE user_id = ${userId} AND status IN ('pending_payment', 'confirmed') AND starts_at > now()`;
       if (n >= MAX_UPCOMING) return { ok: false, error: 'limit' } as const;
@@ -98,6 +96,9 @@ export async function createBooking(input: { userId: number; serviceId: number; 
       if (!s || !(await isFree(tx, serviceId, startsAt))) return { ok: false, error: 'unavailable' } as const;
       let promo: (Promo & { id: number }) | null = null;
       if (code) {
+        // Lu sous le verrou de la cliente : en rafale, chaque essai voit les échecs comptés par le précédent.
+        // Après les contrôles de plafond, de prestation et de créneau : un créneau pris ne consomme aucun essai sur l'IP
+        if (!promoTry(userId, ip)) return { ok: false, error: 'promo', promo: 'blocked' } as const;
         const [p] = /^[A-Z0-9-]{3,32}$/.test(code)
           ? await tx<(Promo & { id: number; today: string })[]>`SELECT id, kind, value, starts_on::text, ends_on::text, max_uses, once_per_user, service_ids, active, current_date::text AS today
               FROM promo_codes WHERE code = ${code} FOR UPDATE`
