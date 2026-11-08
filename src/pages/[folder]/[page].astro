@@ -21,7 +21,8 @@ const metaTitle = `${doc.title} - My Bubble Beauty`;
 const description = doc.description;
 // Confidentialité : la 4e rubrique (mesure d'audience) décrit GoatCounter dès qu'il est activé.
 const sections = doc.sections.map((s, i) => (key === 'privacy' && i === 3 && GOATCOUNTER ? { ...s, html: AUDIENCE_GC[lang] } : s));
-const body = sections.map((s) => `<h2>${s.h}</h2>${s.html}`).join('');
+// Ancre stable dans les trois langues (le lien « Gérer les cookies » du pied de page vise #cookies)
+const body = sections.map((s) => `<h2${s.id ? ` id="${s.id}"` : ''}>${s.h}</h2>${s.html}`).join('');
 const updated = doc.updated;
 ---
 <Base lang={lang} pageKey={key} title={metaTitle} description={description} mainClass="legal">

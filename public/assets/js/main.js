@@ -120,4 +120,18 @@ menus.forEach(m=>{
 d.addEventListener('click',e=>menus.forEach(m=>{m.open&&!m.contains(e.target)&&(m.open=false)}));
 d.addEventListener('keydown',e=>{if(e.key!=='Escape')return;
   menus.forEach(m=>{if(m.open){m.open=false;m.querySelector('summary').focus()}})});
+/* Confidentialité : réglages des cookies. Case « ne pas compter mes visites » (cookie mb_nostats, lu par le serveur)
+   et effacement des réglages gardés dans le navigateur. Sans JS le bloc reste caché : le texte suffit. */
+const cp=d.querySelector('[data-cookie-prefs]');
+if(cp){
+  cp.hidden=false;
+  const box=cp.querySelector('[data-nostats]'),st=cp.querySelector('.cookie-prefs__status');
+  box.checked=/(?:^|;\s*)mb_nostats=1(?:;|$)/.test(d.cookie);
+  box.addEventListener('change',()=>{
+    d.cookie='mb_nostats=1; Path=/; SameSite=Lax; Max-Age='+(box.checked?31536000:0)+(location.protocol==='https:'?'; Secure':'');
+    st.textContent=box.checked?cp.dataset.off:cp.dataset.on});
+  cp.querySelector('[data-prefs-reset]').addEventListener('click',()=>{
+    try{localStorage.removeItem('mb-theme');localStorage.removeItem('mb-motion')}catch(e){}
+    st.textContent=cp.dataset.reset;setTimeout(()=>location.reload(),900)});
+}
 })();

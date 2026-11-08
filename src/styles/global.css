@@ -298,6 +298,14 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 .legal{padding-block:clamp(3rem,7vw,6rem)}
 .legal article{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);padding:clamp(1.5rem,5vw,4rem);max-width:820px;margin-inline:auto}
 .legal h2{font-size:1.9rem;margin-top:2rem}
+/* Confidentialité : réglages des cookies (bloc révélé par main.js) */
+.cookie-prefs{margin:1.5rem 0;padding:1.25rem 1.5rem;border:1px solid var(--line-soft);border-radius:12px;background:var(--bg)}
+.legal .cookie-prefs h3{margin:0 0 .75rem;font-size:1.35rem}
+.cookie-prefs__check{display:flex;gap:.65rem;align-items:flex-start;margin-bottom:.75rem;cursor:pointer}
+.cookie-prefs__check input{flex:none;width:1.25rem;height:1.25rem;margin-top:.2rem;accent-color:var(--accent)}
+.cookie-prefs p{margin:0}
+.cookie-prefs__status{margin-top:.75rem!important;font-size:.9375rem;color:var(--text-soft)}
+.cookie-prefs__status:empty{display:none}
 .legal h1{font-size:clamp(2.4rem,4vw + 1rem,3.75rem)}
 .legal__updated{font-size:.875rem;line-height:1.25rem;opacity:.8}
 

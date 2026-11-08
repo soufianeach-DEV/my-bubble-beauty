@@ -67,10 +67,10 @@ export const alternates = (key: PageKey) =>
   LANGS.map((l) => ({ lang: l, hreflang: LANG_META[l].hreflang, href: SITE + pagePath(l, key) }));
 
 // Libellés ajoutés en v2 (absents de la v1).
-export const EXTRA: Record<Lang, { cgv: string; hours: string; closed: string; days: string[]; toDark: string; toLight: string }> = {
-  fr: { cgv: 'Conditions générales', hours: 'Horaires', closed: 'Fermé', days: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'], toDark: 'Passer en mode sombre', toLight: 'Passer en mode clair' },
-  nl: { cgv: 'Algemene voorwaarden', hours: 'Openingsuren', closed: 'Gesloten', days: ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'], toDark: 'Donkere modus inschakelen', toLight: 'Lichte modus inschakelen' },
-  en: { cgv: 'Terms and conditions', hours: 'Opening hours', closed: 'Closed', days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], toDark: 'Switch to dark mode', toLight: 'Switch to light mode' },
+export const EXTRA: Record<Lang, { cgv: string; cookies: string; hours: string; closed: string; days: string[]; toDark: string; toLight: string }> = {
+  fr: { cgv: 'Conditions générales', cookies: 'Gérer les cookies', hours: 'Horaires', closed: 'Fermé', days: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'], toDark: 'Passer en mode sombre', toLight: 'Passer en mode clair' },
+  nl: { cgv: 'Algemene voorwaarden', cookies: 'Cookies beheren', hours: 'Openingsuren', closed: 'Gesloten', days: ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'], toDark: 'Donkere modus inschakelen', toLight: 'Lichte modus inschakelen' },
+  en: { cgv: 'Terms and conditions', cookies: 'Manage cookies', hours: 'Opening hours', closed: 'Closed', days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], toDark: 'Switch to dark mode', toLight: 'Switch to light mode' },
 };
 
 // Horaires d'ouverture, à remplir quand la cliente les donne (vide = rien n'est affiché).

@@ -38,18 +38,18 @@ fieldset.field{border:0;padding:0;margin:0}
 /* Connexion et inscription sur ordinateur : la carte remplit la fenêtre sous l'en-tête, quelle que soit sa largeur, avec la même
    hauteur et la même place sur les deux pages (rien ne bouge au passage de l'une à l'autre). Le contenu en trop défile dans la carte. */
 @media (min-width:760px){
-  .legal:has(> .wrap > .auth){padding-block:clamp(.75rem,2vh,1.5rem)}
-  .auth{max-width:1180px;height:calc(100vh - var(--header-h) - 2 * clamp(.75rem,2vh,1.5rem));height:calc(100dvh - var(--header-h) - 2 * clamp(.75rem,2vh,1.5rem));min-height:0}
+  .legal:has(> .wrap > .auth){padding-block:clamp(2rem,4vh,3rem)}
+  .auth{max-width:1180px;height:calc(100vh - var(--header-h) - 2 * clamp(2rem,4vh,3rem));height:calc(100dvh - var(--header-h) - 2 * clamp(2rem,4vh,3rem));min-height:0}
   .legal .auth article{max-height:100%;overflow-y:auto}
 }
 /* Fenêtre basse (portable 720-900 px) : espacements resserrés pour que le formulaire tienne entier dans la carte */
 @media (min-width:760px) and (max-height:900px){
-  .legal .auth article{padding:clamp(1rem,3vh,2rem) clamp(1.5rem,3vw,2.75rem)}
+  .legal .auth article{padding:clamp(.75rem,2.5vh,2rem) clamp(1.5rem,3vw,2.75rem)}
   .auth .form{max-width:none}
-  .legal .auth h1{font-size:clamp(2rem,5vh,2.75rem);margin-bottom:.25em}
-  .auth article p{margin-bottom:.6em}
-  .auth .form{gap:.65rem}
-  .auth .field{gap:.25rem}
+  .legal .auth h1{font-size:clamp(1.85rem,4.5vh,2.75rem);margin-bottom:.25em}
+  .auth article p{margin-bottom:.5em}
+  .auth .form{gap:.5rem}
+  .auth .field{gap:.2rem}
   .auth .field input{padding-block:.5rem;min-height:40px}
 }
 .auth--register{grid-template-columns:var(--blade) minmax(0,1fr)}

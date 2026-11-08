@@ -20,6 +20,8 @@ export function isCountable(req, path, status) {
   const ua = req.headers['user-agent'] ?? '';
   // Préchargements du navigateur et robots : pas une visite
   if (!ua || BOT.test(ua) || req.headers['sec-purpose'] || req.headers.purpose === 'prefetch') return false;
+  // Refus du visiteur : case de la page confidentialité (cookie mb_nostats) ou signal Global Privacy Control du navigateur
+  if (req.headers['sec-gpc'] === '1' || /(?:^|;\s*)mb_nostats=1(?:;|$)/.test(req.headers.cookie ?? '')) return false;
   return true;
 }
 

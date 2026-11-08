@@ -24,6 +24,15 @@ test('robots, préchargements, erreurs, pages privées et fichiers : pas compté
     assert.ok(!isCountable(req(), p, 200), p);
 });
 
+test('refus du visiteur : cookie mb_nostats ou signal GPC, pas compté', () => {
+  assert.ok(!isCountable(req({ cookie: 'mb_nostats=1' }), '/fr/index.html', 200));
+  assert.ok(!isCountable(req({ cookie: 'autre=x; mb_nostats=1' }), '/fr/index.html', 200));
+  assert.ok(!isCountable(req({ 'sec-gpc': '1' }), '/fr/index.html', 200));
+  // Cookie retiré (case décochée) ou nom approchant : la visite compte
+  assert.ok(isCountable(req({ cookie: 'mb_nostats=0' }), '/fr/index.html', 200));
+  assert.ok(isCountable(req({ cookie: 'xmb_nostats=1' }), '/fr/index.html', 200));
+});
+
 test('empreinte : même personne = même empreinte le même jour, une autre IP = une autre', () => {
   const a = visitorKey(req());
   const b = visitorKey(req());
