@@ -13,8 +13,11 @@ const ui = d.ui;
 const treat = (slug: string) => pagePath(lang, `treatment:${slug}`);
 // Photo de chaque carte soin, dans l'ordre de home.soins.cards
 const CARD_IMG = ['visage', 'massage', 'epilation', 'corps', 'onglerie', 'sourire'];
-const jsonld = {
-  '@context': 'https://schema.org', '@type': 'BeautySalon', '@id': SALON_ID, name: 'My Bubble Beauty', description: h.description,
+// FAQ : {hours} et {phone} viennent de site.ts, pour ne jamais diverger des horaires et du numéro affichés ailleurs
+const hoursText = hoursRows(lang).map((r) => `${r.label} : ${r.value}`).join('. ') + '.';
+const faq = h.faq ? h.faq.items.map((it: { q: string; a: string }) => ({ q: it.q, a: it.a.replace('{hours}', hoursText).replace('{phone}', CONTACT.phoneLabel) })) : [];
+const salon = {
+  '@type': 'BeautySalon', '@id': SALON_ID, name: 'My Bubble Beauty', description: h.description,
   url: SITE + pagePath(lang, 'home'), telephone: CONTACT.phone, email: CONTACT.email, hasMap: CONTACT.maps,
   logo: SITE + '/assets/img/logo-my-bubble.png', image: SITE + '/assets/img/galerie-1.webp',
   address: { '@type': 'PostalAddress', streetAddress: CONTACT.street, postalCode: CONTACT.postal, addressLocality: CONTACT.city, addressCountry: 'BE' },
@@ -22,6 +25,10 @@ const jsonld = {
   areaServed: ['Anderlecht', 'Molenbeek-Saint-Jean', 'Dilbeek', 'Berchem-Sainte-Agathe'],
   sameAs: CONTACT.social.map((s) => s.href), priceRange: '€€',
   ...(HOURS.length ? { openingHoursSpecification: openingHoursSchema() } : {}),
+};
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@graph': faq.length ? [salon, { '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : [salon],
 };
 ---
 <Base lang={lang} pageKey="home" title={h.title} description={h.description} jsonld={jsonld} isHome>
@@ -142,6 +149,13 @@ const jsonld = {
 <button class="lightbox__close" type="button" aria-label={h.gallery.close}>×</button>
 </dialog>
 </section>
+
+{faq.length > 0 && <section class="section faq lit" id="faq" aria-labelledby="h-faq">
+<div class="wrap">
+<div class="section__head"><p class="eyebrow">{h.faq.eyebrow}</p><h2 id="h-faq">{h.faq.title}</h2></div>
+<div class="faq__list">{faq.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}</div>
+</div>
+</section>}
 
 <section class="cta-band" aria-labelledby="h-cta">
 <img class="cta-band__img" src="/assets/img/galerie-2-800.webp" srcset="/assets/img/galerie-2-800.webp 800w, /assets/img/galerie-2-1200.webp 1200w, /assets/img/galerie-2.webp 1600w" sizes="100vw" width="1600" height="1200" alt="" loading="lazy" decoding="async">

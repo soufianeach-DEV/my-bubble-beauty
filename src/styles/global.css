@@ -230,6 +230,15 @@ main{isolation:isolate;overflow-x:clip}
 .tarifs__note{margin:1rem 0 0;font-size:.9375rem;color:var(--text-soft)}
 
 /* ---------- Galerie ---------- */
+/* FAQ : <details> natif, sans JavaScript */
+.faq__list{max-width:52rem;margin-inline:auto;display:grid;gap:.75rem}
+.faq details{background:var(--surface);border:1px solid var(--line-soft);border-radius:calc(var(--radius) / 2)}
+.faq summary{list-style:none;cursor:pointer;min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.25rem;font-weight:500;color:var(--text)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";flex:none;font-size:1.25rem;line-height:1;color:var(--accent)}
+.faq details[open] summary::after{content:"–"}
+.faq summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:inherit}
+.faq details p{margin:0;padding:0 1.25rem 1.1rem;color:var(--text-soft)}
 .galerie .halo{width:70vw;height:70vw;max-width:900px;max-height:900px;left:-25vw;top:20%}
 .mosaic{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:clamp(140px,18vw,250px);gap:clamp(.6rem,1.4vw,1.25rem);list-style:none;margin:0;padding:0}
 .mosaic li:nth-child(1){grid-column:span 2;grid-row:span 2}

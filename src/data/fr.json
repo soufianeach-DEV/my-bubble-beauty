@@ -1058,6 +1058,64 @@
    "socialTitle": "Réseaux sociaux",
    "eyebrow": "Rendez-vous"
   },
+  "faq": {
+   "eyebrow": "Questions fréquentes",
+   "title": "Vos questions, nos réponses",
+   "items": [
+    {
+     "q": "Où se trouve l'institut ?",
+     "a": "Au Palokestraat 146, 1700 Dilbeek, à deux pas d'Anderlecht, de Molenbeek-Saint-Jean et de Berchem-Sainte-Agathe."
+    },
+    {
+     "q": "Quels sont vos horaires ?",
+     "a": "{hours}"
+    },
+    {
+     "q": "Comment prendre rendez-vous ?",
+     "a": "En ligne sur la page Réserver, par téléphone au {phone} ou sur WhatsApp."
+    },
+    {
+     "q": "Puis-je annuler ou déplacer mon rendez-vous ?",
+     "a": "Oui, gratuitement jusqu'à 24 heures avant, par téléphone, e-mail ou WhatsApp. Au-delà de 15 minutes de retard, le soin peut être écourté ou reporté pour respecter les rendez-vous suivants."
+    },
+    {
+     "q": "Comment puis-je payer ?",
+     "a": "Sur place, à la fin du soin, en espèces, par Bancontact ou par carte bancaire. Les cures et les bons cadeaux se paient à l'achat. Les prix affichés sont en euros, TVA comprise."
+    },
+    {
+     "q": "Proposez-vous des bons cadeaux ?",
+     "a": "Oui. Un bon cadeau vaut pour un soin précis ou pour un montant, pendant 12 mois."
+    },
+    {
+     "q": "Combien de temps dure un soin ?",
+     "a": "Ça dépend du soin : 20 ou 30 minutes pour une séance de lumière LED, 30 ou 45 minutes pour le Rituel Pureté, 30 à 60 minutes pour un massage, 60 minutes pour la madérothérapie. La durée de chaque soin figure dans les tarifs."
+    },
+    {
+     "q": "Proposez-vous des cures ?",
+     "a": "Oui, pour plusieurs soins, par exemple 5 séances de LED pour 110 € ou 5 séances de madérothérapie pour 340 €. Une cure est nominative. Sa durée de validité est donnée à l'achat."
+    },
+    {
+     "q": "Que se passe-t-il avant un premier soin technique ?",
+     "a": "Il commence par une consultation : analyse de votre peau, déroulement, effets attendus et contre-indications. Un test préalable peut être fait, et le soin n'a lieu qu'avec votre accord écrit. Ça concerne par exemple le laser, la radiofréquence, les peelings et le Micro-Pen."
+    },
+    {
+     "q": "Je suis enceinte, puis-je venir ?",
+     "a": "Oui. Le Rituel Maman Douceur est un massage pensé pour la grossesse. Signalez-la toujours avant un soin : certains soins ne sont pas faits pendant cette période."
+    },
+    {
+     "q": "Un mineur peut-il prendre un soin ?",
+     "a": "Oui, avec l'accord écrit d'un parent, présent au premier rendez-vous. Les soins techniques sont réservés aux personnes majeures."
+    },
+    {
+     "q": "Faut-il s'attendre à des réactions après un soin ?",
+     "a": "Après certains soins, des rougeurs ou une sensibilité passagères sont possibles. Suivez les conseils donnés après la séance, par exemple la protection solaire. En cas de réaction inhabituelle, contactez-nous tout de suite."
+    },
+    {
+     "q": "Vendez-vous des produits à utiliser chez soi ?",
+     "a": "Oui, une sélection de produits de beauté haut de gamme pour prolonger les soins à la maison."
+    }
+   ]
+  },
   "cta": {
    "title": "Envie d'un moment My Bubble ?"
   }
