@@ -4,7 +4,7 @@ import type { Lang } from '../lib/site';
 
 export type LegalDoc = { title: string; description: string; updated: string; sections: { id?: string; h: string; html: string }[] };
 
-const MAIL = '<a href="mailto:mybubblebeauty@gmail.com">mybubblebeauty@gmail.com</a>';
+const MAIL = '<a href="mailto:mybubble9600@gmail.com">mybubble9600@gmail.com</a>';
 const TEL = '<a href="tel:+32484118395">0484.118.395</a>';
 
 // Rubrique « Mesure d'audience » quand GoatCounter est activé (GOATCOUNTER renseigné dans src/lib/site.ts).

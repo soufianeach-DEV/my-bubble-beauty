@@ -27,7 +27,7 @@ export const CONTACT = {
   phone: '+32484118395',
   phoneLabel: '0484.118.395',
   whatsapp: 'https://wa.me/32484118395',
-  email: 'mybubblebeauty@gmail.com',
+  email: 'mybubble9600@gmail.com',
   street: 'Palokestraat 146',
   postal: '1700',
   city: 'Dilbeek',
