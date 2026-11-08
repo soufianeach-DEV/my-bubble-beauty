@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { RULES, blocked, clientIp, forget, hit, ipKey } from './rate.ts';
+import { RULES, blocked, clientIp, forget, hit, ipKey, promoDone, promoTry } from './rate.ts';
 
 test("IP lue par la droite de X-Forwarded-For : la gauche forgée par le client est ignorée", () => {
   assert.equal(clientIp('6.6.6.6, 203.0.113.7'), '203.0.113.7');
@@ -95,4 +95,25 @@ test("règle pleine : une rafale d'identifiants à 1 essai n'efface pas un compt
   for (let i = 0; i < 3 * RULES.loginEmail.keys; i++) hit('loginEmail', `inventee${i}@example.com`, t0);
   assert.equal(hit('loginEmail', 'cible@example.com', t0), false);
   assert.equal(blocked('loginEmail', 'cible@example.com', t0), true);
+});
+
+test('codes promo : 30 essais faux par IP, même répartis sur plusieurs comptes', () => {
+  const ip = '203.0.113.99';
+  for (let u = 1; u <= 3; u++) for (let i = 0; i < 10; i++) {
+    assert.equal(promoTry(1000 + u, ip), true);
+    promoDone(1000 + u, ip, false);
+  }
+  assert.equal(promoTry(1004, ip), false);
+  assert.equal(promoTry(1004, '203.0.113.100'), true);
+  assert.equal(promoTry(1001), false);
+});
+
+test('codes promo : essais parallèles réservés tout de suite, un code accepté rend son essai', () => {
+  const ip = '203.0.113.120';
+  // 40 contrôles avant le moindre résultat (requêtes en vol) : seuls 30 passent
+  let ok = 0;
+  for (let u = 0; u < 40; u++) if (promoTry(2000 + u, ip)) ok++;
+  assert.equal(ok, 30);
+  promoDone(2000, ip, true);
+  assert.equal(promoTry(2100, ip), true);
 });

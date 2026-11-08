@@ -85,7 +85,7 @@ if (open && method === 'POST') {
     code = f.data.code;
     at = startsAt;
     day = todayBrussels(startsAt);
-    const ask = (promoCode: string) => quote({ userId: user.id, serviceId, startsAt, promoCode, lang });
+    const ask = (promoCode: string) => quote({ userId: user.id, serviceId, startsAt, promoCode, lang, ip: Astro.locals.ip });
     let fail: BookingError | null = null;
     let tryCode = etape === 'choisir' ? '' : code;
     if (etape === 'reserver' && cgv) {

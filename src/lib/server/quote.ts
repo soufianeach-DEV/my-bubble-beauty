@@ -4,7 +4,7 @@ import type { Lang } from '../site.ts';
 import { MAX_UPCOMING } from './booking.ts';
 import { sql } from './db.ts';
 import { amounts, promoProblem, type Promo, type PromoProblem } from './pricing.ts';
-import { blocked, hit } from './rate.ts';
+import { promoDone, promoTry } from './rate.ts';
 import { isFree } from './slots.ts';
 
 export type Quote = ReturnType<typeof amounts> & { name: string; duration_min: number; code: string | null };
@@ -16,8 +16,8 @@ export async function bookingOpen(): Promise<boolean> {
   return open;
 }
 
-export async function quote(input: { userId: number; serviceId: number; startsAt: Date; promoCode?: string | null; lang: Lang }): Promise<QuoteResult> {
-  const { userId, serviceId, startsAt, lang } = input;
+export async function quote(input: { userId: number; serviceId: number; startsAt: Date; promoCode?: string | null; lang: Lang; ip?: string }): Promise<QuoteResult> {
+  const { userId, serviceId, startsAt, lang, ip } = input;
   const code = input.promoCode?.trim().toUpperCase() || null;
   if (!Number.isInteger(serviceId) || Number.isNaN(startsAt.getTime())) return { ok: false, error: 'unavailable' };
   // Ses propres paiements en cours ne comptent pas : createBooking les expire avant de compter
@@ -33,7 +33,7 @@ export async function quote(input: { userId: number; serviceId: number; startsAt
     // (même verrou que createBooking) pour qu'une rafale ne dépasse pas la limite
     const r = await sql.begin(async (tx) => {
       await tx`SELECT id FROM users WHERE id = ${userId} FOR UPDATE`;
-      if (blocked('promo', String(userId))) return { problem: 'blocked' as const };
+      if (!promoTry(userId, ip)) return { problem: 'blocked' as const };
       const [p] = /^[A-Z0-9-]{3,32}$/.test(code)
         ? await tx<(Promo & { id: number; today: string })[]>`SELECT id, kind, value, starts_on::text, ends_on::text, max_uses, once_per_user, service_ids, active, current_date::text AS today
             FROM promo_codes WHERE code = ${code}`
@@ -41,7 +41,7 @@ export async function quote(input: { userId: number; serviceId: number; startsAt
       const [use] = p ? await tx`SELECT count(*) AS uses, count(*) FILTER (WHERE user_id = ${userId}) AS mine FROM bookings
             WHERE promo_code_id = ${p.id} AND status IN ('pending_payment', 'confirmed')` : [];
       const problem = p ? promoProblem(p, { today: p.today, serviceId, uses: use.uses, usesByUser: use.mine }) : 'unknown';
-      if (problem) hit('promo', String(userId));
+      promoDone(userId, ip, !problem);
       return problem ? { problem } : { p };
     });
     if ('problem' in r) return { ok: false, error: 'promo', promo: r.problem };

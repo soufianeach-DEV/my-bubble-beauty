@@ -8,7 +8,7 @@ import { journal } from './journal.ts';
 import { log } from './log.ts';
 import { bookingCancelledMail, bookingConfirmedMail, bookingMovedMail, bookingReminderMail, sendMail } from './mail.ts';
 import { amounts, isDay, promoProblem, type Promo, type PromoProblem } from './pricing.ts';
-import { blocked, hit } from './rate.ts';
+import { blocked, hit, promoDone, promoTry } from './rate.ts';
 import { isFree } from './slots.ts';
 import { createCheckoutSession, expireSession, refund, retrieveSession, type CheckoutSession } from './stripe.ts';
 import { verifyWebhookSignature } from './stripe-signature.ts';
@@ -88,7 +88,7 @@ export async function createBooking(input: { userId: number; serviceId: number; 
       const [me] = await tx`SELECT id FROM users WHERE id = ${userId} AND deleted_at IS NULL AND blocked_at IS NULL FOR UPDATE`;
       if (!me) return { ok: false, error: 'unavailable' } as const;
       // Lu sous le verrou de la cliente : en rafale, chaque essai voit les échecs comptés par le précédent
-      if (code && blocked('promo', String(userId))) return { ok: false, error: 'promo', promo: 'blocked' } as const;
+      if (code && !promoTry(userId, ip)) return { ok: false, error: 'promo', promo: 'blocked' } as const;
       stale = await expirePending(tx, userId);
       const [{ n }] = await tx`SELECT count(*) AS n FROM bookings WHERE user_id = ${userId} AND status IN ('pending_payment', 'confirmed') AND starts_at > now()`;
       if (n >= MAX_UPCOMING) return { ok: false, error: 'limit' } as const;
@@ -106,9 +106,10 @@ export async function createBooking(input: { userId: number; serviceId: number; 
               WHERE promo_code_id = ${p.id} AND status IN ('pending_payment', 'confirmed')` : [];
         const problem = p ? promoProblem(p, { today: p.today, serviceId, uses: use.uses, usesByUser: use.mine }) : 'unknown';
         if (problem) {
-          hit('promo', String(userId));
+          promoDone(userId, ip, false);
           return { ok: false, error: 'promo', promo: problem } as const;
         }
+        promoDone(userId, ip, true);
         promo = p;
       }
       const m = amounts(s.price_cents, s.deposit_cents, promo);

@@ -13,6 +13,7 @@ export const RULES = {
   mailTo: { max: 3, ms: HOUR, keys: 10_000 }, // e-mails d'inscription ou d'oubli par adresse destinataire
   mailIp: { max: 20, ms: HOUR, keys: 10_000 }, // mêmes e-mails par IP
   promo: { max: 10, ms: HOUR, keys: 10_000 }, // codes promo invalides par cliente
+  promoIp: { max: 30, ms: HOUR, keys: 10_000 }, // mêmes essais par IP : plusieurs comptes ne multiplient pas les essais depuis une connexion
   booking: { max: 4, ms: HOUR, keys: 10_000 }, // réservations créées par IP : plusieurs comptes ne bloquent pas l'agenda depuis une seule connexion
   loginDevice: { max: 10, ms: 15 * MIN, keys: 10_000 }, // essais sous cookie d'appareil, par e-mail : au-delà, le cookie ne dispense plus de loginEmail
 } as const;
@@ -72,6 +73,23 @@ export function hit(rule: Rule, id: string, now = Date.now()): boolean {
 
 // Limite atteinte, sans compter d'essai (pour ne compter que les échecs)
 export const blocked = (rule: Rule, id: string, now = Date.now()) => (live(rule, idKey(id), now)?.n ?? 0) >= RULES[rule].max;
+
+// Codes promo : un code valable se trahit par la remise, donc les essais faux sont comptés par cliente et par IP.
+// L'essai sur l'IP est réservé dès le contrôle, sans attente entre lecture et ajout : des requêtes parallèles de plusieurs comptes
+// (que le verrou de la cliente ne sérialise pas) ne passent pas toutes sous la limite. Faux si un compteur est plein.
+export function promoTry(userId: number, ip?: string): boolean {
+  if (blocked('promo', String(userId)) || (ip && blocked('promoIp', ip))) return false;
+  if (ip) hit('promoIp', ip);
+  return true;
+}
+// Après promoTry : code accepté, l'essai réservé sur l'IP est rendu ; code refusé, compté aussi pour la cliente
+export function promoDone(userId: number, ip: string | undefined, ok: boolean) {
+  if (!ok) hit('promo', String(userId));
+  else if (ip) {
+    const c = live('promoIp', idKey(ip), Date.now());
+    if (c && c.n > 0) c.n--;
+  }
+}
 
 // Remise à zéro de id et de ses couples « id\n… » (forget('loginPair', email) vide toutes les IP de cette adresse)
 export function forget(rule: Rule, id: string) {
