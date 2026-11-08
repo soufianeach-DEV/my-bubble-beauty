@@ -54,7 +54,11 @@ fieldset.field{border:0;padding:0;margin:0}
 }
 .auth--register{grid-template-columns:var(--blade) minmax(0,1fr)}
 .auth--register article{grid-column:2}
-.auth__blade{view-transition-name:auth-blade;position:absolute;inset:0 0 0 auto;width:var(--blade);overflow:hidden;color:#FFFBF9;background:#4E302C;
+/* Lame claire en thème clair, brune seulement en thème sombre */
+.auth{--blade-bg:#EAD9CD;--blade-ink:#3B2A27;--blade-veil:linear-gradient(180deg,rgb(234 217 205 / 0) 45%,rgb(234 217 205 / .75) 68%,rgb(246 236 232 / .96));--blade-script:#8A5A52;--blade-line:rgb(59 42 39 / .6);--blade-hover-ink:#FFFBF9}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .auth{--blade-bg:#4E302C;--blade-ink:#FFFBF9;--blade-veil:linear-gradient(180deg,rgb(78 48 44 / 0) 45%,rgb(78 48 44 / .7) 68%,rgb(58 34 31 / .94));--blade-script:#E8C9A0;--blade-line:rgb(255 251 249 / .7);--blade-hover-ink:#4E302C}}
+:root[data-theme="dark"] .auth{--blade-bg:#4E302C;--blade-ink:#FFFBF9;--blade-veil:linear-gradient(180deg,rgb(78 48 44 / 0) 45%,rgb(78 48 44 / .7) 68%,rgb(58 34 31 / .94));--blade-script:#E8C9A0;--blade-line:rgb(255 251 249 / .7);--blade-hover-ink:#4E302C}
+.auth__blade{view-transition-name:auth-blade;position:absolute;inset:0 0 0 auto;width:var(--blade);overflow:hidden;color:var(--blade-ink);background:var(--blade-bg);
   clip-path:polygon(var(--slant) 0,100% 0,100% 100%,0 100%)}
 .auth--register .auth__blade{inset:0 auto 0 0;clip-path:polygon(0 0,100% 0,calc(100% - var(--slant)) 100%,0 100%)}
 /* Largeur figée en unités de conteneur : quand la lame s'étire, Souade reste à sa place et seule la couleur avance */
@@ -65,13 +69,13 @@ fieldset.field{border:0;padding:0;margin:0}
 .auth--cover .auth__avatar{opacity:0}
 .auth--register .auth__avatar{inset:0 auto auto 0}
 .auth__veil{position:absolute;inset:0;display:grid;align-content:end;justify-items:start;gap:.9rem;padding:clamp(1.75rem,4vw,3rem) clamp(1.75rem,3vw,2.5rem) clamp(1.75rem,4vw,3rem) calc(var(--slant) + 1.5rem);
-  background:linear-gradient(180deg,rgb(78 48 44 / 0) 45%,rgb(78 48 44 / .7) 68%,rgb(58 34 31 / .94))}
+  background:var(--blade-veil)}
 .auth--register .auth__veil{padding-left:clamp(1.75rem,3vw,2.5rem);padding-right:calc(var(--slant) + 1.5rem)}
 .auth__blade p{margin:0;max-width:24ch;color:inherit}
 .auth__brand{font:300 clamp(2rem,2vw + 1rem,2.6rem)/1 var(--f-title);font-variation-settings:"SOFT" 100,"WONK" 0;letter-spacing:.03em}
-.auth__brand span{display:block;margin-top:-.1em;font:400 1.35em/.8 "Allura",cursive;color:#E8C9A0}
-.auth__blade .btn--ghost{color:#FFFBF9;border-color:rgb(255 251 249 / .7)}
-.auth__blade .btn--ghost:hover,.auth__blade .btn--ghost:focus-visible{background:#FFFBF9;color:#4E302C}
+.auth__brand span{display:block;margin-top:-.1em;font:400 1.35em/.8 "Allura",cursive;color:var(--blade-script)}
+.auth__blade .btn--ghost{color:var(--blade-ink);border-color:var(--blade-line)}
+.auth__blade .btn--ghost:hover,.auth__blade .btn--ghost:focus-visible{background:var(--blade-ink);color:var(--blade-hover-ink)}
 /* Aller : la lame couvre toute la carte. Elle accélère sans freiner : la page suivante reprend le mouvement en décélérant,
    les deux moitiés se lisent comme un seul geste */
 @keyframes auth-cover{to{width:100%;clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}}
