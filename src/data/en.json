@@ -106,7 +106,7 @@
     {
      "title": "Hair Removal",
      "text": "Opt for smooth and silky skin with our advanced hair removal techniques.",
-     "href": "#tarif-epilation",
+     "href": "#tarif-laser-visage",
      "link": "See prices"
     },
     {
@@ -548,64 +548,6 @@
        "name": "2 Sessions",
        "href": null,
        "amount": "120 €"
-      }
-     ]
-    },
-    {
-     "id": "epilation",
-     "cat": "epilation",
-     "title": "Hair Removal",
-     "href": "cire",
-     "items": [
-      {
-       "name": "Eyebrows",
-       "href": null,
-       "amount": "10 €"
-      },
-      {
-       "name": "Chin",
-       "href": null,
-       "amount": "5 €"
-      },
-      {
-       "name": "Upper Lip",
-       "href": null,
-       "amount": "5 €"
-      },
-      {
-       "name": "Full Face",
-       "href": null,
-       "amount": "25 €"
-      },
-      {
-       "name": "Underarms",
-       "href": null,
-       "amount": "10 €"
-      },
-      {
-       "name": "Forearms",
-       "href": null,
-       "amount": "10 €"
-      },
-      {
-       "name": "Full Arms",
-       "href": null,
-       "amount": "15 €"
-      },
-      {
-       "name": "Bikini",
-       "href": null,
-       "amount": "25 €"
-      },
-      {
-       "name": "Half Legs",
-       "href": null,
-       "amount": "20 €"
-      },
-      {
-       "name": "Full Legs",
-       "href": null,
-       "amount": "25 €"
       }
      ]
     },
@@ -1151,63 +1093,6 @@
      "w": 743,
      "h": 782,
      "alt": "Client wearing protective glasses during a Carbon Peel treatment"
-    }
-   ]
-  },
-  "cire": {
-   "title": "Waxing Unwanted Hair",
-   "metaTitle": "Waxing Unwanted Hair - My Bubble Beauty",
-   "description": "Waxing with warm or lukewarm wax pulls hair out by the root, for skin that stays smooth for longer than after shaving. Procedure and prices.",
-   "articleHtml": "<p>Waxing unwanted hair is a commonly used method for hair removal in the field of beauty care. This technique involves the application of warm or lukewarm wax to the skin, allowing it to harden and then swiftly removing it, along with the hair. Here's how waxing typically works in beauty care:</p><h2>Preparation</h2><p>Before waxing begins, the skin is usually thoroughly cleaned to remove dirt, oil, and cosmetic products. It's important for the skin to be clean and dry before the wax is applied.</p><h2>Application</h2><p>The wax is heated to make it liquid but should not be too hot to avoid burns. It is then applied to the area to be waxed using a stick or spatula. The wax adheres to the hair and the skin.</p><h2>Hardening</h2><p>The wax is allowed to harden for a few moments. During this period, the wax adheres to the hair, completely covering it.</p><h2>Removal</h2><p>Once the wax has hardened, a beauty professional grips an edge of the wax and quickly pulls it off against the direction of hair growth. This action pulls the hair out by the root, leaving the skin temporarily smooth and hair-free.</p><h2>Aftercare</h2><p>After waxing, it's common to apply a soothing lotion or moisturizing cream to calm the skin and minimize irritation. Hair gradually regrows, usually within a few weeks.</p><p>Waxing can be applied to various parts of the body, including legs, underarms, the bikini line, the face, and other areas with unwanted hair. This hair removal method offers several benefits, such as skin that stays smooth for longer than after shaving, since the hair is pulled out by the root. However, there are also potential downsides, such as the pain associated with hair removal and the possibility of skin irritation.</p><p>There are different types of wax, including hot wax, lukewarm wax, and cold wax, each with its own pros and cons. Some people also choose to wax at home using commercially available wax kits, although this may require some practice for good results.</p><p>For waxing, it's recommended to seek an experienced professional, especially for sensitive areas, to reduce the risk of injuries or skin irritation.</p>",
-   "priceTitle": "Price",
-   "prices": [
-    {
-     "name": "Eyebrows",
-     "amount": "10 €"
-    },
-    {
-     "name": "Chin",
-     "amount": "5 €"
-    },
-    {
-     "name": "Upper Lip",
-     "amount": "5 €"
-    },
-    {
-     "name": "Full Face",
-     "amount": "25 €"
-    },
-    {
-     "name": "Underarms",
-     "amount": "10 €"
-    },
-    {
-     "name": "Forearms",
-     "amount": "10 €"
-    },
-    {
-     "name": "Full Arms",
-     "amount": "15 €"
-    },
-    {
-     "name": "Bikini",
-     "amount": "25 €"
-    },
-    {
-     "name": "Half Legs",
-     "amount": "20 €"
-    },
-    {
-     "name": "Full Legs",
-     "amount": "25 €"
-    }
-   ],
-   "figures": [
-    {
-     "src": "soins/cire.webp",
-     "w": 801,
-     "h": 1367,
-     "alt": "Golden depilatory wax dripping from a spatula"
     }
    ]
   },

@@ -106,7 +106,7 @@
     {
      "title": "Épilation",
      "text": "Optez pour une peau douce et lisse avec nos techniques d'épilation de pointe.",
-     "href": "#tarif-epilation",
+     "href": "#tarif-laser-visage",
      "link": "Voir les tarifs"
     },
     {
@@ -548,64 +548,6 @@
        "name": "2 séances",
        "href": null,
        "amount": "120 €"
-      }
-     ]
-    },
-    {
-     "id": "epilation",
-     "cat": "epilation",
-     "title": "Épilation",
-     "href": "cire",
-     "items": [
-      {
-       "name": "Sourcils",
-       "href": null,
-       "amount": "10 €"
-      },
-      {
-       "name": "Menton",
-       "href": null,
-       "amount": "5 €"
-      },
-      {
-       "name": "Lèvre supérieure",
-       "href": null,
-       "amount": "5 €"
-      },
-      {
-       "name": "Visage complet",
-       "href": null,
-       "amount": "25 €"
-      },
-      {
-       "name": "Aisselles",
-       "href": null,
-       "amount": "10 €"
-      },
-      {
-       "name": "Avant-bras",
-       "href": null,
-       "amount": "10 €"
-      },
-      {
-       "name": "Bras complet",
-       "href": null,
-       "amount": "15 €"
-      },
-      {
-       "name": "Bikini",
-       "href": null,
-       "amount": "25 €"
-      },
-      {
-       "name": "Demi-jambes",
-       "href": null,
-       "amount": "20 €"
-      },
-      {
-       "name": "Jambes complètes",
-       "href": null,
-       "amount": "25 €"
       }
      ]
     },
@@ -1151,63 +1093,6 @@
      "w": 743,
      "h": 782,
      "alt": "Cliente avec des lunettes de protection pendant un soin Carbon Peel"
-    }
-   ]
-  },
-  "cire": {
-   "title": "L'épilation à la cire",
-   "metaTitle": "L'épilation à la cire - My Bubble Beauty",
-   "description": "L'épilation à la cire chaude ou tiède retire les poils à la racine, pour une peau qui reste lisse plus longtemps qu'après un rasage. Déroulement et tarifs.",
-   "articleHtml": "<p>L'épilation à la cire est une méthode d'élimination des poils non désirés qui est couramment utilisée en esthétique. Cette technique consiste à appliquer de la cire chaude ou tiède sur la peau, à la laisser durcir, puis à la retirer rapidement, emportant ainsi les poils avec elle. Voici comment fonctionne l'épilation à la cire en esthétique :</p><h2>Préparation</h2><p>Avant de commencer l'épilation à la cire, la peau est généralement nettoyée pour éliminer toute trace de saleté, d'huile ou de produits cosmétiques. Il est important que la peau soit propre et sèche avant l'application de la cire.</p><h2>Application</h2><p>La cire est chauffée pour la rendre fluide, mais elle ne doit pas être brûlante pour éviter les brûlures. Elle est ensuite appliquée sur la zone à épiler à l'aide d'un bâton ou d'une spatule. La cire adhère aux poils et à la peau.</p><h2>Durcissement</h2><p>La cire est laissée à durcir pendant quelques instants. Pendant cette période, la cire s'accroche aux poils, les enrobant complètement.</p><h2>Retrait</h2><p>Une fois la cire durcie, un professionnel de l'esthétique saisit un bord de la cire et la retire rapidement dans le sens inverse de la pousse des poils. Cette action arrache les poils à la racine, laissant la peau temporairement lisse et sans poils.</p><h2>Soin post-épilation</h2><p>Après l'épilation, il est courant d'appliquer une lotion apaisante ou une crème hydratante pour calmer la peau et minimiser les irritations. Les poils repousseront progressivement, généralement en quelques semaines.</p><p>L'épilation à la cire peut être réalisée sur différentes parties du corps, notamment les jambes, les aisselles, le maillot, le visage et d'autres zones où les poils non désirés sont présents. Cette méthode d'épilation offre plusieurs avantages, notamment une peau qui reste lisse plus longtemps qu'après un rasage, car les poils sont arrachés à la racine. Cependant, il y a aussi des inconvénients potentiels, tels que la douleur associée à l'arrachage des poils et la possibilité d'irritation de la peau.</p><p>Il existe différentes formules de cire, notamment la cire chaude, la cire tiède ou la cire froide, chacune ayant ses propres avantages et inconvénients. Certaines personnes choisissent également de réaliser l'épilation à la cire à la maison à l'aide de kits disponibles dans le commerce, bien que cela puisse nécessiter de la pratique pour obtenir de bons résultats.</p><p>Il est recommandé de faire appel à un professionnel expérimenté pour l'épilation à la cire, en particulier pour les zones sensibles, car cela réduit le risque de blessures ou d'irritations de la peau.</p>",
-   "priceTitle": "Tarif",
-   "prices": [
-    {
-     "name": "Sourcils",
-     "amount": "10 €"
-    },
-    {
-     "name": "Menton",
-     "amount": "5 €"
-    },
-    {
-     "name": "Lèvre supérieure",
-     "amount": "5 €"
-    },
-    {
-     "name": "Visage complet",
-     "amount": "25 €"
-    },
-    {
-     "name": "Aisselles",
-     "amount": "10 €"
-    },
-    {
-     "name": "Avant-bras",
-     "amount": "10 €"
-    },
-    {
-     "name": "Bras complet",
-     "amount": "15 €"
-    },
-    {
-     "name": "Bikini",
-     "amount": "25 €"
-    },
-    {
-     "name": "Demi-jambes",
-     "amount": "20 €"
-    },
-    {
-     "name": "Jambes complètes",
-     "amount": "25 €"
-    }
-   ],
-   "figures": [
-    {
-     "src": "soins/cire.webp",
-     "w": 801,
-     "h": 1367,
-     "alt": "Cire épilatoire dorée qui coule d'une spatule"
     }
    ]
   },

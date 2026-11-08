@@ -106,7 +106,7 @@
     {
      "title": "Ontharing",
      "text": "Kies voor een zachte en gladde huid met onze geavanceerde ontharingstechnieken.",
-     "href": "#tarif-epilation",
+     "href": "#tarif-laser-visage",
      "link": "Bekijk de tarieven"
     },
     {
@@ -548,64 +548,6 @@
        "name": "2 sessies",
        "href": null,
        "amount": "120 €"
-      }
-     ]
-    },
-    {
-     "id": "epilation",
-     "cat": "epilation",
-     "title": "Ontharing",
-     "href": "cire",
-     "items": [
-      {
-       "name": "Wenkbrauwen",
-       "href": null,
-       "amount": "10 €"
-      },
-      {
-       "name": "Kin",
-       "href": null,
-       "amount": "5 €"
-      },
-      {
-       "name": "Bovenlip",
-       "href": null,
-       "amount": "5 €"
-      },
-      {
-       "name": "Volledig gezicht",
-       "href": null,
-       "amount": "25 €"
-      },
-      {
-       "name": "Oksels",
-       "href": null,
-       "amount": "10 €"
-      },
-      {
-       "name": "Onderarmen",
-       "href": null,
-       "amount": "10 €"
-      },
-      {
-       "name": "Volledige armen",
-       "href": null,
-       "amount": "15 €"
-      },
-      {
-       "name": "Bikini",
-       "href": null,
-       "amount": "25 €"
-      },
-      {
-       "name": "Halve benen",
-       "href": null,
-       "amount": "20 €"
-      },
-      {
-       "name": "Volledige benen",
-       "href": null,
-       "amount": "25 €"
       }
      ]
     },
@@ -1151,63 +1093,6 @@
      "w": 743,
      "h": 782,
      "alt": "Cliënte met een beschermbril tijdens een Carbon Peel-behandeling"
-    }
-   ]
-  },
-  "cire": {
-   "title": "Het waxen van ongewenst haar",
-   "metaTitle": "Het waxen van ongewenst haar - My Bubble Beauty",
-   "description": "Waxen met warme of lauwe was trekt de haren met wortel en al uit, voor een huid die langer glad blijft dan na het scheren. Verloop en tarieven.",
-   "articleHtml": "<p>Het waxen van ongewenst haar is een veelgebruikte methode voor het verwijderen van lichaamshaar in de schoonheidsverzorging. Deze techniek omvat het aanbrengen van warme of lauwe was op de huid, het laten stollen en vervolgens het snel verwijderen, waarbij het haar wordt meegetrokken. Zo werkt waxen doorgaans in de schoonheidsverzorging:</p><h2>Voorbereiding</h2><p>Voordat het waxen begint, wordt de huid meestal grondig gereinigd om vuil, olie en cosmetische producten te verwijderen. Het is belangrijk dat de huid schoon en droog is voordat de was wordt aangebracht.</p><h2>Aanbrengen</h2><p>De was wordt verwarmd om deze vloeibaar te maken, maar mag niet te heet zijn om brandwonden te voorkomen. Vervolgens wordt hij op het te ontharen gebied aangebracht met een stokje of spatel. De was hecht zich aan de haren en de huid.</p><h2>Uitharden</h2><p>Men laat de was enkele ogenblikken uitharden. Tijdens deze periode hecht de was zich aan de haren, waarbij ze volledig worden bedekt.</p><h2>Verwijdering</h2><p>Zodra de was is uitgehard, neemt een schoonheidsspecialist een rand van de was vast en trekt hem snel weg, tegen de haargroei in. Deze handeling trekt de haren met wortel en al uit en laat de huid tijdelijk glad en haarvrij achter.</p><h2>Nazorg</h2><p>Na het waxen is het gebruikelijk om een kalmerende lotion of vochtinbrengende crème aan te brengen om de huid te kalmeren en irritatie te minimaliseren. De haren groeien geleidelijk terug, meestal binnen enkele weken.</p><p>Waxen kan worden toegepast op verschillende delen van het lichaam, waaronder benen, oksels, de bikinilijn, het gezicht en andere gebieden met ongewenst haar. Deze ontharingsmethode biedt verschillende voordelen, zoals een huid die langer glad blijft dan na het scheren, omdat de haren met wortel en al worden uitgetrokken. Er zijn echter ook potentiële nadelen, zoals de pijn die gepaard gaat met het uittrekken van de haren en de mogelijkheid van huidirritatie.</p><p>Er zijn verschillende soorten was, waaronder hete was, lauwe was en koude was, elk met zijn eigen voor- en nadelen. Sommige mensen kiezen er ook voor om zelf thuis te waxen met behulp van in de handel verkrijgbare waxkits, hoewel dit wat oefening kan vereisen voor goede resultaten.</p><p>Voor waxen wordt aanbevolen om een ervaren professional in te schakelen, vooral voor gevoelige gebieden, om het risico op verwondingen of huidirritatie te verminderen.</p>",
-   "priceTitle": "Tarief",
-   "prices": [
-    {
-     "name": "Wenkbrauwen",
-     "amount": "10 €"
-    },
-    {
-     "name": "Kin",
-     "amount": "5 €"
-    },
-    {
-     "name": "Bovenlip",
-     "amount": "5 €"
-    },
-    {
-     "name": "Volledig gezicht",
-     "amount": "25 €"
-    },
-    {
-     "name": "Oksels",
-     "amount": "10 €"
-    },
-    {
-     "name": "Onderarmen",
-     "amount": "10 €"
-    },
-    {
-     "name": "Volledige armen",
-     "amount": "15 €"
-    },
-    {
-     "name": "Bikini",
-     "amount": "25 €"
-    },
-    {
-     "name": "Halve benen",
-     "amount": "20 €"
-    },
-    {
-     "name": "Volledige benen",
-     "amount": "25 €"
-    }
-   ],
-   "figures": [
-    {
-     "src": "soins/cire.webp",
-     "w": 801,
-     "h": 1367,
-     "alt": "Goudkleurige ontharingswas die van een spatel druipt"
     }
    ]
   },

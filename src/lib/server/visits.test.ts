@@ -8,7 +8,7 @@ const req = (headers: Record<string, string> = {}, method = 'GET') =>
   ({ method, headers: { 'user-agent': CHROME, 'x-forwarded-for': '203.0.113.7', ...headers }, socket: { remoteAddress: '10.0.0.1' } }) as never;
 
 test('pages publiques vues par un navigateur : comptées', () => {
-  for (const p of ['/', '/index.html', '/fr/index.html', '/nl/subPages/cire.html', '/eng/terms.html']) assert.ok(isCountable(req(), p, 200), p);
+  for (const p of ['/', '/index.html', '/fr/index.html', '/nl/subPages/laserepilation.html', '/eng/terms.html']) assert.ok(isCountable(req(), p, 200), p);
   // Page revalidée depuis le cache du navigateur (ETag) : c'est aussi une visite
   assert.ok(isCountable(req(), '/fr/index.html', 304));
 });
