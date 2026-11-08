@@ -15,11 +15,31 @@ const tr = (d.treatments as Record<string, (typeof d.treatments)['mado']>)[slug]
 const key = `treatment:${slug}` as const;
 // Le retour vise le groupe de tarifs du soin : main.js affiche alors son filtre
 const grp = d.home.tarifs.groups.find((g) => g.href === slug || g.items.some((it) => it.href === slug));
+// Maillage entre fiches : jusqu'à 3 soins de la même famille, pris à la suite du soin courant pour répartir les liens
+const FAMILIES = [
+  ['brosse', 'photo', 'hydra', 'microneed', 'charbon', 'peeling', 'plasma'],
+  ['massages', 'mado', 'radiofrequence', 'lipolaser'],
+  ['cire', 'laserepilation'],
+  ['regard', 'semi-permanent', 'dents'],
+];
+const all = d.treatments as Record<string, { title: string }>;
+const fam = (FAMILIES.find((f) => f.includes(slug)) ?? []).filter((s) => all[s]);
+const at = fam.indexOf(slug);
+const related = fam.length > 1 ? Array.from({ length: Math.min(3, fam.length - 1) }, (_, i) => fam[(at + 1 + i) % fam.length]) : [];
+// « 35 € » -> prix ; « Dès 180 € » (Vanaf, From) -> prix minimum
+const offers = tr.prices.flatMap((p) => {
+  const n = /(\d+(?:[.,]\d+)?)/.exec(p.amount);
+  if (!n) return [];
+  const price = Number(n[1].replace(',', '.'));
+  return [{ '@type': 'Offer', name: p.name, priceCurrency: 'EUR',
+    ...(/^\s*\d/.test(p.amount) ? { price } : { priceSpecification: { '@type': 'PriceSpecification', minPrice: price, priceCurrency: 'EUR' } }) }];
+});
 const jsonld = {
   '@context': 'https://schema.org', '@type': 'WebPage', name: tr.title, inLanguage: d.htmlLang,
   url: SITE + pagePath(lang, key), description: tr.description,
-  // Le soin est proposé par le salon décrit sur l'accueil (même @id dans les trois langues)
-  about: { '@type': 'Service', name: tr.title, provider: { '@id': SALON_ID } },
+  // Le soin est proposé par le salon décrit sur l'accueil (même @id dans les trois langues) ; nom et URL repris pour que la fiche se suffise
+  about: { '@type': 'Service', name: tr.title, url: SITE + pagePath(lang, key), areaServed: 'Dilbeek',
+    provider: { '@type': 'BeautySalon', '@id': SALON_ID, name: 'My Bubble Beauty', url: SITE + pagePath(lang, 'home') }, offers },
   breadcrumb: { '@type': 'BreadcrumbList', itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'My Bubble Beauty', item: SITE + pagePath(lang, 'home') },
     { '@type': 'ListItem', position: 2, name: tr.title, item: SITE + pagePath(lang, key) },
@@ -35,6 +55,8 @@ const jsonld = {
 <h1>{tr.title}</h1>
 <p class="treatment__jump" hidden><a href="#h-price">{tr.priceTitle}<span aria-hidden="true"> ↓</span></a></p>
 <Fragment set:html={tr.articleHtml} />
+{related.length > 0 && <nav class="related" aria-labelledby="h-related"><h2 id="h-related">{d.ui.related}</h2>
+<ul>{related.map((s) => <li><a href={pagePath(lang, `treatment:${s}`)}>{all[s].title}<span aria-hidden="true"> →</span></a></li>)}</ul></nav>}
 </article>
 <div class="treatment__side">
 <aside class="pricebox" aria-labelledby="h-price"><h2 id="h-price">{tr.priceTitle}</h2>

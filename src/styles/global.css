@@ -424,6 +424,9 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 .treatment__figs{display:grid;gap:1rem}
 .treatment__figs figure{margin:0;border-radius:16px;overflow:hidden;background:var(--surface);box-shadow:0 0 0 1px var(--line-soft)}
 .treatment__figs img{width:100%;height:auto}
+.related{margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--line-soft)}
+.related ul{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:.5rem 1.25rem}
+.related a{font-weight:600}
 
 /* ---------- Choix de la langue ---------- */
 .chooser__main{min-height:100svh;display:grid;align-content:start;justify-content:center;padding-top:clamp(3rem,12vh,8rem)!important;justify-items:center;gap:1.5rem;padding:3rem var(--gutter);text-align:center}

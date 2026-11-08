@@ -39,18 +39,19 @@
   "quickContact": "Quick contact",
   "call": "Call",
   "moreInfo": "Learn more",
+  "related": "Related treatments",
   "back": "← Back to prices",
   "book": "Book an appointment",
   "bookShort": "Book"
  },
  "home": {
   "title": "Beauty salon in Dilbeek - My Bubble Beauty",
-  "description": "Beauty and wellness centre in Dilbeek, close to Anderlecht, Molenbeek and Berchem: facials, medical pedicure, nails and hair removal.",
+  "description": "Beauty and wellness centre in Dilbeek, close to Anderlecht, Molenbeek and Berchem: facials, foot care, nails and hair removal.",
   "hero": {
    "eyebrow": "Beauty salon · Dilbeek",
    "brand": "My Bubble",
    "sub": "Your oasis of well-being and beauty in Dilbeek",
-   "lead": "Facials, medical pedicure, nails and hair removal: our experienced team combines expertise with premium products to reveal and enhance your natural beauty, in a relaxing setting.",
+   "lead": "Facials, foot care, nails and hair removal: we combine expertise with premium products to reveal and enhance your natural beauty, in a relaxing setting.",
    "cta": "Make an Appointment",
    "imgAlt": "Souade prepares the treatment room: rolled towels, bottles and a jade roller on the trolley"
   },
@@ -74,12 +75,12 @@
   "about": {
    "eyebrow": "The centre",
    "lead": "Welcome to My Bubble, your beauty centre in Dilbeek, close to Anderlecht, Molenbeek-Saint-Jean and Berchem-Sainte-Agathe.",
-   "bodyHtml": "<p>We specialize in high-quality aesthetic treatments and medical pedicures to reveal and enhance your natural beauty. Our team of experienced professionals offers a full range of services, including skincare, nail care, and hair removal. We combine expertise with top-quality products to look after your comfort and well-being.</p><p>Also discover our selection of premium beauty products designed to maintain and enhance your appearance at home. Whether you're looking for relaxing treatments, solutions for specific skin issues, or exceptional cosmetic products, we have everything you need. Visit us in Dilbeek and see how we can help you achieve radiant beauty.</p>",
+   "bodyHtml": "<p>We specialize in high-quality aesthetic treatments and hand and foot care to reveal and enhance your natural beauty. We offer a full range of services, including skincare, nail care, and hair removal. We combine expertise with top-quality products to look after your comfort and well-being.</p><p>Also discover our selection of premium beauty products designed to maintain and enhance your appearance at home. Whether you're looking for relaxing treatments, solutions for specific skin issues, or exceptional cosmetic products, we have everything you need. Visit us in Dilbeek and see how we can help you achieve radiant beauty.</p>",
    "quote": "My Bubble: the perfect blend of quality, well-being, and aesthetics.",
    "points": [
     "High-quality aesthetic treatments",
-    "Medical pedicure",
-    "Team of experienced professionals",
+    "Hand and foot care",
+    "Personal, one-to-one care",
     "Premium beauty products"
    ],
    "more": "Read more",
@@ -1614,32 +1615,11 @@
     }
    ]
   },
-  "sos": {
-   "title": "SOS Purity Treatment",
-   "metaTitle": "SOS Purity Treatment - My Bubble Beauty",
-   "description": "The SOS Purity treatment aims to deeply cleanse oily, acne-prone skin, reduce excess sebum and unclog pores. Discover how a session works.",
-   "articleHtml": "<p>An SOS Purity treatment in aesthetics is specially designed for individuals with skin issues related to excess sebum, a tendency towards acne, blackheads, and other skin imperfections. This type of treatment aims to deeply cleanse the skin, reduce excess sebum, unclog pores, and promote clearer and healthier skin. Here's how an SOS Purity treatment in aesthetics may work:</p><h2>Deep Cleansing</h2><p>The treatment typically begins with a thorough cleansing of the face to remove impurities, excess sebum, and dead skin cells.</p><h2>Exfoliation</h2><p>Gentle exfoliation may be performed to eliminate dead skin cells, promoting smoother skin.</p><h2>Blackhead Extraction</h2><p>Aestheticians or skin professionals often use manual extraction techniques or extraction devices to remove blackheads and comedones. This helps unclog pores and improve skin texture.</p><h2>Application of Suitable Products</h2><p>Specific products containing ingredients such as salicylic acid, known for its purifying properties, may be applied to the skin to help calm redness and limit the appearance of new blemishes.</p><h2>Masks and Targeted Treatments</h2><p>Purifying masks or other targeted treatments may be used to soothe the skin, reduce excess sebum, and promote better sebum production regulation.</p><h2>Hydration</h2><p>Even if you have skin issues related to excess sebum, it's essential to maintain proper skin hydration to prevent it from becoming too dry in response to treatments. Lightweight and non-comedogenic moisturizing products can be used.</p><h2>Sun Protection</h2><p>As with many skin treatments, applying sunscreen or sun protection products is important to shield the skin from UV damage.</p>",
-   "priceTitle": "Price",
-   "prices": [
-    {
-     "name": "SOS Purity",
-     "amount": "35 €"
-    }
-   ],
-   "figures": [
-    {
-     "src": "soins/sos.webp",
-     "w": 756,
-     "h": 418,
-     "alt": "Comparison between cleansing by hand and cleansing with the brush"
-    }
-   ]
-  },
   "massages": {
    "title": "Massages and body scrubs",
    "metaTitle": "Massages and body scrubs - My Bubble Beauty",
    "description": "Hot stone, bamboo, argan oil, light-stroke and pregnancy massages, lavender and honey body scrubs, signature rituals. Durations and prices.",
-   "articleHtml": "<p>Our massages help release tension. Our scrubs leave the skin soft.</p><h2>Our relaxing massages</h2><p><strong>Warmth & Relaxation Ritual: hot stone massage.</strong> A deeply relaxing massage. The warmth of volcanic stones meets enveloping movements. It helps release muscle tension and brings a feeling of complete well-being. 60 minutes.</p><p><strong>Bamboo & Balance Ritual: bamboo massage.</strong> A rhythmic, enveloping massage with bamboo sticks. It works on body tension, stimulates the tissues and leaves a pleasant feeling of lightness. 60 minutes.</p><p><strong>Gold & Softness Ritual: argan oil massage.</strong> A delicate massage with argan oil, which nourishes the skin and wraps it in softness. Its flowing movements help you let go. 60 minutes.</p><p><strong>Feather & Serenity Ritual: light-stroke massage.</strong> Slow, light and harmonious movements. A true invitation to relax, to calm body and mind. 45 minutes.</p><p><strong>Gentle Mum Ritual: pregnancy massage.</strong> A moment for the mother-to-be. Gentle movements adapted to pregnancy, for relaxation and comfort. 60 minutes.</p><h2>Our body scrubs</h2><p><strong>Lavender & Softness Ritual.</strong> A scrub delicately scented with lavender. It helps remove dead skin cells and leaves the skin soft and silky. 30 minutes.</p><p><strong>Honey & Velvet Ritual.</strong> An indulgent scrub that pairs the softness of honey with a delicate ritual. The skin feels soft, supple and comfortable again. 30 minutes.</p><h2>Our signature rituals</h2><p>To make the moment last, we pair a scrub with a massage.</p><ul><li><strong>Awakening of the Senses.</strong> Lavender scrub and light-stroke massage.</li><li><strong>Precious Softness.</strong> Honey scrub and argan oil massage.</li><li><strong>Total Escape.</strong> Scrub of your choice and hot stone massage.</li></ul><p>Before the treatment, we check any contraindications with you, for example pregnancy, ongoing medical treatment or damaged skin.</p>",
+   "articleHtml": "<p>Our massages help release tension. Our scrubs leave the skin soft.</p><h2>Our relaxing massages</h2><p><strong>Warmth & Relaxation Ritual: hot stone massage.</strong> A deeply relaxing massage. The warmth of volcanic stones meets enveloping movements. It helps release muscle tension and brings a feeling of complete well-being. 60 minutes.</p><p><strong>Bamboo & Balance Ritual: bamboo massage.</strong> A rhythmic, enveloping massage with bamboo sticks. It works on body tension, stimulates the tissues and leaves a pleasant feeling of lightness. 60 minutes.</p><p><strong>Gold & Softness Ritual: argan oil massage.</strong> A delicate massage with argan oil, which nourishes the skin and wraps it in softness. Its flowing movements help you let go. 60 minutes.</p><p><strong>Feather & Serenity Ritual: light-stroke massage.</strong> Slow, light and harmonious movements. A true invitation to relax, to calm body and mind. 45 minutes.</p><p><strong>Gentle Mum Ritual: pregnancy massage.</strong> A moment for the mother-to-be. Gentle movements adapted to pregnancy, for relaxation and comfort. 60 minutes.</p><h2>Our body scrubs</h2><p><strong>Lavender & Softness Ritual.</strong> A scrub delicately scented with lavender. It helps remove dead skin cells and leaves the skin soft and silky. 30 minutes.</p><p><strong>Honey & Velvet Ritual.</strong> An indulgent scrub that pairs the softness of honey with a delicate ritual. The skin feels soft, supple and comfortable again. 30 minutes.</p><h2>Our signature rituals</h2><p>To make the moment last, we pair a scrub with a massage.</p><ul><li><strong>Awakening of the Senses.</strong> Lavender scrub and light-stroke massage.</li><li><strong>Precious Softness.</strong> Honey scrub and argan oil massage.</li><li><strong>Total Escape.</strong> Scrub of your choice and hot stone massage.</li></ul><p>Before the treatment, we check any contraindications with you, for example ongoing medical treatment or damaged skin. During pregnancy, we offer you the Gentle Mum Ritual, designed for you.</p>",
    "priceTitle": "Prices",
    "prices": [
     {

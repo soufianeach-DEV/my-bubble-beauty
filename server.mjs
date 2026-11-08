@@ -56,7 +56,18 @@ const REDIRECTS = new Map([
   ['/confidentialite.html', '/fr/confidentialite.html'],
   // Page BB Glow retirée (07/11/2026) : les liens déjà partagés ou indexés mènent aux tarifs
   ...['fr', 'nl', 'eng'].map((l) => [`/${l}/subPages/bbglow.html`, `/${l}/index.html#package`]),
+  // SOS Pureté retirée de la carte (8bac70c) : même traitement
+  ...['fr', 'nl', 'eng'].map((l) => [`/${l}/subPages/sos.html`, `/${l}/index.html#package`]),
 ]);
+
+// Un seul domaine indexé : toute autre adresse publique (ex. *.onrender.com après la bascule) redirige vers SITE_URL.
+// Exemptés : localhost et adresses IP (sondes de santé, accès direct), POST (formulaires, webhook Stripe) et /api.
+const SITE_HOST = new URL(process.env.SITE_URL).host;
+const otherHost = (req, path) => {
+  const host = (req.headers.host ?? '').toLowerCase();
+  return !!host && host !== SITE_HOST && (req.method === 'GET' || req.method === 'HEAD') && !path.startsWith('/api/')
+    && !/^(localhost|127\.|\[::1\]|\d+\.\d+\.\d+\.\d+)(:|$)/.test(host);
+};
 
 // Pages privées : noindex aussi dans l'en-tête, pour toute réponse (redirection vers la connexion comprise). Jamais ailleurs.
 const NOINDEX = /^\/(admin|api|(fr|nl|eng)\/(compte|reserver))(\/|$)/;
@@ -84,6 +95,10 @@ const server = http.createServer((req, res) => {
   if (!['GET', 'HEAD', 'POST'].includes(req.method)) {
     log('method_refused', { method: req.method });
     res.writeHead(405, { Allow: 'GET, HEAD, POST' });
+    return res.end();
+  }
+  if (otherHost(req, path)) {
+    res.writeHead(301, { Location: process.env.SITE_URL + req.url });
     return res.end();
   }
   // /fr, /nl, /eng -> accueil de la langue (URL d'origine conservées)

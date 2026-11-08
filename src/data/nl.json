@@ -39,18 +39,19 @@
   "quickContact": "Snel contact",
   "call": "Bellen",
   "moreInfo": "Meer info",
+  "related": "Verwante behandelingen",
   "back": "← Terug naar de tarieven",
   "book": "Afspraak maken",
   "bookShort": "Reserveren"
  },
  "home": {
   "title": "Schoonheidssalon in Dilbeek - My Bubble Beauty",
-  "description": "Schoonheids- en welzijnscentrum in Dilbeek, vlak bij Anderlecht, Molenbeek en Berchem: gezichtsverzorging, medische pedicure, nagels en ontharing.",
+  "description": "Schoonheids- en welzijnscentrum in Dilbeek, vlak bij Anderlecht, Molenbeek en Berchem: gezichtsverzorging, voetverzorging, nagels en ontharing.",
   "hero": {
    "eyebrow": "Schoonheidsinstituut · Dilbeek",
    "brand": "My Bubble",
    "sub": "Uw oase van welzijn en schoonheid in Dilbeek",
-   "lead": "Gezichtsverzorging, medische pedicure, nagels en ontharing: ons ervaren team combineert expertise met hoogwaardige producten om uw natuurlijke schoonheid te onthullen en te versterken, in alle rust.",
+   "lead": "Gezichtsverzorging, voetverzorging, nagels en ontharing: wij combineren expertise met hoogwaardige producten om uw natuurlijke schoonheid te onthullen en te versterken, in alle rust.",
    "cta": "Afspraak maken",
    "imgAlt": "Souade maakt de behandelruimte klaar: opgerolde handdoeken, flesjes en een jaderoller op het karretje"
   },
@@ -74,12 +75,12 @@
   "about": {
    "eyebrow": "Het centrum",
    "lead": "Welkom bij My Bubble, uw schoonheidssalon in Dilbeek, vlak bij Anderlecht, Sint-Jans-Molenbeek en Sint-Agatha-Berchem.",
-   "bodyHtml": "<p>Wij specialiseren ons in hoogwaardige esthetische behandelingen en medische pedicure om uw natuurlijke schoonheid te onthullen en te versterken. Ons team van ervaren professionals biedt een volledig scala aan diensten, waaronder huidverzorging, nagelverzorging en ontharing. Wij combineren expertise met hoogwaardige producten om voor uw comfort en welzijn te zorgen.</p><p>Ontdek ook onze selectie van hoogwaardige schoonheidsproducten, ontworpen om uw uiterlijk thuis te onderhouden en te verbeteren. Of u nu op zoek bent naar ontspannende behandelingen, oplossingen voor specifieke huidproblemen of uitzonderlijke cosmetische producten, wij hebben alles wat u nodig heeft. Bezoek ons in Dilbeek en ontdek hoe wij u kunnen helpen een stralende schoonheid te bereiken.</p>",
+   "bodyHtml": "<p>Wij specialiseren ons in hoogwaardige esthetische behandelingen en verzorging van handen en voeten om uw natuurlijke schoonheid te onthullen en te versterken. Wij bieden een volledig scala aan diensten, waaronder huidverzorging, nagelverzorging en ontharing. Wij combineren expertise met hoogwaardige producten om voor uw comfort en welzijn te zorgen.</p><p>Ontdek ook onze selectie van hoogwaardige schoonheidsproducten, ontworpen om uw uiterlijk thuis te onderhouden en te verbeteren. Of u nu op zoek bent naar ontspannende behandelingen, oplossingen voor specifieke huidproblemen of uitzonderlijke cosmetische producten, wij hebben alles wat u nodig heeft. Bezoek ons in Dilbeek en ontdek hoe wij u kunnen helpen een stralende schoonheid te bereiken.</p>",
    "quote": "My Bubble: de perfecte combinatie van kwaliteit, welzijn en esthetiek.",
    "points": [
     "Hoogwaardige esthetische behandelingen",
-    "Medische pedicure",
-    "Team van ervaren professionals",
+    "Verzorging van handen en voeten",
+    "Persoonlijke begeleiding",
     "Hoogwaardige schoonheidsproducten"
    ],
    "more": "Lees meer",
@@ -1614,32 +1615,11 @@
     }
    ]
   },
-  "sos": {
-   "title": "SOS Zuiverheid",
-   "metaTitle": "SOS Zuiverheid - My Bubble Beauty",
-   "description": "Een SOS Zuiverheid-behandeling is speciaal ontwikkeld voor wie last heeft van overtollige talg, een neiging tot acne, mee-eters en andere onzuiverheden.",
-   "articleHtml": "<p>Een SOS Zuiverheid-behandeling in de schoonheidszorg is speciaal ontwikkeld voor mensen met huidproblemen door overtollige talg, een neiging tot acne, mee-eters en andere onzuiverheden. Deze behandeling is bedoeld om de huid grondig te reinigen, overtollige talg te verminderen, de poriën te ontstoppen en bij te dragen tot een zuiverdere, gezondere huid. Zo verloopt een SOS Zuiverheid-behandeling:</p><h2>Grondige reiniging</h2><p>De behandeling begint meestal met een grondige reiniging van het gezicht om onzuiverheden, overtollige talg en dode huidcellen te verwijderen.</p><h2>Exfoliatie</h2><p>Een zachte exfoliatie kan dode huidcellen verwijderen, waardoor de huid gladder wordt.</p><h2>Verwijderen van comedonen</h2><p>Schoonheidsspecialisten of huidprofessionals gebruiken vaak manuele technieken of extractie-instrumenten om mee-eters en comedonen te verwijderen. Zo worden de poriën ontstopt en verbetert de huidtextuur.</p><h2>Aangepaste producten</h2><p>Specifieke producten met ingrediënten zoals salicylzuur, bekend om zijn zuiverende werking, kunnen op de huid worden aangebracht om roodheid te helpen kalmeren en nieuwe onzuiverheden te helpen beperken.</p><h2>Maskers en gerichte behandelingen</h2><p>Zuiverende maskers of andere gerichte behandelingen kunnen de huid kalmeren, overtollige talg verminderen en de talgproductie beter helpen regelen.</p><h2>Hydratatie</h2><p>Ook bij een vette huid blijft voldoende hydratatie essentieel, zodat de huid niet te droog wordt door de behandelingen. Daarvoor kunnen lichte, niet-comedogene hydraterende producten worden gebruikt.</p><h2>Zonnebescherming</h2><p>Zoals bij veel huidbehandelingen is een zonnecrème of een ander beschermend product belangrijk om de huid te beschermen tegen schade door uv-stralen.</p>",
-   "priceTitle": "Tarief",
-   "prices": [
-    {
-     "name": "SOS Zuiverheid",
-     "amount": "35 €"
-    }
-   ],
-   "figures": [
-    {
-     "src": "soins/sos.webp",
-     "w": 756,
-     "h": 418,
-     "alt": "Vergelijking tussen reinigen met de handen en reinigen met de borstel"
-    }
-   ]
-  },
   "massages": {
    "title": "Massages en lichaamsscrubs",
    "metaTitle": "Massages en lichaamsscrubs - My Bubble Beauty",
    "description": "Massage met warme stenen, bamboe, arganolie, strijkmassage of zwangerschapsmassage, scrubs met lavendel en honing, signature-rituelen. Duur en tarieven.",
-   "articleHtml": "<p>Onze massages helpen spanningen los te laten. Onze scrubs maken de huid zacht.</p><h2>Onze ontspannende massages</h2><p><strong>Ritueel Warmte & Ontspanning: massage met warme stenen.</strong> Een diep ontspannende massage. De warmte van vulkanische stenen gaat samen met omhullende bewegingen. Ze helpt spierspanning los te laten en geeft een gevoel van volledig welzijn. 60 minuten.</p><p><strong>Ritueel Bamboe & Evenwicht: bamboemassage.</strong> Een ritmische, omhullende massage met bamboestokken. Ze werkt op spanningen in het lichaam, stimuleert de weefsels en geeft een aangenaam licht gevoel. 60 minuten.</p><p><strong>Ritueel Goud & Zachtheid: massage met arganolie.</strong> Een zachte massage met arganolie, die de huid voedt en omhult. De vloeiende bewegingen helpen u los te laten. 60 minuten.</p><p><strong>Ritueel Veer & Sereniteit: strijkmassage.</strong> Trage, lichte en harmonieuze bewegingen. Een echte uitnodiging tot ontspanning, voor lichaam en geest. 45 minuten.</p><p><strong>Ritueel Zachte Mama: zwangerschapsmassage.</strong> Een moment voor de aanstaande moeder. Zachte bewegingen, aangepast aan de zwangerschap, voor ontspanning en comfort. 60 minuten.</p><h2>Onze lichaamsscrubs</h2><p><strong>Ritueel Lavendel & Zachtheid.</strong> Een scrub met een zachte lavendelgeur. Hij helpt dode huidcellen te verwijderen en maakt de huid zacht en zijdeachtig. 30 minuten.</p><p><strong>Ritueel Honing & Fluweel.</strong> Een verwennende scrub die de zachtheid van honing combineert met een delicaat ritueel. De huid wordt weer zacht, soepel en comfortabel. 30 minuten.</p><h2>Onze signature-rituelen</h2><p>Om langer te genieten, combineren we een scrub met een massage.</p><ul><li><strong>Ontwaken van de Zintuigen.</strong> Lavendelscrub en strijkmassage.</li><li><strong>Kostbare Zachtheid.</strong> Honingscrub en massage met arganolie.</li><li><strong>Totale Ontsnapping.</strong> Scrub naar keuze en massage met warme stenen.</li></ul><p>Voor de behandeling overlopen we samen de mogelijke contra-indicaties, bijvoorbeeld een zwangerschap, een lopende medische behandeling of beschadigde huid.</p>",
+   "articleHtml": "<p>Onze massages helpen spanningen los te laten. Onze scrubs maken de huid zacht.</p><h2>Onze ontspannende massages</h2><p><strong>Ritueel Warmte & Ontspanning: massage met warme stenen.</strong> Een diep ontspannende massage. De warmte van vulkanische stenen gaat samen met omhullende bewegingen. Ze helpt spierspanning los te laten en geeft een gevoel van volledig welzijn. 60 minuten.</p><p><strong>Ritueel Bamboe & Evenwicht: bamboemassage.</strong> Een ritmische, omhullende massage met bamboestokken. Ze werkt op spanningen in het lichaam, stimuleert de weefsels en geeft een aangenaam licht gevoel. 60 minuten.</p><p><strong>Ritueel Goud & Zachtheid: massage met arganolie.</strong> Een zachte massage met arganolie, die de huid voedt en omhult. De vloeiende bewegingen helpen u los te laten. 60 minuten.</p><p><strong>Ritueel Veer & Sereniteit: strijkmassage.</strong> Trage, lichte en harmonieuze bewegingen. Een echte uitnodiging tot ontspanning, voor lichaam en geest. 45 minuten.</p><p><strong>Ritueel Zachte Mama: zwangerschapsmassage.</strong> Een moment voor de aanstaande moeder. Zachte bewegingen, aangepast aan de zwangerschap, voor ontspanning en comfort. 60 minuten.</p><h2>Onze lichaamsscrubs</h2><p><strong>Ritueel Lavendel & Zachtheid.</strong> Een scrub met een zachte lavendelgeur. Hij helpt dode huidcellen te verwijderen en maakt de huid zacht en zijdeachtig. 30 minuten.</p><p><strong>Ritueel Honing & Fluweel.</strong> Een verwennende scrub die de zachtheid van honing combineert met een delicaat ritueel. De huid wordt weer zacht, soepel en comfortabel. 30 minuten.</p><h2>Onze signature-rituelen</h2><p>Om langer te genieten, combineren we een scrub met een massage.</p><ul><li><strong>Ontwaken van de Zintuigen.</strong> Lavendelscrub en strijkmassage.</li><li><strong>Kostbare Zachtheid.</strong> Honingscrub en massage met arganolie.</li><li><strong>Totale Ontsnapping.</strong> Scrub naar keuze en massage met warme stenen.</li></ul><p>Voor de behandeling overlopen we samen de mogelijke contra-indicaties, bijvoorbeeld een lopende medische behandeling of beschadigde huid. Tijdens de zwangerschap bieden we u het Ritueel Zachte Mama aan, speciaal voor u bedoeld.</p>",
    "priceTitle": "Tarieven",
    "prices": [
     {

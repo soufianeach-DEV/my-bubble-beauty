@@ -39,18 +39,19 @@
   "quickContact": "Contact rapide",
   "call": "Appeler",
   "moreInfo": "En savoir plus",
+  "related": "Soins associés",
   "back": "← Retour aux tarifs",
   "book": "Prendre rendez-vous",
   "bookShort": "Réserver"
  },
  "home": {
   "title": "Institut de beauté à Dilbeek - My Bubble Beauty",
-  "description": "Centre de beauté et de bien-être à Dilbeek, aux portes d'Anderlecht, de Molenbeek et de Berchem : soins du visage, pédicure médicale, ongles et épilation.",
+  "description": "Centre de beauté et de bien-être à Dilbeek, aux portes d'Anderlecht, de Molenbeek et de Berchem : soins du visage, soins des pieds, ongles et épilation.",
   "hero": {
    "eyebrow": "Institut de beauté · Dilbeek",
    "brand": "My Bubble",
    "sub": "Votre centre de beauté et de bien-être à Dilbeek",
-   "lead": "Soins du visage, pédicure médicale, ongles et épilation : notre équipe expérimentée allie expertise et produits haut de gamme pour révéler et sublimer votre beauté naturelle, en toute détente.",
+   "lead": "Soins du visage, soins des pieds, ongles et épilation : nous allions expertise et produits haut de gamme pour révéler et sublimer votre beauté naturelle, en toute détente.",
    "cta": "Prendre rendez-vous",
    "imgAlt": "Souade prépare la cabine de soins : serviettes roulées, flacons et rouleau de jade sur la desserte"
   },
@@ -74,12 +75,12 @@
   "about": {
    "eyebrow": "Le centre",
    "lead": "Bienvenue chez My Bubble, votre centre de beauté à Dilbeek, à deux pas d'Anderlecht, de Molenbeek-Saint-Jean et de Berchem-Sainte-Agathe.",
-   "bodyHtml": "<p>Nous nous spécialisons dans les soins esthétiques de qualité et les traitements de pédicure médicale pour révéler et sublimer votre beauté naturelle. Notre équipe de professionnels expérimentés offre une gamme complète de services, incluant les soins de la peau, les soins des ongles et l'épilation. Nous allions expertise et produits de haute qualité pour veiller à votre confort et à votre bien-être.</p><p>Découvrez également notre sélection de produits de beauté haut de gamme, conçus pour entretenir et améliorer votre apparence à domicile. Que vous recherchiez des soins relaxants, des solutions pour des problèmes spécifiques de peau ou des produits cosmétiques d'exception, nous avons tout ce qu'il vous faut. Rendez-nous visite à Dilbeek et découvrez comment nous pouvons vous aider à atteindre une beauté éclatante.</p>",
+   "bodyHtml": "<p>Nous nous spécialisons dans les soins esthétiques de qualité et les soins des mains et des pieds pour révéler et sublimer votre beauté naturelle. Nous proposons une gamme complète de services, incluant les soins de la peau, les soins des ongles et l'épilation. Nous allions expertise et produits de haute qualité pour veiller à votre confort et à votre bien-être.</p><p>Découvrez également notre sélection de produits de beauté haut de gamme, conçus pour entretenir et améliorer votre apparence à domicile. Que vous recherchiez des soins relaxants, des solutions pour des problèmes spécifiques de peau ou des produits cosmétiques d'exception, nous avons tout ce qu'il vous faut. Rendez-nous visite à Dilbeek et découvrez comment nous pouvons vous aider à atteindre une beauté éclatante.</p>",
    "quote": "My Bubble : l'alliance parfaite entre qualité, bien-être et esthétique.",
    "points": [
     "Soins esthétiques de qualité",
-    "Pédicure médicale",
-    "Équipe de professionnels expérimentés",
+    "Soins des mains et des pieds",
+    "Un accompagnement personnalisé",
     "Produits de beauté haut de gamme"
    ],
    "more": "Lire la suite",
@@ -1614,32 +1615,11 @@
     }
    ]
   },
-  "sos": {
-   "title": "SOS Pureté",
-   "metaTitle": "SOS Pureté - My Bubble Beauty",
-   "description": "Le soin SOS Pureté vise à nettoyer en profondeur les peaux grasses à tendance acnéique, à réduire l'excès de sébum et à désobstruer les pores.",
-   "articleHtml": "<p>Un soin SOS Pureté en esthétique est un traitement spécialement conçu pour les personnes ayant des problèmes de peau liés à l'excès de sébum, à une tendance acnéique, aux points noirs et à d'autres imperfections cutanées. Ce type de soin vise à nettoyer en profondeur la peau, à réduire l'excès de sébum, à désobstruer les pores et à favoriser une peau plus nette et plus saine. Voici comment un soin SOS Pureté en esthétique peut fonctionner :</p><h2>Nettoyage en profondeur</h2><p>Le traitement commence généralement par un nettoyage en profondeur du visage pour éliminer les impuretés, l'excès de sébum et les cellules mortes de la peau.</p><h2>Exfoliation</h2><p>Une exfoliation douce peut être effectuée pour éliminer les cellules mortes de la peau, favorisant ainsi une peau plus lisse.</p><h2>Extraction des comédons</h2><p>Les esthéticiennes ou les professionnels de la peau utilisent souvent des techniques d'extraction manuelle ou des dispositifs d'extraction pour éliminer les points noirs et les comédons. Cela permet de désobstruer les pores et d'améliorer la texture de la peau.</p><h2>Application de produits adaptés</h2><p>Des produits spécifiques contenant des ingrédients tels que l'acide salicylique, connu pour ses propriétés purifiantes, peuvent être appliqués sur la peau pour aider à apaiser les rougeurs et à limiter l'apparition de nouvelles imperfections.</p><h2>Masques et traitements ciblés</h2><p>Des masques purifiants ou d'autres traitements ciblés peuvent être utilisés pour calmer la peau, réduire l'excès de sébum et favoriser une meilleure régulation de la production de sébum.</p><h2>Hydratation</h2><p>Même si vous avez des problèmes de peau liés à l'excès de sébum, il est essentiel de maintenir une hydratation adéquate de la peau pour éviter qu'elle ne devienne trop sèche en réponse aux traitements. Des produits hydratants légers et non comédogènes peuvent être utilisés.</p><h2>Protection solaire</h2><p>Comme pour de nombreux traitements de la peau, l'application d'un écran solaire ou d'un produit de protection solaire est importante pour protéger la peau des dommages causés par les rayons UV.</p>",
-   "priceTitle": "Tarif",
-   "prices": [
-    {
-     "name": "SOS Pureté",
-     "amount": "35 €"
-    }
-   ],
-   "figures": [
-    {
-     "src": "soins/sos.webp",
-     "w": 756,
-     "h": 418,
-     "alt": "Comparaison entre un nettoyage avec les mains et un nettoyage avec la brosse"
-    }
-   ]
-  },
   "massages": {
    "title": "Massages et gommages",
    "metaTitle": "Massages et gommages corps - My Bubble Beauty",
    "description": "Massages aux pierres chaudes, au bambou, à l’huile d’argan, par effleurage ou prénatal, gommages lavande et miel, rituels signature. Durées et tarifs.",
-   "articleHtml": "<p>Nos massages aident à relâcher les tensions. Nos gommages laissent la peau douce.</p><h2>Nos massages relaxants</h2><p><strong>Rituel Chaleur & Détente : massage aux pierres chaudes.</strong> Un massage profondément relaxant. La chaleur des pierres volcaniques s’associe à des mouvements enveloppants. Elle aide à relâcher les tensions musculaires et procure une sensation de bien-être absolu. 60 minutes.</p><p><strong>Rituel Bambou & Équilibre : massage au bois de bambou.</strong> Un massage rythmé et enveloppant, réalisé avec des bambous. Il travaille les tensions du corps, stimule les tissus et apporte une agréable sensation de légèreté. 60 minutes.</p><p><strong>Rituel Or & Douceur : massage à l’huile d’argan.</strong> Un massage délicat à l’huile d’argan, qui nourrit la peau et l’enveloppe de douceur. Ses gestes fluides invitent au lâcher-prise. 60 minutes.</p><p><strong>Rituel Plume & Sérénité : massage par effleurage.</strong> Des mouvements lents, légers et harmonieux. Une vraie invitation à la détente, pour apaiser le corps et l’esprit. 45 minutes.</p><p><strong>Rituel Maman Douceur : massage prénatal.</strong> Un moment dédié à la future maman. Des mouvements doux, adaptés à la grossesse, pour la détente et le confort. 60 minutes.</p><h2>Nos gommages corps</h2><p><strong>Rituel Lavande & Douceur.</strong> Un gommage délicatement parfumé à la lavande. Il aide à éliminer les cellules mortes et laisse la peau douce et soyeuse. 30 minutes.</p><p><strong>Rituel Miel & Velours.</strong> Un gommage gourmand qui associe la douceur du miel à un rituel délicat. La peau retrouve douceur, souplesse et confort. 30 minutes.</p><h2>Nos rituels signature</h2><p>Pour prolonger le plaisir, nous associons un gommage et un massage.</p><ul><li><strong>Éveil des Sens.</strong> Gommage lavande et massage par effleurage.</li><li><strong>Douceur Précieuse.</strong> Gommage miel et massage à l’huile d’argan.</li><li><strong>Évasion Absolue.</strong> Gommage au choix et massage aux pierres chaudes.</li></ul><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
+   "articleHtml": "<p>Nos massages aident à relâcher les tensions. Nos gommages laissent la peau douce.</p><h2>Nos massages relaxants</h2><p><strong>Rituel Chaleur & Détente : massage aux pierres chaudes.</strong> Un massage profondément relaxant. La chaleur des pierres volcaniques s’associe à des mouvements enveloppants. Elle aide à relâcher les tensions musculaires et procure une sensation de bien-être absolu. 60 minutes.</p><p><strong>Rituel Bambou & Équilibre : massage au bois de bambou.</strong> Un massage rythmé et enveloppant, réalisé avec des bambous. Il travaille les tensions du corps, stimule les tissus et apporte une agréable sensation de légèreté. 60 minutes.</p><p><strong>Rituel Or & Douceur : massage à l’huile d’argan.</strong> Un massage délicat à l’huile d’argan, qui nourrit la peau et l’enveloppe de douceur. Ses gestes fluides invitent au lâcher-prise. 60 minutes.</p><p><strong>Rituel Plume & Sérénité : massage par effleurage.</strong> Des mouvements lents, légers et harmonieux. Une vraie invitation à la détente, pour apaiser le corps et l’esprit. 45 minutes.</p><p><strong>Rituel Maman Douceur : massage prénatal.</strong> Un moment dédié à la future maman. Des mouvements doux, adaptés à la grossesse, pour la détente et le confort. 60 minutes.</p><h2>Nos gommages corps</h2><p><strong>Rituel Lavande & Douceur.</strong> Un gommage délicatement parfumé à la lavande. Il aide à éliminer les cellules mortes et laisse la peau douce et soyeuse. 30 minutes.</p><p><strong>Rituel Miel & Velours.</strong> Un gommage gourmand qui associe la douceur du miel à un rituel délicat. La peau retrouve douceur, souplesse et confort. 30 minutes.</p><h2>Nos rituels signature</h2><p>Pour prolonger le plaisir, nous associons un gommage et un massage.</p><ul><li><strong>Éveil des Sens.</strong> Gommage lavande et massage par effleurage.</li><li><strong>Douceur Précieuse.</strong> Gommage miel et massage à l’huile d’argan.</li><li><strong>Évasion Absolue.</strong> Gommage au choix et massage aux pierres chaudes.</li></ul><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple un traitement médical en cours ou une peau lésée. Pendant la grossesse, nous vous proposons le Rituel Maman Douceur, pensé pour vous.</p>",
    "priceTitle": "Tarifs",
    "prices": [
     {
