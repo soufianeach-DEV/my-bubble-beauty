@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 # Préparation unique du VPS OVH (Ubuntu 24.04) pour My Bubble Beauty : Node 22, Postgres 16, Caddy, pare-feu, sauvegardes.
-# Usage, en root sur le VPS : bash setup.sh
+# Usage, en root sur le VPS : bash setup.sh [branche]   (feat/reservation par défaut)
 # Rejouable sans dégât : rien n'est écrasé si déjà présent (mot de passe Postgres, fichier de secrets).
 set -euo pipefail
 
 REPO=https://github.com/soufianeach-DEV/my-bubble-beauty.git
+BRANCH=${1:-feat/reservation}
+[[ "$BRANCH" =~ ^[A-Za-z0-9._/-]+$ ]] || { echo "Branche invalide : $BRANCH"; exit 1; }
+RAW="https://raw.githubusercontent.com/soufianeach-DEV/my-bubble-beauty/$BRANCH/deploy/vps"
 APP=/srv/mybubble
 ENV_FILE=/etc/mybubble/env
 
@@ -43,6 +46,17 @@ ufw allow 443/tcp
 ufw allow 443/udp
 ufw --force enable
 systemctl enable --now fail2ban
+
+echo "== SSH : clés seulement (si une clé est déjà posée)"
+# Sans clé posée, couper le mot de passe enfermerait l'admin dehors : on laisse alors SSH tel quel
+if find /root/.ssh /home/*/.ssh -maxdepth 1 -name authorized_keys -size +0 2>/dev/null | grep -q .; then
+  printf 'PasswordAuthentication no\nKbdInteractiveAuthentication no\nPermitRootLogin prohibit-password\n' > /etc/ssh/sshd_config.d/10-mybubble.conf
+  # Avant 50-cloud-init.conf : sshd garde la première valeur lue. Réglage refusé : retiré, pour ne pas bloquer le prochain démarrage
+  sshd -t || { rm -f /etc/ssh/sshd_config.d/10-mybubble.conf; echo "Réglage SSH refusé par sshd, retiré"; exit 1; }
+  systemctl reload ssh
+else
+  echo "Aucune clé SSH trouvée : mot de passe laissé actif. Poser une clé (ssh-copy-id) puis relancer setup.sh"
+fi
 
 echo "== Journaux système gardés 14 jours (durée annoncée dans la page confidentialité)"
 install -d /etc/systemd/journald.conf.d
@@ -88,7 +102,11 @@ EOF
 fi
 
 echo "== Services : site, proxy, sauvegarde quotidienne"
-SRC="$APP/repo/deploy/vps"
+# Jamais lus depuis $APP/repo : ce dossier appartient à mybubble, et le build y exécute le code des paquets npm.
+# root les télécharge lui-même dans un dossier à lui (le relire sur GitHub avant de relancer setup.sh).
+SRC=$(mktemp -d)
+trap 'rm -rf -- "$SRC"' EXIT
+for f in mybubble.service Caddyfile backup.sh deploy.sh; do curl -fsSL "$RAW/$f" -o "$SRC/$f"; done
 install -m 0644 "$SRC/mybubble.service" /etc/systemd/system/mybubble.service
 install -m 0644 "$SRC/Caddyfile" /etc/caddy/Caddyfile
 install -m 0755 "$SRC/backup.sh" /usr/local/sbin/mybubble-backup
@@ -119,4 +137,4 @@ systemctl reload caddy
 echo
 echo "Fini. Étapes suivantes (détail dans deploy/vps/LISEZMOI.md) :"
 echo "  1. nano $ENV_FILE   (ADMIN_EMAIL, ADMIN_TOTP_SECRET, PASSWORD_PEPPER au minimum)"
-echo "  2. mybubble-deploy feat/reservation"
+echo "  2. mybubble-deploy $BRANCH"

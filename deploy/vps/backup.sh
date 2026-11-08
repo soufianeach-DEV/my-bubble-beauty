@@ -8,6 +8,8 @@ DIR=/var/backups/mybubble
 FILE="$DIR/mybubble-$(date +%F).dump"
 
 umask 077
+# Copie interrompue (disque plein, base arrêtée) : le fichier partiel ne reste pas
+trap 'rm -f -- "$FILE.part"' EXIT
 pg_dump --format=custom --no-owner --file="$FILE.part" mybubble
 mv "$FILE.part" "$FILE"
 find "$DIR" -name 'mybubble-*.dump' -mtime +14 -delete

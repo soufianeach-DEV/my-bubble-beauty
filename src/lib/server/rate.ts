@@ -1,6 +1,6 @@
 // Limitation des tentatives (connexion, code admin, e-mails, codes promo) et IP réelle du client derrière le proxy de Render.
 // shortcut: compteurs en mémoire d'une seule instance, remis à zéro à chaque redémarrage ; passer en Postgres si plusieurs instances.
-import { isIPv4, isIPv6 } from 'node:net';
+import { BlockList, isIPv4, isIPv6 } from 'node:net';
 
 const MIN = 60_000;
 const HOUR = 60 * MIN;
@@ -13,6 +13,7 @@ export const RULES = {
   mailTo: { max: 3, ms: HOUR, keys: 10_000 }, // e-mails d'inscription ou d'oubli par adresse destinataire
   mailIp: { max: 20, ms: HOUR, keys: 10_000 }, // mêmes e-mails par IP
   promo: { max: 10, ms: HOUR, keys: 10_000 }, // codes promo invalides par cliente
+  booking: { max: 4, ms: HOUR, keys: 10_000 }, // réservations créées par IP : plusieurs comptes ne bloquent pas l'agenda depuis une seule connexion
   loginDevice: { max: 10, ms: 15 * MIN, keys: 10_000 }, // essais sous cookie d'appareil, par e-mail : au-delà, le cookie ne dispense plus de loginEmail
 } as const;
 export type Rule = keyof typeof RULES;
@@ -26,8 +27,9 @@ const ID_MAX = 320;
 // slice() et trim() gardent la chaîne d'origine en vie (V8) : copie pour que la clé ne retienne que ses 320 caractères
 const idKey = (id: string) => Buffer.from(id.slice(0, ID_MAX)).toString();
 
-// Place pour un nouvel identifiant. Entrées périmées purgées au plus une fois par minute ; règle pleine : partent les entrées périmées
-// ou encore sous la limite, jamais un verrou actif. Pleine de verrous, la règle ne suit plus de nouvel identifiant jusqu'à leur fin
+// Place pour un nouvel identifiant. Entrées périmées purgées au plus une fois par minute ; règle pleine : part une entrée périmée,
+// sinon le compteur le plus bas (jamais le plus ancien : 99 essais sur un compte ne s'effacent pas sous une rafale d'adresses à 1 essai),
+// jamais un verrou actif. Pleine de verrous, la règle ne suit plus de nouvel identifiant jusqu'à leur fin
 // (chaque verrou a coûté `max` essais, les autres règles protègent encore) plutôt que de lever un verrou ou de grossir sans fin.
 function room(rule: Rule, now: number): boolean {
   const m = counters[rule];
@@ -36,10 +38,17 @@ function room(rule: Rule, now: number): boolean {
     nextSweep[rule] = now + MIN;
     for (const [k, c] of m) if (c.until <= now) m.delete(k);
   }
+  if (m.size < keys) return true;
+  let low: string | undefined;
+  let lowN = max;
   for (const [k, c] of m) {
-    if (m.size < keys) break;
-    if (c.until <= now || c.n < max) m.delete(k);
+    if (c.until <= now) {
+      low = k;
+      break;
+    }
+    if (c.n < lowN) [low, lowN] = [k, c.n];
   }
+  if (low !== undefined) m.delete(low);
   return m.size < keys;
 }
 
@@ -70,13 +79,24 @@ export function forget(rule: Rule, id: string) {
   for (const k of counters[rule].keys()) if (k === id || k.startsWith(`${id}\n`)) counters[rule].delete(k);
 }
 
-// shortcut: Render ajoute l'IP du client à droite de X-Forwarded-For (1 proxy supposé) ; mesurer la position au premier déploiement avec un en-tête forgé.
-// La gauche est écrite par le client, donc falsifiable ; Astro.clientAddress n'est jamais utilisé.
+// Adresses des relais internes (Render, Caddy local) : jamais celle d'un visiteur venu d'Internet
+const INTERNAL = new BlockList();
+for (const [net, bits] of [['10.0.0.0', 8], ['172.16.0.0', 12], ['192.168.0.0', 16], ['127.0.0.0', 8], ['169.254.0.0', 16], ['100.64.0.0', 10]] as const) INTERNAL.addSubnet(net, bits, 'ipv4');
+for (const [net, bits] of [['::1', 128], ['fc00::', 7], ['fe80::', 10]] as const) INTERNAL.addSubnet(net, bits, 'ipv6');
+const internal = (ip: string) => {
+  const v4 = /^::ffff:(\d+\.\d+\.\d+\.\d+)$/i.exec(ip)?.[1] ?? ip;
+  return isIPv4(v4) ? INTERNAL.check(v4, 'ipv4') : isIPv6(ip) && INTERNAL.check(ip, 'ipv6');
+};
+
+// Render et Caddy ajoutent l'IP du client à droite de X-Forwarded-For. La gauche est écrite par le client, donc falsifiable ;
+// Astro.clientAddress n'est jamais utilisé. On remonte depuis la droite en sautant les relais internes : si Render ajoute un saut privé
+// après l'IP du client, tous les visiteurs ne partagent pas la même clé (un seul pourrait sinon verrouiller la connexion de tous).
 export const PROXY_HOPS = 1;
 export function clientIp(xff: string | null | undefined, fallback = 'inconnue'): string {
   const parts = (xff ?? '').split(',').map((s) => s.trim()).filter(Boolean);
-  const ip = parts[parts.length - PROXY_HOPS] ?? fallback;
-  return ipKey(ip);
+  let i = parts.length - PROXY_HOPS;
+  while (i > 0 && internal(parts[i])) i--;
+  return ipKey(parts[i] ?? fallback);
 }
 
 // IPv6 regroupées par /64 : un seul abonné dispose souvent d'un /64 entier

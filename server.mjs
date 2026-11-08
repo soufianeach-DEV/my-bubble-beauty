@@ -98,7 +98,8 @@ const server = http.createServer((req, res) => {
     return res.end();
   }
   if (otherHost(req, path)) {
-    res.writeHead(301, { Location: process.env.SITE_URL + req.url });
+    // Cible de requête sous forme absolue (« GET http://… ») : jamais recollée derrière le domaine
+    res.writeHead(301, { Location: process.env.SITE_URL + (req.url.startsWith('/') ? req.url : '/') });
     return res.end();
   }
   // /fr, /nl, /eng -> accueil de la langue (URL d'origine conservées)

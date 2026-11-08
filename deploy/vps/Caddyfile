@@ -6,6 +6,18 @@ mybubble-beauty.com {
 	encode zstd gzip
 	# Caddy remplace X-Forwarded-For par l'IP qu'il voit (aucun proxy de confiance déclaré) : rate.ts la lit à droite, comme chez Render
 	reverse_proxy 127.0.0.1:10000
+	# Node arrêté ou injoignable : la page d'erreur de Caddy garde les en-têtes de sécurité de server.mjs
+	handle_errors {
+		header {
+			Strict-Transport-Security "max-age=31536000"
+			Content-Security-Policy "default-src 'none'; frame-ancestors 'none'"
+			X-Content-Type-Options nosniff
+			X-Frame-Options DENY
+			Referrer-Policy strict-origin-when-cross-origin
+			Cache-Control no-store
+		}
+		respond "My Bubble Beauty : site momentanément indisponible." {err.status_code}
+	}
 }
 
 www.mybubble-beauty.com {

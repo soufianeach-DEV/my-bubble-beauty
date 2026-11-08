@@ -78,3 +78,21 @@ test('identifiant borné à 320 caractères dans hit, blocked et forget', () => 
   forget('mailTo', huge);
   assert.equal(blocked('mailTo', 'a'.repeat(320), t0), false);
 });
+
+test('relais internes à droite de X-Forwarded-For sautés : chaque visiteur garde sa clé', () => {
+  assert.equal(clientIp('6.6.6.6, 203.0.113.7, 10.1.2.3'), '203.0.113.7');
+  assert.equal(clientIp('203.0.113.7, 172.20.0.5, 192.168.1.1'), '203.0.113.7');
+  assert.equal(clientIp('2a02:a03f:1:2:3:4:5:6, fd00::1'), '2a02:a03f:1:2::/64');
+  // La gauche forgée en adresse privée ne change rien : l'IP publique de droite reste lue
+  assert.equal(clientIp('10.0.0.1, 203.0.113.7'), '203.0.113.7');
+  // Tout est interne (accès local) : la plus à gauche
+  assert.equal(clientIp('127.0.0.1'), '127.0.0.1');
+});
+
+test("règle pleine : une rafale d'identifiants à 1 essai n'efface pas un compteur élevé (99 essais sur un compte)", () => {
+  const t0 = 40_000_000;
+  for (let i = 0; i < 99; i++) hit('loginEmail', 'cible@example.com', t0);
+  for (let i = 0; i < 3 * RULES.loginEmail.keys; i++) hit('loginEmail', `inventee${i}@example.com`, t0);
+  assert.equal(hit('loginEmail', 'cible@example.com', t0), false);
+  assert.equal(blocked('loginEmail', 'cible@example.com', t0), true);
+});

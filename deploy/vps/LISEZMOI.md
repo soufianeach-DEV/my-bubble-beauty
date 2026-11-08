@@ -30,7 +30,7 @@ less setup.sh        # le relire avant de le lancer
 bash setup.sh
 ```
 
-Le script installe Node 22, Postgres 16 et Caddy. Il ferme tous les ports sauf SSH, 80 et 443. Il crée la base et son mot de passe, puis programme la sauvegarde de la nuit.
+Le script installe Node 22, Postgres 16 et Caddy. Il ferme tous les ports sauf SSH, 80 et 443. Si une clé SSH est posée, il coupe la connexion par mot de passe. Il télécharge lui-même depuis GitHub le service, le Caddyfile et les scripts : relis-les sur GitHub avant de le relancer. Il crée la base et son mot de passe, puis programme la sauvegarde de la nuit.
 
 ## 3. Remplir les secrets
 
@@ -107,6 +107,8 @@ Les copies de la nuit sont sur le même disque que la base. Si le VPS est perdu,
 sudo install -o ubuntu -m 600 /var/backups/mybubble/mybubble-AAAA-MM-JJ.dump /tmp/
 # Sur le PC
 scp ubuntu@IP_DU_VPS:/tmp/mybubble-AAAA-MM-JJ.dump .
+# Puis sur le VPS : la copie de /tmp ne reste pas
+sudo rm /tmp/mybubble-AAAA-MM-JJ.dump
 ```
 
 L'option « Sauvegarde automatisée » d'OVH garde aussi une copie de tout le VPS hors de la machine.

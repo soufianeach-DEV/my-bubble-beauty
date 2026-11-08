@@ -89,7 +89,7 @@ if (open && method === 'POST') {
     let fail: BookingError | null = null;
     let tryCode = etape === 'choisir' ? '' : code;
     if (etape === 'reserver' && cgv) {
-      const r = await createBooking({ userId: user.id, serviceId, startsAt, promoCode: code, lang });
+      const r = await createBooking({ userId: user.id, serviceId, startsAt, promoCode: code, lang, ip: Astro.locals.ip });
       if (r.ok) {
         if (f.data.sante) await setConsent(user.id, true, Astro.locals.ip);
         return Astro.redirect(r.checkoutUrl ?? `/${folder}/compte?reservation=ok`, 303);
@@ -118,6 +118,7 @@ if (open && method === 'POST') {
       limit = fail === 'limit';
       error = limit ? L.err.limit(MAX_UPCOMING) : L.err.unavailable;
     } else if (fail === 'payment') error = L.err.payment;
+    else if (fail === 'busy') error = L.err.busy;
     else if (etape === 'reserver' && !cgv) {
       cgvMissing = true;
       error = L.err.cgv;

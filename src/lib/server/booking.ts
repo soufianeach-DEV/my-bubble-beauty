@@ -67,16 +67,18 @@ async function refundBooking(bookingId: number, paymentIntent: string, amount: n
   }
 }
 
-export type BookingError = 'unavailable' | 'limit' | 'promo' | 'payment';
+export type BookingError = 'unavailable' | 'limit' | 'promo' | 'payment' | 'busy';
 export type BookingResult =
   | { ok: true; id: number; checkoutUrl: string | null }
   | { ok: false; error: BookingError; promo?: PromoProblem | 'blocked' };
 
 // POST /reserver. checkoutUrl non nul : rediriger en 303 vers Stripe ; nul : réservation déjà confirmée (sans acompte).
-export async function createBooking(input: { userId: number; serviceId: number; startsAt: Date; promoCode?: string | null; lang: Lang }): Promise<BookingResult> {
-  const { userId, serviceId, startsAt, lang } = input;
+export async function createBooking(input: { userId: number; serviceId: number; startsAt: Date; promoCode?: string | null; lang: Lang; ip?: string }): Promise<BookingResult> {
+  const { userId, serviceId, startsAt, lang, ip } = input;
   const code = input.promoCode?.trim().toUpperCase() || null;
   if (!Number.isInteger(serviceId) || Number.isNaN(startsAt.getTime())) return { ok: false, error: 'unavailable' };
+  // Chaque compte ne garde qu'un paiement en cours, mais plusieurs comptes depuis la même connexion pourraient tenir l'agenda 35 min chacun
+  if (ip && blocked('booking', ip)) return { ok: false, error: 'busy' };
   let stale: string[] = [];
   let r;
   try {
@@ -123,6 +125,7 @@ export async function createBooking(input: { userId: number; serviceId: number; 
   }
   expireAtStripe(stale);
   if (!r.ok) return r;
+  if (ip) hit('booking', ip);
   journal('booking_created', { actor: userId, client: userId, booking: r.id, details: { deposit: r.deposit } });
   if (!r.deposit) {
     notify(r.id, 'confirmed');

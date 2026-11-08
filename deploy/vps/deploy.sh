@@ -8,7 +8,15 @@ set -euo pipefail
 BRANCH=${1:-main}
 APP=/srv/mybubble          # à mybubble : dépôt git et cache npm
 REL=/opt/mybubble          # à root : versions construites et lien « current », que mybubble ne peut ni remplacer ni détourner
-as_app() { runuser -u mybubble -- "$@"; }
+# Code du dépôt et des paquets npm lancé dans une unité systemd à part, sous mybubble : sans le terminal de root (aucune frappe
+# injectée dans sa session), sans accès aux secrets, et tous ses processus tués à la fin (aucun ne survit pour modifier la version figée).
+# as_app --in DOSSIER cmd… : lancé dans DOSSIER (sinon $APP)
+as_app() {
+  local dir=$APP
+  if [ "$1" = --in ]; then dir=$2; shift 2; fi
+  systemd-run --quiet --wait --pipe --collect --uid=mybubble --gid=mybubble --working-directory="$dir" --setenv=HOME="$APP" \
+    -p NoNewPrivileges=yes -p PrivateTmp=yes -p InaccessiblePaths=/etc/mybubble -- "$@"
+}
 
 [ "$(id -u)" -eq 0 ] || { echo "À lancer en root (sudo mybubble-deploy)"; exit 1; }
 for d in "$REL" "$REL/releases"; do
@@ -27,8 +35,9 @@ if [ ! -f "$DEST/dist/server/entry.mjs" ] || [ -n "$(find "$DEST" ! -user root -
   rm -rf -- "$DEST"
   install -d -o mybubble -g mybubble "$DEST"
   as_app sh -c "git -C '$APP/repo' archive FETCH_HEAD | tar -x -C '$DEST'"
-  # Construction sans aucun secret : seules les pages publiques sont pré-rendues
-  (cd "$DEST" && as_app env HOME="$APP" npm ci --no-audit --no-fund --loglevel=error && as_app env HOME="$APP" SITE_URL=https://mybubble-beauty.com npm run build --silent)
+  # Construction sans aucun secret (/etc/mybubble lui est inaccessible) : seules les pages publiques sont pré-rendues
+  as_app --in "$DEST" npm ci --no-audit --no-fund --loglevel=error
+  as_app --in "$DEST" env SITE_URL=https://mybubble-beauty.com npm run build --silent
 fi
 # Version figée à chaque mise en ligne : le site qui tourne ne peut plus modifier son propre code (-h : jamais à travers un lien)
 chown -R -h root:mybubble "$DEST"

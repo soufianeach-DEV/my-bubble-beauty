@@ -44,7 +44,7 @@ type Texts = {
   cancelRule: string;
   myBookings: string;
   otherTime: string;
-  err: { unavailable: string; limit: (n: number) => string; payment: string; cgv: string; invalid: string; service: string; day: (last: string) => string };
+  err: { unavailable: string; limit: (n: number) => string; payment: string; busy: string; cgv: string; invalid: string; service: string; day: (last: string) => string };
   promo: Record<PromoProblem | 'blocked', string>;
 };
 
@@ -95,6 +95,7 @@ export const RESERVER: Record<Lang, Texts> = {
       unavailable: "Ce créneau n'est plus libre. Choisissez-en un autre.",
       limit: (n) => `Vous avez déjà ${n} rendez-vous à venir. Vous pourrez en prendre un autre après l'un d'eux, ou appelez-nous.`,
       payment: 'Le paiement en ligne est indisponible pour le moment. Réessayez dans quelques minutes ou appelez-nous.',
+      busy: 'Trop de réservations depuis cette connexion. Réessayez dans une heure ou appelez-nous.',
       cgv: 'Cochez la case pour accepter les conditions générales.',
       invalid: "Votre demande n'a pas pu être lue. Recommencez par le choix de la prestation.",
       service: "Cette prestation ne se réserve pas en ligne. Choisissez-en une dans la liste.",
@@ -103,10 +104,10 @@ export const RESERVER: Record<Lang, Texts> = {
     promo: {
       unknown: "Ce code promo n'existe pas.",
       inactive: "Ce code promo n'existe pas.",
-      not_started: "Ce code promo n'est pas encore valable.",
-      expired: 'Ce code promo a expiré.',
-      service: "Ce code promo ne s'applique pas à cette prestation.",
-      exhausted: "Ce code promo n'est plus disponible.",
+      not_started: "Ce code promo n'existe pas.",
+      expired: "Ce code promo n'existe pas.",
+      service: "Ce code promo n'existe pas.",
+      exhausted: "Ce code promo n'existe pas.",
       used: 'Vous avez déjà utilisé ce code promo.',
       blocked: 'Trop de codes essayés. Réessayez dans une heure.',
     },
@@ -157,6 +158,7 @@ export const RESERVER: Record<Lang, Texts> = {
       unavailable: 'Dit tijdstip is niet meer vrij. Kies een ander tijdstip.',
       limit: (n) => `U hebt al ${n} geplande afspraken. U kunt een nieuwe maken na een ervan, of bel ons.`,
       payment: 'Online betalen is momenteel niet mogelijk. Probeer het over enkele minuten opnieuw of bel ons.',
+      busy: 'Te veel boekingen vanaf deze verbinding. Probeer het over een uur opnieuw of bel ons.',
       cgv: 'Vink het vakje aan om akkoord te gaan met de algemene voorwaarden.',
       invalid: 'Uw aanvraag kon niet gelezen worden. Begin opnieuw bij de keuze van de behandeling.',
       service: 'Deze behandeling kan niet online geboekt worden. Kies er een uit de lijst.',
@@ -165,10 +167,10 @@ export const RESERVER: Record<Lang, Texts> = {
     promo: {
       unknown: 'Deze promotiecode bestaat niet.',
       inactive: 'Deze promotiecode bestaat niet.',
-      not_started: 'Deze promotiecode is nog niet geldig.',
-      expired: 'Deze promotiecode is verlopen.',
-      service: 'Deze promotiecode geldt niet voor deze behandeling.',
-      exhausted: 'Deze promotiecode is niet meer beschikbaar.',
+      not_started: 'Deze promotiecode bestaat niet.',
+      expired: 'Deze promotiecode bestaat niet.',
+      service: 'Deze promotiecode bestaat niet.',
+      exhausted: 'Deze promotiecode bestaat niet.',
       used: 'U hebt deze promotiecode al gebruikt.',
       blocked: 'Te veel codes geprobeerd. Probeer het over een uur opnieuw.',
     },
@@ -220,6 +222,7 @@ export const RESERVER: Record<Lang, Texts> = {
       unavailable: 'This time is no longer free. Please choose another one.',
       limit: (n) => `You already have ${n} upcoming appointments. You can book another one after one of them, or call us.`,
       payment: 'Online payment is unavailable right now. Please try again in a few minutes or call us.',
+      busy: 'Too many bookings from this connection. Please try again in an hour or call us.',
       cgv: 'Tick the box to accept the terms and conditions.',
       invalid: 'Your request could not be read. Please start again from the choice of treatment.',
       service: 'This treatment cannot be booked online. Please choose one from the list.',
@@ -228,10 +231,10 @@ export const RESERVER: Record<Lang, Texts> = {
     promo: {
       unknown: 'This promo code does not exist.',
       inactive: 'This promo code does not exist.',
-      not_started: 'This promo code is not valid yet.',
-      expired: 'This promo code has expired.',
-      service: 'This promo code does not apply to this treatment.',
-      exhausted: 'This promo code is no longer available.',
+      not_started: 'This promo code does not exist.',
+      expired: 'This promo code does not exist.',
+      service: 'This promo code does not exist.',
+      exhausted: 'This promo code does not exist.',
       used: 'You have already used this promo code.',
       blocked: 'Too many codes tried. Please try again in an hour.',
     },
