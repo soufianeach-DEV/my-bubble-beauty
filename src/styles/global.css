@@ -620,11 +620,18 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
   .soin p{margin-bottom:.5rem}
 }
 
-/* Tarifs : filtres sur une seule rangée qui glisse au doigt, le bord droit s'estompe pour montrer la suite */
+/* Tarifs : filtres sur une seule rangée qui glisse au doigt. Le bord s'estompe seulement du côté où il reste des filtres,
+   et une flèche montre la suite tant qu'il en reste à droite (main.js pose data-more-left / data-more-right) */
+.filters-wrap{position:relative}
+.filters__more{display:none}
 @media (max-width:767px){
   .filters{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scroll-padding-inline:var(--gutter);scrollbar-width:none;
-    margin:0 calc(-1 * var(--gutter)) 1.5rem;padding:6px 3rem 6px var(--gutter);
-    -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 3rem),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 3rem),transparent)}
+    margin:0 calc(-1 * var(--gutter)) 1.5rem;padding:6px 3rem 6px var(--gutter)}
+  .filters-wrap[data-more-right] .filters{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 4rem),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 4rem),transparent)}
+  .filters-wrap[data-more-left] .filters{-webkit-mask-image:linear-gradient(90deg,transparent,#000 3rem);mask-image:linear-gradient(90deg,transparent,#000 3rem)}
+  .filters-wrap[data-more-left][data-more-right] .filters{-webkit-mask-image:linear-gradient(90deg,transparent,#000 3rem,#000 calc(100% - 4rem),transparent);mask-image:linear-gradient(90deg,transparent,#000 3rem,#000 calc(100% - 4rem),transparent)}
+  .filters-wrap[data-more-right] .filters__more{display:grid;place-items:center;position:absolute;top:28px;right:calc(.75rem - var(--gutter));transform:translateY(-50%);
+    width:2rem;height:2rem;border-radius:50%;background:var(--surface);border:1px solid var(--line-soft);color:var(--text);font-size:1rem;pointer-events:none}
   .filters::-webkit-scrollbar{display:none}
   .filters li{flex:none;scroll-snap-align:start}
 }

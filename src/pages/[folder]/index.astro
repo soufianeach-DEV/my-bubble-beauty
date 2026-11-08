@@ -91,9 +91,13 @@ const jsonld = {
 <div class="wrap">
 <div class="section__head"><p class="eyebrow">{h.tarifs.eyebrow}</p><h2 id="h-tarifs">{h.tarifs.title}</h2><p>{h.tarifs.intro}</p></div>
 <div class="tarifs__panel">
+<div class="filters-wrap">
 <ul class="filters" aria-label={h.tarifs.filtersLabel} hidden>
 {h.tarifs.filters.map((f, i) => <li><button class="pill" type="button" data-filter={f.key} aria-pressed={f.key === 'visage' ? 'true' : 'false'} data-status={f.status}>{f.label}</button></li>)}
 </ul>
+{/* Mobile : indique qu'il reste des filtres à droite (décoratif, main.js l'affiche ou le cache) */}
+<span class="filters__more" aria-hidden="true">→</span>
+</div>
 <p class="visually-hidden" id="filter-status" role="status"></p>
 {[
   { key: 'presta', title: h.tarifs.partPresta, groups: h.tarifs.groups },

@@ -90,6 +90,10 @@ if(fl){
   /* Le filtre marqué dans le HTML (Visage) s'applique dès le chargement */
   pick(fl.querySelector('[aria-pressed="true"]')||fl.querySelector('button'));
   fl.addEventListener('click',e=>pick(e.target.closest('button'),1));
+  /* Rangée qui glisse (mobile) : fondu et flèche seulement du côté où il reste des filtres cachés */
+  const wrap=fl.parentElement,edges=()=>{const max=fl.scrollWidth-fl.clientWidth;
+    wrap.toggleAttribute('data-more-left',fl.scrollLeft>4);wrap.toggleAttribute('data-more-right',fl.scrollLeft<max-4)};
+  fl.addEventListener('scroll',edges,{passive:true});addEventListener('resize',edges);edges();
   /* Arrivée avec un #tarif-… dans l'URL (lien partagé, rechargement, retour) : afficher sa catégorie */
   const fromHash=()=>{const g=location.hash.startsWith('#tarif-')&&d.getElementById(location.hash.slice(1));
     if(!g||!g.hidden)return;pick(fl.querySelector(`[data-filter="${g.dataset.cat}"]`)||fl.querySelector('[data-filter="all"]'));g.scrollIntoView();
