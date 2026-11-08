@@ -86,7 +86,10 @@ fieldset.field{border:0;padding:0;margin:0}
   .auth,.auth--register{grid-template-columns:1fr;min-height:0}
   .auth--register article{grid-column:auto}
   .auth__blade,.auth--register .auth__blade{position:relative;inset:auto;width:auto;min-height:15rem;clip-path:none;order:-1}
-  .auth__avatar,.auth--register .auth__avatar{inset:0;width:100%;height:100%}
+  /* Souade à droite, le texte à gauche sur la couleur unie : le titre ne passe plus sur son visage */
+  .auth__avatar,.auth--register .auth__avatar{inset:0 0 0 auto;width:58%;height:100%;object-position:50% 25%;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 35%);mask-image:linear-gradient(90deg,transparent,#000 35%)}
+  .auth__veil,.auth--register .auth__veil{align-content:center;padding:1.5rem 36% 1.5rem 1.5rem;background:none}
 }
 /* Arrivée : la page suivante s'ouvre couverte, puis la lame se rétracte à sa place, aux vraies dimensions de cette carte.
    (Plus de transition de vue entre documents : les deux cartes n'ont pas la même hauteur, la lame débordait.) */
