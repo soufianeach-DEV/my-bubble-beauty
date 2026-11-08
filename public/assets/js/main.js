@@ -92,12 +92,17 @@ if(fl){
   fl.addEventListener('click',e=>pick(e.target.closest('button'),1));
   /* Arrivée avec un #tarif-… dans l'URL (lien partagé, rechargement, retour) : afficher sa catégorie */
   const fromHash=()=>{const g=location.hash.startsWith('#tarif-')&&d.getElementById(location.hash.slice(1));
-    if(!g||!g.hidden)return;pick(fl.querySelector(`[data-filter="${g.dataset.cat}"]`)||fl.querySelector('[data-filter="all"]'));g.scrollIntoView()};
+    if(!g||!g.hidden)return;pick(fl.querySelector(`[data-filter="${g.dataset.cat}"]`)||fl.querySelector('[data-filter="all"]'));g.scrollIntoView();
+    /* À l'arrivée, les images qui se chargent décalent la page : on revient au groupe une fois tout chargé */
+    d.readyState!=='complete'&&addEventListener('load',()=>g.scrollIntoView({behavior:'instant'}),{once:true})};
   fromHash();addEventListener('hashchange',fromHash);
-  /* Un lien vers un tarif masqué par le filtre affiche sa catégorie avant de défiler */
+  /* Un lien vers un tarif masqué par le filtre affiche sa catégorie, puis défile lui-même jusqu'au groupe :
+     on ne compte pas sur le défilement du navigateur, qui a pu viser le groupe encore masqué */
   d.addEventListener('click',e=>{const a=e.target.closest('a[href^="#tarif-"]');if(!a)return;
-    const g=d.getElementById(a.getAttribute('href').slice(1));
-    g&&g.hidden&&pick(fl.querySelector(`[data-filter="${g.dataset.cat}"]`)||fl.querySelector('[data-filter="all"]'),1)});
+    const id=a.getAttribute('href').slice(1),g=d.getElementById(id);if(!g)return;
+    e.preventDefault();
+    g.hidden&&pick(fl.querySelector(`[data-filter="${g.dataset.cat}"]`)||fl.querySelector('[data-filter="all"]'),1);
+    location.hash!=='#'+id&&history.pushState(null,'','#'+id);g.scrollIntoView()});
 }
 
 /* 6. Galerie : agrandissement dans <dialog> */
