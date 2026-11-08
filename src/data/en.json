@@ -1448,14 +1448,7 @@
      "amount": "70 €"
     }
    ],
-   "figures": [
-    {
-     "src": "soins/lipolaser.webp",
-     "w": 750,
-     "h": 302,
-     "alt": "Diagram of the skin before and after a Lipo Lumière course"
-    }
-   ]
+   "figures": []
   },
   "mado": {
    "title": "Maderotherapy",

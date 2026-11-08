@@ -1448,14 +1448,7 @@
      "amount": "70 €"
     }
    ],
-   "figures": [
-    {
-     "src": "soins/lipolaser.webp",
-     "w": 750,
-     "h": 302,
-     "alt": "Schéma de la peau avant et après une cure Lipo Lumière"
-    }
-   ]
+   "figures": []
   },
   "mado": {
    "title": "La madérothérapie",
