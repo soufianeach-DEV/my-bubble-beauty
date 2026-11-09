@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { base32Decode, base32Encode, newTotpSecret, openSecret, sealSecret, totp, verifyTotp } from './totp.ts';
+import { base32Decode, base32Encode, newTotpSecret, openSecret, openText, sealSecret, sealText, totp, verifyTotp } from './totp.ts';
 
 const KEY = Buffer.from('12345678901234567890');
 
@@ -38,4 +38,11 @@ test("secret de l'équipe : chiffré, relu avec le même poivre, refusé sinon",
   const touched = Buffer.from(blob);
   touched[touched.length - 1] ^= 1;
   assert.equal(openSecret('poivre-un', touched), null);
+});
+
+test('données de santé : clé distincte de celle des secrets TOTP', () => {
+  const blob = sealText('poivre', 'health', 'Allergie au latex');
+  assert.equal(openText('poivre', 'health', blob), 'Allergie au latex');
+  assert.equal(openText('poivre', 'totp-secret', blob), null);
+  assert.equal(openSecret('poivre', blob), null);
 });

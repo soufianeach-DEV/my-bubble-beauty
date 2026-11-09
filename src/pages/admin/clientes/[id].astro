@@ -10,6 +10,7 @@ import { ACTION_LABELS } from '../../../lib/server/journal.ts';
 import { euros, todayBrussels } from '../../../lib/server/pricing.ts';
 import { GRACE_DAYS } from '../../../lib/server/rgpd.ts';
 import { FORMS, KINDS, listConsents } from '../../../lib/server/consentements.ts';
+import { suivi, suiviAction } from '../../../lib/server/suivi.ts';
 
 const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
@@ -19,23 +20,26 @@ if (!id) return new Response(null, { status: 404 });
 const self = `/admin/clientes/${id}`;
 let error = '';
 let notesDraft: string | null = null;
+let historyDraft: string | null = null;
 if (Astro.request.method === 'POST') {
   const form = await readForm(Astro.request);
   if (!form) return new Response(null, { status: 413 });
   // Les actions sur un rendez-vous passent par l'agenda (mêmes règles et même journal)
-  const r = form.get('scope') === 'booking' ? await agendaAction(me, form) : await clientAction(me, form, manage);
+  const scope = form.get('scope');
+  const r = scope === 'booking' ? await agendaAction(me, form) : scope === 'suivi' ? await suiviAction(me, form) : await clientAction(me, form, manage);
   if (r.ok && r.key === 'efface') return Astro.redirect('/admin/clientes?ok=efface', 303);
   if (r.ok) return Astro.redirect(`${self}?ok=${r.key}${r.id !== id ? `#b-${r.id}` : ''}`, 303);
   error = r.error;
   if (form.get('action') === 'notes') notesDraft = String(form.get('notes') ?? '');
+  if (form.get('action') === 'health') historyDraft = String(form.get('medical_history') ?? '').slice(0, 4000);
   Astro.response.status = 400;
 }
 const c = await clientDetail(id);
 if (!c) return new Response(null, { status: 404 });
 const { user: u, bookings, stats, events } = c;
-const consents = await listConsents(u.id);
+const [consents, sv] = await Promise.all([listConsents(u.id), suivi(u.id)]);
 const DONE: Record<string, string> = {
-  notes: 'Notes enregistrées.', block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte réactivé.',
+  notes: 'Notes enregistrées.', sante: 'Date de naissance et antécédents enregistrés.', seance: 'Séance mise à jour.', block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte réactivé.',
   remove: "Compte supprimé : il n'apparaît plus dans les listes et ne peut plus se connecter. Ses rendez-vous restent.", unremove: 'Compte restauré : la cliente peut de nouveau se connecter.', restore: 'Suppression annulée : le compte est de nouveau actif. Les rendez-vous annulés le restent.',
   absente: 'Rendez-vous marqué « absente ».', venue: 'Absence retirée.', rendu: 'Acompte noté comme remboursé hors du site.',
 };
@@ -118,6 +122,35 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 )}
 </section>
 
+<section aria-labelledby="h-suivi">
+<h2 id="h-suivi">Suivi des séances</h2>
+<form class="form" method="post" action={`${self}#h-suivi`}>
+  <input type="hidden" name="scope" value="suivi"><input type="hidden" name="action" value="health"><input type="hidden" name="id" value={u.id}>
+  <div class="field"><label for="birth_date">Date de naissance</label><input id="birth_date" name="birth_date" type="date" min="1900-01-02" value={sv.birthDate ?? ''}></div>
+  {sv.consent
+    ? <div class="field"><label for="medical_history">Antécédents médicaux</label><textarea id="medical_history" name="medical_history" rows="4" maxlength="4000">{historyDraft ?? sv.history ?? ''}</textarea>
+        <p class="hint">Données de santé : chiffrées, visibles par l'admin et la gestionnaire seulement, jamais dans un e-mail ni au journal. Effacées si la cliente retire son accord.</p></div>
+    : <p class="hint">Antécédents médicaux : la cliente n'a pas donné son accord pour ses données de santé. Rien ne peut être noté.</p>}
+  <button class="btn btn--ghost" type="submit">Enregistrer</button>
+</form>
+{sv.seances.length === 0 ? <p>Aucune séance réalisée.</p> : (
+<ol class="seances">{sv.seances.map((s, i) => (
+  <li id={`s-${s.id}`}>
+    <p><strong>Séance {i + 1}</strong> · {fmtDateTime(s.starts_at)}</p>
+    <p>{s.service}{s.zone && ` · zone : ${s.zone}`}{s.practitioner && ` · ${s.practitioner}`}</p>
+    <details><summary>Zone et praticienne</summary>
+      <form class="seance-form" method="post" action={`${self}#s-${s.id}`}>
+        <input type="hidden" name="scope" value="suivi"><input type="hidden" name="action" value="seance"><input type="hidden" name="id" value={u.id}><input type="hidden" name="booking" value={s.id}>
+        <label>Zone traitée<input name="zone" maxlength="100" value={s.zone ?? ''}></label>
+        <label>Praticienne<select name="practitioner"><option value="">—</option>{sv.team.map((t) => <option value={t.id} selected={t.id === s.practitioner_id}>{t.name}</option>)}</select></label>
+        <button class="btn btn--ghost" type="submit">Enregistrer</button>
+      </form>
+    </details>
+  </li>
+))}</ol>
+)}
+</section>
+
 <section aria-labelledby="h-consent">
 <h2 id="h-consent">Consentements</h2>
 {consents.length === 0 ? <p>Aucun consentement signé.</p> : (
@@ -187,6 +220,13 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
   .cell-form .btn{min-height:44px;padding:.55rem 1rem;white-space:normal;text-align:left;line-height:1.3}
   .events{padding-left:1.1rem}
   .consents{padding-left:1.1rem}
+  .seances{list-style:none;margin:1rem 0 0;padding:0;display:grid;gap:.6rem}
+  .seances li{padding:.75rem 1rem;border:1px solid var(--line-soft);border-radius:12px;scroll-margin-top:1rem}
+  .seances p{margin:0 0 .2rem}
+  .seance-form{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:flex-end;margin-top:.5rem}
+  .seance-form label{display:grid;gap:.25rem;font-size:.8125rem;color:var(--text-soft);min-width:0;flex:1 1 12rem}
+  .seance-form input,.seance-form select{min-height:44px;font:inherit}
+  .seance-form .btn{min-height:44px}
   .sign-links{display:flex;flex-wrap:wrap;gap:.5rem}
   .sign-links .btn{min-height:44px}
   section{margin-bottom:2rem}

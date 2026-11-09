@@ -63,6 +63,29 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     assert.equal((await rgpd.exportData(cl, '127.0.0.1')).consents.length, 1);
     await rgpd.eraseUser(cl, cl, null, 'self');
     assert.equal((await sql`SELECT 1 FROM consents WHERE user_id = ${cl}`).length, 0);
+
+    // Suivi des séances : antécédents refusés sans accord santé, chiffrés avec, effacés au retrait de l'accord ; zone d'une séance réalisée
+    const sv = await import('./suivi.ts');
+    const f = (o: Record<string, string>) => Object.entries(o).reduce((x, [k, v]) => (x.set(k, v), x), new FormData());
+    const health = { action: 'health', id: String(other), birth_date: '1990-05-04', medical_history: 'Allergie au latex' };
+    assert.equal((await sv.suiviAction(other, f(health))).ok, false);
+    await rgpd.setConsent(other, true, '127.0.0.1');
+    const saved = await sv.suiviAction(other, f(health));
+    assert.ok(saved.ok, JSON.stringify(saved));
+    const [row] = await sql`SELECT medical_history, birth_date::text FROM users WHERE id = ${other}`;
+    assert.ok(!Buffer.from(row.medical_history).includes(Buffer.from('latex')));
+    assert.equal((await sv.suivi(other)).history, 'Allergie au latex');
+    const [h] = await sql`SELECT details FROM audit_log WHERE details->>'action' = 'client_health' AND client_id = ${other}`;
+    assert.equal(JSON.stringify(h.details).includes('latex'), false);
+    await rgpd.setConsent(other, false, '127.0.0.1');
+    assert.equal((await sql`SELECT medical_history FROM users WHERE id = ${other}`)[0].medical_history, null);
+    const past = new Date(Date.now() - 50 * 86_400_000);
+    const [b] = await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents)
+      VALUES (${other}, ${laser.id}, ${past}, ${new Date(past.getTime() + 1_800_000)}, 'confirmed', 4500) RETURNING id`;
+    assert.ok((await sv.suiviAction(other, f({ action: 'seance', id: String(other), booking: String(b.id), zone: 'Aisselles', practitioner: '' }))).ok);
+    assert.deepEqual((await sv.suivi(other)).seances.map((s) => s.zone), ['Aisselles']);
+    // Une séance d'une autre cliente n'est pas modifiable par cette fiche
+    assert.equal((await sv.suiviAction(other, f({ action: 'seance', id: String(cl), booking: String(b.id), zone: 'x', practitioner: '' }))).ok, false);
   } finally {
     await sql`DELETE FROM bookings WHERE service_id IN (SELECT id FROM services WHERE slug = ${`laser-${tag}`})`;
     await sql`DELETE FROM services WHERE slug = ${`laser-${tag}`}`;

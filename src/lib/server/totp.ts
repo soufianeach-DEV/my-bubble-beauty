@@ -46,24 +46,28 @@ export function verifyTotp(secret: string, code: string, now = Date.now()): numb
 // Secret TOTP d'une personne de l'équipe : 20 octets aléatoires, affichés une fois en base32 à l'enregistrement
 export const newTotpSecret = () => base32Encode(randomBytes(20));
 
-// Chiffrement en base (AES-256-GCM) : une fuite de la base seule ne donne pas les seconds facteurs. Clé dérivée du poivre (HKDF).
-const totpKey = (pepper: string) => Buffer.from(hkdfSync('sha256', pepper, 'my-bubble', 'totp-secret', 32));
+// Chiffrement en base (AES-256-GCM) : une fuite de la base seule ne donne ni les seconds facteurs ni les données de santé.
+// Une clé par usage, dérivée du poivre (HKDF) : la clé des secrets TOTP n'ouvre pas les antécédents médicaux, et inversement.
+const keyFor = (pepper: string, purpose: string) => Buffer.from(hkdfSync('sha256', pepper, 'my-bubble', purpose, 32));
 
 // iv (12) | tag (16) | chiffré
-export function sealSecret(pepper: string, secret: string): Buffer {
+export function sealText(pepper: string, purpose: string, text: string): Buffer {
   const iv = randomBytes(12);
-  const c = createCipheriv('aes-256-gcm', totpKey(pepper), iv);
-  const body = Buffer.concat([c.update(secret, 'utf8'), c.final()]);
+  const c = createCipheriv('aes-256-gcm', keyFor(pepper, purpose), iv);
+  const body = Buffer.concat([c.update(text, 'utf8'), c.final()]);
   return Buffer.concat([iv, c.getAuthTag(), body]);
 }
 
-// null si le chiffré a été modifié ou si le poivre a changé
-export function openSecret(pepper: string, blob: Buffer): string | null {
+// null si le chiffré a été modifié, si le poivre a changé ou si la clé d'un autre usage est employée
+export function openText(pepper: string, purpose: string, blob: Buffer): string | null {
   try {
-    const d = createDecipheriv('aes-256-gcm', totpKey(pepper), blob.subarray(0, 12));
+    const d = createDecipheriv('aes-256-gcm', keyFor(pepper, purpose), blob.subarray(0, 12));
     d.setAuthTag(blob.subarray(12, 28));
     return Buffer.concat([d.update(blob.subarray(28)), d.final()]).toString('utf8');
   } catch {
     return null;
   }
 }
+
+export const sealSecret = (pepper: string, secret: string) => sealText(pepper, 'totp-secret', secret);
+export const openSecret = (pepper: string, blob: Buffer) => openText(pepper, 'totp-secret', blob);
