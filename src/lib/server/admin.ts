@@ -182,6 +182,7 @@ export async function agendaAction(userId: number, form: FormData): Promise<Resu
   const { action, id } = p.data;
   if (action === 'no_show' || action === 'show') {
     const b = await setNoShow(id, action === 'no_show');
+    if (b === 'gift') return { ok: false, error: "Le bon cadeau de ce rendez-vous sert déjà à un autre rendez-vous : l'absence reste notée." };
     if (!b) return { ok: false, error: 'Seul un rendez-vous confirmé et passé peut être marqué.' };
     audit(userId, action === 'no_show' ? 'booking_no_show' : 'booking_attended', { booking_id: id, client_id: b.user_id });
     return { ok: true, id, key: action === 'no_show' ? 'absente' : 'venue' };

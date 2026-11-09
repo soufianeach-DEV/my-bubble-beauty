@@ -132,6 +132,25 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
       VALUES (${other}, ${wh.id}, ${new Date(later.getTime() + 86_400_000)}, ${new Date(later.getTime() + 90_000_000)}, 'confirmed', 9000, ${gc.id})`, /bookings_gift_idx/);
     await sql`UPDATE bookings SET status = 'cancelled', cancelled_at = now() WHERE id = ${gb.id}`;
     assert.equal((await gifts.listGifts(gc.id))[0].state, 'valide');
+    // Absence au rendez-vous du bon : le bon redevient utilisable, et la gérante peut le réattribuer à un autre soin
+    const missed = new Date(Date.now() - 20 * 86_400_000 + 3 * 3_600_000);
+    const [ab] = await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, discount_cents, gift_card_id, no_show)
+      VALUES (${other}, ${wh.id}, ${missed}, ${new Date(missed.getTime() + 3_600_000)}, 'confirmed', 9000, 9000, ${gc.id}, true) RETURNING id`;
+    assert.equal((await gifts.listGifts(gc.id))[0].state, 'valide');
+    const re = (service: number) => gifts.giftAction(other, f({ action: 'reassign', id: String(gc.id), service: String(service), confirm: 'on' }));
+    assert.deepEqual(await re(laser.id), { ok: true, id: gc.id, key: 'reassign' }, 'soin moins cher : réattribué');
+    assert.deepEqual(await gifts.checkGift(sql, gc.code, wh.id), { problem: 'service' });
+    assert.deepEqual(await gifts.checkGift(sql, gc.code, laser.id), { id: gc.id });
+    const [{ details: moved }] = await sql`SELECT details FROM audit_log WHERE details->>'action' = 'gift_reassigned' AND (details->>'gift_id')::bigint = ${gc.id}`;
+    assert.deepEqual({ from: moved.from_service_id, to: moved.to_service_id }, { from: wh.id, to: laser.id });
+    assert.equal((await re(wh.id) as { key?: string }).key, 'reassign-plus', 'soin plus cher : signalé, pas refusé');
+    // Nouveau rendez-vous avec le bon : l'index ne compte plus l'absence ; retirer l'absence est alors refusé proprement
+    const [nb] = await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, discount_cents, gift_card_id)
+      VALUES (${other}, ${wh.id}, ${new Date(later.getTime() + 2 * 86_400_000)}, ${new Date(later.getTime() + 2 * 86_400_000 + 3_600_000)}, 'confirmed', 9000, 9000, ${gc.id}) RETURNING id`;
+    assert.equal((await re(laser.id)).ok, false, 'bon réservé : plus de réattribution');
+    const { setNoShow } = await import('./booking.ts');
+    assert.equal(await setNoShow(ab.id, false), 'gift');
+    await sql`UPDATE bookings SET status = 'cancelled', cancelled_at = now() WHERE id IN (${ab.id}, ${nb.id})`;
     assert.ok((await gifts.giftAction(other, f({ action: 'cancel', id: String(gc.id), confirm: 'on' }))).ok);
     assert.deepEqual(await gifts.checkGift(sql, gc.code, wh.id), { problem: 'unknown' });
     await sql`UPDATE bookings SET gift_card_id = NULL WHERE gift_card_id = ${gc.id}`;

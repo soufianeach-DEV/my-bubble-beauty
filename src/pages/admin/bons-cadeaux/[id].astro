@@ -2,7 +2,8 @@
 export const prerender = false;
 // Un bon cadeau : carte imprimable au design My Bubble (Pour, Soin, Durée, Message, code, validité), puis « utilisé » ou « annulé »
 import Admin from '../_layout.astro';
-import { adminId, readForm } from '../../../lib/server/admin.ts';
+import { adminId, byCategory, listServices, readForm } from '../../../lib/server/admin.ts';
+import { euros } from '../../../lib/server/pricing.ts';
 import { giftAction, listGifts, STATE_LABELS } from '../../../lib/server/cadeaux.ts';
 import { JS_VERSION } from '../../../lib/site';
 
@@ -19,9 +20,11 @@ if (Astro.request.method === 'POST') {
   error = r.error;
   Astro.response.status = 400;
 }
-const [g] = await listGifts(id);
+const [[g], services] = await Promise.all([listGifts(id), listServices()]);
 if (!g) return new Response(null, { status: 404 });
-const DONE: Record<string, string> = { create: 'Bon créé. Imprimez-le ou enregistrez-le en PDF.', used: 'Bon noté utilisé.', cancel: 'Bon annulé : son code ne vaut plus rien.' };
+// Réattribution : soins de la carte ouverts à la réservation, prix affiché ; un soin plus cher est signalé, pas refusé
+const others = byCategory(services.filter((s) => s.active && s.id !== g.service_id));
+const DONE: Record<string, string> = { reassign: 'Bon réattribué : il vaut désormais pour le soin indiqué sur la carte.', 'reassign-plus': 'Bon réattribué. Attention : le nouveau soin coûte plus cher que l'ancien.', create: 'Bon créé. Imprimez-le ou enregistrez-le en PDF.', used: 'Bon noté utilisé.', cancel: 'Bon annulé : son code ne vaut plus rien.' };
 const done = !error && DONE[Astro.url.searchParams.get('ok') ?? ''];
 const day = (d: string) => new Intl.DateTimeFormat('fr-BE', { timeZone: 'UTC', dateStyle: 'long' }).format(new Date(`${d}T12:00:00Z`));
 ---
@@ -49,6 +52,21 @@ const day = (d: string) => new Intl.DateTimeFormat('fr-BE', { timeZone: 'UTC', d
   <p class="small">Valable jusqu'au {day(g.expires_on)}. Réservation en ligne avec ce code, ou au 0484 11 83 95. Rue Paloke 146, 1700 Dilbeek.</p>
 </article>
 
+{g.state === 'valide' && others.some((o) => o.items.length > 0) && (
+<form class="noprint act reassign" method="post">
+  <input type="hidden" name="action" value="reassign"><input type="hidden" name="id" value={g.id}>
+  <p><strong>Réattribuer à un autre soin</strong> · soin actuel : {g.service} ({euros(g.service_price_cents)})</p>
+  <p class="hint">Après une absence, ou à la demande de la cliente. Choisissez un soin équivalent ; un soin plus cher est marqué « plus cher ».</p>
+  <div class="field"><label for="re-service">Nouveau soin</label>
+    <select id="re-service" name="service" required>
+      <option value="">Choisir…</option>
+      {others.map((o) => o.items.length > 0 && <optgroup label={o.label}>{o.items.map((s) => <option value={s.id}>{s.name_fr} · {euros(s.price_cents)}{s.price_cents > g.service_price_cents && ` · plus cher (+${euros(s.price_cents - g.service_price_cents)})`}</option>)}</optgroup>)}
+    </select>
+  </div>
+  <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+  <button class="btn btn--ghost" type="submit">Réattribuer le bon</button>
+</form>
+)}
 {(g.state === 'valide' || g.state === 'reserve') && (
 <div class="noprint acts">
   <form class="act" method="post">
@@ -84,6 +102,8 @@ const day = (d: string) => new Intl.DateTimeFormat('fr-BE', { timeZone: 'UTC', d
   .acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:.75rem;margin-top:1.5rem;max-width:40rem}
   .act{display:grid;gap:.5rem;align-content:start;padding:.85rem 1rem;border:1px solid var(--line-soft);border-radius:12px}
   .act .btn{min-height:44px;justify-self:start}
+  .reassign{max-width:40rem;margin-top:1.5rem}
+  .reassign select{font:inherit;max-width:100%}
   .check{display:flex;align-items:center;gap:.5rem;min-height:44px}
   .check input{width:1.25rem;height:1.25rem;margin:0;accent-color:var(--accent)}
   @media (max-width:599px){.voucher{aspect-ratio:auto;padding:1.5rem}.voucher dl{grid-template-columns:1fr}}

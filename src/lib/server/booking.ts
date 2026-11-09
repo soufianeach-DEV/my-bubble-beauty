@@ -407,10 +407,16 @@ export async function rescheduleByAdmin(bookingId: number, day: string, time: st
 }
 
 // Absence à un rendez-vous confirmé et passé (fiche cliente, agenda) ; renvoie la cliente concernée
-export async function setNoShow(bookingId: number, noShow: boolean): Promise<{ user_id: number | null } | null> {
-  const [b] = await sql<{ user_id: number | null }[]>`UPDATE bookings SET no_show = ${noShow}
-    WHERE id = ${bookingId} AND status = 'confirmed' AND starts_at < now() RETURNING user_id`;
-  return b ?? null;
+// 'gift' : retirer l'absence rendrait actif un bon cadeau déjà repris par un autre rendez-vous (index unique bookings_gift_idx)
+export async function setNoShow(bookingId: number, noShow: boolean): Promise<{ user_id: number | null } | null | 'gift'> {
+  try {
+    const [b] = await sql<{ user_id: number | null }[]>`UPDATE bookings SET no_show = ${noShow}
+      WHERE id = ${bookingId} AND status = 'confirmed' AND starts_at < now() RETURNING user_id`;
+    return b ?? null;
+  } catch (e) {
+    if ((e as { constraint_name?: string }).constraint_name === 'bookings_gift_idx') return 'gift';
+    throw e;
+  }
 }
 
 // Acompte rendu hors du site (virement, espèces) : le reste dû passe à zéro, la date est gardée

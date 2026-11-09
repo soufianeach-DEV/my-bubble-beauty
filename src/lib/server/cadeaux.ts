@@ -1,6 +1,7 @@
 // Bons cadeaux : créés depuis l'admin pour un soin de la carte (Pour, Soin, Durée, Message), valables 12 mois (CGV).
 // À la réservation, le code se saisit dans le champ du code promo : le soin est alors offert (prix ramené à 0 €).
-// Le bon redevient utilisable si le rendez-vous est annulé ; il est utilisé quand le rendez-vous a eu lieu, ou noté à la caisse.
+// Le bon redevient utilisable si le rendez-vous est annulé ou manqué (absence) ; il est utilisé quand le rendez-vous a eu lieu, ou noté à la caisse.
+// La gérante peut réattribuer un bon libre à un autre soin de la carte (« soin équivalent », à son jugement ; le prix est affiché, rien n'est bloqué).
 import { randomInt } from 'node:crypto';
 import type { Sql } from 'postgres';
 import { z } from 'astro/zod';
@@ -27,7 +28,7 @@ export const STATE_LABELS: Record<GiftState, string> = { valide: 'Valable', rese
 const state = (tx: Sql) => tx`CASE
   WHEN g.cancelled_at IS NOT NULL THEN 'annule'
   WHEN g.used_at IS NOT NULL OR EXISTS (SELECT 1 FROM bookings b WHERE b.gift_card_id = g.id AND b.status = 'confirmed' AND b.ends_at < now() AND NOT b.no_show) THEN 'utilise'
-  WHEN EXISTS (SELECT 1 FROM bookings b WHERE b.gift_card_id = g.id AND b.status IN ('pending_payment', 'confirmed') AND b.ends_at >= now()) THEN 'reserve'
+  WHEN EXISTS (SELECT 1 FROM bookings b WHERE b.gift_card_id = g.id AND b.status IN ('pending_payment', 'confirmed') AND b.ends_at >= now() AND NOT b.no_show) THEN 'reserve'
   WHEN g.expires_on < current_date THEN 'expire'
   ELSE 'valide' END`;
 
@@ -45,11 +46,11 @@ export async function checkGift(tx: Sql, code: string, serviceId: number, lock =
   return { id: g.id };
 }
 
-export type Gift = { id: number; code: string; recipient: string; recipient_email: string | null; service: string; service_id: number; duration_label: string; message: string; issued_on: string; expires_on: string; state: GiftState; booking_at: Date | null; created_by: string | null };
+export type Gift = { id: number; code: string; recipient: string; recipient_email: string | null; service: string; service_id: number; service_price_cents: number; duration_label: string; message: string; issued_on: string; expires_on: string; state: GiftState; booking_at: Date | null; created_by: string | null };
 
 export function listGifts(id?: number) {
   return sql<Gift[]>`
-    SELECT g.id, g.code, g.recipient, g.recipient_email, s.name_fr AS service, g.service_id, g.duration_label, g.message, g.issued_on::text, g.expires_on::text,
+    SELECT g.id, g.code, g.recipient, g.recipient_email, s.name_fr AS service, g.service_id, s.price_cents AS service_price_cents, g.duration_label, g.message, g.issued_on::text, g.expires_on::text,
       ${state(sql)} AS state, (SELECT max(b.starts_at) FROM bookings b WHERE b.gift_card_id = g.id AND b.status IN ('pending_payment', 'confirmed')) AS booking_at,
       coalesce(u.name, u.email) AS created_by
     FROM gift_cards g JOIN services s ON s.id = g.service_id LEFT JOIN users u ON u.id = g.created_by
@@ -68,6 +69,9 @@ export const giftForm = z.discriminatedUnion('action', [
     duration_label: line(40, 'Durée : 40 caractères au plus.').default(''),
     message: z.string({ error: 'Message : 300 caractères au plus.' }).max(300, 'Message : 300 caractères au plus.').default('').transform((v) => v.replace(/\r\n/g, '\n').trim()),
   }),
+  z.object({ action: z.literal('reassign'), id: z.coerce.number().int().min(1).max(2_000_000_000),
+    service: z.coerce.number({ error: 'Choisissez le nouveau soin.' }).int().min(1, 'Choisissez le nouveau soin.').max(2_000_000_000, 'Choisissez le nouveau soin.'),
+    confirm: z.literal('on', { error: 'Cochez la case pour confirmer.' }) }),
   z.object({ action: z.enum(['used', 'cancel']), id: z.coerce.number().int().min(1).max(2_000_000_000), confirm: z.literal('on', { error: 'Cochez la case pour confirmer.' }) }),
 ], { error: 'Action inconnue.' });
 
@@ -94,6 +98,18 @@ export async function giftAction(actor: number, form: FormData): Promise<Result>
   }
   const [g] = await listGifts(f.id);
   if (!g) return { ok: false, error: 'Bon introuvable.' };
+  if (f.action === 'reassign') {
+    if (g.state !== 'valide') return { ok: false, error: `Seul un bon valable se réattribue ; celui-ci est ${STATE_LABELS[g.state].toLowerCase()}.` };
+    if (f.service === g.service_id) return { ok: false, error: 'Choisissez un autre soin que le soin actuel.' };
+    const [s] = await sql<{ price_cents: number }[]>`SELECT price_cents FROM services WHERE id = ${f.service} AND retired_at IS NULL AND active`;
+    if (!s) return { ok: false, error: 'Soin introuvable ou fermé à la réservation.' };
+    // Garde : le bon n'a pas été réservé entre la lecture et l'écriture
+    const [u] = await sql`UPDATE gift_cards SET service_id = ${f.service} WHERE id = ${g.id} AND service_id = ${g.service_id} AND cancelled_at IS NULL AND used_at IS NULL
+      AND NOT EXISTS (SELECT 1 FROM bookings b WHERE b.gift_card_id = ${g.id} AND b.status IN ('pending_payment', 'confirmed') AND NOT b.no_show) RETURNING id`;
+    if (!u) return { ok: false, error: 'Le bon vient de changer, rechargez la page.' };
+    audit(actor, 'gift_reassigned', { gift_id: g.id, from_service_id: g.service_id, to_service_id: f.service, from_price_cents: g.service_price_cents, to_price_cents: s.price_cents });
+    return { ok: true, id: g.id, key: s.price_cents > g.service_price_cents ? 'reassign-plus' : 'reassign' };
+  }
   if (f.action === 'used') {
     if (g.state !== 'valide' && g.state !== 'reserve') return { ok: false, error: `Ce bon est ${STATE_LABELS[g.state].toLowerCase()}.` };
     await sql`UPDATE gift_cards SET used_at = now() WHERE id = ${g.id} AND used_at IS NULL`;
