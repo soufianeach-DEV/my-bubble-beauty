@@ -420,6 +420,25 @@ export async function markRefundedManually(bookingId: number): Promise<{ amount:
 
 // Rappel la veille (de 26 h à 2 h avant), une seule fois par rendez-vous : la ligne est réservée par l'UPDATE avant l'envoi.
 // Seulement pour les réservations prises plus de 26 h à l'avance (la confirmation vient de partir pour les autres).
+// Suppression définitive d'un rendez-vous, voulue par la gérante, quel que soit son statut : aucune ligne au journal ni au log serveur.
+// Le créneau se libère ; un code promo ou un bon cadeau redevient utilisable (ils se comptent sur les rendez-vous restants) ;
+// un avantage fidélité porté par ce rendez-vous est rendu à la carte. E-mail d'annulation à la cliente seulement si demandé.
+export async function deleteBooking(id: number, notifyClient: boolean): Promise<boolean> {
+  const [mail] = notifyClient
+    ? await sql<{ email: string; locale: Lang; service: string; starts_at: Date; price_cents: number; discount_cents: number; deposit_cents: number; upcoming: boolean }[]>`
+        SELECT u.email, u.locale, CASE u.locale WHEN 'nl' THEN s.name_nl WHEN 'en' THEN s.name_en ELSE s.name_fr END AS service,
+          b.starts_at, b.price_cents, b.discount_cents, b.deposit_cents, b.starts_at > now() AND b.status = 'confirmed' AS upcoming
+        FROM bookings b JOIN users u ON u.id = b.user_id JOIN services s ON s.id = b.service_id WHERE b.id = ${id}`
+    : [];
+  const gone = await sql.begin(async (tx) => {
+    await tx`DELETE FROM loyalty_rewards WHERE booking_id = ${id}`;
+    return (await tx`DELETE FROM bookings WHERE id = ${id} RETURNING id`).length > 0;
+  });
+  // Prévenir n'a de sens que pour un rendez-vous encore à venir
+  if (gone && mail?.upcoming) sendMail(mail.email, bookingCancelledMail(mail.locale, mail, 0));
+  return gone;
+}
+
 // Blanchiment dentaire terminé (et non marqué absente) : les recommandations de l'institut par e-mail, une seule fois.
 // Fenêtre d'un jour : un rendez-vous ancien, saisi après coup, ne déclenche rien.
 export async function sendAftercare(): Promise<number> {

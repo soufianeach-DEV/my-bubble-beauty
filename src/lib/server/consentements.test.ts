@@ -183,6 +183,19 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     assert.deepEqual({ n: card.sessions, discount: card.discount, free: card.free }, { n: 0, discount: false, free: false });
     const [{ n: logged }] = await sql`SELECT count(*)::int AS n FROM audit_log WHERE client_id = ${fan} AND details->>'action' = 'loyalty_applied'`;
     assert.equal(logged, 2);
+
+    // Suppression d'un rendez-vous par l'admin : la ligne disparaît, son avantage fidélité est rendu, rien n'est écrit au journal
+    const { deleteAction } = await import('./admin.ts');
+    const before = (await sql`SELECT count(*)::int AS n FROM audit_log`)[0].n;
+    assert.equal((await deleteAction(f({ action: 'delete', id: String(next2.id) }))).ok, false, 'case « Je confirme » exigée');
+    assert.ok((await deleteAction(f({ action: 'delete', id: String(next2.id), confirm: 'on' }))).ok);
+    assert.equal((await sql`SELECT 1 FROM bookings WHERE id = ${next2.id}`).length, 0);
+    assert.equal((await sql`SELECT 1 FROM loyalty_rewards WHERE booking_id = ${next2.id} OR (user_id = ${fan} AND kind = 'free')`).length, 0);
+    assert.equal((await fid.loyaltyCard(fan)).free, true, 'le soin offert redevient disponible');
+    // Le journal ne bouge pas (attente : les lignes du journal partent en tâche détachée)
+    await new Promise((r) => setTimeout(r, 200));
+    assert.equal((await sql`SELECT count(*)::int AS n FROM audit_log`)[0].n, before);
+    assert.equal((await deleteAction(f({ action: 'delete', id: String(next2.id), confirm: 'on' }))).ok, false);
   } finally {
     await sql`DELETE FROM bookings WHERE service_id IN (SELECT id FROM services WHERE slug IN (${`laser-${tag}`}, ${`blanchiment-des-dents-${tag}`}))`;
     await sql`DELETE FROM services WHERE slug IN (${`laser-${tag}`}, ${`blanchiment-des-dents-${tag}`})`;

@@ -1,0 +1,30 @@
+---
+// Composant (préfixe _, hors routage) ; la ligne suivante satisfait le test des routes gardées
+export const prerender = false;
+// Bouton « Supprimer » d'un rendez-vous (admin seulement) : replié, case « Je confirme » exigée, e-mail à la cliente seulement si coché
+interface Props {
+  id: number;
+  label: string;
+  action?: string;
+}
+const { id, label, action } = Astro.props;
+---
+<details class="del">
+  <summary>Supprimer<span class="visually-hidden"> {label}</span></summary>
+  <form method="post" action={action}>
+    <input type="hidden" name="action" value="delete"><input type="hidden" name="id" value={id}>
+    <p class="hint">Efface définitivement le rendez-vous et libère le créneau. Rien n'est noté au journal.</p>
+    <label class="check"><input type="checkbox" name="notify"><span>Prévenir la cliente par e-mail</span></label>
+    <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+    <button class="btn btn--ghost" type="submit">Supprimer le rendez-vous</button>
+  </form>
+</details>
+
+<style>
+  .del summary{min-height:44px;display:flex;align-items:center;cursor:pointer;color:var(--accent)}
+  .del form{display:grid;gap:.4rem;justify-items:start;margin-top:.25rem}
+  .del .hint{margin:0;font-size:.8125rem}
+  .del .check{display:flex;align-items:center;gap:.5rem;min-height:44px;font-size:.9375rem}
+  .del .check input{width:1.25rem;height:1.25rem;margin:0;accent-color:var(--accent)}
+  .del .btn{min-height:44px}
+</style>

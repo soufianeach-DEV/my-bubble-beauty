@@ -4,7 +4,8 @@ export const prerender = false;
 // absences et acomptes à rendre, désactivation, suppression, effacement à sa demande, dernières lignes du journal la concernant.
 // La gestionnaire voit la fiche et écrit les notes ; les actions sur le compte et le journal restent à l'admin.
 import Admin from '../_layout.astro';
-import { adminId, staffId, agendaAction, fmtDateTime, readForm } from '../../../lib/server/admin.ts';
+import { adminId, staffId, agendaAction, deleteAction, fmtDateTime, readForm } from '../../../lib/server/admin.ts';
+import Supprimer from '../_supprimer.astro';
 import { clientAction, clientDetail } from '../../../lib/server/admin-clientes.ts';
 import { ACTION_LABELS } from '../../../lib/server/journal.ts';
 import { euros, todayBrussels } from '../../../lib/server/pricing.ts';
@@ -27,9 +28,9 @@ if (Astro.request.method === 'POST') {
   if (!form) return new Response(null, { status: 413 });
   // Les actions sur un rendez-vous passent par l'agenda (mêmes règles et même journal)
   const scope = form.get('scope');
-  const r = scope === 'booking' ? await agendaAction(me, form) : scope === 'suivi' ? await suiviAction(me, form) : scope === 'fidelite' ? await applyReward(me, form) : await clientAction(me, form, manage);
+  const r = form.get('action') === 'delete' ? (manage ? await deleteAction(form) : { ok: false as const, error: "Seule l'admin peut supprimer un rendez-vous." }) : scope === 'booking' ? await agendaAction(me, form) : scope === 'suivi' ? await suiviAction(me, form) : scope === 'fidelite' ? await applyReward(me, form) : await clientAction(me, form, manage);
   if (r.ok && r.key === 'efface') return Astro.redirect('/admin/clientes?ok=efface', 303);
-  if (r.ok) return Astro.redirect(`${self}?ok=${r.key}${r.id !== id ? `#b-${r.id}` : ''}`, 303);
+  if (r.ok) return Astro.redirect(`${self}?ok=${r.key}${r.id !== id && r.key !== 'supprime' ? `#b-${r.id}` : ''}`, 303);
   error = r.error;
   if (form.get('action') === 'notes') notesDraft = String(form.get('notes') ?? '');
   if (form.get('action') === 'health') historyDraft = String(form.get('medical_history') ?? '').slice(0, 4000);
@@ -40,7 +41,7 @@ if (!c) return new Response(null, { status: 404 });
 const { user: u, bookings, stats, events } = c;
 const [consents, sv, card, rewardable] = await Promise.all([listConsents(u.id), suivi(u.id), loyaltyCard(u.id), rewardableBookings(u.id)]);
 const DONE: Record<string, string> = {
-  notes: 'Notes enregistrées.', sante: 'Date de naissance et antécédents enregistrés.', 'fidelite-remise': 'Remise de fidélité appliquée au rendez-vous.', 'fidelite-offert': 'Soin offert appliqué au rendez-vous : la carte repart à zéro.', seance: 'Séance mise à jour.', block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte réactivé.',
+  notes: 'Notes enregistrées.', supprime: 'Rendez-vous supprimé.', sante: 'Date de naissance et antécédents enregistrés.', 'fidelite-remise': 'Remise de fidélité appliquée au rendez-vous.', 'fidelite-offert': 'Soin offert appliqué au rendez-vous : la carte repart à zéro.', seance: 'Séance mise à jour.', block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte réactivé.',
   remove: "Compte supprimé : il n'apparaît plus dans les listes et ne peut plus se connecter. Ses rendez-vous restent.", unremove: 'Compte restauré : la cliente peut de nouveau se connecter.', restore: 'Suppression annulée : le compte est de nouveau actif. Les rendez-vous annulés le restent.',
   absente: 'Rendez-vous marqué « absente ».', venue: 'Absence retirée.', rendu: 'Acompte noté comme remboursé hors du site.',
 };
@@ -116,6 +117,7 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
             <button class="btn btn--ghost" type="submit" name="action" value="manual_refund">Marquer remboursé hors site ({euros(due(b))})</button>
           </form>
         )}
+        {manage && <Supprimer id={b.id} label={`le rendez-vous du ${fmtDateTime(b.starts_at)}`} action={self} />}
       </td>
     </tr>
   ))}</tbody>

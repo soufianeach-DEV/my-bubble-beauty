@@ -122,6 +122,9 @@ export const agendaForm = z
   })
   .refine((a) => a.action !== 'move' || (a.day && a.time), "Pour déplacer, saisissez la nouvelle date et l'heure.");
 
+// Suppression d'un rendez-vous (admin) : case « Je confirme » exigée, e-mail à la cliente seulement si coché
+export const deleteBookingForm = z.object({ action: z.literal('delete'), id, notify: box, confirm: z.literal('on', { error: 'Cochez la case pour confirmer.' }) });
+
 // Fiche cliente : notes (4000 caractères, plusieurs lignes permises), blocage, effacement confirmé par un mot tapé
 // Actions sur un compte : la case « Je confirme » est exigée ici, pas seulement dans la page
 const confirm = z.literal('on', { error: 'Cochez la case pour confirmer.' });

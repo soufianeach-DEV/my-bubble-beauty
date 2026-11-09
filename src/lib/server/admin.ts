@@ -1,8 +1,8 @@
 // Gestion de l'institut par l'admin : prestations, horaires, fermetures, codes promo, saisie et annulation de rendez-vous.
 // Toute saisie passe par un schéma de admin-form.ts, toute requête est paramétrée, toute modification est journalisée avec l'admin.
 import { t } from '../site.ts';
-import { agendaForm, bulkServiceForm, closureForm, hoursForm, idForm, newBookingForm, promoForm, serviceForm, toggleForm } from './admin-form.ts';
-import { cancelByAdmin, createAdminBooking, markRefundedManually, rescheduleByAdmin, setNoShow } from './booking.ts';
+import { agendaForm, bulkServiceForm, deleteBookingForm, closureForm, hoursForm, idForm, newBookingForm, promoForm, serviceForm, toggleForm } from './admin-form.ts';
+import { cancelByAdmin, createAdminBooking, deleteBooking, markRefundedManually, rescheduleByAdmin, setNoShow } from './booking.ts';
 import { sql } from './db.ts';
 import { journal } from './journal.ts';
 
@@ -169,6 +169,13 @@ export async function togglePromo(userId: number, form: FormData): Promise<Resul
 }
 
 // Agenda : annuler (remboursement au choix) ou relancer le remboursement d'un acompte resté chez l'institut
+// Suppression d'un rendez-vous par l'admin : volontairement absente du journal (demande de la gérante) ; seule action dans ce cas
+export async function deleteAction(form: FormData): Promise<Result> {
+  const p = deleteBookingForm.safeParse(fields(form));
+  if (!p.success) return first(p.error);
+  return (await deleteBooking(p.data.id, p.data.notify)) ? { ok: true, id: p.data.id, key: 'supprime' } : { ok: false, error: 'Rendez-vous introuvable.' };
+}
+
 export async function agendaAction(userId: number, form: FormData): Promise<Result> {
   const p = agendaForm.safeParse(fields(form));
   if (!p.success) return first(p.error);

@@ -4,7 +4,8 @@ export const prerender = false;
 // N'affiche que ce que la base contient ; ce qui manque est signalé, jamais déduit.
 import { ADMIN_EMAIL, MAIL_FROM, RESEND_API_KEY } from 'astro:env/server';
 import Admin from './_layout.astro';
-import { staffId, fmtDateTime, fmtDay, fmtTime } from '../../lib/server/admin.ts';
+import { adminId, deleteAction, readForm, staffId, fmtDateTime, fmtDay, fmtTime } from '../../lib/server/admin.ts';
+import Supprimer from './_supprimer.astro';
 import { addDays, monday } from '../../lib/server/admin-form.ts';
 import { adminAgenda } from '../../lib/server/booking.ts';
 import { alerts, clientCards, dayFrame, freeMinutes, loadByDay } from '../../lib/server/accueil.ts';
@@ -13,6 +14,16 @@ import { JS_VERSION } from '../../lib/site';
 
 const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
+// Seule action de la page : supprimer un rendez-vous de la ligne du temps (admin seulement)
+const admin = adminId(Astro.locals) !== null;
+let delError = '';
+if (Astro.request.method === 'POST') {
+  const form = admin ? await readForm(Astro.request) : null;
+  const r = form ? await deleteAction(form) : { ok: false as const, error: "Seule l'admin peut supprimer un rendez-vous." };
+  if (r.ok) return Astro.redirect('/admin?ok=supprime#h-line', 303);
+  delError = r.error;
+  Astro.response.status = 400;
+}
 
 const now = new Date();
 const today = todayBrussels();
@@ -49,6 +60,8 @@ const mailOff = !RESEND_API_KEY || !MAIL_FROM;
 const alertCount = al.pending.length + al.moved.length + al.cancelled.length + al.newClients.length + al.noDuration.length + al.closures.length + (mailOff ? 1 : 0);
 ---
 <Admin title="Accueil">
+{delError && <p class="notice notice--error" role="alert">{delError}</p>}
+{!delError && Astro.url.searchParams.get('ok') === 'supprime' && <p class="notice" role="status">Rendez-vous supprimé.</p>}
 <Fragment slot="actions"><a class="btn btn--solid" href="/admin/reservations/nouvelle">Saisir un rendez-vous</a></Fragment>
 <script is:inline src={`/assets/js/compte-a-rebours.js?v=${JS_VERSION}`} defer></script>
 
@@ -88,6 +101,7 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
             <small>{r.service}{r.guest && ' · saisie par l\'institut'}</small>
           </span>
           <span class={`badge badge--${tone}`}>{label}</span>
+          {admin && <span class="tl-del"><Supprimer id={r.id} label={`le rendez-vous de ${fmtTime(r.starts_at)}`} action="/admin" /></span>}
         </li>
       ); })}</ol>
     )}
@@ -196,6 +210,7 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
   .quick{display:flex;flex-wrap:wrap;gap:.5rem}
 
   .timeline ol{display:grid;gap:.5rem;list-style:none;margin:0;padding:0}
+  .tl-del{grid-column:1 / -1}
   .tl{display:grid;grid-template-columns:4.5rem minmax(0,1fr) auto;gap:.75rem;align-items:center;padding:.6rem .75rem;border-left:3px solid var(--line-soft);border-radius:10px;background:rgb(138 90 82 / .05)}
   .tl--ok{border-left-color:rgb(76 128 92)}
   .tl--wait{border-left-color:rgb(196 150 70)}

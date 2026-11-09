@@ -2,13 +2,16 @@
 export const prerender = false;
 // Agenda : rendez-vous du jour ou de la semaine à l'heure de Bruxelles, annulation en deux temps et remboursement de l'acompte
 import Admin from './_layout.astro';
-import { staffId, agendaAction, fmtDay, fmtTime, readForm } from '../../lib/server/admin.ts';
+import { adminId, staffId, agendaAction, deleteAction, fmtDay, fmtTime, readForm } from '../../lib/server/admin.ts';
+import Supprimer from './_supprimer.astro';
 import { addDays, monday } from '../../lib/server/admin-form.ts';
 import { adminAgenda } from '../../lib/server/booking.ts';
 import { euros, isDay, todayBrussels } from '../../lib/server/pricing.ts';
 
 const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
+// Suppression d'un rendez-vous : admin seulement
+const admin = adminId(Astro.locals) !== null;
 const q = Astro.url.searchParams;
 const vue = q.get('vue') === 'jour' ? 'jour' : 'semaine';
 const today = todayBrussels();
@@ -18,7 +21,9 @@ let error = '';
 if (Astro.request.method === 'POST') {
   const form = await readForm(Astro.request);
   if (!form) return new Response(null, { status: 413 });
-  const r = await agendaAction(me, form);
+  const r = form.get('action') === 'delete'
+    ? admin ? await deleteAction(form) : { ok: false as const, error: "Seule l'admin peut supprimer un rendez-vous." }
+    : await agendaAction(me, form);
   // Déplacé : l'agenda suit le rendez-vous à sa nouvelle date
   if (r.ok) return Astro.redirect(`${link(r.day ?? jour)}&ok=${r.key}#r-${r.id}`, 303);
   error = r.error;
@@ -26,6 +31,7 @@ if (Astro.request.method === 'POST') {
 }
 const DONE: Record<string, string> = {
   annule: 'Rendez-vous annulé.',
+  supprime: 'Rendez-vous supprimé.',
   rembourse: 'Acompte remboursé, rendez-vous annulé.',
   echec: "Le remboursement n'a pas abouti. S'il reste un acompte à rendre, le bouton « Rembourser l'acompte » reste sur la ligne : réessayez plus tard.",
   cree: 'Rendez-vous enregistré.',
@@ -141,6 +147,7 @@ const due = (r: (typeof rows)[number]) => (r.paid ? r.deposit_cents - r.refunded
                   <button class="btn btn--ghost" type="submit" name="action" value={r.no_show ? 'show' : 'no_show'}>{r.no_show ? "Retirer l'absence" : 'Marquer absente'}</button>
                 </form>
               )}
+              {admin && <Supprimer id={r.id} label={`le rendez-vous de ${fmtTime(r.starts_at)}, ${r.name ?? r.service}`} />}
             </td>
           </tr>
         ))}</tbody>
