@@ -163,5 +163,7 @@ const email = str('Adresse e-mail invalide.').toLowerCase().max(254, 'Adresse e-
 export const staffForm = z.discriminatedUnion('action', [
   z.object({ action: z.literal('grant'), email, role, confirm }),
   z.object({ action: z.literal('role'), id, role, confirm }),
+  // « Tous les comptes » : Aucun / Gestionnaire / Admin choisi sur la ligne du compte
+  z.object({ action: z.literal('assign'), id, role: z.enum(['none', 'admin', 'gestionnaire'], { error: 'Choisissez un rôle.' }), confirm }),
   ...(['demote', 'block', 'unblock', 'remove', 'restore', 'reset_totp'] as const).map((a) => z.object({ action: z.literal(a), id, confirm })),
 ], { error: 'Action inconnue.' });

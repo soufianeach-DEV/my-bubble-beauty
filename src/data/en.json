@@ -200,11 +200,13 @@
      "items": [
       {
        "name": "Purity & Light",
+       "duration": "60 min",
        "detail": "Rotating brush + LED",
        "amount": "60 €"
       },
       {
        "name": "Radiance & Youth",
+       "duration": "60 min",
        "detail": "Cleanse + mask + red LED",
        "amount": "70 €",
        "was": "75 €",
@@ -212,6 +214,7 @@
       },
       {
        "name": "Clear Skin",
+       "duration": "60 min",
        "detail": "Cleanse + blue LED",
        "amount": "60 €"
       }

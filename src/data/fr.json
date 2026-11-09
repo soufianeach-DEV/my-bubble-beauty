@@ -200,11 +200,13 @@
      "items": [
       {
        "name": "Pureté & Lumière",
+       "duration": "60 min",
        "detail": "Brosse rotative + LED",
        "amount": "60 €"
       },
       {
        "name": "Éclat & Jeunesse",
+       "duration": "60 min",
        "detail": "Nettoyage + masque + LED rouge",
        "amount": "70 €",
        "was": "75 €",
@@ -212,6 +214,7 @@
       },
       {
        "name": "Peau Nette",
+       "duration": "60 min",
        "detail": "Nettoyage + LED bleue",
        "amount": "60 €"
       }

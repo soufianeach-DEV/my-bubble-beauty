@@ -200,11 +200,13 @@
      "items": [
       {
        "name": "Puur & Licht",
+       "duration": "60 min",
        "detail": "Roterende borstel + led",
        "amount": "60 €"
       },
       {
        "name": "Glans & Jeugd",
+       "duration": "60 min",
        "detail": "Reiniging + masker + rood ledlicht",
        "amount": "70 €",
        "was": "75 €",
@@ -212,6 +214,7 @@
       },
       {
        "name": "Zuivere Huid",
+       "duration": "60 min",
        "detail": "Reiniging + blauw ledlicht",
        "amount": "60 €"
       }

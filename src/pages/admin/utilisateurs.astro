@@ -4,7 +4,7 @@ export const prerender = false;
 // supprimé (suppression douce) ou restauré ; application d'authentification relancée. Admin seulement, jamais sur soi ni sur la gérante.
 import Admin from './_layout.astro';
 import { adminId, fmtDateTime, readForm } from '../../lib/server/admin.ts';
-import { ENROL_DAYS, listStaff, ROLE_LABELS, staffAction } from '../../lib/server/staff.ts';
+import { ACCOUNTS_PER_PAGE, ENROL_DAYS, listAccounts, listStaff, ROLE_LABELS, staffAction, type AccountSort } from '../../lib/server/staff.ts';
 
 const me = adminId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
@@ -29,7 +29,14 @@ const DONE: Record<string, string> = {
   reset_totp: `Application d'authentification relancée : la personne en enregistre une nouvelle dans les ${ENROL_DAYS} jours.`,
 };
 const done = !error && DONE[Astro.url.searchParams.get('ok') ?? ''];
-const all = await listStaff();
+// « Tous les comptes » : recherche, tri et page dans l'URL (GET), gardés après une action
+const qs = Astro.url.searchParams;
+const q = (qs.get('q') ?? '').trim().slice(0, 100);
+const sort: AccountSort = qs.get('tri') === 'nom' ? 'nom' : qs.get('tri') === 'connexion' ? 'connexion' : 'recent';
+const pageNo = Math.min(Math.max(Number(qs.get('page')) || 1, 1), 10_000);
+const [all, accounts] = await Promise.all([listStaff(), listAccounts(q, sort, pageNo)]);
+const pages = Math.max(1, Math.ceil(accounts.total / ACCOUNTS_PER_PAGE));
+const listUrl = (p: number) => `/admin/utilisateurs?${new URLSearchParams({ ...(q && { q }), ...(sort !== 'recent' && { tri: sort }), ...(p > 1 && { page: String(p) }) })}#h-all`;
 // Anciens membres : comptes de l'équipe supprimés, restaurables ; ils n'ont plus aucun accès (connexion refusée)
 const staff = all.filter((s) => !s.removed_at);
 const former = all.filter((s) => s.removed_at);
@@ -39,8 +46,10 @@ const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', date
 {done && <p class="notice" role="status">{done}</p>}
 {error && errorId === null && <p class="notice notice--error" role="alert">{error}</p>}
 
+<details class="add-box" open={draft.email !== ''}>
+<summary>Ajouter par adresse e-mail</summary>
 <section aria-labelledby="h-add">
-  <h2 id="h-add">Ajouter un admin ou un gestionnaire</h2>
+  <h2 id="h-add" class="visually-hidden">Ajouter un admin ou un gestionnaire</h2>
   <p class="hint">La personne crée d'abord son compte sur le site et confirme son adresse. Admin : tout l'espace. Gestionnaire : accueil, agenda, rendez-vous, fiches clientes (notes comprises), prestations et fermetures, sans horaires d'ouverture, codes promo, journal, métriques ni utilisateurs.</p>
   <form class="form add" method="post">
     <input type="hidden" name="action" value="grant">
@@ -55,6 +64,7 @@ const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', date
     <button class="btn btn--solid" type="submit">Ajouter</button>
   </form>
 </section>
+</details>
 
 <section aria-labelledby="h-team">
   <h2 id="h-team">Équipe <small>({staff.length})</small></h2>
@@ -121,6 +131,53 @@ const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', date
   ); })}</ul>
 </section>
 
+<section aria-labelledby="h-all">
+  <h2 id="h-all">Tous les comptes <small>({accounts.total})</small></h2>
+  <p class="hint">Comptes clients, hors équipe et hors comptes supprimés. Choisissez un rôle sur la ligne : la personne passe dans « Équipe » et ses sessions sont fermées. Il faut une adresse confirmée.</p>
+  <form class="form find" method="get" action="/admin/utilisateurs#h-all">
+    <div class="field grow"><label for="q">Rechercher (nom ou e-mail)</label><input id="q" name="q" type="search" value={q} maxlength="100"></div>
+    <div class="field"><label for="tri">Trier par</label>
+      <select id="tri" name="tri">
+        <option value="recent" selected={sort === 'recent'}>Inscription récente</option>
+        <option value="nom" selected={sort === 'nom'}>Nom</option>
+        <option value="connexion" selected={sort === 'connexion'}>Dernière connexion</option>
+      </select>
+    </div>
+    <button class="btn btn--ghost" type="submit">Afficher</button>
+  </form>
+  {accounts.rows.length === 0 ? <p>Aucun compte{q && ' pour cette recherche'}.</p> : (
+  <ul class="team">{accounts.rows.map((a) => (
+    <li id={`u-${a.id}`} class="member account">
+      <div class="who">
+        <strong>{a.name || a.email}</strong>{a.name && <small>{a.email}</small>}
+        <p class="tags"><span class={a.verified ? 'badge badge--ok' : 'badge badge--wait'}>{a.verified ? 'Adresse confirmée' : 'Adresse non confirmée'}</span></p>
+        <small>Inscrite le {day(a.created_at)} · dernière connexion : {a.last_login ? fmtDateTime(a.last_login) : 'jamais'}</small>
+      </div>
+      {errorId === a.id && <p class="notice notice--error" role="alert">{error}</p>}
+      {a.verified ? (
+        <form class="assign" method="post">
+          <input type="hidden" name="action" value="assign"><input type="hidden" name="id" value={a.id}>
+          <div class="field"><label for={`r-${a.id}`}>Rôle</label>
+            <select id={`r-${a.id}`} name="role">
+              <option value="none" selected>Aucun (cliente)</option>
+              <option value="gestionnaire">Gestionnaire</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+          <button class="btn btn--ghost" type="submit">Appliquer</button>
+        </form>
+      ) : <p class="hint">Rôle possible une fois l'adresse confirmée.</p>}
+    </li>
+  ))}</ul>
+  )}
+  {pages > 1 && <nav class="pager" aria-label="Pages des comptes">
+    {pageNo > 1 && <a class="btn btn--ghost" href={listUrl(pageNo - 1)}>Page précédente</a>}
+    <span>Page {pageNo} sur {pages}</span>
+    {pageNo < pages && <a class="btn btn--ghost" href={listUrl(pageNo + 1)}>Page suivante</a>}
+  </nav>}
+</section>
+
 <section aria-labelledby="h-former">
   <h2 id="h-former">Anciens membres <small>({former.length})</small></h2>
   {former.length === 0 ? <p>Aucun.</p> : (
@@ -152,6 +209,14 @@ const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', date
   .add{display:flex;flex-wrap:wrap;gap:.75rem 1rem;align-items:flex-end}
   .add .grow{flex:1 1 16rem;min-width:0}
   select{min-height:44px;padding:.4rem .6rem;border:1px solid var(--line-soft);border-radius:8px;background:rgb(var(--card));color:var(--text);font:inherit}
+  .add-box{margin-bottom:2rem}
+  .add-box > summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:500}
+  .find,.assign{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:flex-end}
+  .find .grow{flex:1 1 16rem;min-width:0}
+  .find .field,.assign .field{margin:0}
+  .account{grid-template-columns:minmax(0,1fr) auto;align-items:center}
+  @media (max-width:719px){.account{grid-template-columns:1fr}}
+  .pager{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;margin-top:1rem}
   .check{display:flex;align-items:center;gap:.5rem;min-height:44px}
   .check input{width:1.25rem;height:1.25rem;margin:0;accent-color:var(--accent)}
   .team{display:grid;gap:.75rem;list-style:none;margin:0;padding:0}

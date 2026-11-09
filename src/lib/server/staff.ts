@@ -59,18 +59,41 @@ export function listStaff() {
     ORDER BY email = ${admin} DESC, (blocked_at IS NOT NULL OR removed_at IS NOT NULL), lower(coalesce(name, email)), id`;
 }
 
+// « Tous les comptes » : comptes clients (hors équipe et gérante), sans les comptes supprimés ou en suppression ; 25 par page
+export type AccountRow = { id: number; name: string | null; email: string; verified: boolean; created_at: Date; last_login: Date | null };
+export type AccountSort = 'recent' | 'nom' | 'connexion';
+export const ACCOUNTS_PER_PAGE = 25;
+export async function listAccounts(q: string, sort: AccountSort, page: number) {
+  const admin = ADMIN_EMAIL.trim().toLowerCase();
+  const like = `%${q.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
+  const where = sql`role IS NULL AND email <> ${admin} AND deleted_at IS NULL AND removed_at IS NULL
+    ${q ? sql`AND (email ILIKE ${like} OR coalesce(name, '') ILIKE ${like})` : sql``}`;
+  const order = sort === 'nom' ? sql`lower(coalesce(name, email)), id` : sort === 'connexion' ? sql`last_login DESC NULLS LAST, id` : sql`created_at DESC, id DESC`;
+  const [rows, [{ n }]] = await Promise.all([
+    sql<AccountRow[]>`SELECT id, name, email, email_verified_at IS NOT NULL AS verified, created_at,
+        (SELECT max(at) FROM audit_log a WHERE a.actor_id = users.id AND a.action = 'login_ok') AS last_login
+      FROM users WHERE ${where} ORDER BY ${order} LIMIT ${ACCOUNTS_PER_PAGE} OFFSET ${(page - 1) * ACCOUNTS_PER_PAGE}`,
+    sql<{ n: number }[]>`SELECT count(*)::int AS n FROM users WHERE ${where}`,
+  ]);
+  return { rows, total: n };
+}
+
 const err = (error: string): Result => ({ ok: false, error });
 const label = (r: 'admin' | 'gestionnaire') => ROLE_LABELS[r].toLowerCase();
 
 export async function staffAction(actor: number, form: FormData): Promise<Result> {
   const p = staffForm.safeParse(Object.fromEntries(form));
   if (!p.success) return err(p.error.issues[0]?.message ?? 'Saisie invalide.');
-  const f = p.data;
+  const parsed = p.data;
+  // Ligne de « Tous les comptes » : Aucun = retirer le rôle (même chemin que « demote »), sinon même chemin que l'ajout par adresse
+  const f = parsed.action === 'assign'
+    ? parsed.role === 'none' ? { action: 'demote' as const, id: parsed.id, confirm: parsed.confirm } : { action: 'grant' as const, id: parsed.id, role: parsed.role, confirm: parsed.confirm }
+    : parsed;
 
   if (f.action === 'grant') {
     const [u] = await sql<{ id: number; email: string; role: 'admin' | 'gestionnaire' | null; verified: boolean; off: boolean }[]>`
       SELECT id, email, role, email_verified_at IS NOT NULL AS verified, blocked_at IS NOT NULL OR removed_at IS NOT NULL OR deleted_at IS NOT NULL AS off
-      FROM users WHERE email = ${f.email}`;
+      FROM users WHERE ${'email' in f ? sql`email = ${f.email}` : sql`id = ${f.id}`}`;
     if (!u) return err("Aucun compte avec cette adresse. La personne crée d'abord son compte sur le site, puis confirme son adresse.");
     if (isAdminEmail(u.email)) return err('Cette adresse est celle de la gérante : elle a déjà tous les droits.');
     if (u.id === actor) return err('Vous ne pouvez pas changer votre propre rôle.');

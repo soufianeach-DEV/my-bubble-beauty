@@ -288,6 +288,22 @@ test('comptes, réservations et sécurité sur une vraie base', { skip: !url && 
       assert.equal((await totpState({ ...old.user, role: 'gestionnaire' }, old.session.createdAt))?.kind, 'relogin');
       // Gérante intouchable, personne n'agit sur soi-même
       assert.equal(await ok(boss.id, { action: 'grant', email: ENV.ADMIN_EMAIL, role: 'admin' }), false);
+      // « Tous les comptes » : rôle choisi sur la ligne (par id), mêmes garde-fous ; liste sans équipe, gérante ni comptes supprimés
+      const { listAccounts } = await import('./staff.ts');
+      const y = await mkUser('ligne');
+      const [unv] = await sql`INSERT INTO users (email, password_hash, name) VALUES (${`${tag}nonconf@test.local`}, ${hash}, ${`Zz ${tag}`}) RETURNING id`;
+      const [gone] = await sql`INSERT INTO users (email, password_hash, email_verified_at, removed_at) VALUES (${`${tag}parti@test.local`}, ${hash}, now(), now()) RETURNING id`;
+      const listed = (await listAccounts(tag, 'recent', 1)).rows.map((r) => r.id);
+      assert.ok(listed.includes(y.id) && listed.includes(unv.id), 'clientes listées, adresse confirmée ou non');
+      assert.ok(!listed.includes(g.id) && !listed.includes(gone.id) && !listed.includes(boss.id), 'ni équipe, ni compte supprimé, ni gérante');
+      assert.equal(await ok(boss.id, { action: 'assign', id: String(unv.id), role: 'gestionnaire' }), false, 'adresse non confirmée');
+      assert.equal(await ok(boss.id, { action: 'assign', id: String(boss.id), role: 'admin' }), false, 'soi-même');
+      assert.equal(await ok(boss.id, { action: 'assign', id: String(y.id), role: 'none' }), false, 'déjà cliente');
+      assert.ok(await ok(boss.id, { action: 'assign', id: String(y.id), role: 'admin' }));
+      assert.equal((await sql`SELECT role FROM users WHERE id = ${y.id}`)[0].role, 'admin');
+      assert.ok(!(await listAccounts(tag, 'nom', 1)).rows.some((r) => r.id === y.id), 'promue : sort de « Tous les comptes »');
+      assert.ok(await ok(boss.id, { action: 'assign', id: String(y.id), role: 'none' }));
+      assert.equal((await sql`SELECT role FROM users WHERE id = ${y.id}`)[0].role, null, 'rétrogradée : redevient cliente');
       assert.equal(await ok(boss.id, { action: 'block', id: String(boss.id) }), false);
       assert.equal(await ok(g.id, { action: 'remove', id: String(boss.id) }), false);
       assert.equal(await ok(boss.id, { action: 'grant', email: `${tag}inconnue@test.local`, role: 'admin' }), false);
