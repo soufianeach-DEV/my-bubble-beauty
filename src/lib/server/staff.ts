@@ -13,28 +13,30 @@ export const ENROL_DAYS = 7;
 export const ROLE_LABELS: Record<Role, string> = { super: 'Super-admin', admin: 'Admin', gestionnaire: 'Gestionnaire' };
 const ISSUER = 'My Bubble Beauty';
 
-export type TotpState = { kind: 'ready'; secret: string } | { kind: 'enrol'; secret: string; until: Date; uri: string } | { kind: 'expired' };
+// relogin : session ouverte avant le rôle ; la clé ne s'affiche qu'après une connexion par mot de passe faite depuis
+export type TotpState = { kind: 'ready'; secret: string } | { kind: 'enrol'; secret: string; until: Date; uri: string } | { kind: 'expired' } | { kind: 'relogin' };
 
 // Second facteur de la personne connectée. enrol : secret encore jamais validé, affiché sur /admin/code pendant 7 jours.
 // Le secret de la gérante reste ADMIN_TOTP_SECRET ; celui de l'équipe est en base, chiffré.
-export async function totpState(user: { id: number; email: string; role: Role | null }): Promise<TotpState | null> {
+export async function totpState(user: { id: number; email: string; role: Role | null }, sessionAt: Date): Promise<TotpState | null> {
   if (!user.role) return null;
   if (user.role === 'super') return { kind: 'ready', secret: ADMIN_TOTP_SECRET };
-  const [u] = await sql<{ totp_secret: Buffer | null; confirmed: boolean; open: boolean; until: Date }[]>`
-    SELECT totp_secret, totp_confirmed_at IS NOT NULL AS confirmed, role_at > now() - make_interval(days => ${ENROL_DAYS}) AS open,
+  const [u] = await sql<{ totp_secret: Buffer | null; confirmed: boolean; open: boolean; until: Date; fresh: boolean }[]>`
+    SELECT totp_secret, totp_confirmed_at IS NOT NULL AS confirmed, ${sessionAt}::timestamptz > role_at AS fresh, role_at > now() - make_interval(days => ${ENROL_DAYS}) AS open,
       role_at + make_interval(days => ${ENROL_DAYS}) AS until
     FROM users WHERE id = ${user.id} AND role IS NOT NULL`;
   if (!u) return null;
   const known = u.totp_secret && openSecret(PASSWORD_PEPPER, u.totp_secret);
   if (u.confirmed) return known ? { kind: 'ready', secret: known } : { kind: 'expired' };
   if (!u.open) return { kind: 'expired' };
+  if (!u.fresh) return { kind: 'relogin' };
   let secret = known;
   if (!secret) {
     secret = newTotpSecret();
     // Deux onglets à la fois : seul le premier secret écrit reste (comparaison avec la valeur lue), l'autre page relit
     const [w] = await sql`UPDATE users SET totp_secret = ${sealSecret(PASSWORD_PEPPER, secret)}
       WHERE id = ${user.id} AND totp_confirmed_at IS NULL AND totp_secret IS NOT DISTINCT FROM ${u.totp_secret} RETURNING id`;
-    if (!w) return totpState(user);
+    if (!w) return totpState(user, sessionAt);
   }
   const label = encodeURIComponent(`${ISSUER}:${user.email}`);
   return { kind: 'enrol', secret, until: u.until, uri: `otpauth://totp/${label}?secret=${secret}&issuer=${encodeURIComponent(ISSUER)}` };
@@ -77,6 +79,8 @@ export async function staffAction(actor: number, form: FormData): Promise<Result
     if (u.role) await sql`UPDATE users SET role = ${f.role}, updated_at = now() WHERE id = ${u.id}`;
     // Nouveau dans l'équipe : 7 jours pour enregistrer son application d'authentification
     else await sql`UPDATE users SET role = ${f.role}, role_at = now(), totp_secret = NULL, totp_confirmed_at = NULL, totp_last_step = 0, updated_at = now() WHERE id = ${u.id}`;
+    // Sessions ouvertes avant le rôle fermées : un cookie de cliente volé ne voit ni la clé ni l'administration
+    await revokeAll(u.id);
     audit(actor, u.role ? 'staff_role_changed' : 'staff_role_given', { client_id: u.id, role: f.role, before: u.role });
     return { ok: true, id: u.id, key: 'grant' };
   }
@@ -91,6 +95,7 @@ export async function staffAction(actor: number, form: FormData): Promise<Result
     case 'role':
       if (u.role === f.role) return err(`Ce compte est déjà ${label(f.role)}.`);
       await sql`UPDATE users SET role = ${f.role}, updated_at = now() WHERE id = ${u.id}`;
+      await revokeAll(u.id);
       audit(actor, 'staff_role_changed', { client_id: u.id, role: f.role, before: u.role });
       break;
     case 'demote':

@@ -92,9 +92,9 @@ export async function signIn(cookies: AstroCookies, email: string, password: str
 
 // Code de l'appli d'authentification (anti-rejeu par totp_last_step) ; la session est tournée et porte mfa_at.
 // Premier code d'une personne de l'équipe : il valide aussi le secret affiché pendant l'enregistrement.
-export async function verifyAdminTotp(cookies: AstroCookies, user: SessionUser, code: string, userAgent: string | null, ip: string): Promise<boolean> {
-  const state = await totpState(user);
-  if (!state || state.kind === 'expired' || !(await checkAdminCode(user.id, state.secret, code.trim(), ip))) return false;
+export async function verifyAdminTotp(cookies: AstroCookies, user: SessionUser, sessionAt: Date, code: string, userAgent: string | null, ip: string): Promise<boolean> {
+  const state = await totpState(user, sessionAt);
+  if (!state || state.kind === 'expired' || state.kind === 'relogin' || !(await checkAdminCode(user.id, state.secret, code.trim(), ip))) return false;
   if (state.kind === 'enrol') await confirmTotp(user.id);
   await openSession(cookies, user.id, userAgent, true);
   return true;

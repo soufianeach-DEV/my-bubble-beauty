@@ -10,27 +10,29 @@ import { totpState } from '../../lib/server/staff.ts';
 
 const user = Astro.locals.user;
 if (!user?.role) return new Response(null, { status: 404 });
-if (Astro.locals.session?.mfaAt) return Astro.redirect('/admin');
+const session = Astro.locals.session;
+if (!session) return new Response(null, { status: 404 });
+if (session.mfaAt) return Astro.redirect('/admin');
 let error = '';
 if (Astro.request.method === 'POST') {
   const form = await readForm(Astro.request);
   if (!form) return new Response(null, { status: 413 });
   const p = totpForm.safeParse(Object.fromEntries(form));
-  if (p.success && (await verifyAdminTotp(Astro.cookies, user, p.data.code, Astro.request.headers.get('user-agent'), Astro.locals.ip))) return Astro.redirect('/admin', 303);
+  if (p.success && (await verifyAdminTotp(Astro.cookies, user, session.createdAt, p.data.code, Astro.request.headers.get('user-agent'), Astro.locals.ip))) return Astro.redirect('/admin', 303);
   // Même message pour un code faux, rejoué ou bloqué : rien n'indique où en est le compteur
   error = "Code refusé. Saisissez le code affiché maintenant par l'application d'authentification. Après 5 erreurs, attendez 15 minutes.";
   Astro.response.status = 400;
 }
-const state = await totpState(user);
+const state = await totpState(user, session.createdAt);
 // Clé lisible à recopier : groupes de 4 caractères
 const groups = state?.kind === 'enrol' ? state.secret.match(/.{1,4}/g)!.join(' ') : '';
 const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', dateStyle: 'long', timeStyle: 'short' }).format;
 ---
 <Admin title="Code de connexion" nav={false}>
 {state?.kind === 'expired' ? (
-  <>
-    <p class="notice notice--error" role="alert">Le délai pour enregistrer votre application d'authentification est passé. Demandez à l'admin de le relancer depuis la page Utilisateurs.</p>
-  </>
+  <p class="notice notice--error" role="alert">Le délai pour enregistrer votre application d'authentification est passé. Demandez à l'admin de le relancer depuis la page Utilisateurs.</p>
+) : state?.kind === 'relogin' ? (
+  <p class="notice notice--error" role="alert">Pour afficher la clé de votre application, déconnectez-vous puis reconnectez-vous avec votre mot de passe.</p>
 ) : (
   <>
     {state?.kind === 'enrol' ? (

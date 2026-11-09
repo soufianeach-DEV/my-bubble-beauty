@@ -269,7 +269,13 @@ test('comptes, réservations et sécurité sur une vraie base', { skip: !url && 
       const ok = async (actor: number, o: Record<string, string>) => (await staffAction(actor, form({ confirm: 'on', ...o }))).ok;
       // Case « Je confirme » exigée côté serveur ; adresse lue sans casse
       assert.equal((await staffAction(boss.id, form({ action: 'grant', email: g.email, role: 'gestionnaire' }))).ok, false);
+      // Session de cliente ouverte avant le rôle : fermée par l'attribution, elle ne voit jamais la clé
+      const before = cookies();
+      await openSession(before, g.id, 'test');
+      const old = (await readSession(tok(before)))!;
       assert.ok(await ok(boss.id, { action: 'grant', email: g.email.toUpperCase(), role: 'gestionnaire' }));
+      assert.equal(await readSession(tok(before)), null);
+      assert.equal((await totpState({ ...old.user, role: 'gestionnaire' }, old.session.createdAt))?.kind, 'relogin');
       // Gérante intouchable, personne n'agit sur soi-même
       assert.equal(await ok(boss.id, { action: 'grant', email: ENV.ADMIN_EMAIL, role: 'admin' }), false);
       assert.equal(await ok(boss.id, { action: 'block', id: String(boss.id) }), false);
@@ -281,13 +287,13 @@ test('comptes, réservations et sécurité sur une vraie base', { skip: !url && 
       await openSession(jar, g.id, 'test');
       const s = (await readSession(tok(jar)))!;
       assert.equal(s.user.role, 'gestionnaire');
-      const st = await totpState(s.user);
+      const st = await totpState(s.user, s.session.createdAt);
       assert.equal(st?.kind, 'enrol');
       const secret = (st as { secret: string }).secret;
-      assert.equal(((await totpState(s.user)) as { secret: string }).secret, secret);
-      assert.equal(await accounts.verifyAdminTotp(jar, s.user, '000000', 'test', '127.0.0.1'), false);
-      assert.ok(await accounts.verifyAdminTotp(jar, s.user, totp(base32Decode(secret), Math.floor(Date.now() / 30_000)), 'test', '127.0.0.1'));
-      assert.equal((await totpState(s.user))?.kind, 'ready');
+      assert.equal(((await totpState(s.user, s.session.createdAt)) as { secret: string }).secret, secret);
+      assert.equal(await accounts.verifyAdminTotp(jar, s.user, s.session.createdAt, '000000', 'test', '127.0.0.1'), false);
+      assert.ok(await accounts.verifyAdminTotp(jar, s.user, s.session.createdAt, totp(base32Decode(secret), Math.floor(Date.now() / 30_000)), 'test', '127.0.0.1'));
+      assert.equal((await totpState(s.user, s.session.createdAt))?.kind, 'ready');
       const [row] = await sql`SELECT totp_secret FROM users WHERE id = ${g.id}`;
       assert.ok(!Buffer.from(row.totp_secret).includes(Buffer.from(secret)));
       assert.ok((await readSession(tok(jar)))!.session.mfaAt);
@@ -327,9 +333,9 @@ test('comptes, réservations et sécurité sur une vraie base', { skip: !url && 
       // Délai de 7 jours passé : plus d'enregistrement possible tant que l'admin ne le relance pas
       assert.ok(await ok(boss.id, { action: 'grant', email: g.email, role: 'admin' }));
       await sql`UPDATE users SET role_at = now() - interval '8 days' WHERE id = ${g.id}`;
-      assert.equal((await totpState({ id: g.id, email: g.email, role: 'admin' }))?.kind, 'expired');
+      assert.equal((await totpState({ id: g.id, email: g.email, role: 'admin' }, new Date()))?.kind, 'expired');
       assert.ok(await ok(boss.id, { action: 'reset_totp', id: String(g.id) }));
-      assert.equal((await totpState({ id: g.id, email: g.email, role: 'admin' }))?.kind, 'enrol');
+      assert.equal((await totpState({ id: g.id, email: g.email, role: 'admin' }, new Date(Date.now() + 1000)))?.kind, 'enrol');
       // Une personne de l'équipe ne supprime pas son compte elle-même, et l'effacement par la fiche la refuse
       assert.equal(await rgpd.deleteAccount(cookies(), g, password, '127.0.0.1'), 'admin');
 
