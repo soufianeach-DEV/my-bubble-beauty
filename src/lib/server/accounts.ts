@@ -3,7 +3,7 @@
 import type { AstroCookies } from 'astro';
 import type { Lang } from '../site.ts';
 import { checkAdminCode, clearLoginLimits, deviceCookie, hashPassword, login, mfaCookie, newPasswordProblem, trustedMfa, verifyPassword, type LoginUser } from './auth.ts';
-import { DEVICE, DEVICE_COOKIE, MFA, MFA_COOKIE, hashToken, newToken } from './cookie.ts';
+import { COOKIE, DEVICE, DEVICE_COOKIE, MFA, MFA_COOKIE, hashToken, newToken } from './cookie.ts';
 import { sql } from './db.ts';
 import { journal } from './journal.ts';
 import { log } from './log.ts';
@@ -109,6 +109,17 @@ export async function verifyAdminTotp(cookies: AstroCookies, user: SessionUser, 
   await openSession(cookies, user.id, userAgent, true);
   cookies.set(MFA_COOKIE, mfaCookie(await mfaWho(user.id)), MFA);
   return true;
+}
+
+// Page Mon profil de l'équipe : échéance de l'appareil de confiance de ce navigateur, null s'il n'est pas (ou plus) reconnu
+export async function trustedUntil(userId: number, value: string | undefined): Promise<Date | null> {
+  return trustedMfa(await mfaWho(userId), value) ? new Date(Number(value!.split('.')[0]) * 1000) : null;
+}
+
+// « Oublier cet appareil » : la prochaine connexion par mot de passe redemande le code
+export function forgetDevice(cookies: AstroCookies, userId: number, ip: string) {
+  cookies.delete(MFA_COOKIE, COOKIE);
+  journal('totp_forgotten', { actor: userId, ip });
 }
 
 // Mot de passe oublié : rien n'est dit sur l'existence du compte. Un compte non vérifié peut aussi s'en servir (la réinitialisation le vérifie).

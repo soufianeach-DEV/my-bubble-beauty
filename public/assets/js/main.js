@@ -26,7 +26,8 @@ if(th){
   const dark=mm('(prefers-color-scheme: dark)'),metas=d.querySelectorAll('meta[name="theme-color"]');
   const cur=()=>root.dataset.theme||(dark.matches?'dark':'light');
   /* Bouton icône : le nom accessible et l'info-bulle disent l'action */
-  const sync=()=>{const t=cur(),l=t==='dark'?th.dataset.light:th.dataset.dark;th.setAttribute('aria-label',l);th.title=l;
+  const txt=th.querySelector('[data-theme-txt]');
+  const sync=()=>{const t=cur(),l=t==='dark'?th.dataset.light:th.dataset.dark;th.setAttribute('aria-label',l);th.title=l;txt&&(txt.textContent=l);
     root.dataset.theme&&metas.forEach(m=>m.content=t==='dark'?'#1E1615':'#F6ECE8')};
   th.hidden=false;sync();
   th.addEventListener('click',()=>{const t=cur()==='dark'?'light':'dark';root.dataset.theme=t;
@@ -119,8 +120,8 @@ if(dlg&&dlg.showModal){
   dlg.addEventListener('click',e=>{e.target===dlg&&dlg.close()});
 }
 
-/* 7. Menu mobile et choix de langue : se ferment sur un lien, un clic ailleurs ou Échap */
-const menus=[...d.querySelectorAll('details.mnav,details.langsel')];
+/* 7. Menu mobile, choix de langue et menu profil : se ferment sur un lien, un clic ailleurs ou Échap */
+const menus=[...d.querySelectorAll('details.mnav,details.langsel,details.pmenu')];
 menus.forEach(m=>{
   m.addEventListener('click',e=>{e.target.closest('a')&&(m.open=false)});
   m.addEventListener('toggle',()=>{m.open&&menus.forEach(o=>o!==m&&(o.open=false))});

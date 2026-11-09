@@ -40,6 +40,7 @@ export const ACTION_LABELS: Record<string, string> = {
   totp_ok: 'Code admin accepté',
   totp_failed: 'Code admin refusé',
   totp_trusted: 'Code admin évité (appareil de confiance)',
+  totp_forgotten: 'Appareil de confiance oublié',
   admin_denied: 'Accès admin refusé',
   admin_action: "Action de l'admin",
 };

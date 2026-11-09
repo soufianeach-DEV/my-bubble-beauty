@@ -45,6 +45,10 @@ export async function totpState(user: { id: number; email: string; role: Role | 
 // Premier code juste : le secret devient celui de la personne
 export const confirmTotp = (userId: number) => sql`UPDATE users SET totp_confirmed_at = now() WHERE id = ${userId} AND totp_confirmed_at IS NULL`;
 
+// Date d'enregistrement de l'application d'authentification (null pour la gérante, dont la clé vient de la configuration)
+export const totpConfirmedAt = async (userId: number) =>
+  (await sql<{ at: Date | null }[]>`SELECT totp_confirmed_at AS at FROM users WHERE id = ${userId}`)[0]?.at ?? null;
+
 export type StaffRow = { id: number; name: string | null; email: string; role: Role; role_at: Date | null; blocked_at: Date | null; removed_at: Date | null; totp_confirmed_at: Date | null; enrol_until: Date | null; last_login: Date | null };
 
 // La gérante d'abord, puis l'équipe active, puis les comptes désactivés ou supprimés

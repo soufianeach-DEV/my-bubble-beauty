@@ -1,0 +1,155 @@
+---
+export const prerender = false;
+// Mon profil (équipe) : coordonnées, mot de passe, code de connexion et appareil de confiance, sessions.
+// Mêmes garde-fous que l'espace client : mot de passe actuel redemandé, confirmation du nouveau, tout passe au journal.
+import { z } from 'astro/zod';
+import Admin from './_layout.astro';
+import PasswordField from '../[folder]/compte/_password-field.astro';
+import { COMPTE } from '../../data/i18n/compte.ts';
+import { JS_VERSION } from '../../lib/site';
+import { fmtDateTime, staffId } from '../../lib/server/admin.ts';
+import { changePassword, forgetDevice, signOutOthers, trustedUntil, updateProfile } from '../../lib/server/accounts.ts';
+import { NAME, PASSWORD, PHONE, device, readForm } from '../../lib/server/compte.ts';
+import { MFA_COOKIE } from '../../lib/server/cookie.ts';
+import { listSessions } from '../../lib/server/session.ts';
+import { ROLE_LABELS, totpConfirmedAt } from '../../lib/server/staff.ts';
+
+const me = staffId(Astro.locals);
+const user = Astro.locals.user;
+const session = Astro.locals.session;
+if (!me || !user?.role || !session) return new Response(null, { status: 404 });
+const tx = COMPTE.fr;
+
+const ACTION = z.discriminatedUnion('action', [
+  z.object({ action: z.literal('profile'), name: NAME, phone: PHONE }),
+  z.object({ action: z.literal('password'), current: PASSWORD, next: PASSWORD, next2: PASSWORD }),
+  z.object({ action: z.literal('others'), password: PASSWORD }),
+  z.object({ action: z.literal('forget') }),
+]);
+
+let notice: { text: string; error?: boolean } | null = null;
+let profile = { name: user.name ?? '', phone: user.phone ?? '' };
+let bad = new Set<string>();
+if (Astro.request.method === 'POST') {
+  const form = await readForm(Astro.request, ACTION);
+  const f = form.data;
+  bad = form.bad;
+  if (!f) {
+    notice = { text: tx.invalid, error: true };
+    if (form.raw.action === 'profile') profile = { name: form.raw.name ?? '', phone: form.raw.phone ?? '' };
+  } else if (f.action === 'profile') {
+    await updateProfile(me, f);
+    profile = f;
+    notice = { text: 'Coordonnées enregistrées.' };
+  } else if (f.action === 'password' && f.next2 !== f.next) {
+    // Confirmation refusée avant tout contrôle du mot de passe actuel
+    notice = { text: tx.register.passwordMismatch, error: true };
+    bad.add('next2');
+  } else if (f.action === 'password') {
+    const r = await changePassword(me, f.current, f.next, session.hash);
+    if (r === 'ok') notice = { text: 'Mot de passe changé. Les autres appareils sont déconnectés et un e-mail vous le confirme.' };
+    else {
+      notice = { text: r === 'wrong' ? tx.account.wrong : tx.problem[r], error: true };
+      bad.add(r === 'wrong' ? 'current' : 'next');
+    }
+  } else if (f.action === 'forget') {
+    forgetDevice(Astro.cookies, me, Astro.locals.ip);
+    notice = { text: 'Cet appareil est oublié : votre prochaine connexion redemandera le code.' };
+  } else if (await signOutOthers(me, f.password, session.hash)) notice = { text: 'Les autres appareils sont déconnectés.' };
+  else {
+    notice = { text: tx.account.wrong, error: true };
+    bad.add('password');
+  }
+  if (notice?.error) Astro.response.status = 400;
+}
+// Après « Oublier cet appareil », Astro.cookies.get ne rend plus le cookie supprimé dans cette réponse
+const [sessions, totpAt, trusted] = await Promise.all([listSessions(me, session.hash), totpConfirmedAt(me), trustedUntil(me, Astro.cookies.get(MFA_COOKIE)?.value)]);
+const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', dateStyle: 'long' }).format;
+const invalid = (k: string) => (bad.has(k) ? 'true' : undefined);
+---
+<Admin title="Mon profil">
+<script is:inline src={`/assets/js/password.js?v=${JS_VERSION}`} defer></script>
+{notice && <p class:list={['notice', notice.error && 'notice--error']} role={notice.error ? 'alert' : 'status'}>{notice.text}</p>}
+<div class="prof-grid">
+  <section id="profil" aria-labelledby="h-profil">
+    <h2 id="h-profil">Mes coordonnées</h2>
+    <dl class="facts">
+      <div><dt>Adresse e-mail</dt><dd>{user.email}</dd></div>
+      <div><dt>Rôle</dt><dd><span class="badge">{ROLE_LABELS[user.role]}</span></dd></div>
+    </dl>
+    <p class="hint">L'adresse et le rôle ne se changent pas ici. Le rôle se gère dans Utilisateurs, par une personne admin.</p>
+    <form class="form" method="post">
+      <input type="hidden" name="action" value="profile">
+      <div class="field">
+        <label for="name">Nom et prénom</label>
+        <input id="name" name="name" type="text" required maxlength="100" autocomplete="name" value={profile.name.slice(0, 100)} aria-invalid={invalid('name')}>
+      </div>
+      <div class="field">
+        <label for="phone">Téléphone <span class="hint">(facultatif)</span></label>
+        <input id="phone" name="phone" type="tel" maxlength="30" autocomplete="tel" value={profile.phone.slice(0, 30)} aria-invalid={invalid('phone')}>
+      </div>
+      <button class="btn btn--solid" type="submit">Enregistrer</button>
+    </form>
+  </section>
+
+  <section id="mot-de-passe" aria-labelledby="h-pw">
+    <h2 id="h-pw">Mot de passe</h2>
+    <form class="form" method="post">
+      <input type="hidden" name="action" value="password">
+      <PasswordField id="current" name="current" label="Mot de passe actuel" lang="fr" invalid={bad.has('current')} />
+      <PasswordField id="next" name="next" label="Nouveau mot de passe" lang="fr" isNew invalid={bad.has('next')} />
+      <PasswordField id="next2" name="next2" label="Confirmer le nouveau mot de passe" lang="fr" match="next" mismatch={tx.register.passwordMismatch} invalid={bad.has('next2')} />
+      <button class="btn btn--solid" type="submit">Changer le mot de passe</button>
+    </form>
+  </section>
+
+  <div class="prof-col">
+    <section id="code" aria-labelledby="h-code">
+      <h2 id="h-code">Code de connexion</h2>
+      <p>{user.role === 'super'
+        ? "Votre code vient de l'application d'authentification de la gérante. Sa clé est gardée dans la configuration du serveur."
+        : totpAt ? `Application d'authentification enregistrée le ${day(totpAt)}.` : "Application d'authentification pas encore enregistrée."}</p>
+      <h3>Appareil de confiance</h3>
+      {trusted ? (<>
+        <p>Ce navigateur ne redemande pas le code jusqu'au {day(trusted)}.</p>
+        <form method="post"><input type="hidden" name="action" value="forget"><button class="btn btn--ghost" type="submit">Oublier cet appareil</button></form>
+      </>) : <p>Ce navigateur n'est pas reconnu. Le code est demandé à chaque connexion.</p>}
+      <p class="hint">Un code juste rend le navigateur de confiance pendant 30 jours. Un changement de rôle ou d'application d'authentification oublie tous les appareils.</p>
+    </section>
+
+    <section id="sessions" aria-labelledby="h-sessions">
+      <h2 id="h-sessions">Sessions</h2>
+      <ul class="sess">{sessions.map((s) => (
+        <li><strong>{device(s.user_agent) || 'Appareil inconnu'}{s.current && ' (cet appareil)'}</strong><span>Ouverte {fmtDateTime(s.created_at)} · vue {fmtDateTime(s.last_seen_at)}</span></li>
+      ))}</ul>
+      {sessions.length > 1 && (
+        <details class="cancel" open={bad.has('password') || undefined}><summary>Déconnecter les autres appareils</summary>
+          <form class="form" method="post">
+            <input type="hidden" name="action" value="others">
+            <PasswordField id="others-password" name="password" label="Mot de passe actuel" lang="fr" invalid={bad.has('password')} />
+            <button class="btn btn--ghost" type="submit">Déconnecter les autres appareils</button>
+          </form>
+        </details>
+      )}
+    </section>
+  </div>
+</div>
+</Admin>
+
+<style>
+  /* Trois colonnes dès 1280 px : tout tient sans défilement sur un écran de bureau */
+  .prof-grid{display:grid;gap:1.5rem;align-items:start}
+  .prof-grid section{padding:1.25rem 1.5rem;border:1px solid var(--line-soft);border-radius:16px;background:var(--bg);scroll-margin-top:1rem}
+  .prof-col{display:grid;gap:1.5rem;align-items:start}
+  .prof-grid h2{margin:0 0 .75rem;font-size:1.35rem}
+  .prof-grid h3{margin:1rem 0 .4rem;font-size:1rem}
+  .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:.75rem;margin:0 0 .5rem}
+  .facts dt{font-size:.875rem;font-weight:500;color:var(--text-soft)}
+  .facts dd{margin:.15rem 0 0;overflow-wrap:anywhere}
+  @media (min-width:900px){.prof-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.prof-col{grid-column:1 / -1;grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (min-width:1280px){.prof-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.prof-col{grid-column:auto;grid-template-columns:minmax(0,1fr)}}
+  .sess{list-style:none;margin:0 0 .75rem;padding:0}
+  .sess li{display:grid;gap:.1rem;padding:.5rem 0;border-bottom:1px solid var(--line-soft);font-size:.9375rem}
+  .sess li:last-child{border-bottom:0}
+  .sess span{color:var(--text-soft);font-size:.875rem}
+</style>

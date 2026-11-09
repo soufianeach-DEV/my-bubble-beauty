@@ -4,6 +4,7 @@ export const prerender = false;
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import { EXTRA } from '../../lib/site';
+import { ROLE_LABELS } from '../../lib/server/staff.ts';
 import '../../styles/forms.css';
 
 interface Props {
@@ -31,6 +32,17 @@ const LINKS = [
 // La gestionnaire ne voit que ses pages (staffId) ; les autres lui répondent 404 de toute façon
 const STAFF = new Set(['/admin', '/admin/agenda', '/admin/reservations/nouvelle', '/admin/clientes', '/admin/prestations', '/admin/horaires']);
 const links = Astro.locals.user?.role === 'gestionnaire' ? LINKS.filter(([href]) => STAFF.has(href)) : LINKS;
+// Bouton profil : initiales du nom (sinon de l'adresse), nom et rôle ; avant le code, le menu ne garde que le thème et la déconnexion
+const me = Astro.locals.user;
+const who = me?.name?.trim() || me?.email || '';
+const initials = (me?.name?.trim() ? me.name.trim().split(/\s+/).slice(0, 2).map((w) => w[0]) : [who[0] ?? '?']).join('').toUpperCase();
+const role = me?.role ? ROLE_LABELS[me.role] : '';
+const PROFILE = [
+  ['/admin/profil', 'Mon profil'],
+  ['/admin/profil#mot-de-passe', 'Mot de passe'],
+  ['/admin/profil#code', 'Code de connexion et appareils de confiance'],
+  ['/admin/profil#sessions', 'Sessions'],
+] as const;
 // La déconnexion est ouverte avant le code par le middleware : le bouton reste aussi sur la page du code
 ---
 <Base lang="fr" pageKey="home" canonicalPath={here} title={`${title} — Admin My Bubble Beauty`} description="Administration des rendez-vous." noindex bare mainClass="legal admin-shell">
@@ -43,13 +55,21 @@ const links = Astro.locals.user?.role === 'gestionnaire' ? LINKS.filter(([href])
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d={d} /></svg>{label}
     </a></li>
   ))}</ul></nav>}
-  {/* Sans en-tête public, le bouton de thème vit ici (main.js prend le premier .theme-btn de la page) */}
-  <div class="admin-foot">
-    <button class="theme-btn" type="button" data-dark={EXTRA.fr.toDark} data-light={EXTRA.fr.toLight} aria-label={EXTRA.fr.toDark} title={EXTRA.fr.toDark} hidden><Icon name="theme" /></button>
-    <form method="post" action="/admin/deconnexion"><button class="admin-out" type="submit">Se déconnecter</button></form>
-  </div>
 </aside>
 <div class="admin-main">
+  {/* Menu profil en haut à droite : details fermé par main.js (clic ailleurs, Échap, lien suivi), utilisable au clavier sans JS */}
+  <div class="admin-top">
+    <details class="pmenu">
+      <summary><span class="pm-avatar" aria-hidden="true">{initials}</span><span class="pm-who"><strong>{who}</strong><small>{role}</small></span><span class="visually-hidden"> : menu du profil</span><Icon name="chevron" /></summary>
+      <ul class="pm-list">
+        {nav && PROFILE.map(([href, label]) => <li><a href={href}>{label}</a></li>)}
+        {/* Sans en-tête public, le bouton de thème vit ici (main.js prend le premier .theme-btn de la page) ; son texte et son nom disent l'action */}
+        <li><button class="theme-btn pm-item" type="button" data-dark={EXTRA.fr.toDark} data-light={EXTRA.fr.toLight} aria-label={EXTRA.fr.toDark} title={EXTRA.fr.toDark} hidden><Icon name="theme" /><span data-theme-txt>{EXTRA.fr.toDark}</span></button></li>
+        {nav && <li><a href="/fr/index.html">Voir le site</a></li>}
+        <li><form method="post" action="/admin/deconnexion"><button class="pm-item" type="submit">Se déconnecter</button></form></li>
+      </ul>
+    </details>
+  </div>
   <header class="admin-head"><h1>{title}</h1><slot name="actions" /></header>
   <slot />
 </div>
@@ -78,12 +98,7 @@ const links = Astro.locals.user?.role === 'gestionnaire' ? LINKS.filter(([href])
   .admin-side a:hover,.admin-side a:focus-visible{background:rgb(255 251 249 / .08);color:#FFFBF9}
   .admin-side a[aria-current="page"]{background:#FFFBF9;color:#4E302C;font-weight:500}
   .admin-side svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-  .admin-foot{display:flex;gap:.5rem;align-items:center;margin-top:auto}
-  .admin-foot form{flex:1}
-  .admin-foot .theme-btn{color:#FFFBF9;border-color:rgb(255 251 249 / .35)}
-  .admin-foot .theme-btn:hover,.admin-foot .theme-btn:focus-visible{background:rgb(255 251 249 / .12)}
-  .admin-out{width:100%;min-height:44px;padding:.5rem .75rem;border:1px solid rgb(255 251 249 / .35);border-radius:999px;background:none;color:#FFFBF9;font:inherit;cursor:pointer}
-  .admin-out:hover,.admin-out:focus-visible{background:#FFFBF9;color:#4E302C}
+  .admin-top{display:flex;justify-content:flex-end;margin:0 0 .75rem}
   .admin-main{min-width:0;padding:clamp(1.25rem,2.5vw,3rem) clamp(1.25rem,3vw,3.5rem)}
   .admin-head{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;margin:0 0 1.75rem}
   .admin-head h1{margin:0;font-size:clamp(2rem,2vw + 1.25rem,2.75rem)}
@@ -103,14 +118,14 @@ const links = Astro.locals.user?.role === 'gestionnaire' ? LINKS.filter(([href])
     /* minmax(0,…) : sans lui la bande de menu et les tableaux élargissent la colonne au-delà de l'écran */
     :global(.admin-shell) article.admin{grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr}
     /* Marque et boutons sur une ligne, menu en dessous : rien ne se chevauche */
-    .admin-side{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;position:relative;height:auto;overflow:visible;min-width:0;gap:1rem;padding:1rem}
+    .admin-side{display:grid;grid-template-columns:minmax(0,1fr);align-items:center;position:relative;height:auto;overflow:visible;min-width:0;gap:1rem;padding:1rem}
     .admin-side nav{grid-column:1 / -1}
     .admin-brand{display:flex;align-items:baseline;gap:.4rem;margin:0;min-height:44px;align-items:center;font-size:1.25rem}
     .admin-brand small{display:none}
     /* Menu en bande défilante : tout reste à portée de pouce sans tiroir */
     .admin-side ul{display:flex;overflow-x:auto;gap:.4rem;margin:0 -1rem;padding:0 1rem;scrollbar-width:none}
     .admin-side a{white-space:nowrap}
-    .admin-foot{grid-column:2;grid-row:1;margin:0}
-    .admin-out{width:auto;padding:.4rem 1rem}
+    .pm-who{display:none}
+    .pmenu summary{padding-right:.5rem}
   }
 </style>

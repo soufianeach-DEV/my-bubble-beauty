@@ -28,6 +28,8 @@ const user = Astro.locals.user;
 const session = Astro.locals.session;
 // Le middleware exige déjà une session : la page ne s'y fie pas pour autant
 if (!user || !session) return Astro.redirect(`${self}/connexion`);
+// L'équipe gère son profil dans l'admin (mot de passe, code, sessions) : l'espace client ne lui sert pas
+if (user.role) return Astro.redirect('/admin/profil');
 
 const dayOnly = new Intl.DateTimeFormat({ fr: 'fr-BE', nl: 'nl-BE', en: 'en-GB' }[lang], { timeZone: 'Europe/Brussels', dateStyle: 'long' }).format;
 
