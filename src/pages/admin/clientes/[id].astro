@@ -24,6 +24,8 @@ const self = `/admin/clientes/${id}`;
 let error = '';
 let notesDraft: string | null = null;
 let historyDraft: string | null = null;
+let birthDraft: string | null = null;
+let profDraft: FormData | null = null;
 if (Astro.request.method === 'POST') {
   const form = await readForm(Astro.request);
   if (!form) return new Response(null, { status: 413 });
@@ -34,14 +36,25 @@ if (Astro.request.method === 'POST') {
   if (r.ok) return Astro.redirect(`${self}?ok=${r.key}${r.id !== id && r.key !== 'supprime' ? `#b-${r.id}` : ''}`, 303);
   error = r.error;
   if (form.get('action') === 'notes' || form.get('scope') === 'profil') notesDraft = String(form.get('notes') ?? '');
-  if (form.get('action') === 'health') historyDraft = String(form.get('medical_history') ?? '').slice(0, 4000);
+  if (form.get('action') === 'health') {
+    historyDraft = String(form.get('medical_history') ?? '').slice(0, 4000);
+    birthDraft = String(form.get('birth_date') ?? '').slice(0, 10);
+  }
+  if (form.get('scope') === 'profil') profDraft = form;
   Astro.response.status = 400;
 }
 const c = await clientDetail(id);
 if (!c) return new Response(null, { status: 404 });
 const { user: u, bookings, stats, events } = c;
 const [consents, sv, card, rewardable, prof] = await Promise.all([listConsents(u.id), suivi(u.id), loyaltyCard(u.id), rewardableBookings(u.id), readProfile(u.id)]);
+// Badges d'alerte d'après la fiche enregistrée ; après un refus, le formulaire réaffiche toute la saisie, pas seulement les notes
 const careAlerts = alertsOf(prof.care, prof.health);
+if (profDraft) {
+  const one = (k: string) => String(profDraft!.get(k) ?? '').slice(0, 2000);
+  const all = (k: string) => profDraft!.getAll(k).map((v) => String(v).slice(0, 40));
+  prof.care = { heat: one('heat'), cover: one('cover'), pressure: one('pressure'), ambience: one('ambience'), scents: one('scents'), zones: all('zones'), zones_other: one('zones_other'), touch: one('touch') };
+  if (prof.health) prof.health = { allergies: all('allergies'), allergies_other: one('allergies_other'), skin: all('skin'), contra: one('contra') };
+}
 const DONE: Record<string, string> = {
   notes: 'Fiche de soin enregistrée.', supprime: 'Rendez-vous supprimé.', sante: 'Date de naissance et antécédents enregistrés.', 'fidelite-remise': 'Remise de fidélité appliquée au rendez-vous.', 'fidelite-offert': 'Soin offert appliqué au rendez-vous : la carte repart à zéro.', seance: 'Séance mise à jour.', block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte réactivé.',
   remove: "Compte supprimé : il n'apparaît plus dans les listes et ne peut plus se connecter. Ses rendez-vous restent.", unremove: 'Compte restauré : la cliente peut de nouveau se connecter.', restore: 'Suppression annulée : le compte est de nouveau actif. Les rendez-vous annulés le restent.',
@@ -182,7 +195,7 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 <h2 id="h-suivi">Suivi des séances</h2>
 <form class="form" method="post" action={`${self}#h-suivi`}>
   <input type="hidden" name="scope" value="suivi"><input type="hidden" name="action" value="health"><input type="hidden" name="id" value={u.id}>
-  <div class="field"><label for="birth_date">Date de naissance</label><input id="birth_date" name="birth_date" type="date" min="1900-01-02" value={sv.birthDate ?? ''}></div>
+  <div class="field"><label for="birth_date">Date de naissance</label><input id="birth_date" name="birth_date" type="date" min="1900-01-02" value={birthDraft ?? sv.birthDate ?? ''}></div>
   {sv.consent
     ? <div class="field"><label for="medical_history">Antécédents médicaux</label><textarea id="medical_history" name="medical_history" rows="4" maxlength="4000">{historyDraft ?? sv.history ?? ''}</textarea>
         <p class="hint">Données de santé : chiffrées, visibles par l'admin et la gestionnaire seulement, jamais dans un e-mail ni au journal. Effacées si la cliente retire son accord.</p></div>
