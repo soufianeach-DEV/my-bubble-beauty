@@ -2,6 +2,8 @@
 // Gabarit des pages d'admin (hors routage : préfixe _) ; la ligne suivante satisfait le test des routes gardées
 export const prerender = false;
 import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { EXTRA } from '../../lib/site';
 import '../../styles/forms.css';
 
 interface Props {
@@ -25,8 +27,8 @@ const LINKS = [
 ] as const;
 // La déconnexion est ouverte avant le code par le middleware : le bouton reste aussi sur la page du code
 ---
-<Base lang="fr" pageKey="home" canonicalPath={here} title={`${title} — Admin My Bubble Beauty`} description="Administration des rendez-vous." noindex mainClass="legal">
-<div class="wrap"><article class="admin">
+<Base lang="fr" pageKey="home" canonicalPath={here} title={`${title} — Admin My Bubble Beauty`} description="Administration des rendez-vous." noindex bare mainClass="legal admin-shell">
+<article class="admin">
 <aside class="admin-side">
   <p class="admin-brand">My Bubble <span>Beauty</span><small>Administration</small></p>
   {nav && <nav aria-label="Administration"><ul>{LINKS.map(([href, label, d]) => (
@@ -34,17 +36,25 @@ const LINKS = [
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d={d} /></svg>{label}
     </a></li>
   ))}</ul></nav>}
-  <form method="post" action="/admin/deconnexion"><button class="admin-out" type="submit">Se déconnecter</button></form>
+  {/* Sans en-tête public, le bouton de thème vit ici (main.js prend le premier .theme-btn de la page) */}
+  <div class="admin-foot">
+    <button class="theme-btn" type="button" data-dark={EXTRA.fr.toDark} data-light={EXTRA.fr.toLight} aria-label={EXTRA.fr.toDark} title={EXTRA.fr.toDark} hidden><Icon name="theme" /></button>
+    <form method="post" action="/admin/deconnexion"><button class="admin-out" type="submit">Se déconnecter</button></form>
+  </div>
 </aside>
 <div class="admin-main">
   <header class="admin-head"><h1>{title}</h1><slot name="actions" /></header>
   <slot />
 </div>
-</article></div>
+</article>
 </Base>
 
 <style>
-  :global(.legal) article.admin{max-width:1280px;display:grid;grid-template-columns:15.5rem minmax(0,1fr);padding:0;overflow:hidden}
+  /* Outil de travail : toute la fenêtre, sans carte centrée ni marges de page publique */
+  :global(main.admin-shell){padding:0}
+  :global(.admin-shell) article.admin{max-width:none;min-height:100vh;min-height:100dvh;margin:0;border:0;border-radius:0;display:grid;grid-template-columns:15rem minmax(0,1fr);padding:0;background:var(--surface)}
+  /* Barre latérale pleine hauteur, fixe pendant le défilement du contenu */
+  .admin-side{position:sticky;top:0;height:100vh;height:100dvh;overflow-y:auto}
   /* Panneau latéral dans la couleur de la lame des pages de connexion : même brun en clair et en sombre */
   .admin-side{display:flex;flex-direction:column;gap:1.5rem;padding:1.75rem 1rem;background:#4E302C;color:#FFFBF9}
   .admin-brand{margin:0 .75rem;font:300 1.6rem/1 var(--f-title);font-variation-settings:"SOFT" 100,"WONK" 0;color:inherit}
@@ -56,10 +66,13 @@ const LINKS = [
   .admin-side a:hover,.admin-side a:focus-visible{background:rgb(255 251 249 / .08);color:#FFFBF9}
   .admin-side a[aria-current="page"]{background:#FFFBF9;color:#4E302C;font-weight:500}
   .admin-side svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-  .admin-side form{margin-top:auto}
+  .admin-foot{display:flex;gap:.5rem;align-items:center;margin-top:auto}
+  .admin-foot form{flex:1}
+  .admin-foot .theme-btn{color:#FFFBF9;border-color:rgb(255 251 249 / .35)}
+  .admin-foot .theme-btn:hover,.admin-foot .theme-btn:focus-visible{background:rgb(255 251 249 / .12)}
   .admin-out{width:100%;min-height:44px;padding:.5rem .75rem;border:1px solid rgb(255 251 249 / .35);border-radius:999px;background:none;color:#FFFBF9;font:inherit;cursor:pointer}
   .admin-out:hover,.admin-out:focus-visible{background:#FFFBF9;color:#4E302C}
-  .admin-main{min-width:0;padding:clamp(1.25rem,3vw,2.5rem)}
+  .admin-main{min-width:0;padding:clamp(1.25rem,2.5vw,3rem) clamp(1.25rem,3vw,3.5rem)}
   .admin-head{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;margin:0 0 1.75rem}
   .admin-head h1{margin:0;font-size:clamp(2rem,2vw + 1.25rem,2.75rem)}
   /* Les textes .visually-hidden (position absolue) des tableaux restent dans le défilement du tableau, sinon la page déborde sur mobile */
@@ -73,16 +86,19 @@ const LINKS = [
   .admin :global(.badge--wait){background:rgb(196 150 70 / .24)}
   .admin :global(.badge--off){background:rgb(120 110 108 / .18);color:var(--text-soft)}
   .admin :global(.badge--alert){background:rgb(176 70 60 / .2)}
-  @media (max-width:899px){
+  /* Tablette et téléphone : barre latérale repliée en bande en haut, menu défilant */
+  @media (max-width:1023px){
     /* minmax(0,…) : sans lui la bande de menu et les tableaux élargissent la colonne au-delà de l'écran */
-    :global(.legal) article.admin{grid-template-columns:minmax(0,1fr)}
-    .admin-side{position:relative;min-width:0;gap:1rem;padding:1rem}
+    :global(.admin-shell) article.admin{grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr}
+    /* Marque et boutons sur une ligne, menu en dessous : rien ne se chevauche */
+    .admin-side{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;position:relative;height:auto;overflow:visible;min-width:0;gap:1rem;padding:1rem}
+    .admin-side nav{grid-column:1 / -1}
     .admin-brand{display:flex;align-items:baseline;gap:.4rem;margin:0;min-height:44px;align-items:center;font-size:1.25rem}
     .admin-brand small{display:none}
     /* Menu en bande défilante : tout reste à portée de pouce sans tiroir */
     .admin-side ul{display:flex;overflow-x:auto;gap:.4rem;margin:0 -1rem;padding:0 1rem;scrollbar-width:none}
     .admin-side a{white-space:nowrap}
-    .admin-side form{position:absolute;top:1rem;right:1rem;margin:0}
+    .admin-foot{grid-column:2;grid-row:1;margin:0}
     .admin-out{width:auto;padding:.4rem 1rem}
   }
 </style>

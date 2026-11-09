@@ -17,8 +17,10 @@ interface Props {
   canonicalPath?: string;
   /** Route à la demande sous le dossier de langue (ex. 'compte/inscription') : le sélecteur de langue mène à la même route. */
   route?: string;
+  /** Page d'outil (admin) : sans en-tête, pied de page ni barre d'appel publics. */
+  bare?: boolean;
 }
-const { lang, pageKey, title, description, ogType = 'website', jsonld, noindex = false, isHome = false, mainClass, canonicalPath, route } = Astro.props;
+const { lang, pageKey, title, description, ogType = 'website', jsonld, noindex = false, isHome = false, mainClass, canonicalPath, route, bare = false } = Astro.props;
 const d = t(lang);
 const ui = d.ui;
 const home = pagePath(lang, 'home');
@@ -73,7 +75,7 @@ const year = new Date().getFullYear();
 </head>
 <body>
 <a class="skip" href="#main">{ui.skip}</a>
-<header class="site-header">
+{!bare && <header class="site-header">
 <div class="wrap">
 <a class="brand" href={home}><img src="/assets/img/logo-my-bubble-200.webp?v=2" srcset="/assets/img/logo-my-bubble-200.webp?v=2 200w, /assets/img/logo-my-bubble-400.webp?v=2 400w" sizes="(max-width: 767px) 85px, 119px" width="955" height="673" alt={ui.brandAlt}></a>
 <nav class="nav" aria-label={ui.navLabel}><ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul></nav>
@@ -89,11 +91,11 @@ const year = new Date().getFullYear();
 <a class="btn btn--ghost header-account" href={account}>{ui.ctaShort}</a>
 <a class="btn btn--solid sheen" href={`/${FOLDER[lang]}/reserver`}><span class="lbl-long">{ui.book}</span><span class="lbl-short">{ui.bookShort}</span></a>
 </div>
-</header>
+</header>}
 <main id="main" class={mainClass}>
 <slot />
 </main>
-<footer class="site-footer">
+{!bare && <><footer class="site-footer">
 <div class="wrap">
 <a class="footer-logo" href={home}><img src="/assets/img/logo-my-bubble-200.webp?v=2" srcset="/assets/img/logo-my-bubble-200.webp?v=2 200w, /assets/img/logo-my-bubble-400.webp?v=2 400w" sizes="120px" width="955" height="673" alt={ui.brandAlt} loading="lazy" decoding="async"></a>
 <p>{ui.rights.replace(/\d{4}/, String(year))}</p>
@@ -105,6 +107,6 @@ const year = new Date().getFullYear();
 <a class="btn btn--solid" href={`/${FOLDER[lang]}/reserver`}>{ui.bookShort}</a>
 <a class="btn btn--ghost" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{ui.call}</a>
 <a class="btn btn--ghost" href={CONTACT.whatsapp} aria-label="WhatsApp"><Icon name="whatsapp" /></a>
-</nav>
+</nav></>}
 </body>
 </html>
