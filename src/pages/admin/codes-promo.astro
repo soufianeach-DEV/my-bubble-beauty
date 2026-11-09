@@ -4,7 +4,7 @@ export const prerender = false;
 import Admin from './_layout.astro';
 import { adminId, byCategory, listPromos, listServices, readForm, savePromo, togglePromo } from '../../lib/server/admin.ts';
 import { centsInput } from '../../lib/server/admin-form.ts';
-import { euros } from '../../lib/server/pricing.ts';
+import { euros, todayBrussels } from '../../lib/server/pricing.ts';
 
 const me = adminId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
@@ -28,6 +28,10 @@ if (Astro.request.method === 'POST') {
 }
 const done = DONE[Astro.url.searchParams.get('ok') ?? ''];
 const [promos, services] = await Promise.all([listPromos(), listServices()]);
+// État réel : actif seulement s'il est utilisable aujourd'hui (dates AAAA-MM-JJ comparées en texte, jour de fin compris)
+const today = todayBrussels(new Date());
+const stateOf = (p: (typeof promos)[number]) => !p.active ? 'Désactivé' : p.ends_on && p.ends_on < today ? 'Expiré' : p.starts_on && p.starts_on > today ? 'Pas encore valable'
+  : p.max_uses !== null && p.uses >= p.max_uses ? 'Épuisé' : 'Actif';
 const edit = Astro.request.method === 'GET' ? promos.find((p) => String(p.id) === Astro.url.searchParams.get('id')) : undefined;
 if (edit) {
   f = {
@@ -55,7 +59,7 @@ const period = (p: (typeof promos)[number]) =>
         <td>{period(p)}</td>
         <td>{p.uses}{p.max_uses !== null && ` / ${p.max_uses}`}</td>
         <td>{p.service_ids ? `${p.service_ids.length} prestation${p.service_ids.length > 1 ? 's' : ''}` : 'Toutes les prestations'}{p.once_per_user && <><br>Une fois par cliente</>}</td>
-        <td>{p.active ? 'Actif' : 'Désactivé'}</td>
+        <td>{stateOf(p)}</td>
         <td class="cell">
           <a class="btn btn--ghost" href={`/admin/codes-promo?id=${p.id}#code-form`}>Modifier<span class="visually-hidden"> {p.code}</span></a>
           <form class="inline-form" method="post">
