@@ -50,8 +50,10 @@ export async function saveProfile(actor: number, clientId: number, form: FormDat
   if (!u) return { ok: false, error: 'Cliente introuvable.' };
   if (hasHealth && !u.consent) return { ok: false, error: "Sans l'accord de la cliente pour ses données de santé, allergies, type de peau et contre-indications ne peuvent pas être notés." };
   const clean = JSON.parse(JSON.stringify(care));
+  // Accord relu dans l'écriture même : un retrait d'accord entre la lecture et l'écriture ne laisse aucune donnée de santé
   await sql`UPDATE users SET care_profile = ${sql.json(clean)}, notes = ${notes},
-    health_profile = ${u.consent && hasHealth ? sealText(PASSWORD_PEPPER, HEALTH, JSON.stringify(health)) : null}, updated_at = now() WHERE id = ${clientId}`;
+    health_profile = CASE WHEN health_consent_at IS NOT NULL THEN ${hasHealth ? sealText(PASSWORD_PEPPER, HEALTH, JSON.stringify(health)) : null}::bytea END,
+    updated_at = now() WHERE id = ${clientId} AND role IS NULL`;
   // Le contenu ne va jamais au journal (données de santé possibles) : seulement ce qui a été rempli
   audit(actor, 'client_profile', { client_id: clientId, notes_length: notes.length, health: hasHealth, zones: care.zones?.length ?? 0 });
   return { ok: true, id: clientId, key: 'notes' };
