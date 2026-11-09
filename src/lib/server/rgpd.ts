@@ -114,11 +114,12 @@ export async function setConsent(userId: number, give: boolean, ip: string) {
 
 // Accès et portabilité (art. 15 et 20) : tout ce que le site garde sur la cliente, notes de l'institut comprises
 export async function exportData(userId: number, ip: string) {
-  const [[account], bookings, sessions, events, linked, consents] = await Promise.all([
+  const [[account], bookings, sessions, events, linked, consents, loyalty] = await Promise.all([
     sql`SELECT email, name, phone, locale, created_at, email_verified_at, health_consent_at, notes AS institute_notes, birth_date::text, medical_history, care_profile, health_profile FROM users WHERE id = ${userId}`,
     sql`SELECT s.name_fr AS service, b.starts_at, b.ends_at, b.status, b.no_show, b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents,
-          p.code AS promo_code, b.created_at, b.cancelled_at, b.moved_at
+          p.code AS promo_code, b.created_at, b.cancelled_at, b.moved_at, b.zone, pr.name AS practitioner
         FROM bookings b JOIN services s ON s.id = b.service_id LEFT JOIN promo_codes p ON p.id = b.promo_code_id
+          LEFT JOIN users pr ON pr.id = b.practitioner_id
         WHERE b.user_id = ${userId} ORDER BY b.starts_at`,
     sql`SELECT user_agent, created_at, last_seen_at FROM sessions WHERE user_id = ${userId} ORDER BY created_at`,
     // L'IP d'un essai sur son compte appartient à quelqu'un d'autre : seule la sienne (actions qu'elle a faites) est donnée
@@ -126,7 +127,10 @@ export async function exportData(userId: number, ip: string) {
     // Comptes Google ou Microsoft liés : identifiant du fournisseur et date du lien
     sql`SELECT provider, subject, created_at FROM user_identities WHERE user_id = ${userId} ORDER BY created_at`,
     // Consentements signés : texte exact, nom saisi, date et canal (le sien, donc rendu tel quel)
-    sql`SELECT kind, version, signer_name, mention, specialist, channel, signed_at, text FROM consents WHERE user_id = ${userId} ORDER BY signed_at`,
+    sql`SELECT kind, version, signer_name, mention, specialist, channel, signed_at, ip, user_agent, text FROM consents WHERE user_id = ${userId} ORDER BY signed_at`,
+    // Avantages de fidélité reçus, avec la date du rendez-vous qui les a portés
+    sql`SELECT r.kind, r.percent, r.amount_cents, r.sessions, r.used_at, b.starts_at AS booking_starts_at
+        FROM loyalty_rewards r LEFT JOIN bookings b ON b.id = r.booking_id WHERE r.user_id = ${userId} ORDER BY r.used_at`,
   ]);
   journal('data_exported', { actor: userId, client: userId, ip });
   // Antécédents médicaux : déchiffrés pour la cliente elle-même
@@ -137,5 +141,5 @@ export async function exportData(userId: number, ip: string) {
     delete account.care_profile;
     delete account.health_profile;
   }
-  return { exported_at: new Date().toISOString(), controller: 'My Bubble Beauty', account, linked_accounts: linked, bookings, consents, sessions, security_log: events };
+  return { exported_at: new Date().toISOString(), controller: 'My Bubble Beauty', account, linked_accounts: linked, bookings, consents, loyalty_rewards: loyalty, sessions, security_log: events };
 }

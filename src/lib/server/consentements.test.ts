@@ -60,7 +60,9 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     const [j] = await sql`SELECT details FROM audit_log WHERE action = 'consent_signed' AND client_id = ${cl}`;
     assert.deepEqual(j.details, { kind: 'laser', version: cons.FORMS.laser.version, channel: 'online' });
     // Export de la cliente : son consentement y figure ; effacement : il part avec le compte
-    assert.equal((await rgpd.exportData(cl, '127.0.0.1')).consents.length, 1);
+    const exp = await rgpd.exportData(cl, '127.0.0.1');
+    assert.equal(exp.consents.length, 1);
+    assert.ok('ip' in exp.consents[0] && 'user_agent' in exp.consents[0], "IP et appareil de la signature dans l'export");
     await rgpd.eraseUser(cl, cl, null, 'self');
     assert.equal((await sql`SELECT 1 FROM consents WHERE user_id = ${cl}`).length, 0);
 
@@ -206,6 +208,9 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     assert.ok((await cancelByAdmin(big.id, false)).ok);
     assert.equal((await sql`SELECT 1 FROM loyalty_rewards WHERE booking_id = ${big.id}`).length, 0);
     assert.equal((await fid.loyaltyCard(fan)).free, true, 'rendez-vous annulé : le soin offert redevient disponible');
+    const out = await rgpd.exportData(fan, '127.0.0.1');
+    assert.deepEqual(out.loyalty_rewards.map((r) => r.kind), ['discount'], "l'export liste l'avantage encore porté");
+    assert.ok('zone' in out.bookings[0] && 'practitioner' in out.bookings[0]);
 
     // Fiche de soin : préférences sans accord santé ; allergies refusées sans accord, chiffrées avec ; alertes ; export lisible
     const prof = await import('./profil.ts');
