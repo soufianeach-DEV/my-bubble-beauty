@@ -163,6 +163,9 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     const [bc] = await gifts.listGifts((forClient as { id: number }).id);
     assert.deepEqual({ who: bc.recipient, mail: bc.recipient_email, user: bc.user_id }, { who: 'bonfille', mail: `${tag}bonfille@test.local`, user: fille });
     assert.deepEqual((await gifts.clientGifts(fille)).map((x) => x.id), [bc.id]);
+    const exGift = await rgpd.exportData(fille, '127.0.0.1');
+    assert.equal(exGift.gift_cards.length, 1);
+    assert.ok(exGift.gift_cards[0].code_end === `…${bc.code.slice(-4)}` && !JSON.stringify(exGift).includes(bc.code), 'export : code masqué');
     const sent = await gifts.giftAction(other, f({ action: 'send', id: String(bc.id) }));
     assert.equal(sent.ok, false);
     assert.match((sent as { error: string }).error, /n'a pas pu partir/);
