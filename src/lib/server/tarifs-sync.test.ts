@@ -13,7 +13,7 @@ test('durées de la carte : formats lus, toutes les lignes réelles de la grille
   for (const [t, n] of cases) assert.equal(parseDuration(t), n, String(t));
   // Grille réelle (fr.json) : toute durée écrite se lit, aucune n'est inventée là où il n'y en a pas
   const { default: fr } = await import('../../data/fr.json', { with: { type: 'json' } });
-  const lines = fr.home.tarifs.groups.flatMap((g: { items: { duration?: string }[] }) => g.items);
+  const lines = fr.home.tarifs.groups.flatMap((g: { hidden?: boolean; items: { duration?: string }[] }) => (g.hidden ? [] : g.items));
   for (const it of lines) if (it.duration) assert.ok(parseDuration(it.duration)! > 0, `illisible : ${it.duration}`);
   const seed = await serviceSeed();
   assert.equal(seed.length, lines.length);

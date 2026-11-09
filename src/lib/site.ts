@@ -59,6 +59,7 @@ export const PAGES = {
 export type PageKey = keyof typeof PAGES | `treatment:${string}`;
 
 export function pagePath(lang: Lang, key: PageKey): string {
+  if (key.startsWith('treatment:') && hiddenTreatment(key.slice(10))) return `/${FOLDER[lang]}/index.html`;
   if (key.startsWith('treatment:')) return `/${FOLDER[lang]}/subPages/${key.slice(10)}.html`;
   return `/${FOLDER[lang]}/${PAGES[key as keyof typeof PAGES][lang]}.html`;
 }
@@ -92,3 +93,8 @@ export const hoursRows = (lang: Lang) =>
     const slots = HOURS.filter((h) => h.day === i + 1).map((h) => `${h.open}–${h.close}`);
     return { label, value: slots.length ? slots.join(', ') : EXTRA[lang].closed };
   });
+
+// Soins masqués temporairement (groupe « hidden » de la grille) : ni sous-page, ni lien, ni plan du site
+export function hiddenTreatment(slug: string): boolean {
+  return t('fr').home.tarifs.groups.some((g) => (g as { hidden?: boolean }).hidden && g.href === slug);
+}

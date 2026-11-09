@@ -360,7 +360,7 @@
     {
      "id": "carbon-peel",
      "cat": "visage",
-     "title": "Carbon Peel Bubble Signature",
+     "title": "Peel Bubble Signature",
      "href": "charbon",
      "items": [
       {
@@ -398,7 +398,8 @@
       {
        "name": "Green Peel",
        "detail": "Green algae peel",
-       "amount": "89 €"
+       "amount": "89 €",
+       "duration": "60 to 75 min"
       },
       {
        "name": "Green Peel – 3 sessions",
@@ -415,7 +416,8 @@
       {
        "name": "Marine Peel",
        "detail": "Marine algae peel",
-       "amount": "99 €"
+       "amount": "99 €",
+       "duration": "60 to 75 min"
       },
       {
        "name": "Marine Peel – 3 sessions",
@@ -428,6 +430,11 @@
        "amount": "445 €",
        "note": "€89 per session · save €50 (–10%)",
        "was": "495 €"
+      },
+      {
+       "name": "Korean peel",
+       "duration": "60 to 75 min",
+       "amount": "130 €"
       }
      ]
     },
@@ -442,7 +449,8 @@
        "href": null,
        "amount": "250 €"
       }
-     ]
+     ],
+     "hidden": true
     },
     {
      "id": "massages",
@@ -1257,10 +1265,10 @@
  },
  "treatments": {
   "charbon": {
-   "title": "Carbon Peel Bubble Signature",
-   "metaTitle": "Carbon Peel Bubble Signature, radiance - My Bubble Beauty",
-   "description": "Carbon Peel Bubble Signature: a treatment for radiance, purity and skin quality on the face, neck and décolleté. À la carte options, benefits and prices.",
-   "articleHtml": "<p>Carbon Peel Bubble Signature is a treatment for radiance, purity and skin quality. It combines a carbon mask with an aesthetic laser to purify the skin, reduce shine and revive the radiance of your complexion. Here is how a session goes:</p><h2>Initial consultation</h2><p>Before the first session, we look at your skin, talk about what you would like and choose the area to treat together.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p><h2>Cleansing the skin</h2><p>Make-up is removed and the skin is cleansed of impurities and excess sebum. It must be clean and dry before the rest of the treatment.</p><h2>Applying the carbon mask</h2><p>A thin layer of carbon cream is spread evenly over the area, then left to dry for a few minutes.</p><h2>The laser</h2><p>You wear protective glasses throughout this step. The laser is moved gently over the area. Its light is absorbed by the carbon particles, which are removed from the surface of the skin. You may feel slight warmth or small tingles.</p><h2>Cleansing and soothing</h2><p>The carbon residue is removed. A soothing treatment followed by sun protection ends the session.</p><h2>The areas treated</h2><ul><li><strong>Full face</strong> (30 to 45 min). A purifying, revitalising treatment that aims to improve the look of pores, reduce shine and revive the radiance of your complexion.</li><li><strong>Face + neck</strong> (45 to 60 min). A targeted treatment to refine the look of the skin’s texture and even out your complexion.</li><li><strong>Face + neck + décolleté</strong> (60 to 75 min). Our complete signature treatment, working on the look of the skin across all three areas for a brighter, more harmonious appearance.</li><li><strong>Neck + décolleté</strong> (30 to 45 min). A dedicated treatment to improve the look and evenness of the skin on the neck and décolleté.</li></ul><h2>The benefits we aim for</h2><p><strong>Face.</strong> Less visible pores, clearer-looking skin, a brighter complexion, improved skin texture.</p><p><strong>Neck.</strong> Better-looking skin, a more even tone, a more uniform appearance.</p><p><strong>Décolleté.</strong> A finer-looking skin texture, a visibly more even tone, brighter-looking skin.</p><h2>After the treatment</h2><p>Slight redness may appear and usually fades within a few hours. Over the following days, protect your skin from the sun and avoid scrubs. The number of sessions and their frequency are set with you according to your skin and goals. Results vary from person to person.</p>",
+   "title": "Peel Bubble Signature",
+   "metaTitle": "Peel Bubble Signature, radiance - My Bubble Beauty",
+   "description": "Peel Bubble Signature: a treatment for radiance, purity and skin quality on the face, neck and décolleté. À la carte options, benefits and prices.",
+   "articleHtml": "<p>Peel Bubble Signature is a treatment for radiance, purity and skin quality. It combines a carbon mask with an aesthetic laser to purify the skin, reduce shine and revive the radiance of your complexion. Here is how a session goes:</p><h2>Initial consultation</h2><p>Before the first session, we look at your skin, talk about what you would like and choose the area to treat together.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p><h2>Cleansing the skin</h2><p>Make-up is removed and the skin is cleansed of impurities and excess sebum. It must be clean and dry before the rest of the treatment.</p><h2>Applying the carbon mask</h2><p>A thin layer of carbon cream is spread evenly over the area, then left to dry for a few minutes.</p><h2>The laser</h2><p>You wear protective glasses throughout this step. The laser is moved gently over the area. Its light is absorbed by the carbon particles, which are removed from the surface of the skin. You may feel slight warmth or small tingles.</p><h2>Cleansing and soothing</h2><p>The carbon residue is removed. A soothing treatment followed by sun protection ends the session.</p><h2>The areas treated</h2><ul><li><strong>Full face</strong> (30 to 45 min). A purifying, revitalising treatment that aims to improve the look of pores, reduce shine and revive the radiance of your complexion.</li><li><strong>Face + neck</strong> (45 to 60 min). A targeted treatment to refine the look of the skin’s texture and even out your complexion.</li><li><strong>Face + neck + décolleté</strong> (60 to 75 min). Our complete signature treatment, working on the look of the skin across all three areas for a brighter, more harmonious appearance.</li><li><strong>Neck + décolleté</strong> (30 to 45 min). A dedicated treatment to improve the look and evenness of the skin on the neck and décolleté.</li></ul><h2>The benefits we aim for</h2><p><strong>Face.</strong> Less visible pores, clearer-looking skin, a brighter complexion, improved skin texture.</p><p><strong>Neck.</strong> Better-looking skin, a more even tone, a more uniform appearance.</p><p><strong>Décolleté.</strong> A finer-looking skin texture, a visibly more even tone, brighter-looking skin.</p><h2>After the treatment</h2><p>Slight redness may appear and usually fades within a few hours. Over the following days, protect your skin from the sun and avoid scrubs. The number of sessions and their frequency are set with you according to your skin and goals. Results vary from person to person.</p>",
    "priceTitle": "Prices",
    "prices": [
     {
@@ -1730,7 +1738,7 @@
    "title": "Algae peels",
    "metaTitle": "Algae peels - My Bubble Beauty",
    "description": "Green Peel and Marine Peel: algae peels that refine skin texture and reveal the skin's natural radiance. Procedure, aftercare and prices.",
-   "articleHtml": "<p>The excellence of marine actives, for the beauty of your skin.</p><p>Treat your skin to an exceptional beauty experience with our collection of algae peels.</p><p>Inspired by the benefits of marine actives and skin renewal techniques, these treatments are designed to visibly improve the appearance of the skin, refine its texture and reveal its natural radiance.</p><p>Each protocol is tailored to your skin's needs, offering a personalised experience that combines effectiveness, expertise and well-being.</p><p><strong>Enhanced skin, a luminous complexion, beauty revealed.</strong></p><h2>Our three beauty experiences</h2><h3>01 — GREEN PEEL | Green algae peel</h3><p>€89 — Single treatment · Face</p><p>An intensive treatment inspired by plant and marine actives, designed to support skin renewal.</p><p><strong>Ideal for:</strong></p><ul><li>dull, uneven skin;</li><li>blemishes and visible pores;</li><li>skin lacking radiance;</li><li>uneven skin texture.</li></ul><p><strong>The intended result:</strong> skin that looks smoother and fresher, and a visibly more luminous complexion.</p><p><strong>Packages:</strong> 3 sessions €240 instead of €267; 5 sessions €395 instead of €445.</p><h3>02 — MARINE PEEL | Marine algae peel</h3><p>€99 — Single treatment · Face</p><p>A beauty experience using the properties of marine algae and, depending on the chosen protocol, natural micro-spicules.</p><p><strong>Ideal for:</strong></p><ul><li>skin with irregularities;</li><li>blemish-prone skin;</li><li>uneven skin texture;</li><li>complexions lacking evenness.</li></ul><p><strong>The intended result:</strong> a more even skin texture and a more uniform-looking complexion.</p><p><strong>Packages:</strong> 3 sessions €270 instead of €297; 5 sessions €445 instead of €495.</p><p>Every appointment starts with an analysis of your skin, so that we can select the most suitable protocol.</p><h2>Procedure</h2><ol><li><strong>Personalised diagnosis</strong>: identifying your needs and checking for contraindications.</li><li><strong>Skin preparation</strong>: cleansing and preparing the skin.</li><li><strong>Peel application</strong>: carrying out the appropriate professional protocol.</li><li><strong>Final care</strong>: applying the recommended products after the treatment.</li><li><strong>Personalised advice</strong>: recommendations to support your skin after your appointment.</li></ol><h2>Aftercare following your peel</h2><ul><li>avoid direct sun exposure;</li><li>apply SPF 50 sun protection;</li><li>avoid exfoliants and irritating actives for the recommended period;</li><li>follow the home-care instructions;</li><li>never pull off flaking skin during peeling.</li></ul><p>Recovery time and possible reactions depend on the chosen peel and its protocol.</p>",
+   "articleHtml": "<p>The excellence of marine actives, for the beauty of your skin.</p><p>Treat your skin to an exceptional beauty experience with our collection of algae peels.</p><p>Inspired by the benefits of marine actives and skin renewal techniques, these treatments are designed to visibly improve the appearance of the skin, refine its texture and reveal its natural radiance.</p><p>Each protocol is tailored to your skin's needs, offering a personalised experience that combines effectiveness, expertise and well-being.</p><p><strong>Enhanced skin, a luminous complexion, beauty revealed.</strong></p><h2>Our three beauty experiences</h2><h3>01 — GREEN PEEL | Green algae peel</h3><p>€89 — Single treatment · Face</p><p>An intensive treatment inspired by plant and marine actives, designed to support skin renewal.</p><p><strong>Ideal for:</strong></p><ul><li>dull, uneven skin;</li><li>blemishes and visible pores;</li><li>skin lacking radiance;</li><li>uneven skin texture.</li></ul><p><strong>The intended result:</strong> skin that looks smoother and fresher, and a visibly more luminous complexion.</p><p><strong>Packages:</strong> 3 sessions €240 instead of €267; 5 sessions €395 instead of €445.</p><h3>02 — MARINE PEEL | Marine algae peel</h3><p>€99 — Single treatment · Face</p><p>A beauty experience using the properties of marine algae and, depending on the chosen protocol, natural micro-spicules.</p><p><strong>Ideal for:</strong></p><ul><li>skin with irregularities;</li><li>blemish-prone skin;</li><li>uneven skin texture;</li><li>complexions lacking evenness.</li></ul><p><strong>The intended result:</strong> a more even skin texture and a more uniform-looking complexion.</p><p><strong>Packages:</strong> 3 sessions €270 instead of €297; 5 sessions €445 instead of €495.</p><h3>03 — KOREAN PEEL</h3><p>€130 — 60 to 75 min</p><p>Every appointment starts with an analysis of your skin, so that we can select the most suitable protocol.</p><h2>Procedure</h2><ol><li><strong>Personalised diagnosis</strong>: identifying your needs and checking for contraindications.</li><li><strong>Skin preparation</strong>: cleansing and preparing the skin.</li><li><strong>Peel application</strong>: carrying out the appropriate professional protocol.</li><li><strong>Final care</strong>: applying the recommended products after the treatment.</li><li><strong>Personalised advice</strong>: recommendations to support your skin after your appointment.</li></ol><h2>Aftercare following your peel</h2><ul><li>avoid direct sun exposure;</li><li>apply SPF 50 sun protection;</li><li>avoid exfoliants and irritating actives for the recommended period;</li><li>follow the home-care instructions;</li><li>never pull off flaking skin during peeling.</li></ul><p>Recovery time and possible reactions depend on the chosen peel and its protocol.</p>",
    "priceTitle": "Prices",
    "prices": [
     {
@@ -1756,6 +1764,10 @@
     {
      "name": "Marine Peel – 5 sessions",
      "amount": "445 €"
+    },
+    {
+     "name": "Korean peel",
+     "amount": "130 €"
     }
    ],
    "figures": [

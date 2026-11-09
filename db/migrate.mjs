@@ -26,7 +26,8 @@ const slugify = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().
 // Une prestation qui a une durée arrive en ligne, les autres attendent que la gérante la saisisse.
 export async function serviceSeed() {
   const [fr, nl, en] = await Promise.all(['fr', 'nl', 'en'].map(async (l) => JSON.parse(await readFile(new URL(`${l}.json`, DATA), 'utf8')).home.tarifs.groups));
-  return fr.flatMap((g, i) => g.items.map((item, j) => {
+  // Groupe masqué (hidden) : hors carte, donc retiré de la réservation par syncServices (effacé, ou masqué si un rendez-vous y renvoie)
+  return fr.flatMap((g, i) => (g.hidden ? [] : g.items).map((item, j) => {
     const m = AMOUNT.exec(item.amount);
     // Même soin en deux durées (Sculpt & Fermeté 30 et 60 min) : la durée distingue le slug (unique) et le nom
     const twin = g.items.filter((x) => x.name === item.name).length > 1;

@@ -1,11 +1,11 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import Icon from '../../../components/Icon.astro';
-import { LANGS, FOLDER, CONTACT, SITE, SALON_ID, t, pagePath, langOfFolder } from '../../../lib/site';
+import { LANGS, FOLDER, CONTACT, SITE, SALON_ID, t, pagePath, langOfFolder, hiddenTreatment } from '../../../lib/site';
 
 export function getStaticPaths() {
   return LANGS.flatMap((l) =>
-    Object.keys(t(l).treatments).map((slug) => ({ params: { folder: FOLDER[l], slug } })),
+    Object.keys(t(l).treatments).filter((slug) => !hiddenTreatment(slug)).map((slug) => ({ params: { folder: FOLDER[l], slug } })),
   );
 }
 const lang = langOfFolder(Astro.params.folder!);
@@ -23,7 +23,7 @@ const FAMILIES = [
   ['regard', 'semi-permanent', 'dents'],
 ];
 const all = d.treatments as Record<string, { title: string }>;
-const fam = (FAMILIES.find((f) => f.includes(slug)) ?? []).filter((s) => all[s]);
+const fam = (FAMILIES.find((f) => f.includes(slug)) ?? []).filter((s) => all[s] && !hiddenTreatment(s));
 const at = fam.indexOf(slug);
 const related = fam.length > 1 ? Array.from({ length: Math.min(3, fam.length - 1) }, (_, i) => fam[(at + 1 + i) % fam.length]) : [];
 // « 35 € » -> prix ; « Dès 180 € » (Vanaf, From) -> prix minimum

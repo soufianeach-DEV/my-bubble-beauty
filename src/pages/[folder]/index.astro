@@ -100,7 +100,7 @@ const jsonld = {
 </div>
 <p class="visually-hidden" id="filter-status" role="status"></p>
 {[
-  { key: 'presta', title: h.tarifs.partPresta, groups: h.tarifs.groups },
+  { key: 'presta', title: h.tarifs.partPresta, groups: h.tarifs.groups.filter((g) => !(g as { hidden?: boolean }).hidden) },
   { key: 'formules', title: h.tarifs.partFormules, groups: h.tarifs.formulas },
 ].map((part) => (
   <section class={`tarifs__part tarifs__part--${part.key}`} aria-labelledby={`h-part-${part.key}`}>

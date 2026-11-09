@@ -360,7 +360,7 @@
     {
      "id": "carbon-peel",
      "cat": "visage",
-     "title": "Carbon Peel Bubble Signature",
+     "title": "Peel Bubble Signature",
      "href": "charbon",
      "items": [
       {
@@ -398,7 +398,8 @@
       {
        "name": "Green Peel",
        "detail": "Peeling aux algues vertes",
-       "amount": "89 €"
+       "amount": "89 €",
+       "duration": "60 à 75 min"
       },
       {
        "name": "Green Peel – 3 séances",
@@ -415,7 +416,8 @@
       {
        "name": "Marine Peel",
        "detail": "Peeling aux algues marines",
-       "amount": "99 €"
+       "amount": "99 €",
+       "duration": "60 à 75 min"
       },
       {
        "name": "Marine Peel – 3 séances",
@@ -428,6 +430,11 @@
        "amount": "445 €",
        "note": "89 € la séance · 50 € d’économie (–10 %)",
        "was": "495 €"
+      },
+      {
+       "name": "Peeling coréen",
+       "duration": "60 à 75 min",
+       "amount": "130 €"
       }
      ]
     },
@@ -442,7 +449,8 @@
        "href": null,
        "amount": "250 €"
       }
-     ]
+     ],
+     "hidden": true
     },
     {
      "id": "massages",
@@ -1257,10 +1265,10 @@
  },
  "treatments": {
   "charbon": {
-   "title": "Carbon Peel Bubble Signature",
-   "metaTitle": "Carbon Peel Bubble Signature, soin éclat - My Bubble Beauty",
-   "description": "Le Carbon Peel Bubble Signature, soin éclat, pureté et qualité de peau pour le visage, le cou et le décolleté. Prestations à la carte, bénéfices et tarifs.",
-   "articleHtml": "<p>Le Carbon Peel Bubble Signature est un soin éclat, pureté et qualité de peau. Il associe un masque au carbone et le passage d'un laser esthétique pour purifier la peau, réduire son aspect brillant et raviver l'éclat du teint. Voici comment se déroule une séance :</p><h2>Consultation initiale</h2><p>Avant la première séance, nous observons votre peau, nous parlons de vos attentes et nous choisissons avec vous la zone à traiter.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><h2>Nettoyage de la peau</h2><p>La peau est démaquillée et nettoyée pour retirer les impuretés, le maquillage et l’excès de sébum. Elle doit être propre et sèche avant la suite du soin.</p><h2>Application du masque au carbone</h2><p>Une fine couche de crème au carbone est appliquée de façon uniforme sur la zone, puis laissée sécher quelques minutes.</p><h2>Passage du laser</h2><p>Vous portez des lunettes de protection pendant toute cette étape. Le laser est passé doucement sur la zone. Sa lumière est absorbée par les particules de carbone, qui sont retirées de la surface de la peau. Vous pouvez sentir une légère chaleur ou de petits picotements.</p><h2>Nettoyage et apaisement</h2><p>Les résidus de carbone sont retirés. Un soin apaisant puis une protection solaire terminent la séance.</p><h2>Les zones traitées</h2><ul><li><strong>Visage complet</strong> (30 à 45 min). Un soin purifiant et revitalisant, pour améliorer l’apparence des pores, réduire l’aspect brillant et raviver l’éclat du teint.</li><li><strong>Visage + cou</strong> (45 à 60 min). Un soin ciblé, pour améliorer l’aspect du grain de peau et retrouver un teint plus uniforme.</li><li><strong>Visage + cou + décolleté</strong> (60 à 75 min). Notre soin signature complet, pour travailler l’apparence de la peau sur les trois zones et lui apporter un aspect plus lumineux et harmonieux.</li><li><strong>Cou + décolleté</strong> (30 à 45 min). Un soin spécifique, pour améliorer l’apparence et l’uniformité de la peau du cou et du décolleté.</li></ul><h2>Les bénéfices recherchés</h2><p><strong>Visage.</strong> Pores moins visibles, peau d’apparence plus nette, teint plus lumineux, texture de peau améliorée.</p><p><strong>Cou.</strong> Peau d’aspect plus beau, teint moins irrégulier, aspect plus homogène.</p><p><strong>Décolleté.</strong> Grain de peau plus fin, teint visuellement plus uniforme, peau d’apparence plus lumineuse.</p><h2>Après le soin</h2><p>Une légère rougeur peut apparaître et disparaît en général en quelques heures. Les jours suivants, protégez votre peau du soleil et évitez les gommages. Le nombre de séances et leur rythme sont définis avec vous selon votre peau et vos objectifs. Les résultats varient d’une personne à l’autre.</p>",
+   "title": "Peel Bubble Signature",
+   "metaTitle": "Peel Bubble Signature, soin éclat - My Bubble Beauty",
+   "description": "Le Peel Bubble Signature, soin éclat, pureté et qualité de peau pour le visage, le cou et le décolleté. Prestations à la carte, bénéfices et tarifs.",
+   "articleHtml": "<p>Le Peel Bubble Signature est un soin éclat, pureté et qualité de peau. Il associe un masque au carbone et le passage d'un laser esthétique pour purifier la peau, réduire son aspect brillant et raviver l'éclat du teint. Voici comment se déroule une séance :</p><h2>Consultation initiale</h2><p>Avant la première séance, nous observons votre peau, nous parlons de vos attentes et nous choisissons avec vous la zone à traiter.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p><h2>Nettoyage de la peau</h2><p>La peau est démaquillée et nettoyée pour retirer les impuretés, le maquillage et l’excès de sébum. Elle doit être propre et sèche avant la suite du soin.</p><h2>Application du masque au carbone</h2><p>Une fine couche de crème au carbone est appliquée de façon uniforme sur la zone, puis laissée sécher quelques minutes.</p><h2>Passage du laser</h2><p>Vous portez des lunettes de protection pendant toute cette étape. Le laser est passé doucement sur la zone. Sa lumière est absorbée par les particules de carbone, qui sont retirées de la surface de la peau. Vous pouvez sentir une légère chaleur ou de petits picotements.</p><h2>Nettoyage et apaisement</h2><p>Les résidus de carbone sont retirés. Un soin apaisant puis une protection solaire terminent la séance.</p><h2>Les zones traitées</h2><ul><li><strong>Visage complet</strong> (30 à 45 min). Un soin purifiant et revitalisant, pour améliorer l’apparence des pores, réduire l’aspect brillant et raviver l’éclat du teint.</li><li><strong>Visage + cou</strong> (45 à 60 min). Un soin ciblé, pour améliorer l’aspect du grain de peau et retrouver un teint plus uniforme.</li><li><strong>Visage + cou + décolleté</strong> (60 à 75 min). Notre soin signature complet, pour travailler l’apparence de la peau sur les trois zones et lui apporter un aspect plus lumineux et harmonieux.</li><li><strong>Cou + décolleté</strong> (30 à 45 min). Un soin spécifique, pour améliorer l’apparence et l’uniformité de la peau du cou et du décolleté.</li></ul><h2>Les bénéfices recherchés</h2><p><strong>Visage.</strong> Pores moins visibles, peau d’apparence plus nette, teint plus lumineux, texture de peau améliorée.</p><p><strong>Cou.</strong> Peau d’aspect plus beau, teint moins irrégulier, aspect plus homogène.</p><p><strong>Décolleté.</strong> Grain de peau plus fin, teint visuellement plus uniforme, peau d’apparence plus lumineuse.</p><h2>Après le soin</h2><p>Une légère rougeur peut apparaître et disparaît en général en quelques heures. Les jours suivants, protégez votre peau du soleil et évitez les gommages. Le nombre de séances et leur rythme sont définis avec vous selon votre peau et vos objectifs. Les résultats varient d’une personne à l’autre.</p>",
    "priceTitle": "Tarifs",
    "prices": [
     {
@@ -1730,7 +1738,7 @@
    "title": "Les peelings aux algues",
    "metaTitle": "Les peelings aux algues - My Bubble Beauty",
    "description": "Green Peel et Marine Peel : des peelings aux algues pour affiner le grain de peau et révéler l'éclat naturel du teint. Déroulé, précautions et tarifs.",
-   "articleHtml": "<p>L'excellence des actifs marins au service de la beauté de votre peau.</p><p>Offrez à votre peau une expérience de beauté exceptionnelle grâce à notre collection de peelings aux algues.</p><p>Inspirés des bienfaits des actifs marins et des techniques de renouvellement cutané, ces soins sont conçus pour améliorer visiblement l'apparence de la peau, affiner son grain et révéler son éclat naturel.</p><p>Chaque protocole est adapté aux besoins de votre peau afin de vous proposer une expérience personnalisée, alliant efficacité, expertise et bien-être.</p><p><strong>Une peau sublimée, un teint lumineux, une beauté révélée.</strong></p><h2>Nos trois expériences de beauté</h2><h3>01 — GREEN PEEL | Peeling aux algues vertes</h3><p>89 € — Soin individuel · Visage</p><p>Un soin intensif inspiré des actifs végétaux et marins, destiné à accompagner le renouvellement cutané.</p><p><strong>Idéal pour :</strong></p><ul><li>les peaux ternes et irrégulières ;</li><li>les imperfections et les pores apparents ;</li><li>les peaux présentant un manque d'éclat ;</li><li>les irrégularités du grain de peau.</li></ul><p><strong>Le résultat recherché :</strong> une peau d'apparence plus lisse, plus fraîche et un teint visiblement plus lumineux.</p><p><strong>Forfaits :</strong> 3 séances 240 € au lieu de 267 € ; 5 séances 395 € au lieu de 445 €.</p><h3>02 — MARINE PEEL | Peeling aux algues marines</h3><p>99 € — Soin individuel · Visage</p><p>Une expérience de beauté utilisant les propriétés des algues marines et, selon le protocole choisi, des micro-spicules naturelles.</p><p><strong>Idéal pour :</strong></p><ul><li>les peaux présentant des irrégularités ;</li><li>les peaux à imperfections ;</li><li>les textures cutanées irrégulières ;</li><li>les teints manquant d'uniformité.</li></ul><p><strong>Le résultat recherché :</strong> une texture de peau plus régulière et un teint d'apparence plus homogène.</p><p><strong>Forfaits :</strong> 3 séances 270 € au lieu de 297 € ; 5 séances 445 € au lieu de 495 €.</p><p>Chaque rendez-vous commence par une analyse de votre peau afin de sélectionner le protocole le plus adapté.</p><h2>Déroulé</h2><ol><li><strong>Diagnostic personnalisé</strong> : identification des besoins et vérification des contre-indications.</li><li><strong>Préparation de la peau</strong> : nettoyage et préparation cutanée.</li><li><strong>Application du peeling</strong> : réalisation du protocole professionnel adapté.</li><li><strong>Soin final</strong> : application des soins recommandés après le traitement.</li><li><strong>Conseils personnalisés</strong> : recommandations pour accompagner la peau après votre rendez-vous.</li></ol><h2>Les précautions après votre peeling</h2><ul><li>éviter l'exposition directe au soleil ;</li><li>appliquer une protection solaire SPF 50 ;</li><li>éviter les exfoliants et les actifs irritants pendant la période recommandée ;</li><li>respecter les consignes de soins à domicile ;</li><li>ne jamais arracher les petites peaux en cas de desquamation.</li></ul><p>Le temps de récupération et les réactions possibles dépendent du peeling choisi et de son protocole.</p>",
+   "articleHtml": "<p>L'excellence des actifs marins au service de la beauté de votre peau.</p><p>Offrez à votre peau une expérience de beauté exceptionnelle grâce à notre collection de peelings aux algues.</p><p>Inspirés des bienfaits des actifs marins et des techniques de renouvellement cutané, ces soins sont conçus pour améliorer visiblement l'apparence de la peau, affiner son grain et révéler son éclat naturel.</p><p>Chaque protocole est adapté aux besoins de votre peau afin de vous proposer une expérience personnalisée, alliant efficacité, expertise et bien-être.</p><p><strong>Une peau sublimée, un teint lumineux, une beauté révélée.</strong></p><h2>Nos trois expériences de beauté</h2><h3>01 — GREEN PEEL | Peeling aux algues vertes</h3><p>89 € — Soin individuel · Visage</p><p>Un soin intensif inspiré des actifs végétaux et marins, destiné à accompagner le renouvellement cutané.</p><p><strong>Idéal pour :</strong></p><ul><li>les peaux ternes et irrégulières ;</li><li>les imperfections et les pores apparents ;</li><li>les peaux présentant un manque d'éclat ;</li><li>les irrégularités du grain de peau.</li></ul><p><strong>Le résultat recherché :</strong> une peau d'apparence plus lisse, plus fraîche et un teint visiblement plus lumineux.</p><p><strong>Forfaits :</strong> 3 séances 240 € au lieu de 267 € ; 5 séances 395 € au lieu de 445 €.</p><h3>02 — MARINE PEEL | Peeling aux algues marines</h3><p>99 € — Soin individuel · Visage</p><p>Une expérience de beauté utilisant les propriétés des algues marines et, selon le protocole choisi, des micro-spicules naturelles.</p><p><strong>Idéal pour :</strong></p><ul><li>les peaux présentant des irrégularités ;</li><li>les peaux à imperfections ;</li><li>les textures cutanées irrégulières ;</li><li>les teints manquant d'uniformité.</li></ul><p><strong>Le résultat recherché :</strong> une texture de peau plus régulière et un teint d'apparence plus homogène.</p><p><strong>Forfaits :</strong> 3 séances 270 € au lieu de 297 € ; 5 séances 445 € au lieu de 495 €.</p><h3>03 — PEELING CORÉEN</h3><p>130 € — 60 à 75 min</p><p>Chaque rendez-vous commence par une analyse de votre peau afin de sélectionner le protocole le plus adapté.</p><h2>Déroulé</h2><ol><li><strong>Diagnostic personnalisé</strong> : identification des besoins et vérification des contre-indications.</li><li><strong>Préparation de la peau</strong> : nettoyage et préparation cutanée.</li><li><strong>Application du peeling</strong> : réalisation du protocole professionnel adapté.</li><li><strong>Soin final</strong> : application des soins recommandés après le traitement.</li><li><strong>Conseils personnalisés</strong> : recommandations pour accompagner la peau après votre rendez-vous.</li></ol><h2>Les précautions après votre peeling</h2><ul><li>éviter l'exposition directe au soleil ;</li><li>appliquer une protection solaire SPF 50 ;</li><li>éviter les exfoliants et les actifs irritants pendant la période recommandée ;</li><li>respecter les consignes de soins à domicile ;</li><li>ne jamais arracher les petites peaux en cas de desquamation.</li></ul><p>Le temps de récupération et les réactions possibles dépendent du peeling choisi et de son protocole.</p>",
    "priceTitle": "Tarifs",
    "prices": [
     {
@@ -1756,6 +1764,10 @@
     {
      "name": "Marine Peel – 5 séances",
      "amount": "445 €"
+    },
+    {
+     "name": "Peeling coréen",
+     "amount": "130 €"
     }
    ],
    "figures": [

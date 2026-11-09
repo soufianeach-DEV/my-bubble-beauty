@@ -360,7 +360,7 @@
     {
      "id": "carbon-peel",
      "cat": "visage",
-     "title": "Carbon Peel Bubble Signature",
+     "title": "Peel Bubble Signature",
      "href": "charbon",
      "items": [
       {
@@ -398,7 +398,8 @@
       {
        "name": "Green Peel",
        "detail": "Peeling met groene algen",
-       "amount": "89 €"
+       "amount": "89 €",
+       "duration": "60 tot 75 min"
       },
       {
        "name": "Green Peel – 3 sessies",
@@ -415,7 +416,8 @@
       {
        "name": "Marine Peel",
        "detail": "Peeling met zeealgen",
-       "amount": "99 €"
+       "amount": "99 €",
+       "duration": "60 tot 75 min"
       },
       {
        "name": "Marine Peel – 3 sessies",
@@ -428,6 +430,11 @@
        "amount": "445 €",
        "note": "89 € per sessie · 50 € voordeel (–10 %)",
        "was": "495 €"
+      },
+      {
+       "name": "Koreaanse peeling",
+       "duration": "60 tot 75 min",
+       "amount": "130 €"
       }
      ]
     },
@@ -442,7 +449,8 @@
        "href": null,
        "amount": "250 €"
       }
-     ]
+     ],
+     "hidden": true
     },
     {
      "id": "massages",
@@ -1257,10 +1265,10 @@
  },
  "treatments": {
   "charbon": {
-   "title": "Carbon Peel Bubble Signature",
-   "metaTitle": "Carbon Peel Bubble Signature, huidglans - My Bubble Beauty",
-   "description": "De Carbon Peel Bubble Signature: een behandeling voor glans, zuiverheid en huidkwaliteit van gezicht, hals en decolleté. Behandelingen à la carte, voordelen en tarieven.",
-   "articleHtml": "<p>De Carbon Peel Bubble Signature is een behandeling voor glans, zuiverheid en huidkwaliteit. Ze combineert een koolstofmasker met een esthetische laser om de huid te zuiveren, de glans te verminderen en de teint op te frissen. Zo verloopt een sessie:</p><h2>Eerste consultatie</h2><p>Vóór de eerste sessie bekijken we je huid, bespreken we je verwachtingen en kiezen we samen de zone die behandeld wordt.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><h2>Reiniging van de huid</h2><p>De huid wordt afgeschminkt en gereinigd om onzuiverheden, make-up en overtollig talg te verwijderen. Ze moet schoon en droog zijn voor de rest van de behandeling.</p><h2>Het koolstofmasker aanbrengen</h2><p>Een dun laagje koolstofcrème wordt gelijkmatig op de zone aangebracht en enkele minuten gelaten om te drogen.</p><h2>De laser</h2><p>Tijdens deze hele stap draag je een beschermbril. De laser wordt zacht over de zone bewogen. Het licht wordt opgenomen door de koolstofdeeltjes, die van het huidoppervlak verwijderd worden. Je kan een lichte warmte of kleine prikjes voelen.</p><h2>Reiniging en kalmering</h2><p>De koolstofresten worden verwijderd. Een kalmerende verzorging en daarna een zonnebescherming sluiten de sessie af.</p><h2>De behandelde zones</h2><ul><li><strong>Volledig gezicht</strong> (30 tot 45 min). Een zuiverende en revitaliserende behandeling, om de poriën er beter uit te laten zien, de glans te verminderen en de teint op te frissen.</li><li><strong>Gezicht + hals</strong> (45 tot 60 min). Een gerichte behandeling, voor een fijner ogende huidstructuur en een egalere teint.</li><li><strong>Gezicht + hals + decolleté</strong> (60 tot 75 min). Onze volledige signature-behandeling, die het uitzicht van de huid op de drie zones verzorgt en ze stralender en harmonieuzer laat ogen.</li><li><strong>Hals + decolleté</strong> (30 tot 45 min). Een specifieke behandeling om het uitzicht en de egaliteit van de huid van hals en decolleté te verbeteren.</li></ul><h2>De beoogde voordelen</h2><p><strong>Gezicht.</strong> Minder zichtbare poriën, een zuiverder ogende huid, een stralendere teint, een verbeterde huidtextuur.</p><p><strong>Hals.</strong> Een mooier uitzicht van de huid, een minder onregelmatige teint, een egaler uitzicht.</p><p><strong>Decolleté.</strong> Een fijner ogende huidstructuur, een visueel egalere teint, een stralender ogende huid.</p><h2>Na de behandeling</h2><p>Er kan een lichte roodheid verschijnen, die meestal na enkele uren verdwijnt. Bescherm je huid de volgende dagen tegen de zon en vermijd scrubs. Het aantal sessies en hun ritme worden samen met jou bepaald, volgens je huid en je doelen. De resultaten verschillen van persoon tot persoon.</p>",
+   "title": "Peel Bubble Signature",
+   "metaTitle": "Peel Bubble Signature, huidglans - My Bubble Beauty",
+   "description": "De Peel Bubble Signature: een behandeling voor glans, zuiverheid en huidkwaliteit van gezicht, hals en decolleté. Behandelingen à la carte, voordelen en tarieven.",
+   "articleHtml": "<p>De Peel Bubble Signature is een behandeling voor glans, zuiverheid en huidkwaliteit. Ze combineert een koolstofmasker met een esthetische laser om de huid te zuiveren, de glans te verminderen en de teint op te frissen. Zo verloopt een sessie:</p><h2>Eerste consultatie</h2><p>Vóór de eerste sessie bekijken we je huid, bespreken we je verwachtingen en kiezen we samen de zone die behandeld wordt.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><h2>Reiniging van de huid</h2><p>De huid wordt afgeschminkt en gereinigd om onzuiverheden, make-up en overtollig talg te verwijderen. Ze moet schoon en droog zijn voor de rest van de behandeling.</p><h2>Het koolstofmasker aanbrengen</h2><p>Een dun laagje koolstofcrème wordt gelijkmatig op de zone aangebracht en enkele minuten gelaten om te drogen.</p><h2>De laser</h2><p>Tijdens deze hele stap draag je een beschermbril. De laser wordt zacht over de zone bewogen. Het licht wordt opgenomen door de koolstofdeeltjes, die van het huidoppervlak verwijderd worden. Je kan een lichte warmte of kleine prikjes voelen.</p><h2>Reiniging en kalmering</h2><p>De koolstofresten worden verwijderd. Een kalmerende verzorging en daarna een zonnebescherming sluiten de sessie af.</p><h2>De behandelde zones</h2><ul><li><strong>Volledig gezicht</strong> (30 tot 45 min). Een zuiverende en revitaliserende behandeling, om de poriën er beter uit te laten zien, de glans te verminderen en de teint op te frissen.</li><li><strong>Gezicht + hals</strong> (45 tot 60 min). Een gerichte behandeling, voor een fijner ogende huidstructuur en een egalere teint.</li><li><strong>Gezicht + hals + decolleté</strong> (60 tot 75 min). Onze volledige signature-behandeling, die het uitzicht van de huid op de drie zones verzorgt en ze stralender en harmonieuzer laat ogen.</li><li><strong>Hals + decolleté</strong> (30 tot 45 min). Een specifieke behandeling om het uitzicht en de egaliteit van de huid van hals en decolleté te verbeteren.</li></ul><h2>De beoogde voordelen</h2><p><strong>Gezicht.</strong> Minder zichtbare poriën, een zuiverder ogende huid, een stralendere teint, een verbeterde huidtextuur.</p><p><strong>Hals.</strong> Een mooier uitzicht van de huid, een minder onregelmatige teint, een egaler uitzicht.</p><p><strong>Decolleté.</strong> Een fijner ogende huidstructuur, een visueel egalere teint, een stralender ogende huid.</p><h2>Na de behandeling</h2><p>Er kan een lichte roodheid verschijnen, die meestal na enkele uren verdwijnt. Bescherm je huid de volgende dagen tegen de zon en vermijd scrubs. Het aantal sessies en hun ritme worden samen met jou bepaald, volgens je huid en je doelen. De resultaten verschillen van persoon tot persoon.</p>",
    "priceTitle": "Tarieven",
    "prices": [
     {
@@ -1730,7 +1738,7 @@
    "title": "De algenpeelings",
    "metaTitle": "De algenpeelings - My Bubble Beauty",
    "description": "Green Peel en Marine Peel: algenpeelings die de huidstructuur verfijnen en de natuurlijke glans van de teint naar boven halen. Verloop, voorzorgen en tarieven.",
-   "articleHtml": "<p>Het beste van mariene actieve stoffen, voor de schoonheid van uw huid.</p><p>Gun uw huid een uitzonderlijke schoonheidservaring met onze collectie algenpeelings.</p><p>Geïnspireerd op de weldaden van mariene actieve stoffen en op technieken voor huidvernieuwing, zijn deze behandelingen ontworpen om het uiterlijk van de huid zichtbaar te verbeteren, de huidstructuur te verfijnen en haar natuurlijke glans te onthullen.</p><p>Elk protocol wordt afgestemd op de behoeften van uw huid, voor een persoonlijke ervaring die doeltreffendheid, expertise en welzijn combineert.</p><p><strong>Een stralende huid, een lichtende teint, een onthulde schoonheid.</strong></p><h2>Onze drie schoonheidservaringen</h2><h3>01 — GREEN PEEL | Peeling met groene algen</h3><p>89 € — Afzonderlijke behandeling · Gezicht</p><p>Een intensieve behandeling, geïnspireerd op plantaardige en mariene actieve stoffen, die de huidvernieuwing ondersteunt.</p><p><strong>Ideaal voor:</strong></p><ul><li>doffe en onregelmatige huid;</li><li>onzuiverheden en zichtbare poriën;</li><li>een huid die aan glans mist;</li><li>een onregelmatige huidstructuur.</li></ul><p><strong>Het beoogde resultaat:</strong> een huid die gladder en frisser oogt en een zichtbaar stralendere teint.</p><p><strong>Pakketten:</strong> 3 sessies 240 € in plaats van 267 €; 5 sessies 395 € in plaats van 445 €.</p><h3>02 — MARINE PEEL | Peeling met zeealgen</h3><p>99 € — Afzonderlijke behandeling · Gezicht</p><p>Een schoonheidservaring die de eigenschappen van zeealgen benut en, afhankelijk van het gekozen protocol, natuurlijke micro-spicules.</p><p><strong>Ideaal voor:</strong></p><ul><li>een huid met onregelmatigheden;</li><li>een huid met onzuiverheden;</li><li>een onregelmatige huidtextuur;</li><li>een teint die aan egaalheid mist.</li></ul><p><strong>Het beoogde resultaat:</strong> een regelmatigere huidtextuur en een teint die egaler oogt.</p><p><strong>Pakketten:</strong> 3 sessies 270 € in plaats van 297 €; 5 sessies 445 € in plaats van 495 €.</p><p>Elke afspraak begint met een analyse van uw huid, zodat we het best passende protocol kiezen.</p><h2>Verloop</h2><ol><li><strong>Persoonlijke diagnose</strong>: bepalen van de behoeften en nagaan van de contra-indicaties.</li><li><strong>Voorbereiding van de huid</strong>: reiniging en voorbereiding van de huid.</li><li><strong>Aanbrengen van de peeling</strong>: uitvoering van het aangepaste professionele protocol.</li><li><strong>Afsluitende verzorging</strong>: aanbrengen van de aanbevolen verzorging na de behandeling.</li><li><strong>Persoonlijk advies</strong>: aanbevelingen om uw huid na de afspraak te begeleiden.</li></ol><h2>Voorzorgen na uw peeling</h2><ul><li>vermijd rechtstreekse blootstelling aan de zon;</li><li>gebruik een zonnebescherming SPF 50;</li><li>vermijd scrubs en irriterende actieve stoffen gedurende de aanbevolen periode;</li><li>volg de verzorgingsrichtlijnen voor thuis;</li><li>trek nooit loszittende huidschilfers af bij vervelling.</li></ul><p>De hersteltijd en de mogelijke reacties hangen af van de gekozen peeling en het protocol.</p>",
+   "articleHtml": "<p>Het beste van mariene actieve stoffen, voor de schoonheid van uw huid.</p><p>Gun uw huid een uitzonderlijke schoonheidservaring met onze collectie algenpeelings.</p><p>Geïnspireerd op de weldaden van mariene actieve stoffen en op technieken voor huidvernieuwing, zijn deze behandelingen ontworpen om het uiterlijk van de huid zichtbaar te verbeteren, de huidstructuur te verfijnen en haar natuurlijke glans te onthullen.</p><p>Elk protocol wordt afgestemd op de behoeften van uw huid, voor een persoonlijke ervaring die doeltreffendheid, expertise en welzijn combineert.</p><p><strong>Een stralende huid, een lichtende teint, een onthulde schoonheid.</strong></p><h2>Onze drie schoonheidservaringen</h2><h3>01 — GREEN PEEL | Peeling met groene algen</h3><p>89 € — Afzonderlijke behandeling · Gezicht</p><p>Een intensieve behandeling, geïnspireerd op plantaardige en mariene actieve stoffen, die de huidvernieuwing ondersteunt.</p><p><strong>Ideaal voor:</strong></p><ul><li>doffe en onregelmatige huid;</li><li>onzuiverheden en zichtbare poriën;</li><li>een huid die aan glans mist;</li><li>een onregelmatige huidstructuur.</li></ul><p><strong>Het beoogde resultaat:</strong> een huid die gladder en frisser oogt en een zichtbaar stralendere teint.</p><p><strong>Pakketten:</strong> 3 sessies 240 € in plaats van 267 €; 5 sessies 395 € in plaats van 445 €.</p><h3>02 — MARINE PEEL | Peeling met zeealgen</h3><p>99 € — Afzonderlijke behandeling · Gezicht</p><p>Een schoonheidservaring die de eigenschappen van zeealgen benut en, afhankelijk van het gekozen protocol, natuurlijke micro-spicules.</p><p><strong>Ideaal voor:</strong></p><ul><li>een huid met onregelmatigheden;</li><li>een huid met onzuiverheden;</li><li>een onregelmatige huidtextuur;</li><li>een teint die aan egaalheid mist.</li></ul><p><strong>Het beoogde resultaat:</strong> een regelmatigere huidtextuur en een teint die egaler oogt.</p><p><strong>Pakketten:</strong> 3 sessies 270 € in plaats van 297 €; 5 sessies 445 € in plaats van 495 €.</p><h3>03 — KOREAANSE PEELING</h3><p>130 € — 60 tot 75 min</p><p>Elke afspraak begint met een analyse van uw huid, zodat we het best passende protocol kiezen.</p><h2>Verloop</h2><ol><li><strong>Persoonlijke diagnose</strong>: bepalen van de behoeften en nagaan van de contra-indicaties.</li><li><strong>Voorbereiding van de huid</strong>: reiniging en voorbereiding van de huid.</li><li><strong>Aanbrengen van de peeling</strong>: uitvoering van het aangepaste professionele protocol.</li><li><strong>Afsluitende verzorging</strong>: aanbrengen van de aanbevolen verzorging na de behandeling.</li><li><strong>Persoonlijk advies</strong>: aanbevelingen om uw huid na de afspraak te begeleiden.</li></ol><h2>Voorzorgen na uw peeling</h2><ul><li>vermijd rechtstreekse blootstelling aan de zon;</li><li>gebruik een zonnebescherming SPF 50;</li><li>vermijd scrubs en irriterende actieve stoffen gedurende de aanbevolen periode;</li><li>volg de verzorgingsrichtlijnen voor thuis;</li><li>trek nooit loszittende huidschilfers af bij vervelling.</li></ul><p>De hersteltijd en de mogelijke reacties hangen af van de gekozen peeling en het protocol.</p>",
    "priceTitle": "Tarieven",
    "prices": [
     {
@@ -1756,6 +1764,10 @@
     {
      "name": "Marine Peel – 5 sessies",
      "amount": "445 €"
+    },
+    {
+     "name": "Koreaanse peeling",
+     "amount": "130 €"
     }
    ],
    "figures": [

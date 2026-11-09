@@ -1,11 +1,11 @@
 // Sitemap généré depuis les mêmes données que les pages : il ne peut pas se désynchroniser.
 import type { APIRoute } from 'astro';
-import { LANGS, PAGES, SITE, t, pagePath, alternates, type PageKey } from '../lib/site';
+import { LANGS, PAGES, SITE, t, pagePath, alternates, hiddenTreatment, type PageKey } from '../lib/site';
 
 export const GET: APIRoute = () => {
   const keys: PageKey[] = [
     ...(Object.keys(PAGES) as (keyof typeof PAGES)[]),
-    ...Object.keys(t('fr').treatments).map((s) => `treatment:${s}` as const),
+    ...Object.keys(t('fr').treatments).filter((s) => !hiddenTreatment(s)).map((s) => `treatment:${s}` as const),
   ];
   const link = (hreflang: string, href: string) => `<xhtml:link rel="alternate" hreflang="${hreflang}" href="${href}"/>`;
   const urls: string[] = [];
