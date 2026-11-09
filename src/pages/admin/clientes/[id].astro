@@ -277,13 +277,13 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 </details>
 </section>}
 
-{/* Journal (connexions, exports, IP) : admin seulement, comme la page Journal */}
-{manage && {gifts.length > 0 && <section aria-labelledby="h-gifts">
+{gifts.length > 0 && <section aria-labelledby="h-gifts">
 <h2 id="h-gifts">Bons cadeaux</h2>
 <ul class="events">{gifts.map((g) => <li><a href={`/admin/bons-cadeaux/${g.id}`}>{g.code}</a> · {g.service} · {GIFT_STATES[g.state]} · jusqu'au {g.expires_on.split('-').reverse().join('/')}</li>)}</ul>
 </section>}
 
-<section aria-labelledby="h-journal">
+{/* Journal (connexions, exports, IP) : admin seulement, comme la page Journal */}
+{manage && <section aria-labelledby="h-journal">
 <h2 id="h-journal">Journal récent</h2>
 {events.length === 0 ? <p>Aucune ligne.</p> : (
 <ul class="events">{events.map((e) => <li><time datetime={e.at.toISOString()}>{fmtDateTime(e.at)}</time> — {ACTION_LABELS[e.action] ?? e.action}{e.action === 'admin_action' && typeof e.details.action === 'string' && ` (${e.details.action})`}</li>)}</ul>
