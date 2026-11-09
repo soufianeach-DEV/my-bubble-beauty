@@ -2,14 +2,14 @@
 export const prerender = false;
 // Clientes : comptes confirmés, recherche par nom, e-mail ou téléphone, filtre par état ; un clic ouvre la fiche
 import Admin from './_layout.astro';
-import { adminId, fmtDateTime } from '../../lib/server/admin.ts';
+import { staffId, fmtDateTime } from '../../lib/server/admin.ts';
 import { clientCounts, listClients, type ClientFilter } from '../../lib/server/admin-clientes.ts';
 
-const me = adminId(Astro.locals);
+const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
 const sp = Astro.url.searchParams;
 const q = (sp.get('q') ?? '').slice(0, 100);
-const FILTERS: Record<ClientFilter, string> = { actives: 'Actives', suppression: 'En suppression (30 jours)', bloquees: 'Bloquées', toutes: 'Toutes' };
+const FILTERS: Record<ClientFilter, string> = { actives: 'Actives', suppression: 'En suppression (30 jours)', bloquees: 'Désactivées', toutes: 'Toutes', supprimees: 'Supprimées' };
 const filter = (Object.hasOwn(FILTERS, sp.get('etat') ?? '') ? sp.get('etat') : 'actives') as ClientFilter;
 const page = Math.min(Math.max(Number.parseInt(sp.get('page') ?? '1', 10) || 1, 1), 1000);
 const [{ rows, more }, counts] = await Promise.all([listClients(q, filter, page), clientCounts()]);
@@ -37,8 +37,8 @@ const erased = sp.get('ok') === 'efface';
       <td>{c.phone ? <a href={`tel:${c.phone.replace(/[^0-9+]/g, '')}`}>{c.phone}</a> : '—'}</td>
       <td>{c.done} passé{c.done > 1 && 's'} · {c.upcoming} à venir{c.no_shows > 0 && <><br><small>{c.no_shows} absence{c.no_shows > 1 && 's'}</small></>}</td>
       <td>{c.last_at ? day(c.last_at) : '—'}</td>
-      <td>{c.blocked_at && <span class="badge badge--alert">Bloquée</span>}{c.deleted_at && <span class="badge badge--wait">Suppression demandée le {day(c.deleted_at)}</span>}
-        {!c.blocked_at && !c.deleted_at && <>Cliente depuis {day(c.created_at)}</>}</td>
+      <td>{c.removed_at && <span class="badge badge--alert">Supprimée le {day(c.removed_at)}</span>}{c.blocked_at && <span class="badge badge--alert">Désactivée</span>}{c.deleted_at && <span class="badge badge--wait">Suppression demandée le {day(c.deleted_at)}</span>}
+        {!c.blocked_at && !c.deleted_at && !c.removed_at && <>Cliente depuis {day(c.created_at)}</>}</td>
     </tr>
   ))}</tbody>
 </table></div>

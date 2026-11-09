@@ -34,10 +34,14 @@ function afterCancel(rows: Cancelled[], actor: number | null, client: number | n
 
 export type DeleteResult = 'ok' | 'wrong' | 'admin';
 
+// La gérante et l'équipe ne suppriment pas leur compte elles-mêmes : l'admin leur retire d'abord le rôle
+const staffAccount = async (user: { id: number; email: string }) =>
+  isAdminEmail(user.email) || (await sql`SELECT 1 FROM users WHERE id = ${user.id} AND role IS NOT NULL`).length > 0;
+
 // Suppression demandée par la cliente (mot de passe redemandé) : compte inutilisable sauf pour revenir dans les 30 jours,
 // toutes ses sessions fermées, rendez-vous à venir annulés.
 export async function deleteAccount(cookies: AstroCookies, user: { id: number; email: string }, password: string, ip: string): Promise<DeleteResult> {
-  if (isAdminEmail(user.email)) return 'admin';
+  if (await staffAccount(user)) return 'admin';
   const u = await checkCurrent(user.id, password);
   if (!u) return 'wrong';
   const rows = await sql.begin(async (tx) => {
@@ -66,8 +70,8 @@ export async function reactivate(userId: number, ip: string): Promise<boolean> {
 // Sessions, liens d'e-mail et notes partent avec la ligne ; le journal garde l'action sans le numéro de la cliente (SET NULL).
 export async function eraseUser(clientId: number, actor: number | null, ip: string | null, why: 'self' | 'admin' | 'purge'): Promise<{ email: string; locale: Lang } | null> {
   const r = await sql.begin(async (tx) => {
-    const [u] = await tx<{ email: string; locale: Lang }[]>`SELECT email, locale FROM users WHERE id = ${clientId} FOR UPDATE`;
-    if (!u || isAdminEmail(u.email)) return null;
+    const [u] = await tx<{ email: string; locale: Lang; role: string | null }[]>`SELECT email, locale, role FROM users WHERE id = ${clientId} FOR UPDATE`;
+    if (!u || isAdminEmail(u.email) || u.role) return null;
     const cancelled = await cancelFuture(tx, clientId);
     await tx`UPDATE bookings SET client_erased = true WHERE user_id = ${clientId}`;
     // Ligne de journal dans la même transaction, avant la suppression : client_id passe ensuite à NULL (SET NULL)
@@ -88,7 +92,7 @@ export async function eraseUser(clientId: number, actor: number | null, ip: stri
 
 // Effacement tout de suite par la cliente (depuis son compte ou la page de réactivation), mot de passe redemandé
 export async function eraseNow(cookies: AstroCookies, user: { id: number; email: string }, password: string, ip: string): Promise<DeleteResult> {
-  if (isAdminEmail(user.email)) return 'admin';
+  if (await staffAccount(user)) return 'admin';
   if (!(await checkCurrent(user.id, password))) return 'wrong';
   const gone = await eraseUser(user.id, user.id, ip, 'self');
   await closeSession(cookies);

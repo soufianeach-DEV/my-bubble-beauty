@@ -129,7 +129,7 @@ const price = (b: (typeof bookings)[number]) => euros(b.price_cents - b.discount
 <p>{[ta.hello, profile.name].filter(Boolean).join(' ')}</p>
 <div class="actions">
 <a class="btn btn--solid" href={`/${d}/reserver`}>{ta.book}</a>
-{user.isAdmin && <a class="btn btn--ghost" href="/admin">{ta.admin}</a>}
+{user.role && <a class="btn btn--ghost" href="/admin">{ta.admin}</a>}
 <form class="inline-form" method="post" action={self}><input type="hidden" name="action" value="logout"><button class="btn btn--ghost" type="submit">{ta.logout}</button></form>
 </div>
 

@@ -12,6 +12,7 @@ import type { Identity } from './oidc.ts';
 import { badEmail } from './password.ts';
 import { blocked, hit } from './rate.ts';
 import { isAdminEmail, openSession, revokeOthers, type SessionUser } from './session.ts';
+import { confirmTotp, totpState } from './staff.ts';
 
 export type PasswordProblem = 'short' | 'long' | 'pwned';
 
@@ -78,19 +79,23 @@ export async function verifyEmail(cookies: AstroCookies, token: string, password
 
 // Connexion : message unique en cas d'échec (null). mfaRequired : rediriger vers /admin/code, la session n'ouvre pas /admin sans le code.
 // Lit puis pose le cookie d'appareil : la page de connexion n'a rien d'autre à faire.
-// remember (« Se souvenir de moi ») ignoré pour l'admin : sa session reste courte et le code TOTP la remplace de toute façon.
+// remember (« Se souvenir de moi ») ignoré pour l'équipe : sa session reste courte et le code TOTP la remplace de toute façon.
 export async function signIn(cookies: AstroCookies, email: string, password: string, ip: string, userAgent: string | null, remember = false): Promise<(LoginUser & { mfaRequired: boolean }) | null> {
   const u = await login(email, password, ip, cookies.get(DEVICE_COOKIE)?.value);
   if (!u) return null;
-  const admin = isAdminEmail(u.email);
+  const [r] = await sql<{ role: string | null }[]>`SELECT role FROM users WHERE id = ${u.id}`;
+  const admin = isAdminEmail(u.email) || !!r?.role;
   await openSession(cookies, u.id, userAgent, false, remember && !admin);
   cookies.set(DEVICE_COOKIE, deviceCookie(u.email), DEVICE);
   return { ...u, mfaRequired: admin };
 }
 
-// Code de l'appli d'authentification (anti-rejeu par totp_last_step) ; la session est tournée et porte mfa_at
+// Code de l'appli d'authentification (anti-rejeu par totp_last_step) ; la session est tournée et porte mfa_at.
+// Premier code d'une personne de l'équipe : il valide aussi le secret affiché pendant l'enregistrement.
 export async function verifyAdminTotp(cookies: AstroCookies, user: SessionUser, code: string, userAgent: string | null, ip: string): Promise<boolean> {
-  if (!user.isAdmin || !(await checkAdminCode(user.id, code.trim(), ip))) return false;
+  const state = await totpState(user);
+  if (!state || state.kind === 'expired' || !(await checkAdminCode(user.id, state.secret, code.trim(), ip))) return false;
+  if (state.kind === 'enrol') await confirmTotp(user.id);
   await openSession(cookies, user.id, userAgent, true);
   return true;
 }
@@ -103,7 +108,7 @@ export async function requestReset(email: string, lang: Lang, ip: string): Promi
     log('reset_mail_limited', { ip });
     return;
   }
-  const [u] = await sql`SELECT id FROM users WHERE email = ${email}`;
+  const [u] = await sql`SELECT id FROM users WHERE email = ${email} AND removed_at IS NULL`;
   log('reset_requested', { user_id: u?.id ?? null, ip });
   if (u) mailWithToken(u.id, email, 'reset', 30, (t) => resetMail(lang, t));
 }
@@ -186,11 +191,11 @@ async function claimUnverified(tx: Tx, userId: number) {
   await tx`UPDATE email_tokens SET used_at = now() WHERE user_id = ${userId} AND used_at IS NULL`;
 }
 
-// Dernières vérifications puis session : bloqué ou supprimé depuis plus de 30 jours = même échec que les autres.
+// Dernières vérifications puis session : bloqué, supprimé par l'admin ou depuis plus de 30 jours = même échec que les autres.
 // Un compte en suppression (moins de 30 jours) ouvre la session : le middleware l'envoie vers « Réactiver ».
 async function finishSignIn(cookies: AstroCookies, userId: number, via: string, ip: string, userAgent: string | null): Promise<LoginUser | null> {
   const [u] = await sql<{ id: number; email: string; locale: Lang; blocked: boolean; gone: boolean }[]>`
-    SELECT id, email, locale, blocked_at IS NOT NULL AS blocked, deleted_at IS NOT NULL AND deleted_at <= now() - interval '30 days' AS gone
+    SELECT id, email, locale, blocked_at IS NOT NULL AS blocked, (deleted_at IS NOT NULL AND deleted_at <= now() - interval '30 days') OR removed_at IS NOT NULL AS gone
     FROM users WHERE id = ${userId}`;
   if (!u || u.gone || isAdminEmail(u.email)) return null;
   if (u.blocked) {
@@ -246,7 +251,7 @@ export async function requestLoginLink(email: string, lang: Lang, ip: string): P
     log('login_link_limited', { ip });
     return;
   }
-  const [u] = await sql<{ id: number }[]>`SELECT id FROM users WHERE email = ${email} AND blocked_at IS NULL`;
+  const [u] = await sql<{ id: number }[]>`SELECT id FROM users WHERE email = ${email} AND blocked_at IS NULL AND removed_at IS NULL`;
   log('login_link_requested', { user_id: u?.id ?? null, ip });
   if (u) mailWithToken(u.id, email, 'login', 15, (t) => loginLinkMail(lang, t));
 }

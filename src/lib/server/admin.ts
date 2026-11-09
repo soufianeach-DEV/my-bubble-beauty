@@ -8,8 +8,10 @@ import { journal } from './journal.ts';
 
 export type Result = { ok: true; id: number; key?: string; day?: string } | { ok: false; error: string };
 
-// Défense en profondeur : le middleware garde déjà /admin, chaque page relit l'admin et son code validé avant d'agir
-export const adminId = (l: App.Locals) => (l.user?.isAdmin && l.session?.mfaAt ? l.user.id : null);
+// Défense en profondeur : le middleware garde déjà /admin, chaque page relit le rôle et le code validé avant d'agir.
+// staffId : pages de la gestionnaire (accueil, agenda, rendez-vous, clientes, prestations) ; adminId : tout le reste, refusé par défaut.
+export const staffId = (l: App.Locals) => (l.user?.role && l.session?.mfaAt ? l.user.id : null);
+export const adminId = (l: App.Locals) => ((l.user?.role === 'super' || l.user?.role === 'admin') && l.session?.mfaAt ? l.user.id : null);
 
 // Corps au-delà de 64 Kio : la lecture lève, la page répond 413
 export async function readForm(request: Request) {

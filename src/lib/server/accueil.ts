@@ -98,10 +98,10 @@ export async function alerts(adminEmail: string) {
       SELECT ${COLS}, b.moved_at ${FROM} WHERE b.status = 'confirmed' AND b.moved_at > now() - interval '48 hours' AND b.starts_at > now() ORDER BY b.starts_at`,
     sql<(Row & { cancelled_at: Date; cancel_reason: string | null })[]>`
       SELECT ${COLS}, b.cancelled_at, b.cancel_reason ${FROM} WHERE b.status = 'cancelled' AND b.cancelled_at > now() - interval '48 hours' ORDER BY b.cancelled_at DESC`,
-    // Inscrites depuis 7 jours, adresse confirmée, hors compte de la gérante
+    // Inscrites depuis 7 jours, adresse confirmée, hors gérante, équipe et comptes supprimés
     sql<{ id: number; name: string | null; email: string; created_at: Date }[]>`
       SELECT id, name, email, created_at FROM users
-      WHERE created_at > now() - interval '7 days' AND email_verified_at IS NOT NULL AND deleted_at IS NULL AND email <> ${adminEmail.trim().toLowerCase()}
+      WHERE created_at > now() - interval '7 days' AND email_verified_at IS NOT NULL AND deleted_at IS NULL AND removed_at IS NULL AND role IS NULL AND email <> ${adminEmail.trim().toLowerCase()}
       ORDER BY created_at DESC`,
     // Sans durée, une prestation ne peut pas s'ouvrir à la réservation en ligne
     sql<{ id: number; name: string }[]>`SELECT id, name_fr AS name FROM services WHERE duration_min IS NULL ORDER BY sort, id`,

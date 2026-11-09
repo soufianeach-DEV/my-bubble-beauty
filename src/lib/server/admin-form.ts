@@ -123,11 +123,15 @@ export const agendaForm = z
   .refine((a) => a.action !== 'move' || (a.day && a.time), "Pour déplacer, saisissez la nouvelle date et l'heure.");
 
 // Fiche cliente : notes (4000 caractères, plusieurs lignes permises), blocage, effacement confirmé par un mot tapé
+// Actions sur un compte : la case « Je confirme » est exigée ici, pas seulement dans la page
+const confirm = z.literal('on', { error: 'Cochez la case pour confirmer.' });
 export const clientForm = z.discriminatedUnion('action', [
   z.object({ action: z.literal('notes'), id, notes: z.string({ error: 'Notes : 4000 caractères au plus.' }).max(4000, 'Notes : 4000 caractères au plus.').default('') }),
-  z.object({ action: z.literal('block'), id }),
-  z.object({ action: z.literal('unblock'), id }),
-  z.object({ action: z.literal('restore'), id }),
+  z.object({ action: z.literal('block'), id, confirm }),
+  z.object({ action: z.literal('unblock'), id, confirm }),
+  z.object({ action: z.literal('restore'), id, confirm }),
+  z.object({ action: z.literal('remove'), id, confirm }),
+  z.object({ action: z.literal('unremove'), id, confirm }),
   z.object({ action: z.literal('erase'), id, confirm: z.literal('EFFACER', { error: 'Tapez EFFACER pour confirmer.' }) }),
 ], { error: 'Action inconnue.' });
 
@@ -145,3 +149,12 @@ export const newBookingForm = z.object({
 
 // Code de l'appli d'authentification ; les espaces affichés par certaines applis sont retirés
 export const totpForm = z.object({ code: z.string({ error: 'Code à 6 chiffres.' }).transform((v) => v.replace(/\s/g, '')).pipe(z.string().regex(/^\d{6}$/, 'Code à 6 chiffres.')) });
+
+// Équipe (/admin/utilisateurs) : rôle donné à un compte existant par son adresse, puis actions sur la ligne de la personne
+const role = z.enum(['admin', 'gestionnaire'], { error: 'Choisissez Admin ou Gestionnaire.' });
+const email = str('Adresse e-mail invalide.').toLowerCase().max(254, 'Adresse e-mail invalide.').email('Adresse e-mail invalide.');
+export const staffForm = z.discriminatedUnion('action', [
+  z.object({ action: z.literal('grant'), email, role, confirm }),
+  z.object({ action: z.literal('role'), id, role, confirm }),
+  ...(['demote', 'block', 'unblock', 'remove', 'restore', 'reset_totp'] as const).map((a) => z.object({ action: z.literal(a), id, confirm })),
+], { error: 'Action inconnue.' });

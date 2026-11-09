@@ -1,13 +1,15 @@
 ---
 export const prerender = false;
-// Second facteur de l'admin : ouverte avant le code, comme la déconnexion ; un code valide ouvre une nouvelle session marquée mfa
+// Second facteur de l'équipe : ouverte avant le code, comme la déconnexion ; un code valide ouvre une nouvelle session marquée mfa.
+// Nouvelle personne de l'équipe : la clé de son application s'affiche ici pendant 7 jours, le premier code juste l'enregistre.
 import Admin from './_layout.astro';
 import { verifyAdminTotp } from '../../lib/server/accounts.ts';
 import { readForm } from '../../lib/server/admin.ts';
 import { totpForm } from '../../lib/server/admin-form.ts';
+import { totpState } from '../../lib/server/staff.ts';
 
 const user = Astro.locals.user;
-if (!user?.isAdmin) return new Response(null, { status: 404 });
+if (!user?.role) return new Response(null, { status: 404 });
 if (Astro.locals.session?.mfaAt) return Astro.redirect('/admin');
 let error = '';
 if (Astro.request.method === 'POST') {
@@ -19,15 +21,47 @@ if (Astro.request.method === 'POST') {
   error = "Code refusé. Saisissez le code affiché maintenant par l'application d'authentification. Après 5 erreurs, attendez 15 minutes.";
   Astro.response.status = 400;
 }
+const state = await totpState(user);
+// Clé lisible à recopier : groupes de 4 caractères
+const groups = state?.kind === 'enrol' ? state.secret.match(/.{1,4}/g)!.join(' ') : '';
+const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', dateStyle: 'long', timeStyle: 'short' }).format;
 ---
 <Admin title="Code de connexion" nav={false}>
-<p>Ouvrez l'application d'authentification de votre téléphone et saisissez le code à 6 chiffres de My Bubble Beauty.</p>
-{error && <p class="notice notice--error" role="alert">{error}</p>}
-<form class="form" method="post">
-  <div class="field">
-    <label for="code">Code à 6 chiffres</label>
-    <input id="code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{6,7}" maxlength="7" required autofocus aria-invalid={error ? 'true' : undefined}>
-  </div>
-  <button class="btn btn--solid" type="submit">Valider</button>
-</form>
+{state?.kind === 'expired' ? (
+  <>
+    <p class="notice notice--error" role="alert">Le délai pour enregistrer votre application d'authentification est passé. Demandez à l'admin de le relancer depuis la page Utilisateurs.</p>
+  </>
+) : (
+  <>
+    {state?.kind === 'enrol' ? (
+      <section class="enrol" aria-labelledby="h-enrol">
+        <h2 id="h-enrol">Enregistrer votre application d'authentification</h2>
+        <ol>
+          <li>Installez une application d'authentification sur votre téléphone (Google Authenticator, Microsoft Authenticator, Authy…).</li>
+          <li>Sur ce téléphone, touchez <a href={state.uri}>Ajouter My Bubble Beauty à l'application</a>. Sinon, choisissez « Saisir une clé » dans l'application et recopiez la clé ci-dessous.</li>
+          <li>Saisissez le code à 6 chiffres que l'application affiche.</li>
+        </ol>
+        <p class="key"><span>Clé</span><code>{groups}</code></p>
+        <p class="hint">Gardez cette clé pour vous. À faire avant le {day(state.until)}.</p>
+      </section>
+    ) : <p>Ouvrez l'application d'authentification de votre téléphone et saisissez le code à 6 chiffres de My Bubble Beauty.</p>}
+    {error && <p class="notice notice--error" role="alert">{error}</p>}
+    <form class="form" method="post">
+      <div class="field">
+        <label for="code">Code à 6 chiffres</label>
+        <input id="code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{6,7}" maxlength="7" required autofocus aria-invalid={error ? 'true' : undefined}>
+      </div>
+      <button class="btn btn--solid" type="submit">Valider</button>
+    </form>
+  </>
+)}
 </Admin>
+
+<style>
+  .enrol{margin:0 0 1.5rem}
+  .enrol ol{padding-left:1.25rem;display:grid;gap:.5rem}
+  .key{display:grid;gap:.25rem;margin:1rem 0 .5rem}
+  .key span{font-size:.8125rem;color:var(--text-soft)}
+  /* La clé passe à la ligne par groupe sur un téléphone étroit, jamais au milieu d'un groupe */
+  .key code{font-size:1.125rem;letter-spacing:.06em;word-spacing:.3em;overflow-wrap:anywhere;user-select:all}
+</style>

@@ -135,10 +135,10 @@ test('comptes, réservations et sécurité sur une vraie base', { skip: !url && 
       const jar = cookies();
       await openSession(jar, other.id, 'test');
       const form = (o: Record<string, string>) => Object.entries(o).reduce((f, [k, v]) => (f.set(k, v), f), new FormData());
-      assert.ok((await clientAction(admin.id, form({ action: 'block', id: String(other.id) }))).ok);
+      assert.ok((await clientAction(admin.id, form({ action: 'block', id: String(other.id), confirm: 'on' }))).ok);
       assert.equal(await readSession((jar as { get: (k: string) => { value: string } }).get('__Host-mb_session').value), null);
       assert.equal(await login(other.email, password, '10.0.0.3'), null);
-      assert.ok((await clientAction(admin.id, form({ action: 'unblock', id: String(other.id) }))).ok);
+      assert.ok((await clientAction(admin.id, form({ action: 'unblock', id: String(other.id), confirm: 'on' }))).ok);
       assert.ok(await login(other.email, password, '10.0.0.3'));
       // La gérante n'apparaît jamais comme cliente et ne peut pas être effacée par la fiche
       assert.equal(await clientDetail(admin.id), null);
@@ -255,6 +255,87 @@ test('comptes, réservations et sécurité sur une vraie base', { skip: !url && 
       const old = newToken();
       await sql`INSERT INTO email_tokens (token_hash, user_id, purpose, expires_at) VALUES (${hashToken(old)}, ${c.id}, 'login', now() - interval '1 minute')`;
       assert.equal(await accounts.signInWithLink(cookies(), old, '127.0.0.1', null), null);
+    });
+
+    await t.test("équipe : rôle, second facteur propre, gardes, désactivation et suppression douce", async () => {
+      const { listStaff, staffAction, totpState } = await import('./staff.ts');
+      const { base32Decode, totp } = await import('./totp.ts');
+      const form = (o: Record<string, string>) => Object.entries(o).reduce((f, [k, v]) => (f.set(k, v), f), new FormData());
+      const tok = (j: unknown) => (j as { get: (k: string) => { value: string } }).get('__Host-mb_session').value;
+      const [boss] = await sql`INSERT INTO users (email, password_hash, email_verified_at) VALUES (${ENV.ADMIN_EMAIL}, ${hash}, now())
+        ON CONFLICT (email) DO UPDATE SET email_verified_at = now() RETURNING id`;
+      const g = await mkUser('gest');
+      const x = await mkUser('cliente');
+      const ok = async (actor: number, o: Record<string, string>) => (await staffAction(actor, form({ confirm: 'on', ...o }))).ok;
+      // Case « Je confirme » exigée côté serveur ; adresse lue sans casse
+      assert.equal((await staffAction(boss.id, form({ action: 'grant', email: g.email, role: 'gestionnaire' }))).ok, false);
+      assert.ok(await ok(boss.id, { action: 'grant', email: g.email.toUpperCase(), role: 'gestionnaire' }));
+      // Gérante intouchable, personne n'agit sur soi-même
+      assert.equal(await ok(boss.id, { action: 'grant', email: ENV.ADMIN_EMAIL, role: 'admin' }), false);
+      assert.equal(await ok(boss.id, { action: 'block', id: String(boss.id) }), false);
+      assert.equal(await ok(g.id, { action: 'remove', id: String(boss.id) }), false);
+      assert.equal(await ok(boss.id, { action: 'grant', email: `${tag}inconnue@test.local`, role: 'admin' }), false);
+
+      // Session : rôle lu en base ; secret propre affiché puis validé par le premier code, chiffré en base
+      const jar = cookies();
+      await openSession(jar, g.id, 'test');
+      const s = (await readSession(tok(jar)))!;
+      assert.equal(s.user.role, 'gestionnaire');
+      const st = await totpState(s.user);
+      assert.equal(st?.kind, 'enrol');
+      const secret = (st as { secret: string }).secret;
+      assert.equal(((await totpState(s.user)) as { secret: string }).secret, secret);
+      assert.equal(await accounts.verifyAdminTotp(jar, s.user, '000000', 'test', '127.0.0.1'), false);
+      assert.ok(await accounts.verifyAdminTotp(jar, s.user, totp(base32Decode(secret), Math.floor(Date.now() / 30_000)), 'test', '127.0.0.1'));
+      assert.equal((await totpState(s.user))?.kind, 'ready');
+      const [row] = await sql`SELECT totp_secret FROM users WHERE id = ${g.id}`;
+      assert.ok(!Buffer.from(row.totp_secret).includes(Buffer.from(secret)));
+      assert.ok((await readSession(tok(jar)))!.session.mfaAt);
+
+      // La gestionnaire n'est pas une cliente ; elle écrit les notes mais n'agit pas sur un compte
+      assert.equal(await clientDetail(g.id), null);
+      assert.equal((await listClients(g.email, 'toutes', 1)).rows.length, 0);
+      assert.equal((await clientAction(g.id, form({ action: 'block', id: String(x.id), confirm: 'on' }), false)).ok, false);
+      assert.ok((await clientAction(g.id, form({ action: 'notes', id: String(x.id), notes: 'Peau sensible.' }), false)).ok);
+
+      // Suppression douce d'une cliente : session coupée, connexion refusée, masquée, épargnée par la purge, restaurable
+      const jx = cookies();
+      await openSession(jx, x.id, 'test');
+      assert.ok((await clientAction(boss.id, form({ action: 'remove', id: String(x.id), confirm: 'on' }))).ok);
+      assert.equal(await readSession(tok(jx)), null);
+      assert.equal(await login(x.email, password, '10.0.0.4'), null);
+      assert.equal((await listClients(x.email, 'toutes', 1)).rows.length, 0);
+      assert.ok((await listClients(x.email, 'supprimees', 1)).rows.some((r) => r.id === x.id));
+      await purge(sql, ENV.ADMIN_EMAIL);
+      assert.equal((await sql`SELECT 1 FROM users WHERE id = ${x.id}`).length, 1);
+      assert.ok((await clientAction(boss.id, form({ action: 'unremove', id: String(x.id), confirm: 'on' }))).ok);
+      assert.ok(await login(x.email, password, '10.0.0.4'));
+
+      // Équipe : désactiver coupe la session, supprimer masque sans effacer, rétrograder retire rôle et secret
+      assert.ok(await ok(boss.id, { action: 'block', id: String(g.id) }));
+      assert.equal(await readSession(tok(jar)), null);
+      assert.equal(await login(g.email, password, '10.0.0.5'), null);
+      assert.ok(await ok(boss.id, { action: 'unblock', id: String(g.id) }));
+      assert.ok(await ok(boss.id, { action: 'remove', id: String(g.id) }));
+      assert.ok((await listStaff()).some((r) => r.id === g.id && r.removed_at));
+      assert.ok(await ok(boss.id, { action: 'restore', id: String(g.id) }));
+      assert.ok(await ok(boss.id, { action: 'role', id: String(g.id), role: 'admin' }));
+      assert.ok(await ok(boss.id, { action: 'demote', id: String(g.id) }));
+      const [d] = await sql`SELECT role, totp_secret FROM users WHERE id = ${g.id}`;
+      assert.deepEqual({ ...d }, { role: null, totp_secret: null });
+
+      // Délai de 7 jours passé : plus d'enregistrement possible tant que l'admin ne le relance pas
+      assert.ok(await ok(boss.id, { action: 'grant', email: g.email, role: 'admin' }));
+      await sql`UPDATE users SET role_at = now() - interval '8 days' WHERE id = ${g.id}`;
+      assert.equal((await totpState({ id: g.id, email: g.email, role: 'admin' }))?.kind, 'expired');
+      assert.ok(await ok(boss.id, { action: 'reset_totp', id: String(g.id) }));
+      assert.equal((await totpState({ id: g.id, email: g.email, role: 'admin' }))?.kind, 'enrol');
+      // Une personne de l'équipe ne supprime pas son compte elle-même, et l'effacement par la fiche la refuse
+      assert.equal(await rgpd.deleteAccount(cookies(), g, password, '127.0.0.1'), 'admin');
+
+      const [{ n }] = await sql`SELECT count(*)::int AS n FROM audit_log WHERE actor_id = ${boss.id}
+        AND details->>'action' IN ('staff_role_given', 'account_removed', 'account_restored', 'account_disabled', 'staff_role_removed', 'staff_totp_reset')`;
+      assert.ok(n >= 8);
     });
   } finally {
     // Rendez-vous du test retirés : relancée sur la même base, la suite ne bute plus sur bookings_no_overlap

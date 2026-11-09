@@ -85,7 +85,7 @@ export async function createBooking(input: { userId: number; serviceId: number; 
     r = await sql.begin(async (tx) => {
       // Verrous toujours dans cet ordre (cliente, puis code promo) : deux réservations simultanées ne s'interbloquent pas
       // Compte supprimé ou bloqué entre-temps (course avec la suppression) : aucune ligne, aucune réservation
-      const [me] = await tx`SELECT id FROM users WHERE id = ${userId} AND deleted_at IS NULL AND blocked_at IS NULL FOR UPDATE`;
+      const [me] = await tx`SELECT id FROM users WHERE id = ${userId} AND deleted_at IS NULL AND blocked_at IS NULL AND removed_at IS NULL FOR UPDATE`;
       if (!me) return { ok: false, error: 'unavailable' } as const;
       stale = await expirePending(tx, userId);
       const [{ n }] = await tx`SELECT count(*) AS n FROM bookings WHERE user_id = ${userId} AND status IN ('pending_payment', 'confirmed') AND starts_at > now()`;
@@ -152,7 +152,7 @@ export type PaymentOutcome = 'confirmed' | 'already' | 'refunded' | 'unpaid' | '
 async function stillAllowed(tx: Sql, id: number, b: { user_id: number | null; service_id: number; promo_code_id: number | null; starts_at: Date }) {
   if (b.starts_at <= new Date()) return false;
   if (b.user_id) {
-    const [active] = await tx`SELECT 1 FROM users WHERE id = ${b.user_id} AND deleted_at IS NULL AND blocked_at IS NULL`;
+    const [active] = await tx`SELECT 1 FROM users WHERE id = ${b.user_id} AND deleted_at IS NULL AND blocked_at IS NULL AND removed_at IS NULL`;
     if (!active) return false;
     const [{ n }] = await tx`SELECT count(*) AS n FROM bookings WHERE user_id = ${b.user_id} AND id <> ${id} AND status IN ('pending_payment', 'confirmed') AND starts_at > now()`;
     if (n >= MAX_UPCOMING) return false;
@@ -349,7 +349,7 @@ export async function rescheduleByClient(userId: number, bookingId: number, star
   let r: 'ok' | 'unavailable' | 'not_found';
   try {
     r = await sql.begin(async (tx) => {
-      const [me] = await tx`SELECT id FROM users WHERE id = ${userId} AND deleted_at IS NULL AND blocked_at IS NULL FOR UPDATE`;
+      const [me] = await tx`SELECT id FROM users WHERE id = ${userId} AND deleted_at IS NULL AND blocked_at IS NULL AND removed_at IS NULL FOR UPDATE`;
       if (!me) return 'not_found' as const;
       const [b] = await tx`SELECT id, service_id FROM bookings
         WHERE id = ${bookingId} AND user_id = ${userId} AND status = 'confirmed' AND starts_at >= now() + interval '24 hours' FOR UPDATE`;

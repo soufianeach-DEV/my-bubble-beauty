@@ -1,16 +1,18 @@
 ---
 export const prerender = false;
 // Fiche cliente : coordonnées, état du compte, statistiques, notes (données de santé seulement avec son accord), rendez-vous,
-// absences et acomptes à rendre, blocage, effacement à sa demande, dernières lignes du journal la concernant.
+// absences et acomptes à rendre, désactivation, suppression, effacement à sa demande, dernières lignes du journal la concernant.
+// La gestionnaire voit la fiche et écrit les notes ; les actions sur le compte et le journal restent à l'admin.
 import Admin from '../_layout.astro';
-import { adminId, agendaAction, fmtDateTime, readForm } from '../../../lib/server/admin.ts';
+import { adminId, staffId, agendaAction, fmtDateTime, readForm } from '../../../lib/server/admin.ts';
 import { clientAction, clientDetail } from '../../../lib/server/admin-clientes.ts';
 import { ACTION_LABELS } from '../../../lib/server/journal.ts';
 import { euros, todayBrussels } from '../../../lib/server/pricing.ts';
 import { GRACE_DAYS } from '../../../lib/server/rgpd.ts';
 
-const me = adminId(Astro.locals);
+const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
+const manage = adminId(Astro.locals) !== null;
 const id = /^[1-9]\d{0,17}$/.test(Astro.params.id ?? '') ? Number(Astro.params.id) : null;
 if (!id) return new Response(null, { status: 404 });
 const self = `/admin/clientes/${id}`;
@@ -20,7 +22,7 @@ if (Astro.request.method === 'POST') {
   const form = await readForm(Astro.request);
   if (!form) return new Response(null, { status: 413 });
   // Les actions sur un rendez-vous passent par l'agenda (mêmes règles et même journal)
-  const r = form.get('scope') === 'booking' ? await agendaAction(me, form) : await clientAction(me, form);
+  const r = form.get('scope') === 'booking' ? await agendaAction(me, form) : await clientAction(me, form, manage);
   if (r.ok && r.key === 'efface') return Astro.redirect('/admin/clientes?ok=efface', 303);
   if (r.ok) return Astro.redirect(`${self}?ok=${r.key}${r.id !== id ? `#b-${r.id}` : ''}`, 303);
   error = r.error;
@@ -31,7 +33,8 @@ const c = await clientDetail(id);
 if (!c) return new Response(null, { status: 404 });
 const { user: u, bookings, stats, events } = c;
 const DONE: Record<string, string> = {
-  notes: 'Notes enregistrées.', block: 'Compte bloqué : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte débloqué.', restore: 'Suppression annulée : le compte est de nouveau actif. Les rendez-vous annulés le restent.',
+  notes: 'Notes enregistrées.', block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte réactivé.',
+  remove: "Compte supprimé : il n'apparaît plus dans les listes et ne peut plus se connecter. Ses rendez-vous restent.", unremove: 'Compte restauré : la cliente peut de nouveau se connecter.', restore: 'Suppression annulée : le compte est de nouveau actif. Les rendez-vous annulés le restent.',
   absente: 'Rendez-vous marqué « absente ».', venue: 'Absence retirée.', rendu: 'Acompte noté comme remboursé hors du site.',
 };
 const done = !error && DONE[Astro.url.searchParams.get('ok') ?? ''];
@@ -47,7 +50,8 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 {done && <p class="notice" role="status">{done}</p>}
 {error && <p class="notice notice--error" role="alert">{error}</p>}
 <p><a href="/admin/clientes">← Toutes les clientes</a></p>
-{u.blocked_at && <p class="notice notice--error">Compte bloqué depuis le {day(u.blocked_at)}.</p>}
+{u.removed_at && <p class="notice notice--error">Compte supprimé par l'institut le {day(u.removed_at)}. Il reste restaurable.</p>}
+{u.blocked_at && <p class="notice notice--error">Compte désactivé depuis le {day(u.blocked_at)}.</p>}
 {purgeOn && <p class="notice notice--error">Suppression demandée le {day(u.deleted_at!)}. Sans retour de la cliente, le compte sera effacé le {day(purgeOn)}.</p>}
 
 <section aria-labelledby="h-coord">
@@ -112,20 +116,36 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 )}
 </section>
 
-<section aria-labelledby="h-compte">
+{manage && <section aria-labelledby="h-compte">
 <h2 id="h-compte">Compte</h2>
+{/* Chaque action demande la case « Je confirme », vérifiée aussi côté serveur (clientForm) */}
 {purgeOn && (
   <form class="form" method="post" action={self}>
     <input type="hidden" name="id" value={u.id}>
     <p class="hint">À faire seulement si la cliente le demande. Ses rendez-vous annulés lors de la suppression ne reviennent pas.</p>
+    <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
     <button class="btn btn--solid" type="submit" name="action" value="restore">Annuler la suppression</button>
   </form>
 )}
 <form class="form" method="post" action={self}>
   <input type="hidden" name="id" value={u.id}>
   {u.blocked_at
-    ? <button class="btn btn--ghost" type="submit" name="action" value="unblock">Débloquer le compte</button>
-    : <><p class="hint">Bloquer déconnecte la cliente et l'empêche de se connecter. Ses rendez-vous restent.</p><button class="btn btn--ghost" type="submit" name="action" value="block">Bloquer le compte</button></>}
+    ? <p class="hint">La cliente pourra de nouveau se connecter.</p>
+    : <p class="hint">Désactiver déconnecte la cliente et l'empêche de se connecter. Ses rendez-vous restent. Réactivable à tout moment.</p>}
+  <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+  {u.blocked_at
+    ? <button class="btn btn--ghost" type="submit" name="action" value="unblock">Réactiver le compte</button>
+    : <button class="btn btn--ghost" type="submit" name="action" value="block">Désactiver le compte</button>}
+</form>
+<form class="form" method="post" action={self}>
+  <input type="hidden" name="id" value={u.id}>
+  {u.removed_at
+    ? <p class="hint">Le compte revient dans la liste des clientes. S'il est aussi désactivé, réactivez-le pour qu'elle puisse se connecter.</p>
+    : <p class="hint">Supprimer retire le compte des listes et ferme ses sessions. Rien n'est effacé : rendez-vous, notes et journal restent, et le compte se restaure depuis l'onglet « Supprimées ».</p>}
+  <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+  {u.removed_at
+    ? <button class="btn btn--solid" type="submit" name="action" value="unremove">Restaurer le compte</button>
+    : <button class="btn btn--ghost" type="submit" name="action" value="remove">Supprimer le compte</button>}
 </form>
 <details class="cancel">
   <summary>Effacer le compte à la demande de la cliente</summary>
@@ -136,14 +156,14 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
     <button class="btn btn--ghost" type="submit">Effacer définitivement</button>
   </form>
 </details>
-</section>
+</section>}
 
 <section aria-labelledby="h-journal">
 <h2 id="h-journal">Journal récent</h2>
 {events.length === 0 ? <p>Aucune ligne.</p> : (
 <ul class="events">{events.map((e) => <li><time datetime={e.at.toISOString()}>{fmtDateTime(e.at)}</time> — {ACTION_LABELS[e.action] ?? e.action}{e.action === 'admin_action' && typeof e.details.action === 'string' && ` (${e.details.action})`}</li>)}</ul>
 )}
-<p><a href={`/admin/journal?cliente=${u.id}`}>Tout le journal de cette cliente</a></p>
+{manage && <p><a href={`/admin/journal?cliente=${u.id}`}>Tout le journal de cette cliente</a></p>}
 </section>
 </Admin>
 
@@ -156,4 +176,6 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
   .cell-form .btn{min-height:44px;padding:.55rem 1rem;white-space:normal;text-align:left;line-height:1.3}
   .events{padding-left:1.1rem}
   section{margin-bottom:2rem}
+  .check{display:flex;align-items:center;gap:.5rem;min-height:44px}
+  .check input{width:1.25rem;height:1.25rem;margin:0;accent-color:var(--accent)}
 </style>

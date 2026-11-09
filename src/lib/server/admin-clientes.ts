@@ -1,27 +1,31 @@
 // Fiches clientes (admin) : liste et recherche, fiche avec historique et statistiques, notes, blocage, effacement ; écran du journal.
-// Les pages relisent adminId() avant d'appeler ; toute action est journalisée avec l'admin et la cliente.
+// Les pages relisent staffId() avant d'appeler ; seule l'admin agit sur le compte (désactiver, supprimer, effacer), la gestionnaire
+// lit la fiche et écrit les notes. Les comptes de l'équipe n'apparaissent pas ici : ils se gèrent dans /admin/utilisateurs.
 import { ADMIN_EMAIL } from 'astro:env/server';
 import { audit, type Result } from './admin.ts';
 import { clientForm } from './admin-form.ts';
 import { sql } from './db.ts';
 import { eraseUser, GRACE_DAYS } from './rgpd.ts';
-import { isAdminEmail, revokeAll } from './session.ts';
+import { isAdminEmail } from './session.ts';
+import { setBlocked, setRemoved } from './staff.ts';
 
 const PAGE = 50;
 // Recherche par morceau de texte : % et _ saisis comptent comme des caractères, pas comme des jokers
 const like = (q: string) => `%${q.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
 
-export type ClientFilter = 'actives' | 'suppression' | 'bloquees' | 'toutes';
-export type ClientRow = { id: number; name: string | null; email: string; phone: string | null; created_at: Date; deleted_at: Date | null; blocked_at: Date | null; done: number; upcoming: number; no_shows: number; last_at: Date | null };
+// supprimees : comptes retirés par l'admin, absents de tous les autres onglets
+export type ClientFilter = 'actives' | 'suppression' | 'bloquees' | 'toutes' | 'supprimees';
+export type ClientRow = { id: number; name: string | null; email: string; phone: string | null; created_at: Date; deleted_at: Date | null; blocked_at: Date | null; removed_at: Date | null; done: number; upcoming: number; no_shows: number; last_at: Date | null };
 
 // Comptes confirmés seulement ; la gérante n'est pas une cliente. Téléphone cherché sur ses seuls chiffres (0484 11 83 95 = 0484118395).
 // Nombre de comptes par onglet de la liste (adresse confirmée, admin exclue)
 export async function clientCounts(): Promise<Record<ClientFilter, number>> {
   const [c] = await sql<Record<ClientFilter, number>[]>`
-    SELECT count(*) FILTER (WHERE deleted_at IS NULL AND blocked_at IS NULL)::int AS actives,
-      count(*) FILTER (WHERE deleted_at IS NOT NULL)::int AS suppression,
-      count(*) FILTER (WHERE blocked_at IS NOT NULL)::int AS bloquees, count(*)::int AS toutes
-    FROM users WHERE email_verified_at IS NOT NULL AND email <> ${ADMIN_EMAIL.trim().toLowerCase()}`;
+    SELECT count(*) FILTER (WHERE removed_at IS NULL AND deleted_at IS NULL AND blocked_at IS NULL)::int AS actives,
+      count(*) FILTER (WHERE removed_at IS NULL AND deleted_at IS NOT NULL)::int AS suppression,
+      count(*) FILTER (WHERE removed_at IS NULL AND blocked_at IS NOT NULL)::int AS bloquees,
+      count(*) FILTER (WHERE removed_at IS NULL)::int AS toutes, count(*) FILTER (WHERE removed_at IS NOT NULL)::int AS supprimees
+    FROM users WHERE email_verified_at IS NOT NULL AND role IS NULL AND email <> ${ADMIN_EMAIL.trim().toLowerCase()}`;
   return c;
 }
 
@@ -29,17 +33,18 @@ export async function listClients(q: string, filter: ClientFilter, page: number)
   q = q.trim().slice(0, 100);
   const digits = q.replace(/\D/g, '');
   const rows = await sql<ClientRow[]>`
-    SELECT u.id, u.name, u.email, u.phone, u.created_at, u.deleted_at, u.blocked_at,
+    SELECT u.id, u.name, u.email, u.phone, u.created_at, u.deleted_at, u.blocked_at, u.removed_at,
       count(b.id) FILTER (WHERE b.status = 'confirmed' AND b.starts_at < now() AND NOT b.no_show)::int AS done,
       count(b.id) FILTER (WHERE b.status = 'confirmed' AND b.starts_at >= now())::int AS upcoming,
       count(b.id) FILTER (WHERE b.no_show)::int AS no_shows,
       max(b.starts_at) FILTER (WHERE b.status = 'confirmed' AND b.starts_at < now()) AS last_at
     FROM users u LEFT JOIN bookings b ON b.user_id = u.id
-    WHERE u.email_verified_at IS NOT NULL
+    WHERE u.email_verified_at IS NOT NULL AND u.role IS NULL
       AND (${q} = '' OR u.name ILIKE ${like(q)} OR u.email ILIKE ${like(q)}
         OR (${digits.length >= 3} AND regexp_replace(coalesce(u.phone, ''), '[^0-9]', '', 'g') LIKE ${like(digits)}))
-      AND CASE ${filter} WHEN 'actives' THEN u.deleted_at IS NULL AND u.blocked_at IS NULL
-        WHEN 'suppression' THEN u.deleted_at IS NOT NULL WHEN 'bloquees' THEN u.blocked_at IS NOT NULL ELSE true END
+      AND CASE ${filter} WHEN 'supprimees' THEN u.removed_at IS NOT NULL ELSE u.removed_at IS NULL AND CASE ${filter}
+        WHEN 'actives' THEN u.deleted_at IS NULL AND u.blocked_at IS NULL
+        WHEN 'suppression' THEN u.deleted_at IS NOT NULL WHEN 'bloquees' THEN u.blocked_at IS NOT NULL ELSE true END END
     GROUP BY u.id
     ORDER BY lower(coalesce(u.name, u.email)), u.id
     LIMIT ${PAGE + 1} OFFSET ${Math.max(0, page - 1) * PAGE}`;
@@ -49,9 +54,9 @@ export async function listClients(q: string, filter: ClientFilter, page: number)
 export type ClientBooking = { id: number; starts_at: Date; ends_at: Date; service: string; status: string; no_show: boolean; past: boolean; cancel_reason: string | null; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; moved: boolean };
 
 export async function clientDetail(id: number) {
-  const [u] = await sql<{ id: number; name: string | null; email: string; phone: string | null; locale: string; created_at: Date; email_verified_at: Date | null; deleted_at: Date | null; blocked_at: Date | null; health_consent_at: Date | null; notes: string }[]>`
-    SELECT id, name, email, phone, locale, created_at, email_verified_at, deleted_at, blocked_at, health_consent_at, notes FROM users WHERE id = ${id}`;
-  if (!u || isAdminEmail(u.email)) return null;
+  const [u] = await sql<{ id: number; name: string | null; email: string; phone: string | null; locale: string; created_at: Date; email_verified_at: Date | null; deleted_at: Date | null; blocked_at: Date | null; removed_at: Date | null; health_consent_at: Date | null; notes: string; role: string | null }[]>`
+    SELECT id, name, email, phone, locale, created_at, email_verified_at, deleted_at, blocked_at, removed_at, health_consent_at, notes, role FROM users WHERE id = ${id}`;
+  if (!u || isAdminEmail(u.email) || u.role) return null;
   const [bookings, [stats], events] = await Promise.all([
     sql<ClientBooking[]>`
       SELECT b.id, b.starts_at, b.ends_at, s.name_fr AS service, b.status, b.no_show, b.starts_at < now() AS past, b.cancel_reason,
@@ -71,13 +76,14 @@ export async function clientDetail(id: number) {
   return { user: u, bookings, stats, events };
 }
 
-// Actions de la fiche ; l'effacement renvoie key 'efface' (la page repart vers la liste)
-export async function clientAction(adminUser: number, form: FormData): Promise<Result> {
+// Actions de la fiche ; l'effacement renvoie key 'efface' (la page repart vers la liste). manage : rôle admin ou super-admin.
+export async function clientAction(adminUser: number, form: FormData, manage = true): Promise<Result> {
   const p = clientForm.safeParse(Object.fromEntries(form));
   if (!p.success) return { ok: false, error: p.error.issues[0]?.message ?? 'Saisie invalide.' };
   const f = p.data;
-  const [u] = await sql<{ email: string }[]>`SELECT email FROM users WHERE id = ${f.id}`;
-  if (!u || isAdminEmail(u.email)) return { ok: false, error: 'Cliente introuvable.' };
+  const [u] = await sql<{ email: string; role: string | null; removed: boolean }[]>`SELECT email, role, removed_at IS NOT NULL AS removed FROM users WHERE id = ${f.id}`;
+  if (!u || isAdminEmail(u.email) || u.role) return { ok: false, error: 'Cliente introuvable.' };
+  if (f.action !== 'notes' && !manage) return { ok: false, error: "Seule l'admin peut désactiver, supprimer ou effacer un compte." };
   if (f.action === 'notes') {
     await sql`UPDATE users SET notes = ${f.notes.replace(/\r\n/g, '\n')}, updated_at = now() WHERE id = ${f.id}`;
     // Le contenu des notes n'entre jamais au journal (données de santé possibles)
@@ -85,10 +91,13 @@ export async function clientAction(adminUser: number, form: FormData): Promise<R
     return { ok: true, id: f.id, key: 'notes' };
   }
   if (f.action === 'block' || f.action === 'unblock') {
-    await sql`UPDATE users SET blocked_at = ${f.action === 'block' ? sql`now()` : null}, updated_at = now() WHERE id = ${f.id}`;
-    // Bloquée : toutes ses sessions tombent tout de suite (readSession refuse aussi un compte bloqué)
-    if (f.action === 'block') await revokeAll(f.id);
-    audit(adminUser, f.action === 'block' ? 'client_blocked' : 'client_unblocked', { client_id: f.id });
+    // Désactivée : toutes ses sessions tombent tout de suite (readSession refuse aussi un compte désactivé)
+    await setBlocked(adminUser, f.id, f.action === 'block');
+    return { ok: true, id: f.id, key: f.action };
+  }
+  if (f.action === 'remove' || f.action === 'unremove') {
+    if (u.removed === (f.action === 'remove')) return { ok: false, error: u.removed ? 'Ce compte est déjà supprimé.' : "Ce compte n'est pas supprimé." };
+    await setRemoved(adminUser, f.id, f.action === 'remove');
     return { ok: true, id: f.id, key: f.action };
   }
   // Suppression demandée annulée à la demande de la cliente (téléphone) : même délai de 30 jours que la réactivation depuis son compte

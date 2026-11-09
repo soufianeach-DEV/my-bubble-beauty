@@ -4,14 +4,14 @@ export const prerender = false;
 // N'affiche que ce que la base contient ; ce qui manque est signalé, jamais déduit.
 import { ADMIN_EMAIL, MAIL_FROM, RESEND_API_KEY } from 'astro:env/server';
 import Admin from './_layout.astro';
-import { adminId, fmtDateTime, fmtDay, fmtTime } from '../../lib/server/admin.ts';
+import { staffId, fmtDateTime, fmtDay, fmtTime } from '../../lib/server/admin.ts';
 import { addDays, monday } from '../../lib/server/admin-form.ts';
 import { adminAgenda } from '../../lib/server/booking.ts';
 import { alerts, clientCards, dayFrame, freeMinutes, loadByDay } from '../../lib/server/accueil.ts';
 import { isDay, todayBrussels } from '../../lib/server/pricing.ts';
 import { JS_VERSION } from '../../lib/site';
 
-const me = adminId(Astro.locals);
+const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
 
 const now = new Date();
@@ -67,7 +67,8 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
     </div>
   </dl>
   <nav class="quick" aria-label="Actions rapides">
-    <a class="btn btn--ghost" href="/admin/horaires#fermetures">Bloquer un créneau</a>
+    {/* Horaires et fermetures : réservés à l'admin */}
+    {Astro.locals.user?.role !== 'gestionnaire' && <a class="btn btn--ghost" href="/admin/horaires#fermetures">Bloquer un créneau</a>}
     {next?.phone && <>
       <a class="btn btn--ghost" href={`tel:${digits(next.phone)}`}>Appeler {next.name ?? 'la cliente'}</a>
       <a class="btn btn--ghost" href={`https://wa.me/${digits(next.phone).replace(/^\+/, '')}`}>WhatsApp</a>

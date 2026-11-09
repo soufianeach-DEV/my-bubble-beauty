@@ -20,9 +20,9 @@ export async function purge(sql, adminEmail) {
     tokens: (await tx`DELETE FROM email_tokens WHERE expires_at <= now() OR used_at IS NOT NULL`).count,
     unverified: await erase(tx, ids(await tx`SELECT id FROM users WHERE email_verified_at IS NULL AND created_at < now() - interval '7 days'`), 'unverified'),
     // Suppression demandée par la cliente : 30 jours pour revenir (rgpd.ts, GRACE_DAYS), puis effacement
-    deleted: await erase(tx, ids(await tx`SELECT id FROM users WHERE deleted_at <= now() - interval '30 days' AND email <> ${admin}`), 'deleted'),
-    // Le compte de la gérante n'est jamais effacé, même sans rendez-vous
-    inactive: await erase(tx, ids(await tx`SELECT u.id FROM users u WHERE u.created_at < now() - interval '3 years' AND u.email <> ${admin}
+    deleted: await erase(tx, ids(await tx`SELECT id FROM users WHERE deleted_at <= now() - interval '30 days' AND email <> ${admin} AND role IS NULL`), 'deleted'),
+    // Les comptes de la gérante et de l'équipe ne sont jamais effacés, même sans rendez-vous
+    inactive: await erase(tx, ids(await tx`SELECT u.id FROM users u WHERE u.created_at < now() - interval '3 years' AND u.email <> ${admin} AND u.role IS NULL
       AND NOT EXISTS (SELECT 1 FROM bookings b WHERE b.user_id = u.id AND b.starts_at > now() - interval '3 years')`), 'inactive'),
     guests: (await tx`UPDATE bookings SET guest_name = NULL, guest_phone = NULL
       WHERE starts_at < now() - interval '3 years' AND (guest_name IS NOT NULL OR guest_phone IS NOT NULL)`).count,

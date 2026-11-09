@@ -17,7 +17,7 @@ const PUBLIC = new Set([
   '/oauth/[provider]/retour',
   '/api/stripe/webhook',
 ]);
-// Seules routes ouvertes à l'admin avant le code TOTP : le code lui-même, et la déconnexion pour en sortir
+// Seules routes ouvertes à l'équipe (admin, gestionnaire) avant le code TOTP : le code lui-même, et la déconnexion pour en sortir
 const BEFORE_CODE = new Set(['/admin/code', '/admin/deconnexion']);
 // Compte en suppression (30 jours) : réactiver, effacer tout de suite ou se déconnecter, rien d'autre
 const REACTIVATE = '/[folder]/compte/reactiver';
@@ -45,11 +45,11 @@ export const onRequest = defineMiddleware(async (ctx, next) => {
   if (!found) return ctx.redirect(`/${folder ?? 'fr'}/compte/connexion?retour=${encodeURIComponent(ctx.url.pathname + ctx.url.search)}`);
   if (found.user.deletedAt && route !== REACTIVATE) return ctx.redirect(`/${folder ?? 'fr'}/compte/reactiver`);
   if (!found.user.deletedAt && route === REACTIVATE) return ctx.redirect(`/${folder ?? 'fr'}/compte`);
-  if ((route === '/admin' || route.startsWith('/admin/')) && !found.user.isAdmin) {
+  if ((route === '/admin' || route.startsWith('/admin/')) && !found.user.role) {
     log('admin_denied', { user_id: found.user.id, ip: ctx.locals.ip });
     return new Response(null, { status: 404 });
   }
   // Compte de la gérante compris (mot de passe, appareils) : sans le code, le seul mot de passe suffirait à les changer
-  if (found.user.isAdmin && !found.session.mfaAt && !BEFORE_CODE.has(route)) return ctx.redirect('/admin/code');
+  if (found.user.role && !found.session.mfaAt && !BEFORE_CODE.has(route)) return ctx.redirect('/admin/code');
   return next();
 });

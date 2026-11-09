@@ -2,10 +2,10 @@
 export const prerender = false;
 // Rendez-vous pris par téléphone ou WhatsApp : confirmé tout de suite, hors horaires et délais, jamais sur un autre rendez-vous
 import Admin from '../_layout.astro';
-import { adminId, byCategory, listServices, newBooking, readForm } from '../../../lib/server/admin.ts';
+import { staffId, byCategory, listServices, newBooking, readForm } from '../../../lib/server/admin.ts';
 import { todayBrussels } from '../../../lib/server/pricing.ts';
 
-const me = adminId(Astro.locals);
+const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
 let error = '';
 // Valeurs gardées après un refus : seule l'heure est souvent à changer

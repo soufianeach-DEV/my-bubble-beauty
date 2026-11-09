@@ -5,12 +5,17 @@ import { COOKIE, SESSION_COOKIE, hashToken, newToken, sessionCookie } from './co
 import { sql } from './db.ts';
 import { SESSION_IDLE, SESSION_MAX, SESSION_REMEMBER, SESSION_REMEMBER_SECONDS } from './session-limits.mjs';
 
-// deletedAt : compte en suppression (30 jours) ; le middleware ne lui ouvre que la page de réactivation
-export type SessionUser = { id: number; email: string; name: string | null; phone: string | null; locale: 'fr' | 'nl' | 'en'; isAdmin: boolean; deletedAt: Date | null; healthConsent: Date | null };
+// super : la gérante (ADMIN_EMAIL) ; admin et gestionnaire : rôles donnés depuis /admin/utilisateurs ; null : cliente
+export type Role = 'super' | 'admin' | 'gestionnaire';
+// role : accès à /admin (après le code TOTP) ; deletedAt : compte en suppression (30 jours), le middleware ne lui ouvre que la réactivation
+export type SessionUser = { id: number; email: string; name: string | null; phone: string | null; locale: 'fr' | 'nl' | 'en'; role: Role | null; deletedAt: Date | null; healthConsent: Date | null };
 export type SessionInfo = { hash: Buffer; mfaAt: Date | null; createdAt: Date };
 
 // L'admin se décide côté serveur : e-mail vérifié égal à ADMIN_EMAIL, jamais un champ de formulaire
 export const isAdminEmail = (email: string) => email === ADMIN_EMAIL.trim().toLowerCase();
+// Rôle effectif : jamais sans adresse confirmée ; la gérante l'emporte sur toute ligne de rôle
+export const roleOf = (u: { email: string; email_verified_at: Date | null; role: string | null }): Role | null =>
+  u.email_verified_at === null ? null : isAdminEmail(u.email) ? 'super' : u.role === 'admin' || u.role === 'gestionnaire' ? u.role : null;
 
 // Lit la session du cookie et prolonge l'inactivité ; null si inconnue ou expirée
 export async function readSession(token: string): Promise<{ user: SessionUser; session: SessionInfo } | null> {
@@ -22,11 +27,12 @@ export async function readSession(token: string): Promise<{ user: SessionUser; s
       AND s.last_seen_at > now() - (CASE WHEN s.remember THEN ${SESSION_REMEMBER} ELSE ${SESSION_IDLE} END)::interval
       -- Compte bloqué par l'institut : plus aucune session valable, même ouverte avant le blocage
       AND u.blocked_at IS NULL
-    RETURNING s.token_hash, s.mfa_at, s.created_at, u.id, u.email, u.name, u.phone, u.locale, u.email_verified_at, u.deleted_at, u.health_consent_at`;
+      -- Compte supprimé par l'admin : même effet, jusqu'à sa restauration
+      AND u.removed_at IS NULL
+    RETURNING s.token_hash, s.mfa_at, s.created_at, u.id, u.email, u.name, u.phone, u.locale, u.email_verified_at, u.deleted_at, u.health_consent_at, u.role`;
   if (!r) return null;
-  const isAdmin = r.email_verified_at !== null && isAdminEmail(r.email);
   return {
-    user: { id: r.id, email: r.email, name: r.name, phone: r.phone, locale: r.locale, isAdmin, deletedAt: r.deleted_at, healthConsent: r.health_consent_at },
+    user: { id: r.id, email: r.email, name: r.name, phone: r.phone, locale: r.locale, role: roleOf(r as never), deletedAt: r.deleted_at, healthConsent: r.health_consent_at },
     session: { hash: r.token_hash, mfaAt: r.mfa_at, createdAt: r.created_at },
   };
 }

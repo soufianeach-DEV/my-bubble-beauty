@@ -1,6 +1,6 @@
 // Authentification : argon2id poivré, vérification à temps constant, limites de tentatives, code TOTP de l'admin.
 import { hash, verify } from '@node-rs/argon2';
-import { ADMIN_TOTP_SECRET, PASSWORD_PEPPER } from 'astro:env/server';
+import { PASSWORD_PEPPER } from 'astro:env/server';
 import { deviceToken, isDevice } from './cookie.ts';
 import { sql } from './db.ts';
 import { journal } from './journal.ts';
@@ -52,9 +52,9 @@ export async function login(email: string, password: string, ip: string, device?
     log('login_locked', { ip });
     return null;
   }
-  // gone : supprimé depuis plus de 30 jours, en attente de la purge ; il ne se réactive plus
+  // gone : supprimé depuis plus de 30 jours (en attente de la purge, il ne se réactive plus) ou supprimé par l'admin
   const [u] = await sql`SELECT id, email, locale, password_hash, email_verified_at, blocked_at IS NOT NULL AS blocked,
-    deleted_at IS NOT NULL AND deleted_at <= now() - interval '30 days' AS gone FROM users WHERE email = ${email}`;
+    (deleted_at IS NOT NULL AND deleted_at <= now() - interval '30 days') OR removed_at IS NOT NULL AS gone FROM users WHERE email = ${email}`;
   const ok = await verifyPassword(u?.password_hash, password);
   if (!ok || u.gone) {
     journal('login_failed', { client: u?.id ?? null, ip });
@@ -83,14 +83,15 @@ export function clearLoginLimits(email: string) {
 }
 
 // Code de l'appli d'authentification : ±1 pas, rejeu refusé (le pas doit dépasser le dernier accepté), essais limités comme la connexion
+// secret : celui de la gérante (ADMIN_TOTP_SECRET) ou celui de la personne de l'équipe (staff.ts)
 // ip : celle de la requête, pour remonter une attaque sur le second facteur (le login_ok de la session peut venir d'ailleurs)
-export async function checkAdminCode(userId: number, code: string, ip: string): Promise<boolean> {
+export async function checkAdminCode(userId: number, secret: string, code: string, ip: string): Promise<boolean> {
   const id = String(userId);
   if (blocked('totp', id)) {
     log('totp_locked', { user_id: userId, ip });
     return false;
   }
-  const step = verifyTotp(ADMIN_TOTP_SECRET, code);
+  const step = verifyTotp(secret, code);
   const [row] = step === null ? [] : await sql`UPDATE users SET totp_last_step = ${step} WHERE id = ${userId} AND totp_last_step < ${step} RETURNING id`;
   if (!row) {
     hit('totp', id);

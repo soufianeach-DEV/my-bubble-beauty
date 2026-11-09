@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { base32Decode, base32Encode, totp, verifyTotp } from './totp.ts';
+import { base32Decode, base32Encode, newTotpSecret, openSecret, sealSecret, totp, verifyTotp } from './totp.ts';
 
 const KEY = Buffer.from('12345678901234567890');
 
@@ -26,4 +26,16 @@ test('verifyTotp : ±1 pas accepté, ±2 refusé, format strict', () => {
   assert.equal(verifyTotp(secret, totp(KEY, step + 2), now), null);
   assert.equal(verifyTotp(secret, totp(KEY, step - 2), now), null);
   for (const bad of ['', '12345', '1234567', '12 456', 'abcdef']) assert.equal(verifyTotp(secret, bad, now), null);
+});
+
+test("secret de l'équipe : chiffré, relu avec le même poivre, refusé sinon", () => {
+  const secret = newTotpSecret();
+  assert.equal(base32Decode(secret).length, 20);
+  const blob = sealSecret('poivre-un', secret);
+  assert.ok(!blob.includes(Buffer.from(secret)));
+  assert.equal(openSecret('poivre-un', blob), secret);
+  assert.equal(openSecret('poivre-deux', blob), null);
+  const touched = Buffer.from(blob);
+  touched[touched.length - 1] ^= 1;
+  assert.equal(openSecret('poivre-un', touched), null);
 });

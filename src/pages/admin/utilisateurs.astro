@@ -1,0 +1,140 @@
+---
+export const prerender = false;
+// Utilisateurs : l'équipe de l'institut (admin, gestionnaire). Rôle donné à un compte existant, changé, retiré ; compte désactivé,
+// supprimé (suppression douce) ou restauré ; application d'authentification relancée. Admin seulement, jamais sur soi ni sur la gérante.
+import Admin from './_layout.astro';
+import { adminId, fmtDateTime, readForm } from '../../lib/server/admin.ts';
+import { ENROL_DAYS, listStaff, ROLE_LABELS, staffAction } from '../../lib/server/staff.ts';
+
+const me = adminId(Astro.locals);
+if (!me) return new Response(null, { status: 404 });
+let error = '';
+let errorId: number | null = null;
+let draft = { email: '', role: 'gestionnaire' };
+if (Astro.request.method === 'POST') {
+  const form = await readForm(Astro.request);
+  if (!form) return new Response(null, { status: 413 });
+  const r = await staffAction(me, form);
+  if (r.ok) return Astro.redirect(`/admin/utilisateurs?ok=${r.key}#u-${r.id}`, 303);
+  error = r.error;
+  errorId = Number(form.get('id')) || null;
+  if (form.get('action') === 'grant') draft = { email: String(form.get('email') ?? '').slice(0, 254), role: String(form.get('role') ?? 'gestionnaire') };
+  Astro.response.status = 400;
+}
+const DONE: Record<string, string> = {
+  grant: `Rôle enregistré. La personne se connecte avec son compte habituel et enregistre son application d'authentification dans les ${ENROL_DAYS} jours.`,
+  role: 'Rôle changé.', demote: 'Rôle retiré : le compte redevient un compte client et ses sessions sont fermées.',
+  block: 'Compte désactivé : la personne est déconnectée et ne peut plus se connecter.', unblock: 'Compte réactivé.',
+  remove: 'Compte supprimé : il est masqué et ne peut plus se connecter. Son historique reste.', restore: 'Compte restauré.',
+  reset_totp: `Application d'authentification relancée : la personne en enregistre une nouvelle dans les ${ENROL_DAYS} jours.`,
+};
+const done = !error && DONE[Astro.url.searchParams.get('ok') ?? ''];
+const staff = await listStaff();
+const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', dateStyle: 'medium' }).format;
+---
+<Admin title="Utilisateurs">
+{done && <p class="notice" role="status">{done}</p>}
+{error && errorId === null && <p class="notice notice--error" role="alert">{error}</p>}
+
+<section aria-labelledby="h-add">
+  <h2 id="h-add">Ajouter un admin ou un gestionnaire</h2>
+  <p class="hint">La personne crée d'abord son compte sur le site et confirme son adresse. Admin : tout l'espace. Gestionnaire : accueil, agenda, rendez-vous, fiches clientes (notes comprises) et prestations, sans horaires, codes promo, journal, métriques ni utilisateurs.</p>
+  <form class="form add" method="post">
+    <input type="hidden" name="action" value="grant">
+    <div class="field grow"><label for="email">Adresse e-mail du compte</label><input id="email" name="email" type="email" value={draft.email} maxlength="254" autocomplete="off" required></div>
+    <div class="field"><label for="role">Rôle</label>
+      <select id="role" name="role">
+        <option value="gestionnaire" selected={draft.role !== 'admin'}>Gestionnaire</option>
+        <option value="admin" selected={draft.role === 'admin'}>Admin</option>
+      </select>
+    </div>
+    <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+    <button class="btn btn--solid" type="submit">Ajouter</button>
+  </form>
+</section>
+
+<section aria-labelledby="h-team">
+  <h2 id="h-team">Équipe</h2>
+  <ul class="team">{staff.map((s) => {
+    const locked = s.role === 'super' || s.id === me;
+    const totp = s.role === 'super' ? 'Code de la gérante' : s.totp_confirmed_at ? 'Application enregistrée' : s.enrol_until ? `Application à enregistrer avant le ${day(s.enrol_until)}` : "Délai pour enregistrer l'application passé";
+    return (
+    <li id={`u-${s.id}`} class:list={['member', { 'member--off': s.blocked_at || s.removed_at }]}>
+      <div class="who">
+        <strong>{s.name || s.email}</strong>{s.name && <small>{s.email}</small>}
+        <p class="tags">
+          <span class={s.role === 'gestionnaire' ? 'badge' : 'badge badge--ok'}>{ROLE_LABELS[s.role]}</span>
+          {s.blocked_at && <span class="badge badge--alert">Désactivé le {day(s.blocked_at)}</span>}
+          {s.removed_at && <span class="badge badge--alert">Supprimé le {day(s.removed_at)}</span>}
+          <span class={s.totp_confirmed_at || s.role === 'super' ? 'badge' : 'badge badge--wait'}>{totp}</span>
+        </p>
+        {s.role_at && s.role !== 'super' && <small>Dans l'équipe depuis le {fmtDateTime(s.role_at)}</small>}
+      </div>
+      {errorId === s.id && <p class="notice notice--error" role="alert">{error}</p>}
+      {locked ? <p class="hint">{s.role === 'super' ? 'Compte de la gérante : il ne peut être ni rétrogradé, ni désactivé, ni supprimé.' : 'Votre compte : une autre admin peut le modifier.'}</p> : (
+        <details class="manage" open={errorId === s.id}>
+          <summary>Modifier</summary>
+          <div class="acts">
+            <form class="act" method="post">
+              <input type="hidden" name="action" value="role"><input type="hidden" name="id" value={s.id}>
+              <div class="field"><label for={`r-${s.id}`}>Rôle</label>
+                <select id={`r-${s.id}`} name="role">
+                  <option value="gestionnaire" selected={s.role === 'gestionnaire'}>Gestionnaire</option>
+                  <option value="admin" selected={s.role === 'admin'}>Admin</option>
+                </select>
+              </div>
+              <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+              <button class="btn btn--ghost" type="submit">Changer le rôle</button>
+            </form>
+            <form class="act" method="post">
+              <input type="hidden" name="action" value={s.blocked_at ? 'unblock' : 'block'}><input type="hidden" name="id" value={s.id}>
+              <p class="hint">{s.blocked_at ? 'La personne pourra de nouveau se connecter.' : 'Déconnecte la personne et bloque sa connexion. Réactivable.'}</p>
+              <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+              <button class="btn btn--ghost" type="submit">{s.blocked_at ? 'Réactiver' : 'Désactiver'}</button>
+            </form>
+            <form class="act" method="post">
+              <input type="hidden" name="action" value={s.removed_at ? 'restore' : 'remove'}><input type="hidden" name="id" value={s.id}>
+              <p class="hint">{s.removed_at ? "Le compte redevient utilisable (sauf s'il est aussi désactivé)." : "Masque le compte et bloque sa connexion. Rien n'est effacé, restaurable."}</p>
+              <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+              <button class="btn btn--ghost" type="submit">{s.removed_at ? 'Restaurer' : 'Supprimer'}</button>
+            </form>
+            <form class="act" method="post">
+              <input type="hidden" name="action" value="reset_totp"><input type="hidden" name="id" value={s.id}>
+              <p class="hint">Téléphone perdu ou délai passé : la personne enregistre une nouvelle application à sa prochaine connexion.</p>
+              <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+              <button class="btn btn--ghost" type="submit">Relancer l'application</button>
+            </form>
+            <form class="act" method="post">
+              <input type="hidden" name="action" value="demote"><input type="hidden" name="id" value={s.id}>
+              <p class="hint">Le compte redevient un compte client, sans accès à l'administration.</p>
+              <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+              <button class="btn btn--ghost" type="submit">Retirer de l'équipe</button>
+            </form>
+          </div>
+        </details>
+      )}
+    </li>
+  ); })}</ul>
+</section>
+</Admin>
+
+<style>
+  section{margin-bottom:2rem}
+  .add{display:flex;flex-wrap:wrap;gap:.75rem 1rem;align-items:flex-end}
+  .add .grow{flex:1 1 16rem;min-width:0}
+  select{min-height:44px;padding:.4rem .6rem;border:1px solid var(--line-soft);border-radius:8px;background:rgb(var(--card));color:var(--text);font:inherit}
+  .check{display:flex;align-items:center;gap:.5rem;min-height:44px}
+  .check input{width:1.25rem;height:1.25rem;margin:0;accent-color:var(--accent)}
+  .team{display:grid;gap:.75rem;list-style:none;margin:0;padding:0}
+  .member{display:grid;gap:.75rem;padding:1rem 1.25rem;border:1px solid var(--line-soft);border-radius:16px;background:var(--bg);scroll-margin-top:1rem}
+  .member--off{opacity:.8}
+  .who{display:grid;gap:.25rem;min-width:0;overflow-wrap:anywhere}
+  .who small{color:var(--text-soft)}
+  .tags{display:flex;flex-wrap:wrap;gap:.4rem;margin:.25rem 0 0}
+  .member .notice,.member .hint{margin:0}
+  .manage summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:500}
+  /* Une carte par action : côte à côte sur ordinateur, l'une sous l'autre sur téléphone */
+  .acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:.75rem;margin-top:.5rem}
+  .act{display:grid;gap:.5rem;align-content:start;padding:.85rem 1rem;border:1px solid var(--line-soft);border-radius:12px}
+  .act .btn{min-height:44px;padding:.55rem 1rem;justify-self:start}
+</style>

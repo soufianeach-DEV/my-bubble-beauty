@@ -2,12 +2,12 @@
 export const prerender = false;
 // Agenda : rendez-vous du jour ou de la semaine à l'heure de Bruxelles, annulation en deux temps et remboursement de l'acompte
 import Admin from './_layout.astro';
-import { adminId, agendaAction, fmtDay, fmtTime, readForm } from '../../lib/server/admin.ts';
+import { staffId, agendaAction, fmtDay, fmtTime, readForm } from '../../lib/server/admin.ts';
 import { addDays, monday } from '../../lib/server/admin-form.ts';
 import { adminAgenda } from '../../lib/server/booking.ts';
 import { euros, isDay, todayBrussels } from '../../lib/server/pricing.ts';
 
-const me = adminId(Astro.locals);
+const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
 const q = Astro.url.searchParams;
 const vue = q.get('vue') === 'jour' ? 'jour' : 'semaine';

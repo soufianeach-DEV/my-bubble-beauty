@@ -2,11 +2,11 @@
 export const prerender = false;
 // Prestations : durée, prix, ordre, noms et ouverture à la réservation en ligne ; une ligne = un formulaire, jamais de suppression
 import Admin from './_layout.astro';
-import { adminId, bulkServices, byCategory, listServices, readForm, saveService } from '../../lib/server/admin.ts';
+import { staffId, bulkServices, byCategory, listServices, readForm, saveService } from '../../lib/server/admin.ts';
 import { JS_VERSION } from '../../lib/site';
 import { centsInput } from '../../lib/server/admin-form.ts';
 
-const me = adminId(Astro.locals);
+const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
 // Message affiché sous la ligne enregistrée (le formulaire renvoie sur son ancre)
 let flash: { id: number; text: string; error?: boolean } | null = null;

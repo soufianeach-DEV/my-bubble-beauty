@@ -25,14 +25,18 @@ const LINKS = [
   ['/admin/codes-promo', 'Codes promo', 'M20 12l-8 8-9-9V3h8zM7.5 7.5h.01'],
   ['/admin/journal', 'Journal', 'M5 4h14v16H5zM9 8h6M9 12h6M9 16h4'],
   ['/admin/metriques', 'Métriques', 'M4 20h16M7 16v-4M12 16V7M17 16v-7'],
+  ['/admin/utilisateurs', 'Utilisateurs', 'M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6zM9 12l2 2 4-4'],
 ] as const;
+// La gestionnaire ne voit que ses pages (staffId) ; les autres lui répondent 404 de toute façon
+const STAFF = new Set(['/admin', '/admin/agenda', '/admin/reservations/nouvelle', '/admin/clientes', '/admin/prestations']);
+const links = Astro.locals.user?.role === 'gestionnaire' ? LINKS.filter(([href]) => STAFF.has(href)) : LINKS;
 // La déconnexion est ouverte avant le code par le middleware : le bouton reste aussi sur la page du code
 ---
 <Base lang="fr" pageKey="home" canonicalPath={here} title={`${title} — Admin My Bubble Beauty`} description="Administration des rendez-vous." noindex bare mainClass="legal admin-shell">
 <article class="admin">
 <aside class="admin-side">
   <p class="admin-brand">My Bubble <span>Beauty</span><small>Administration</small></p>
-  {nav && <nav aria-label="Administration"><ul>{LINKS.map(([href, label, d]) => (
+  {nav && <nav aria-label="Administration"><ul>{links.map(([href, label, d]) => (
     <li><a href={href} aria-current={href === section ? 'page' : undefined}>
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d={d} /></svg>{label}
     </a></li>
