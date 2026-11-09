@@ -257,6 +257,9 @@ test('comptes, réservations et sécurité sur une vraie base', { skip: !url && 
       assert.equal(await accounts.signInWithLink(cookies(), old, '127.0.0.1', null), null);
     });
   } finally {
+    // Rendez-vous du test retirés : relancée sur la même base, la suite ne bute plus sur bookings_no_overlap
+    await sql`DELETE FROM bookings WHERE service_id IN (SELECT id FROM services WHERE slug = ${tag})`;
+    await sql`DELETE FROM services WHERE slug = ${tag}`;
     await sql.end();
   }
 });

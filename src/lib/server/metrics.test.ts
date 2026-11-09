@@ -1,5 +1,6 @@
 // Sur une base jetable (TEST_DATABASE_URL=postgres://…/base_de_test npm test) : chiffres de l'onglet Métriques.
 // Mesure l'écart avant / après l'ajout de rendez-vous de test : le résultat ne dépend pas du contenu de la base.
+// Les fichiers de test tournent en série (package.json : --test-concurrency=1) : sinon un autre fichier qui écrit en même temps fausse l'écart.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { registerHooks } from 'node:module';
@@ -25,14 +26,15 @@ test('métriques : CA, absences, annulations, à venir, nouvelles clientes', { s
     const before = await metrics(30);
     const [u] = await sql`INSERT INTO users (email, password_hash, email_verified_at) VALUES (${`${tag}@test.local`}, 'x', now()) RETURNING id`;
     const [s] = await sql`INSERT INTO services (slug, category, name_fr, name_nl, name_en, duration_min, price_cents) VALUES (${tag}, 'visage', 'Soin test', 'Test', 'Test', 60, 5000) RETURNING id`;
-    // Rendez-vous d'une heure, placé à offsetDays jours de maintenant
+    // Rendez-vous d'une heure, placé à offsetDays jours de maintenant. Jamais entre J-4 et J-3 : comptes.test.ts y pose un rendez-vous
+    // confirmé de 24 h, et la contrainte bookings_no_overlap refusait l'un des deux quand les fichiers tournent en parallèle.
     const ins = (offsetDays: number, status: string, discount = 0, noShow = false) => sql`
       INSERT INTO bookings (user_id, service_id, status, price_cents, discount_cents, no_show, starts_at, ends_at)
       VALUES (${u.id}, ${s.id}, ${status}, 5000, ${discount}, ${noShow},
         now() + make_interval(days => ${offsetDays}), now() + make_interval(days => ${offsetDays}, hours => 1))`;
-    await ins(-3, 'confirmed', 500); // honoré : 45 €
-    await ins(-4, 'confirmed', 0, true); // absence
-    await ins(-5, 'cancelled'); // annulé
+    await ins(-6, 'confirmed', 500); // honoré : 45 €
+    await ins(-7, 'confirmed', 0, true); // absence
+    await ins(-8, 'cancelled'); // annulé
     await ins(5, 'confirmed'); // à venir
     // Audience : 2 visiteurs hier (3 pages en tout), 1 il y a 40 jours (hors période)
     const fp = (n: number) => Buffer.alloc(16, n);

@@ -8,7 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "start": "node server.mjs",
-    "test": "node --test \"src/**/*.test.ts\"",
+    "test": "node --test --test-concurrency=1 \"src/**/*.test.ts\"",
     "admin:totp": "node scripts/admin-totp.mjs"
   },
   "dependencies": {
