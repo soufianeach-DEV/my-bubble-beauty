@@ -46,6 +46,8 @@ if (Astro.request.method === 'POST') {
 const c = await clientDetail(id);
 if (!c) return new Response(null, { status: 404 });
 const { user: u, bookings, stats, events } = c;
+// Rendez-vous à venir : signalés avant une suppression (ils restent dans l'agenda)
+const upcoming = bookings.filter((b) => !b.past && b.status === 'confirmed');
 const [consents, sv, card, rewardable, prof] = await Promise.all([listConsents(u.id), suivi(u.id), loyaltyCard(u.id), rewardableBookings(u.id), readProfile(u.id)]);
 // Badges d'alerte d'après la fiche enregistrée ; après un refus, le formulaire réaffiche toute la saisie, pas seulement les notes
 const careAlerts = alertsOf(prof.care, prof.health);
@@ -254,7 +256,8 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
   <input type="hidden" name="id" value={u.id}>
   {u.removed_at
     ? <p class="hint">Le compte revient dans la liste des clientes. S'il est aussi désactivé, réactivez-le pour qu'elle puisse se connecter.</p>
-    : <p class="hint">Supprimer retire le compte des listes et ferme ses sessions. Rien n'est effacé : rendez-vous, notes et journal restent, et le compte se restaure depuis l'onglet « Supprimées ».</p>}
+    : <><p class="hint">Supprimer retire le compte des listes et ferme ses sessions. Rien n'est effacé : rendez-vous, notes et journal restent, et le compte se restaure depuis l'onglet « Supprimées ».</p>
+      {upcoming.length > 0 && <p class="notice">{upcoming.length} rendez-vous à venir : ils restent dans l'agenda. Annulez-les d'abord si besoin.</p>}</>}
   <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
   {u.removed_at
     ? <button class="btn btn--solid" type="submit" name="action" value="unremove">Restaurer le compte</button>

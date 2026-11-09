@@ -1,13 +1,35 @@
 ---
 export const prerender = false;
-// Clientes : comptes confirmés, recherche par nom, e-mail ou téléphone, filtre par état ; un clic ouvre la fiche
+// Clientes : comptes confirmés, recherche par nom, e-mail ou téléphone, filtre par état ; un clic ouvre la fiche.
+// Colonne Actions (admin seulement, comme sur la fiche) : désactiver ou réactiver, supprimer (suppression douce) ou restaurer.
+// Même chemin que la fiche (clientAction) : sessions fermées, journal ; l'effacement définitif reste sur la fiche.
 import Admin from './_layout.astro';
-import { staffId, fmtDateTime } from '../../lib/server/admin.ts';
-import { clientCounts, listClients, type ClientFilter } from '../../lib/server/admin-clientes.ts';
+import { adminId, staffId, fmtDateTime, readForm } from '../../lib/server/admin.ts';
+import { clientAction, clientCounts, listClients, type ClientFilter } from '../../lib/server/admin-clientes.ts';
 
 const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
+const manage = adminId(Astro.locals) !== null;
 const sp = Astro.url.searchParams;
+let error = '';
+let errorId: number | null = null;
+if (Astro.request.method === 'POST') {
+  if (!manage) return new Response(null, { status: 404 });
+  const form = await readForm(Astro.request);
+  if (!form) return new Response(null, { status: 413 });
+  const action = String(form.get('action') ?? '');
+  // Seules les actions de la liste passent ici ; notes, annulation de suppression et effacement restent sur la fiche
+  const r = ['block', 'unblock', 'remove', 'unremove'].includes(action) ? await clientAction(me, form, true) : { ok: false as const, error: 'Action inconnue.' };
+  if (r.ok) {
+    // Même onglet, même recherche et même page après l'action
+    const back = new URLSearchParams(sp);
+    back.set('ok', r.key ?? '');
+    return Astro.redirect(`/admin/clientes?${back}#c-${r.id}`, 303);
+  }
+  error = r.error;
+  errorId = Number(form.get('id')) || null;
+  Astro.response.status = 400;
+}
 const q = (sp.get('q') ?? '').slice(0, 100);
 const FILTERS: Record<ClientFilter, string> = { actives: 'Actives', suppression: 'En suppression (30 jours)', bloquees: 'Désactivées', toutes: 'Toutes', supprimees: 'Supprimées' };
 const filter = (Object.hasOwn(FILTERS, sp.get('etat') ?? '') ? sp.get('etat') : 'actives') as ClientFilter;
@@ -16,9 +38,14 @@ const [{ rows, more }, counts] = await Promise.all([listClients(q, filter, page)
 const link = (p: number, etat: string = filter) => `/admin/clientes?${new URLSearchParams({ q, etat, page: String(p) })}`;
 const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', dateStyle: 'medium' }).format;
 const erased = sp.get('ok') === 'efface';
+const DONE: Record<string, string> = { block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter ni réserver. Ses rendez-vous restent.', unblock: 'Compte réactivé.',
+  remove: "Compte supprimé : il sort des listes et ne peut plus se connecter. Ses rendez-vous restent ; rien n'est effacé.", unremove: 'Compte restauré : la cliente peut de nouveau se connecter.' };
+const done = !error && DONE[sp.get('ok') ?? ''];
 ---
 <Admin title="Clientes">
 {erased && <p class="notice" role="status">Compte effacé. Ses rendez-vous restent dans l'agenda, marqués « compte supprimé ».</p>}
+{done && <p class="notice" role="status">{done}</p>}
+{error && <p class="notice notice--error" role="alert">{error}</p>}
 <nav class="tabs" aria-label="État des comptes">{(Object.keys(FILTERS) as ClientFilter[]).map((k) => (
   <a href={link(1, k)} aria-current={k === filter ? 'page' : undefined}>{FILTERS[k]} <span class="count">{counts[k]}</span></a>
 ))}</nav>
@@ -30,15 +57,33 @@ const erased = sp.get('ok') === 'efface';
 <p class="hint">Seuls les comptes dont l'adresse est confirmée apparaissent. Les rendez-vous saisis pour une personne sans compte restent dans l'agenda.</p>
 {rows.length === 0 ? <p>Aucune cliente ne correspond.</p> : (
 <div class="table-wrap"><table class="data-table">
-  <thead><tr><th scope="col">Cliente</th><th scope="col">Téléphone</th><th scope="col">Rendez-vous</th><th scope="col">Dernière visite</th><th scope="col">État</th></tr></thead>
+  <thead><tr><th scope="col">Cliente</th><th scope="col">Téléphone</th><th scope="col">Rendez-vous</th><th scope="col">Dernière visite</th><th scope="col">État</th>{manage && <th scope="col">Actions</th>}</tr></thead>
   <tbody>{rows.map((c) => (
-    <tr>
+    <tr id={`c-${c.id}`} class:list={{ 'row-error': errorId === c.id }}>
       <td><a href={`/admin/clientes/${c.id}`}>{c.name || c.email}</a>{c.name && <><br><small>{c.email}</small></>}</td>
       <td>{c.phone ? <a href={`tel:${c.phone.replace(/[^0-9+]/g, '')}`}>{c.phone}</a> : '—'}</td>
       <td>{c.done} passé{c.done > 1 && 's'} · {c.upcoming} à venir{c.no_shows > 0 && <><br><small>{c.no_shows} absence{c.no_shows > 1 && 's'}</small></>}</td>
       <td>{c.last_at ? day(c.last_at) : '—'}</td>
       <td>{c.removed_at && <span class="badge badge--alert">Supprimée le {day(c.removed_at)}</span>}{c.blocked_at && <span class="badge badge--alert">Désactivée</span>}{c.deleted_at && <span class="badge badge--wait">Suppression demandée le {day(c.deleted_at)}</span>}
         {!c.blocked_at && !c.deleted_at && !c.removed_at && <>Cliente depuis {day(c.created_at)}</>}</td>
+      {manage && <td>
+        <details class="row-acts">
+          <summary>Actions<span class="visually-hidden"> pour {c.name || c.email}</span></summary>
+          <div class="acts">
+            {!c.removed_at && <form method="post">
+              <input type="hidden" name="action" value={c.blocked_at ? 'unblock' : 'block'}><input type="hidden" name="id" value={c.id}>
+              <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+              <button class="btn btn--ghost" type="submit">{c.blocked_at ? 'Réactiver' : 'Désactiver'}</button>
+            </form>}
+            <form method="post">
+              <input type="hidden" name="action" value={c.removed_at ? 'unremove' : 'remove'}><input type="hidden" name="id" value={c.id}>
+              {!c.removed_at && c.upcoming > 0 && <p class="warn">{c.upcoming} rendez-vous à venir : ils restent dans l'agenda. Annulez-les d'abord si besoin.</p>}
+              <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+              <button class="btn btn--ghost" type="submit">{c.removed_at ? 'Restaurer' : 'Supprimer'}</button>
+            </form>
+          </div>
+        </details>
+      </td>}
     </tr>
   ))}</tbody>
 </table></div>
@@ -59,4 +104,12 @@ const erased = sp.get('ok') === 'efface';
   .bar{margin:0 0 1.25rem;align-items:flex-end}
   .bar .grow{flex:1 1 16rem}
   td .badge + .badge{margin-top:.3rem}
+  /* Actions repliées dans la ligne : la liste reste lisible, deux clics et une case pour agir */
+  .row-acts summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:500;white-space:nowrap}
+  .row-acts .acts{display:grid;gap:.75rem;padding:.5rem 0;min-width:13rem}
+  .row-acts form{display:grid;gap:.35rem;justify-items:start}
+  .row-acts .check{display:flex;align-items:center;gap:.5rem;min-height:44px;font-size:.875rem}
+  .row-acts .check input{width:1.25rem;height:1.25rem;margin:0;accent-color:var(--accent)}
+  .row-acts .warn{margin:0;font-size:.8125rem;color:var(--text-soft);max-width:16rem}
+  .row-error{outline:2px solid var(--accent);outline-offset:-2px}
 </style>
