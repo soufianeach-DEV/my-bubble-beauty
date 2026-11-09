@@ -65,11 +65,11 @@ export const giftForm = z.discriminatedUnion('action', [
     recipient: line(100, 'Pour : 100 caractères au plus.').min(1, 'Indiquez pour qui est le bon.'),
     recipient_email: z.string({ error: 'Adresse e-mail invalide.' }).trim().toLowerCase().max(254, 'Adresse e-mail invalide.')
       .refine((v) => v === '' || z.email().safeParse(v).success, 'Adresse e-mail du bénéficiaire invalide.').default(''),
-    service: z.coerce.number({ error: 'Choisissez le soin.' }).int().min(1, 'Choisissez le soin.'),
+    service: z.coerce.number({ error: 'Choisissez le soin.' }).int().min(1, 'Choisissez le soin.').max(2_000_000_000, 'Choisissez le soin.'),
     duration_label: line(40, 'Durée : 40 caractères au plus.').default(''),
     message: z.string({ error: 'Message : 300 caractères au plus.' }).max(300, 'Message : 300 caractères au plus.').default('').transform((v) => v.replace(/\r\n/g, '\n').trim()),
   }),
-  z.object({ action: z.enum(['used', 'cancel']), id: z.coerce.number().int().min(1), confirm: z.literal('on', { error: 'Cochez la case pour confirmer.' }) }),
+  z.object({ action: z.enum(['used', 'cancel']), id: z.coerce.number().int().min(1).max(2_000_000_000), confirm: z.literal('on', { error: 'Cochez la case pour confirmer.' }) }),
 ], { error: 'Action inconnue.' });
 
 export async function giftAction(actor: number, form: FormData): Promise<Result> {

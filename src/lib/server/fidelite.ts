@@ -49,9 +49,9 @@ export const rewardableBookings = (userId: number) => sql<{ id: number; starts_a
   ORDER BY b.starts_at LIMIT 20`;
 
 export const rewardForm = z.object({
-  id: z.coerce.number().int().min(1),
+  id: z.coerce.number().int().min(1).max(2_000_000_000),
   kind: z.enum(['discount', 'free'], { error: 'Avantage inconnu.' }),
-  booking: z.coerce.number({ error: 'Choisissez le rendez-vous.' }).int().min(1, 'Choisissez le rendez-vous.'),
+  booking: z.coerce.number({ error: 'Choisissez le rendez-vous.' }).int().min(1, 'Choisissez le rendez-vous.').max(2_000_000_000, 'Choisissez le rendez-vous.'),
   confirm: z.literal('on', { error: 'Cochez la case pour confirmer.' }),
 });
 
