@@ -1,6 +1,6 @@
 // Authentification : argon2id poivré, vérification à temps constant, limites de tentatives, code TOTP de l'admin.
 import { hash, verify } from '@node-rs/argon2';
-import { PASSWORD_PEPPER } from 'astro:env/server';
+import { ADMIN_TOTP_SECRET, PASSWORD_PEPPER } from 'astro:env/server';
 import { deviceToken, isDevice, isMfaDevice, mfaToken } from './cookie.ts';
 import { sql } from './db.ts';
 import { journal } from './journal.ts';
