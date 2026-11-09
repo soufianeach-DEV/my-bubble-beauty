@@ -552,6 +552,167 @@
      ]
     },
     {
+     "id": "cire-visage",
+     "cat": "epilation",
+     "title": "Épilation à la cire - Visage",
+     "href": "epilation-cire",
+     "intro": "La douceur à fleur de peau.",
+     "items": [
+      {
+       "name": "Sourcils",
+       "href": null,
+       "amount": "12 €"
+      },
+      {
+       "name": "Lèvre supérieure",
+       "href": null,
+       "amount": "7,50 €"
+      },
+      {
+       "name": "Menton",
+       "href": null,
+       "amount": "7,50 €"
+      },
+      {
+       "name": "Joues",
+       "href": null,
+       "amount": "10 €"
+      },
+      {
+       "name": "Visage complet",
+       "href": null,
+       "amount": "30 €"
+      }
+     ]
+    },
+    {
+     "id": "cire-corps",
+     "cat": "epilation",
+     "title": "Épilation à la cire - Corps",
+     "href": "epilation-cire",
+     "items": [
+      {
+       "name": "Aisselles",
+       "href": null,
+       "amount": "10 €"
+      },
+      {
+       "name": "Demi-bras",
+       "href": null,
+       "amount": "12 €"
+      },
+      {
+       "name": "Bras complets",
+       "href": null,
+       "amount": "17,50 €"
+      },
+      {
+       "name": "Ventre",
+       "href": null,
+       "amount": "10 €"
+      },
+      {
+       "name": "Bas du dos",
+       "href": null,
+       "amount": "10 €"
+      },
+      {
+       "name": "Dos complet",
+       "href": null,
+       "amount": "25 €"
+      }
+     ]
+    },
+    {
+     "id": "cire-jambes",
+     "cat": "epilation",
+     "title": "Épilation à la cire - Jambes",
+     "href": "epilation-cire",
+     "items": [
+      {
+       "name": "Demi-jambes",
+       "href": null,
+       "amount": "22,50 €"
+      },
+      {
+       "name": "Cuisses",
+       "href": null,
+       "amount": "25 €"
+      },
+      {
+       "name": "Jambes complètes",
+       "href": null,
+       "amount": "30 €"
+      }
+     ]
+    },
+    {
+     "id": "cire-maillot",
+     "cat": "epilation",
+     "title": "Épilation à la cire - Maillot",
+     "href": "epilation-cire",
+     "items": [
+      {
+       "name": "Maillot classique",
+       "href": null,
+       "amount": "18 €"
+      },
+      {
+       "name": "Maillot échancré",
+       "href": null,
+       "amount": "25 €"
+      },
+      {
+       "name": "Maillot intégral",
+       "href": null,
+       "amount": "35 €"
+      },
+      {
+       "name": "Sillon interfessier seul",
+       "href": null,
+       "amount": "12 €"
+      }
+     ]
+    },
+    {
+     "id": "cire-forfaits",
+     "cat": "epilation",
+     "title": "Épilation à la cire - Forfaits",
+     "href": "epilation-cire",
+     "items": [
+      {
+       "name": "Demi-jambes + aisselles",
+       "href": null,
+       "amount": "33 €"
+      },
+      {
+       "name": "Demi-jambes + maillot classique",
+       "href": null,
+       "amount": "36 €"
+      },
+      {
+       "name": "Demi-jambes + maillot intégral",
+       "href": null,
+       "amount": "50 €"
+      },
+      {
+       "name": "Jambes complètes + aisselles",
+       "href": null,
+       "amount": "38 €"
+      },
+      {
+       "name": "Jambes complètes + maillot classique",
+       "href": null,
+       "amount": "53 €"
+      },
+      {
+       "name": "Jambes complètes + maillot intégral",
+       "href": null,
+       "amount": "65 €"
+      }
+     ]
+    },
+    {
      "id": "laser-visage",
      "cat": "epilation",
      "title": "Épilation laser - Visage",
@@ -1316,6 +1477,112 @@
      "alt": "Schéma de la peau quatre à six semaines après le traitement"
     }
    ]
+  },
+  "epilation-cire": {
+   "title": "L'art d'une peau douce",
+   "metaTitle": "Épilation à la cire à Dilbeek, chocolat ou miel - My Bubble Beauty",
+   "description": "Épilation à la cire au chocolat ou au miel, visage, corps, jambes et maillot, et forfaits. Précautions avant le soin et tarifs.",
+   "articleHtml": "<p>Offrez à votre peau un véritable moment de douceur grâce à nos épilations à la cire.</p><p>Nous utilisons une cire de qualité, déclinée en deux textures gourmandes : au chocolat ou au miel. Ces cires sont sélectionnées pour leur confort d'application et leur efficacité, afin de retirer les poils tout en laissant la peau douce et soignée.</p><p>Chaque prestation est réalisée avec attention, dans le respect de votre peau et de votre sensibilité.</p><h2>Précautions avant votre épilation</h2><p>Pour une épilation dans les meilleures conditions, merci de signaler toute sensibilité particulière, allergie connue, irritation ou traitement dermatologique.</p><p>L'épilation est reportée en cas de :</p><ul><li>plaies ou lésions cutanées ;</li><li>brûlures ou coups de soleil ;</li><li>infection ou irritation importante ;</li><li>réaction allergique sur la zone ;</li><li>peau fragilisée par certains traitements dermatologiques, notamment les rétinoïdes.</li></ul><p>Après l'épilation, évitez les expositions solaires, la chaleur intense, les gommages et les produits irritants pendant 24 à 48 heures.</p><p>La douceur de votre peau est notre priorité. La douceur à fleur de peau.</p>",
+   "priceTitle": "Nos prestations & tarifs, épilations femme",
+   "prices": [
+    {
+     "name": "Sourcils",
+     "amount": "12 €"
+    },
+    {
+     "name": "Lèvre supérieure",
+     "amount": "7,50 €"
+    },
+    {
+     "name": "Menton",
+     "amount": "7,50 €"
+    },
+    {
+     "name": "Joues",
+     "amount": "10 €"
+    },
+    {
+     "name": "Visage complet",
+     "amount": "30 €"
+    },
+    {
+     "name": "Aisselles",
+     "amount": "10 €"
+    },
+    {
+     "name": "Demi-bras",
+     "amount": "12 €"
+    },
+    {
+     "name": "Bras complets",
+     "amount": "17,50 €"
+    },
+    {
+     "name": "Ventre",
+     "amount": "10 €"
+    },
+    {
+     "name": "Bas du dos",
+     "amount": "10 €"
+    },
+    {
+     "name": "Dos complet",
+     "amount": "25 €"
+    },
+    {
+     "name": "Demi-jambes",
+     "amount": "22,50 €"
+    },
+    {
+     "name": "Cuisses",
+     "amount": "25 €"
+    },
+    {
+     "name": "Jambes complètes",
+     "amount": "30 €"
+    },
+    {
+     "name": "Maillot classique",
+     "amount": "18 €"
+    },
+    {
+     "name": "Maillot échancré",
+     "amount": "25 €"
+    },
+    {
+     "name": "Maillot intégral",
+     "amount": "35 €"
+    },
+    {
+     "name": "Sillon interfessier seul",
+     "amount": "12 €"
+    },
+    {
+     "name": "Demi-jambes + aisselles",
+     "amount": "33 €"
+    },
+    {
+     "name": "Demi-jambes + maillot classique",
+     "amount": "36 €"
+    },
+    {
+     "name": "Demi-jambes + maillot intégral",
+     "amount": "50 €"
+    },
+    {
+     "name": "Jambes complètes + aisselles",
+     "amount": "38 €"
+    },
+    {
+     "name": "Jambes complètes + maillot classique",
+     "amount": "53 €"
+    },
+    {
+     "name": "Jambes complètes + maillot intégral",
+     "amount": "65 €"
+    }
+   ],
+   "figures": []
   },
   "lipolaser": {
    "title": "Lipo Lumière : chaud, froid et lumière rouge",

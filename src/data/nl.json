@@ -552,6 +552,167 @@
      ]
     },
     {
+     "id": "cire-visage",
+     "cat": "epilation",
+     "title": "Ontharing met was - Gezicht",
+     "href": "epilation-cire",
+     "intro": "Zachtheid tot in elk detail van uw huid.",
+     "items": [
+      {
+       "name": "Wenkbrauwen",
+       "href": null,
+       "amount": "12 €"
+      },
+      {
+       "name": "Bovenlip",
+       "href": null,
+       "amount": "7,50 €"
+      },
+      {
+       "name": "Kin",
+       "href": null,
+       "amount": "7,50 €"
+      },
+      {
+       "name": "Wangen",
+       "href": null,
+       "amount": "10 €"
+      },
+      {
+       "name": "Volledig gezicht",
+       "href": null,
+       "amount": "30 €"
+      }
+     ]
+    },
+    {
+     "id": "cire-corps",
+     "cat": "epilation",
+     "title": "Ontharing met was - Lichaam",
+     "href": "epilation-cire",
+     "items": [
+      {
+       "name": "Oksels",
+       "href": null,
+       "amount": "10 €"
+      },
+      {
+       "name": "Halve armen",
+       "href": null,
+       "amount": "12 €"
+      },
+      {
+       "name": "Volledige armen",
+       "href": null,
+       "amount": "17,50 €"
+      },
+      {
+       "name": "Buik",
+       "href": null,
+       "amount": "10 €"
+      },
+      {
+       "name": "Onderrug",
+       "href": null,
+       "amount": "10 €"
+      },
+      {
+       "name": "Volledige rug",
+       "href": null,
+       "amount": "25 €"
+      }
+     ]
+    },
+    {
+     "id": "cire-jambes",
+     "cat": "epilation",
+     "title": "Ontharing met was - Benen",
+     "href": "epilation-cire",
+     "items": [
+      {
+       "name": "Halve benen",
+       "href": null,
+       "amount": "22,50 €"
+      },
+      {
+       "name": "Dijen",
+       "href": null,
+       "amount": "25 €"
+      },
+      {
+       "name": "Volledige benen",
+       "href": null,
+       "amount": "30 €"
+      }
+     ]
+    },
+    {
+     "id": "cire-maillot",
+     "cat": "epilation",
+     "title": "Ontharing met was - Bikinilijn",
+     "href": "epilation-cire",
+     "items": [
+      {
+       "name": "Klassieke bikinilijn",
+       "href": null,
+       "amount": "18 €"
+      },
+      {
+       "name": "Diepe bikinilijn",
+       "href": null,
+       "amount": "25 €"
+      },
+      {
+       "name": "Volledige bikini",
+       "href": null,
+       "amount": "35 €"
+      },
+      {
+       "name": "Enkel bilnaad",
+       "href": null,
+       "amount": "12 €"
+      }
+     ]
+    },
+    {
+     "id": "cire-forfaits",
+     "cat": "epilation",
+     "title": "Ontharing met was - Combinaties",
+     "href": "epilation-cire",
+     "items": [
+      {
+       "name": "Halve benen + oksels",
+       "href": null,
+       "amount": "33 €"
+      },
+      {
+       "name": "Halve benen + klassieke bikinilijn",
+       "href": null,
+       "amount": "36 €"
+      },
+      {
+       "name": "Halve benen + volledige bikini",
+       "href": null,
+       "amount": "50 €"
+      },
+      {
+       "name": "Volledige benen + oksels",
+       "href": null,
+       "amount": "38 €"
+      },
+      {
+       "name": "Volledige benen + klassieke bikinilijn",
+       "href": null,
+       "amount": "53 €"
+      },
+      {
+       "name": "Volledige benen + volledige bikini",
+       "href": null,
+       "amount": "65 €"
+      }
+     ]
+    },
+    {
      "id": "laser-visage",
      "cat": "epilation",
      "title": "Laserontharing - Gezicht",
@@ -1316,6 +1477,112 @@
      "alt": "Schema van de huid vier tot zes weken na de behandeling"
     }
    ]
+  },
+  "epilation-cire": {
+   "title": "De kunst van een zachte huid",
+   "metaTitle": "Ontharing met was in Dilbeek, chocolade of honing - My Bubble Beauty",
+   "description": "Ontharing met chocolade- of honingwas voor gezicht, lichaam, benen en bikinilijn, en combinaties. Voorzorgen vóór de behandeling en tarieven.",
+   "articleHtml": "<p>Gun uw huid een echt moment van zachtheid met onze ontharingen met was.</p><p>Wij gebruiken een kwaliteitswas in twee verwennende texturen: met chocolade of met honing. Deze wassen zijn gekozen omdat ze comfortabel aan te brengen en doeltreffend zijn: ze verwijderen de haartjes en laten de huid zacht en verzorgd achter.</p><p>Elke behandeling gebeurt met aandacht, met respect voor uw huid en uw gevoeligheid.</p><h2>Voorzorgen vóór uw ontharing</h2><p>Voor een ontharing in de beste omstandigheden vragen wij u elke bijzondere gevoeligheid, gekende allergie, irritatie of dermatologische behandeling te melden.</p><p>De ontharing wordt uitgesteld bij:</p><ul><li>wonden of huidletsels;</li><li>brandwonden of zonnebrand;</li><li>een infectie of ernstige irritatie;</li><li>een allergische reactie op de zone;</li><li>een huid die verzwakt is door bepaalde dermatologische behandelingen, met name retinoïden.</li></ul><p>Vermijd na de ontharing gedurende 24 tot 48 uur blootstelling aan de zon, intense warmte, scrubs en irriterende producten.</p><p>De zachtheid van uw huid is onze prioriteit. Zachtheid tot in elk detail van uw huid.</p>",
+   "priceTitle": "Onze behandelingen & tarieven, ontharing voor vrouwen",
+   "prices": [
+    {
+     "name": "Wenkbrauwen",
+     "amount": "12 €"
+    },
+    {
+     "name": "Bovenlip",
+     "amount": "7,50 €"
+    },
+    {
+     "name": "Kin",
+     "amount": "7,50 €"
+    },
+    {
+     "name": "Wangen",
+     "amount": "10 €"
+    },
+    {
+     "name": "Volledig gezicht",
+     "amount": "30 €"
+    },
+    {
+     "name": "Oksels",
+     "amount": "10 €"
+    },
+    {
+     "name": "Halve armen",
+     "amount": "12 €"
+    },
+    {
+     "name": "Volledige armen",
+     "amount": "17,50 €"
+    },
+    {
+     "name": "Buik",
+     "amount": "10 €"
+    },
+    {
+     "name": "Onderrug",
+     "amount": "10 €"
+    },
+    {
+     "name": "Volledige rug",
+     "amount": "25 €"
+    },
+    {
+     "name": "Halve benen",
+     "amount": "22,50 €"
+    },
+    {
+     "name": "Dijen",
+     "amount": "25 €"
+    },
+    {
+     "name": "Volledige benen",
+     "amount": "30 €"
+    },
+    {
+     "name": "Klassieke bikinilijn",
+     "amount": "18 €"
+    },
+    {
+     "name": "Diepe bikinilijn",
+     "amount": "25 €"
+    },
+    {
+     "name": "Volledige bikini",
+     "amount": "35 €"
+    },
+    {
+     "name": "Enkel bilnaad",
+     "amount": "12 €"
+    },
+    {
+     "name": "Halve benen + oksels",
+     "amount": "33 €"
+    },
+    {
+     "name": "Halve benen + klassieke bikinilijn",
+     "amount": "36 €"
+    },
+    {
+     "name": "Halve benen + volledige bikini",
+     "amount": "50 €"
+    },
+    {
+     "name": "Volledige benen + oksels",
+     "amount": "38 €"
+    },
+    {
+     "name": "Volledige benen + klassieke bikinilijn",
+     "amount": "53 €"
+    },
+    {
+     "name": "Volledige benen + volledige bikini",
+     "amount": "65 €"
+    }
+   ],
+   "figures": []
   },
   "lipolaser": {
    "title": "Lipo Licht: warmte, koude en rood licht",

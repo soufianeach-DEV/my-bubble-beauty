@@ -552,6 +552,167 @@
      ]
     },
     {
+     "id": "cire-visage",
+     "cat": "epilation",
+     "title": "Waxing - Face",
+     "href": "epilation-cire",
+     "intro": "Softness, right down to your skin.",
+     "items": [
+      {
+       "name": "Eyebrows",
+       "href": null,
+       "amount": "12 €"
+      },
+      {
+       "name": "Upper lip",
+       "href": null,
+       "amount": "7,50 €"
+      },
+      {
+       "name": "Chin",
+       "href": null,
+       "amount": "7,50 €"
+      },
+      {
+       "name": "Cheeks",
+       "href": null,
+       "amount": "10 €"
+      },
+      {
+       "name": "Full face",
+       "href": null,
+       "amount": "30 €"
+      }
+     ]
+    },
+    {
+     "id": "cire-corps",
+     "cat": "epilation",
+     "title": "Waxing - Body",
+     "href": "epilation-cire",
+     "items": [
+      {
+       "name": "Underarms",
+       "href": null,
+       "amount": "10 €"
+      },
+      {
+       "name": "Half arms",
+       "href": null,
+       "amount": "12 €"
+      },
+      {
+       "name": "Full arms",
+       "href": null,
+       "amount": "17,50 €"
+      },
+      {
+       "name": "Abdomen",
+       "href": null,
+       "amount": "10 €"
+      },
+      {
+       "name": "Lower back",
+       "href": null,
+       "amount": "10 €"
+      },
+      {
+       "name": "Full back",
+       "href": null,
+       "amount": "25 €"
+      }
+     ]
+    },
+    {
+     "id": "cire-jambes",
+     "cat": "epilation",
+     "title": "Waxing - Legs",
+     "href": "epilation-cire",
+     "items": [
+      {
+       "name": "Half legs",
+       "href": null,
+       "amount": "22,50 €"
+      },
+      {
+       "name": "Thighs",
+       "href": null,
+       "amount": "25 €"
+      },
+      {
+       "name": "Full legs",
+       "href": null,
+       "amount": "30 €"
+      }
+     ]
+    },
+    {
+     "id": "cire-maillot",
+     "cat": "epilation",
+     "title": "Waxing - Bikini line",
+     "href": "epilation-cire",
+     "items": [
+      {
+       "name": "Classic bikini",
+       "href": null,
+       "amount": "18 €"
+      },
+      {
+       "name": "High-cut bikini",
+       "href": null,
+       "amount": "25 €"
+      },
+      {
+       "name": "Full bikini",
+       "href": null,
+       "amount": "35 €"
+      },
+      {
+       "name": "Intergluteal cleft only",
+       "href": null,
+       "amount": "12 €"
+      }
+     ]
+    },
+    {
+     "id": "cire-forfaits",
+     "cat": "epilation",
+     "title": "Waxing - Packages",
+     "href": "epilation-cire",
+     "items": [
+      {
+       "name": "Half legs + underarms",
+       "href": null,
+       "amount": "33 €"
+      },
+      {
+       "name": "Half legs + classic bikini",
+       "href": null,
+       "amount": "36 €"
+      },
+      {
+       "name": "Half legs + full bikini",
+       "href": null,
+       "amount": "50 €"
+      },
+      {
+       "name": "Full legs + underarms",
+       "href": null,
+       "amount": "38 €"
+      },
+      {
+       "name": "Full legs + classic bikini",
+       "href": null,
+       "amount": "53 €"
+      },
+      {
+       "name": "Full legs + full bikini",
+       "href": null,
+       "amount": "65 €"
+      }
+     ]
+    },
+    {
      "id": "laser-visage",
      "cat": "epilation",
      "title": "Laser hair removal - Face",
@@ -1316,6 +1477,112 @@
      "alt": "Diagram of the skin four to six weeks after treatment"
     }
    ]
+  },
+  "epilation-cire": {
+   "title": "The art of soft skin",
+   "metaTitle": "Waxing in Dilbeek, chocolate or honey wax - My Bubble Beauty",
+   "description": "Waxing with chocolate or honey wax for face, body, legs and bikini line, plus packages. Precautions before your treatment and prices.",
+   "articleHtml": "<p>Treat your skin to a true moment of softness with our waxing treatments.</p><p>We use a quality wax, available in two indulgent textures: chocolate or honey. These waxes are selected for their comfort of application and their effectiveness, so hair is removed while your skin is left soft and cared for.</p><p>Every treatment is carried out with care, with respect for your skin and your sensitivity.</p><h2>Precautions before your waxing</h2><p>For waxing in the best conditions, please let us know about any particular sensitivity, known allergy, irritation or dermatological treatment.</p><p>Waxing is postponed in case of:</p><ul><li>wounds or skin lesions;</li><li>burns or sunburn;</li><li>infection or significant irritation;</li><li>an allergic reaction on the area;</li><li>skin weakened by certain dermatological treatments, retinoids in particular.</li></ul><p>After waxing, avoid sun exposure, intense heat, scrubs and irritating products for 24 to 48 hours.</p><p>The softness of your skin is our priority. Softness, right down to your skin.</p>",
+   "priceTitle": "Our treatments & prices, women's waxing",
+   "prices": [
+    {
+     "name": "Eyebrows",
+     "amount": "12 €"
+    },
+    {
+     "name": "Upper lip",
+     "amount": "7,50 €"
+    },
+    {
+     "name": "Chin",
+     "amount": "7,50 €"
+    },
+    {
+     "name": "Cheeks",
+     "amount": "10 €"
+    },
+    {
+     "name": "Full face",
+     "amount": "30 €"
+    },
+    {
+     "name": "Underarms",
+     "amount": "10 €"
+    },
+    {
+     "name": "Half arms",
+     "amount": "12 €"
+    },
+    {
+     "name": "Full arms",
+     "amount": "17,50 €"
+    },
+    {
+     "name": "Abdomen",
+     "amount": "10 €"
+    },
+    {
+     "name": "Lower back",
+     "amount": "10 €"
+    },
+    {
+     "name": "Full back",
+     "amount": "25 €"
+    },
+    {
+     "name": "Half legs",
+     "amount": "22,50 €"
+    },
+    {
+     "name": "Thighs",
+     "amount": "25 €"
+    },
+    {
+     "name": "Full legs",
+     "amount": "30 €"
+    },
+    {
+     "name": "Classic bikini",
+     "amount": "18 €"
+    },
+    {
+     "name": "High-cut bikini",
+     "amount": "25 €"
+    },
+    {
+     "name": "Full bikini",
+     "amount": "35 €"
+    },
+    {
+     "name": "Intergluteal cleft only",
+     "amount": "12 €"
+    },
+    {
+     "name": "Half legs + underarms",
+     "amount": "33 €"
+    },
+    {
+     "name": "Half legs + classic bikini",
+     "amount": "36 €"
+    },
+    {
+     "name": "Half legs + full bikini",
+     "amount": "50 €"
+    },
+    {
+     "name": "Full legs + underarms",
+     "amount": "38 €"
+    },
+    {
+     "name": "Full legs + classic bikini",
+     "amount": "53 €"
+    },
+    {
+     "name": "Full legs + full bikini",
+     "amount": "65 €"
+    }
+   ],
+   "figures": []
   },
   "lipolaser": {
    "title": "Lipo Light: heat, cold and red light",
