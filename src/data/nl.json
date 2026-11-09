@@ -196,17 +196,17 @@
      "id": "combines-visage",
      "cat": "visage",
      "title": "Gecombineerde gezichtsbehandelingen",
-     "intro": "45 tot 60 minuten, volgens de formule.",
+     "intro": "90 minuten.",
      "items": [
       {
        "name": "Puur & Licht",
-       "duration": "60 min",
+       "duration": "90 min",
        "detail": "Roterende borstel + led",
        "amount": "60 €"
       },
       {
        "name": "Glans & Jeugd",
-       "duration": "60 min",
+       "duration": "90 min",
        "detail": "Reiniging + masker + rood ledlicht",
        "amount": "70 €",
        "was": "75 €",
@@ -214,7 +214,7 @@
       },
       {
        "name": "Zuivere Huid",
-       "duration": "60 min",
+       "duration": "90 min",
        "detail": "Reiniging + blauw ledlicht",
        "amount": "60 €"
       }
@@ -296,25 +296,29 @@
        "name": "HydraPure",
        "href": null,
        "desc": "De dieptereiniging · Ideaal voor een onzuivere huid, verwijde poriën en oneffenheden.",
-       "amount": "120 €"
+       "amount": "120 €",
+       "duration": "90 min"
       },
       {
        "name": "HydraLift",
        "href": null,
        "desc": "De anti-agingbehandeling · Ideaal voor een rijpere huid die stevigheid mist en tekenen van veroudering vertoont.",
-       "amount": "145 €"
+       "amount": "145 €",
+       "duration": "90 min"
       },
       {
        "name": "HydraGlow",
        "href": null,
        "desc": "Glans & hydratatie · Ideaal voor een doffe, uitgedroogde en vermoeide huid.",
-       "amount": "145 €"
+       "amount": "145 €",
+       "duration": "90 min"
       },
       {
        "name": "Hydra Signature",
        "href": null,
        "desc": "De volledige behandeling op maat · Ideaal als je een totaalbehandeling en een persoonlijke aanpak wenst.",
-       "amount": "175 €"
+       "amount": "175 €",
+       "duration": "90 min"
       }
      ]
     },
@@ -329,31 +333,36 @@
        "name": "Signature Éclat",
        "href": null,
        "desc": "Om de teint weer te laten stralen en egaler te maken.",
-       "amount": "130 €"
+       "amount": "130 €",
+       "duration": "60 min"
       },
       {
        "name": "Signature Hydra",
        "href": null,
        "desc": "Voor een zichtbaar beter gehydrateerde, soepele en opgevulde huid.",
-       "amount": "140 €"
+       "amount": "140 €",
+       "duration": "60 min"
       },
       {
        "name": "Signature Lift",
        "href": null,
        "desc": "Om te werken aan het uitzicht van fijne lijntjes en een gebrek aan stevigheid.",
-       "amount": "155 €"
+       "amount": "155 €",
+       "duration": "60 min"
       },
       {
        "name": "Signature Skin",
        "href": null,
        "desc": "Om het uitzicht van de huidstructuur en oneffenheden in de textuur te verbeteren.",
-       "amount": "150 €"
+       "amount": "150 €",
+       "duration": "60 min"
       },
       {
        "name": "Signature Pure",
        "href": null,
        "desc": "Om te werken aan het uitzicht van resterende onzuiverheden en verwijde poriën.",
-       "amount": "145 €"
+       "amount": "145 €",
+       "duration": "60 min"
       }
      ]
     },
@@ -563,13 +572,15 @@
        "name": "Signature Body",
        "href": null,
        "desc": "Gerichte behandeling voor het uitzicht van striemen, volgens de te behandelen zone.",
-       "amount": "Vanaf 180 €"
+       "amount": "Vanaf 180 €",
+       "duration": "60 min"
       },
       {
        "name": "Signature Scar",
        "href": null,
        "desc": "Gerichte behandeling voor het uitzicht van littekens, na beoordeling van de huid.",
-       "amount": "Vanaf 190 €"
+       "amount": "Vanaf 190 €",
+       "duration": "60 min"
       }
      ]
     },
@@ -582,12 +593,14 @@
       {
        "name": "1 sessie",
        "href": null,
-       "amount": "90 €"
+       "amount": "90 €",
+       "duration": "45 tot 60 min"
       },
       {
        "name": "2 sessies",
        "href": null,
-       "amount": "120 €"
+       "amount": "120 €",
+       "duration": "45 tot 60 min"
       }
      ]
     },
@@ -601,27 +614,32 @@
       {
        "name": "Wenkbrauwen",
        "href": null,
-       "amount": "12 €"
+       "amount": "12 €",
+       "duration": "15 tot 20 min"
       },
       {
        "name": "Bovenlip",
        "href": null,
-       "amount": "7,50 €"
+       "amount": "7,50 €",
+       "duration": "15 tot 20 min"
       },
       {
        "name": "Kin",
        "href": null,
-       "amount": "7,50 €"
+       "amount": "7,50 €",
+       "duration": "15 tot 20 min"
       },
       {
        "name": "Wangen",
        "href": null,
-       "amount": "10 €"
+       "amount": "10 €",
+       "duration": "15 tot 20 min"
       },
       {
        "name": "Volledig gezicht",
        "href": null,
-       "amount": "30 €"
+       "amount": "30 €",
+       "duration": "15 tot 20 min"
       }
      ]
     },
@@ -634,32 +652,38 @@
       {
        "name": "Oksels",
        "href": null,
-       "amount": "10 €"
+       "amount": "10 €",
+       "duration": "15 tot 20 min"
       },
       {
        "name": "Halve armen",
        "href": null,
-       "amount": "12 €"
+       "amount": "12 €",
+       "duration": "15 tot 20 min"
       },
       {
        "name": "Volledige armen",
        "href": null,
-       "amount": "17,50 €"
+       "amount": "17,50 €",
+       "duration": "15 tot 20 min"
       },
       {
        "name": "Buik",
        "href": null,
-       "amount": "10 €"
+       "amount": "10 €",
+       "duration": "15 tot 20 min"
       },
       {
        "name": "Onderrug",
        "href": null,
-       "amount": "10 €"
+       "amount": "10 €",
+       "duration": "15 tot 20 min"
       },
       {
        "name": "Volledige rug",
        "href": null,
-       "amount": "25 €"
+       "amount": "25 €",
+       "duration": "15 tot 20 min"
       }
      ]
     },
@@ -672,17 +696,20 @@
       {
        "name": "Halve benen",
        "href": null,
-       "amount": "22,50 €"
+       "amount": "22,50 €",
+       "duration": "15 tot 20 min"
       },
       {
        "name": "Dijen",
        "href": null,
-       "amount": "25 €"
+       "amount": "25 €",
+       "duration": "15 tot 20 min"
       },
       {
        "name": "Volledige benen",
        "href": null,
-       "amount": "30 €"
+       "amount": "30 €",
+       "duration": "15 tot 20 min"
       }
      ]
     },
@@ -695,22 +722,26 @@
       {
        "name": "Klassieke bikinilijn",
        "href": null,
-       "amount": "18 €"
+       "amount": "18 €",
+       "duration": "15 tot 20 min"
       },
       {
        "name": "Diepe bikinilijn",
        "href": null,
-       "amount": "25 €"
+       "amount": "25 €",
+       "duration": "15 tot 20 min"
       },
       {
        "name": "Volledige bikini",
        "href": null,
-       "amount": "35 €"
+       "amount": "35 €",
+       "duration": "15 tot 20 min"
       },
       {
        "name": "Enkel bilnaad",
        "href": null,
-       "amount": "12 €"
+       "amount": "12 €",
+       "duration": "15 tot 20 min"
       }
      ]
     },
@@ -723,32 +754,38 @@
       {
        "name": "Halve benen + oksels",
        "href": null,
-       "amount": "33 €"
+       "amount": "33 €",
+       "duration": "15 tot 20 min"
       },
       {
        "name": "Halve benen + klassieke bikinilijn",
        "href": null,
-       "amount": "36 €"
+       "amount": "36 €",
+       "duration": "15 tot 20 min"
       },
       {
        "name": "Halve benen + volledige bikini",
        "href": null,
-       "amount": "50 €"
+       "amount": "50 €",
+       "duration": "15 tot 20 min"
       },
       {
        "name": "Volledige benen + oksels",
        "href": null,
-       "amount": "38 €"
+       "amount": "38 €",
+       "duration": "15 tot 20 min"
       },
       {
        "name": "Volledige benen + klassieke bikinilijn",
        "href": null,
-       "amount": "53 €"
+       "amount": "53 €",
+       "duration": "15 tot 20 min"
       },
       {
        "name": "Volledige benen + volledige bikini",
        "href": null,
-       "amount": "65 €"
+       "amount": "65 €",
+       "duration": "15 tot 20 min"
       }
      ]
     },
@@ -762,37 +799,44 @@
       {
        "name": "Bovenlip",
        "href": null,
-       "amount": "45 €"
+       "amount": "45 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Kin",
        "href": null,
-       "amount": "50 €"
+       "amount": "50 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Wangen",
        "href": null,
-       "amount": "55 €"
+       "amount": "55 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Bakkebaarden",
        "href": null,
-       "amount": "50 €"
+       "amount": "50 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Hals",
        "href": null,
-       "amount": "60 €"
+       "amount": "60 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Volledig gezicht",
        "href": null,
-       "amount": "110 €"
+       "amount": "110 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Gezicht + hals",
        "href": null,
-       "amount": "135 €"
+       "amount": "135 €",
+       "duration": "20 tot 25 min"
       }
      ]
     },
@@ -805,42 +849,50 @@
       {
        "name": "Oksels",
        "href": null,
-       "amount": "65 €"
+       "amount": "65 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Onderarmen",
        "href": null,
-       "amount": "75 €"
+       "amount": "75 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Volledige armen",
        "href": null,
-       "amount": "130 €"
+       "amount": "130 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Handen en vingers",
        "href": null,
-       "amount": "40 €"
+       "amount": "40 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Buiklijn",
        "href": null,
-       "amount": "40 €"
+       "amount": "40 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Volledige buik",
        "href": null,
-       "amount": "90 €"
+       "amount": "90 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Tepelhoven",
        "href": null,
-       "amount": "45 €"
+       "amount": "45 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Decolleté",
        "href": null,
-       "amount": "75 €"
+       "amount": "75 €",
+       "duration": "20 tot 25 min"
       }
      ]
     },
@@ -853,27 +905,32 @@
       {
        "name": "Klassieke bikinilijn",
        "href": null,
-       "amount": "65 €"
+       "amount": "65 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Diepe bikinilijn",
        "href": null,
-       "amount": "75 €"
+       "amount": "75 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Volledige bikini",
        "href": null,
-       "amount": "95 €"
+       "amount": "95 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Bilnaad",
        "href": null,
-       "amount": "45 €"
+       "amount": "45 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Billen",
        "href": null,
-       "amount": "85 €"
+       "amount": "85 €",
+       "duration": "20 tot 25 min"
       }
      ]
     },
@@ -886,22 +943,26 @@
       {
        "name": "Dijen",
        "href": null,
-       "amount": "120 €"
+       "amount": "120 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Halve benen",
        "href": null,
-       "amount": "120 €"
+       "amount": "120 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Volledige benen",
        "href": null,
-       "amount": "200 €"
+       "amount": "200 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Voeten en tenen",
        "href": null,
-       "amount": "40 €"
+       "amount": "40 €",
+       "duration": "20 tot 25 min"
       }
      ]
     },
@@ -914,27 +975,32 @@
       {
        "name": "Onderrug",
        "href": null,
-       "amount": "75 €"
+       "amount": "75 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Volledige rug",
        "href": null,
-       "amount": "180 €"
+       "amount": "180 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Borst",
        "href": null,
-       "amount": "100 €"
+       "amount": "100 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Buik",
        "href": null,
-       "amount": "90 €"
+       "amount": "90 €",
+       "duration": "20 tot 25 min"
       },
       {
        "name": "Schouders",
        "href": null,
-       "amount": "80 €"
+       "amount": "80 €",
+       "duration": "20 tot 25 min"
       }
      ]
     },
@@ -991,25 +1057,29 @@
        "name": "Manicure essentieel",
        "href": null,
        "desc": "Vormgeven van de nagels, verzorging van de nagelriemen en een verzorgde afwerking.",
-       "amount": "30 €"
+       "amount": "30 €",
+       "duration": "45 tot 60 min"
       },
       {
        "name": "Manicure spa",
        "href": null,
        "desc": "Klassieke manicure, scrub, voedend masker en ontspannende handmassage.",
-       "amount": "45 €"
+       "amount": "45 €",
+       "duration": "45 tot 60 min"
       },
       {
        "name": "Manicure beauté",
        "href": null,
        "desc": "Voorbereiding van de nagels, verzorging van de nagelriemen en semi-permanente lak.",
-       "amount": "55 €"
+       "amount": "55 €",
+       "duration": "45 tot 60 min"
       },
       {
        "name": "Manicure signature",
        "href": null,
        "desc": "Een volledig ritueel met verzorging van nagels en nagelriemen, exfoliatie, hydraterend masker, massage en een mooie afwerking.",
-       "amount": "65 €"
+       "amount": "65 €",
+       "duration": "45 tot 60 min"
       }
      ],
      "intro": "Verzorgde handen, met zorg mooi gemaakt."
@@ -1024,31 +1094,36 @@
        "name": "Pedicure essentieel",
        "href": null,
        "desc": "Vormgeven van de nagels, verzorging van de nagelriemen, reiniging en een verzorgde afwerking.",
-       "amount": "35 €"
+       "amount": "35 €",
+       "duration": "45 tot 60 min"
       },
       {
        "name": "Pedicure spa",
        "href": null,
        "desc": "Klassieke pedicure met scrub, hydraterende verzorging en ontspannende massage.",
-       "amount": "50 €"
+       "amount": "50 €",
+       "duration": "45 tot 60 min"
       },
       {
        "name": "Pedicure beauté",
        "href": null,
        "desc": "Verzorging van nagels en nagelriemen, vormgeven en semi-permanente lak.",
-       "amount": "55 €"
+       "amount": "55 €",
+       "duration": "45 tot 60 min"
       },
       {
        "name": "Pedicure signature",
        "href": null,
        "desc": "Een volledig ritueel met nagelverzorging, esthetische voetverzorging, exfoliatie, hydraterend masker en ontspannende massage.",
-       "amount": "70 €"
+       "amount": "70 €",
+       "duration": "45 tot 60 min"
       },
       {
        "name": "Ritueel signature",
        "href": null,
        "desc": "Het plezier om voor jezelf te zorgen: een manicure en een pedicure voor perfect verzorgde handen en voeten.",
-       "amount": "110 €"
+       "amount": "110 €",
+       "duration": "45 tot 60 min"
       }
      ],
      "intro": "Mooie, zachte en perfect verzorgde voeten."
@@ -1063,37 +1138,44 @@
       {
        "name": "Semi-permanente lak (handen)",
        "href": null,
-       "amount": "30 €"
+       "amount": "30 €",
+       "duration": "45 tot 60 min"
       },
       {
        "name": "Enkel verwijderen (handen)",
        "href": null,
-       "amount": "15 €"
+       "amount": "15 €",
+       "duration": "45 tot 60 min"
       },
       {
        "name": "Verwijderen en opnieuw lakken (handen)",
        "href": null,
-       "amount": "35 €"
+       "amount": "35 €",
+       "duration": "45 tot 60 min"
       },
       {
        "name": "Semi-permanente lak (voeten)",
        "href": null,
-       "amount": "30 €"
+       "amount": "30 €",
+       "duration": "45 tot 60 min"
       },
       {
        "name": "Enkel verwijderen (voeten)",
        "href": null,
-       "amount": "15 €"
+       "amount": "15 €",
+       "duration": "45 tot 60 min"
       },
       {
        "name": "Verwijderen en opnieuw lakken (voeten)",
        "href": null,
-       "amount": "35 €"
+       "amount": "35 €",
+       "duration": "45 tot 60 min"
       },
       {
        "name": "Verwijderen met nagelverzorging",
        "href": null,
-       "amount": "20 €"
+       "amount": "20 €",
+       "duration": "45 tot 60 min"
       }
      ]
     }

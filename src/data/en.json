@@ -196,17 +196,17 @@
      "id": "combines-visage",
      "cat": "visage",
      "title": "Combined facials",
-     "intro": "45 to 60 minutes depending on the package.",
+     "intro": "90 minutes.",
      "items": [
       {
        "name": "Purity & Light",
-       "duration": "60 min",
+       "duration": "90 min",
        "detail": "Rotating brush + LED",
        "amount": "60 €"
       },
       {
        "name": "Radiance & Youth",
-       "duration": "60 min",
+       "duration": "90 min",
        "detail": "Cleanse + mask + red LED",
        "amount": "70 €",
        "was": "75 €",
@@ -214,7 +214,7 @@
       },
       {
        "name": "Clear Skin",
-       "duration": "60 min",
+       "duration": "90 min",
        "detail": "Cleanse + blue LED",
        "amount": "60 €"
       }
@@ -296,25 +296,29 @@
        "name": "HydraPure",
        "href": null,
        "desc": "The deep cleanse · Ideal for congested skin, enlarged pores and blemishes.",
-       "amount": "120 €"
+       "amount": "120 €",
+       "duration": "90 min"
       },
       {
        "name": "HydraLift",
        "href": null,
        "desc": "The anti-ageing treatment · Ideal for mature skin lacking firmness and showing signs of ageing.",
-       "amount": "145 €"
+       "amount": "145 €",
+       "duration": "90 min"
       },
       {
        "name": "HydraGlow",
        "href": null,
        "desc": "Radiance & hydration · Ideal for dull, dehydrated and tired skin.",
-       "amount": "145 €"
+       "amount": "145 €",
+       "duration": "90 min"
       },
       {
        "name": "Hydra Signature",
        "href": null,
        "desc": "The complete personalised treatment · Ideal if you want an all-round treatment and personalised care.",
-       "amount": "175 €"
+       "amount": "175 €",
+       "duration": "90 min"
       }
      ]
     },
@@ -329,31 +333,36 @@
        "name": "Signature Éclat",
        "href": null,
        "desc": "To revive the radiance of your complexion and even it out.",
-       "amount": "130 €"
+       "amount": "130 €",
+       "duration": "60 min"
       },
       {
        "name": "Signature Hydra",
        "href": null,
        "desc": "For visibly more hydrated, supple and plumper skin.",
-       "amount": "140 €"
+       "amount": "140 €",
+       "duration": "60 min"
       },
       {
        "name": "Signature Lift",
        "href": null,
        "desc": "To work on the look of fine lines and loss of firmness.",
-       "amount": "155 €"
+       "amount": "155 €",
+       "duration": "60 min"
       },
       {
        "name": "Signature Skin",
        "href": null,
        "desc": "To improve the look of skin texture and uneven areas.",
-       "amount": "150 €"
+       "amount": "150 €",
+       "duration": "60 min"
       },
       {
        "name": "Signature Pure",
        "href": null,
        "desc": "To work on the look of residual blemishes and enlarged pores.",
-       "amount": "145 €"
+       "amount": "145 €",
+       "duration": "60 min"
       }
      ]
     },
@@ -563,13 +572,15 @@
        "name": "Signature Body",
        "href": null,
        "desc": "A targeted treatment for the look of stretch marks, depending on the area.",
-       "amount": "From 180 €"
+       "amount": "From 180 €",
+       "duration": "60 min"
       },
       {
        "name": "Signature Scar",
        "href": null,
        "desc": "A targeted treatment for the look of scars, after a skin assessment.",
-       "amount": "From 190 €"
+       "amount": "From 190 €",
+       "duration": "60 min"
       }
      ]
     },
@@ -582,12 +593,14 @@
       {
        "name": "1 Session",
        "href": null,
-       "amount": "90 €"
+       "amount": "90 €",
+       "duration": "45 to 60 min"
       },
       {
        "name": "2 Sessions",
        "href": null,
-       "amount": "120 €"
+       "amount": "120 €",
+       "duration": "45 to 60 min"
       }
      ]
     },
@@ -601,27 +614,32 @@
       {
        "name": "Eyebrows",
        "href": null,
-       "amount": "12 €"
+       "amount": "12 €",
+       "duration": "15 to 20 min"
       },
       {
        "name": "Upper lip",
        "href": null,
-       "amount": "7,50 €"
+       "amount": "7,50 €",
+       "duration": "15 to 20 min"
       },
       {
        "name": "Chin",
        "href": null,
-       "amount": "7,50 €"
+       "amount": "7,50 €",
+       "duration": "15 to 20 min"
       },
       {
        "name": "Cheeks",
        "href": null,
-       "amount": "10 €"
+       "amount": "10 €",
+       "duration": "15 to 20 min"
       },
       {
        "name": "Full face",
        "href": null,
-       "amount": "30 €"
+       "amount": "30 €",
+       "duration": "15 to 20 min"
       }
      ]
     },
@@ -634,32 +652,38 @@
       {
        "name": "Underarms",
        "href": null,
-       "amount": "10 €"
+       "amount": "10 €",
+       "duration": "15 to 20 min"
       },
       {
        "name": "Half arms",
        "href": null,
-       "amount": "12 €"
+       "amount": "12 €",
+       "duration": "15 to 20 min"
       },
       {
        "name": "Full arms",
        "href": null,
-       "amount": "17,50 €"
+       "amount": "17,50 €",
+       "duration": "15 to 20 min"
       },
       {
        "name": "Abdomen",
        "href": null,
-       "amount": "10 €"
+       "amount": "10 €",
+       "duration": "15 to 20 min"
       },
       {
        "name": "Lower back",
        "href": null,
-       "amount": "10 €"
+       "amount": "10 €",
+       "duration": "15 to 20 min"
       },
       {
        "name": "Full back",
        "href": null,
-       "amount": "25 €"
+       "amount": "25 €",
+       "duration": "15 to 20 min"
       }
      ]
     },
@@ -672,17 +696,20 @@
       {
        "name": "Half legs",
        "href": null,
-       "amount": "22,50 €"
+       "amount": "22,50 €",
+       "duration": "15 to 20 min"
       },
       {
        "name": "Thighs",
        "href": null,
-       "amount": "25 €"
+       "amount": "25 €",
+       "duration": "15 to 20 min"
       },
       {
        "name": "Full legs",
        "href": null,
-       "amount": "30 €"
+       "amount": "30 €",
+       "duration": "15 to 20 min"
       }
      ]
     },
@@ -695,22 +722,26 @@
       {
        "name": "Classic bikini",
        "href": null,
-       "amount": "18 €"
+       "amount": "18 €",
+       "duration": "15 to 20 min"
       },
       {
        "name": "High-cut bikini",
        "href": null,
-       "amount": "25 €"
+       "amount": "25 €",
+       "duration": "15 to 20 min"
       },
       {
        "name": "Full bikini",
        "href": null,
-       "amount": "35 €"
+       "amount": "35 €",
+       "duration": "15 to 20 min"
       },
       {
        "name": "Intergluteal cleft only",
        "href": null,
-       "amount": "12 €"
+       "amount": "12 €",
+       "duration": "15 to 20 min"
       }
      ]
     },
@@ -723,32 +754,38 @@
       {
        "name": "Half legs + underarms",
        "href": null,
-       "amount": "33 €"
+       "amount": "33 €",
+       "duration": "15 to 20 min"
       },
       {
        "name": "Half legs + classic bikini",
        "href": null,
-       "amount": "36 €"
+       "amount": "36 €",
+       "duration": "15 to 20 min"
       },
       {
        "name": "Half legs + full bikini",
        "href": null,
-       "amount": "50 €"
+       "amount": "50 €",
+       "duration": "15 to 20 min"
       },
       {
        "name": "Full legs + underarms",
        "href": null,
-       "amount": "38 €"
+       "amount": "38 €",
+       "duration": "15 to 20 min"
       },
       {
        "name": "Full legs + classic bikini",
        "href": null,
-       "amount": "53 €"
+       "amount": "53 €",
+       "duration": "15 to 20 min"
       },
       {
        "name": "Full legs + full bikini",
        "href": null,
-       "amount": "65 €"
+       "amount": "65 €",
+       "duration": "15 to 20 min"
       }
      ]
     },
@@ -762,37 +799,44 @@
       {
        "name": "Upper lip",
        "href": null,
-       "amount": "45 €"
+       "amount": "45 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Chin",
        "href": null,
-       "amount": "50 €"
+       "amount": "50 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Cheeks",
        "href": null,
-       "amount": "55 €"
+       "amount": "55 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Sideburns",
        "href": null,
-       "amount": "50 €"
+       "amount": "50 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Neck",
        "href": null,
-       "amount": "60 €"
+       "amount": "60 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Full face",
        "href": null,
-       "amount": "110 €"
+       "amount": "110 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Face + neck",
        "href": null,
-       "amount": "135 €"
+       "amount": "135 €",
+       "duration": "20 to 25 min"
       }
      ]
     },
@@ -805,42 +849,50 @@
       {
        "name": "Underarms",
        "href": null,
-       "amount": "65 €"
+       "amount": "65 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Forearms",
        "href": null,
-       "amount": "75 €"
+       "amount": "75 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Full arms",
        "href": null,
-       "amount": "130 €"
+       "amount": "130 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Hands and fingers",
        "href": null,
-       "amount": "40 €"
+       "amount": "40 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Belly line",
        "href": null,
-       "amount": "40 €"
+       "amount": "40 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Full abdomen",
        "href": null,
-       "amount": "90 €"
+       "amount": "90 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Areolas",
        "href": null,
-       "amount": "45 €"
+       "amount": "45 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Décolleté",
        "href": null,
-       "amount": "75 €"
+       "amount": "75 €",
+       "duration": "20 to 25 min"
       }
      ]
     },
@@ -853,27 +905,32 @@
       {
        "name": "Classic bikini",
        "href": null,
-       "amount": "65 €"
+       "amount": "65 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "High-cut bikini",
        "href": null,
-       "amount": "75 €"
+       "amount": "75 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Full bikini",
        "href": null,
-       "amount": "95 €"
+       "amount": "95 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Intergluteal cleft",
        "href": null,
-       "amount": "45 €"
+       "amount": "45 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Buttocks",
        "href": null,
-       "amount": "85 €"
+       "amount": "85 €",
+       "duration": "20 to 25 min"
       }
      ]
     },
@@ -886,22 +943,26 @@
       {
        "name": "Thighs",
        "href": null,
-       "amount": "120 €"
+       "amount": "120 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Half legs",
        "href": null,
-       "amount": "120 €"
+       "amount": "120 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Full legs",
        "href": null,
-       "amount": "200 €"
+       "amount": "200 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Feet and toes",
        "href": null,
-       "amount": "40 €"
+       "amount": "40 €",
+       "duration": "20 to 25 min"
       }
      ]
     },
@@ -914,27 +975,32 @@
       {
        "name": "Lower back",
        "href": null,
-       "amount": "75 €"
+       "amount": "75 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Full back",
        "href": null,
-       "amount": "180 €"
+       "amount": "180 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Chest",
        "href": null,
-       "amount": "100 €"
+       "amount": "100 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Abdomen",
        "href": null,
-       "amount": "90 €"
+       "amount": "90 €",
+       "duration": "20 to 25 min"
       },
       {
        "name": "Shoulders",
        "href": null,
-       "amount": "80 €"
+       "amount": "80 €",
+       "duration": "20 to 25 min"
       }
      ]
     },
@@ -991,25 +1057,29 @@
        "name": "Essential manicure",
        "href": null,
        "desc": "Nail shaping, cuticle care and a neat finish.",
-       "amount": "30 €"
+       "amount": "30 €",
+       "duration": "45 to 60 min"
       },
       {
        "name": "Spa manicure",
        "href": null,
        "desc": "Classic manicure, scrub, nourishing mask and relaxing hand massage.",
-       "amount": "45 €"
+       "amount": "45 €",
+       "duration": "45 to 60 min"
       },
       {
        "name": "Beauty manicure",
        "href": null,
        "desc": "Nail preparation, cuticle care and semi-permanent polish.",
-       "amount": "55 €"
+       "amount": "55 €",
+       "duration": "45 to 60 min"
       },
       {
        "name": "Signature manicure",
        "href": null,
        "desc": "A complete ritual combining nail and cuticle care, exfoliation, a moisturising mask, massage and a beauty finish.",
-       "amount": "65 €"
+       "amount": "65 €",
+       "duration": "45 to 60 min"
       }
      ],
      "intro": "Well-groomed hands, beautifully and delicately enhanced."
@@ -1024,31 +1094,36 @@
        "name": "Essential pedicure",
        "href": null,
        "desc": "Nail shaping, cuticle care, cleansing and a neat finish.",
-       "amount": "35 €"
+       "amount": "35 €",
+       "duration": "45 to 60 min"
       },
       {
        "name": "Spa pedicure",
        "href": null,
        "desc": "Classic pedicure with a scrub, moisturising care and a relaxing massage.",
-       "amount": "50 €"
+       "amount": "50 €",
+       "duration": "45 to 60 min"
       },
       {
        "name": "Beauty pedicure",
        "href": null,
        "desc": "Nail and cuticle care, shaping and semi-permanent polish.",
-       "amount": "55 €"
+       "amount": "55 €",
+       "duration": "45 to 60 min"
       },
       {
        "name": "Signature pedicure",
        "href": null,
        "desc": "A complete ritual with nail care, cosmetic foot care, exfoliation, a moisturising mask and a relaxing massage.",
-       "amount": "70 €"
+       "amount": "70 €",
+       "duration": "45 to 60 min"
       },
       {
        "name": "Signature ritual",
        "href": null,
        "desc": "The pleasure of taking care of yourself: a manicure and a pedicure for perfectly cared-for hands and feet.",
-       "amount": "110 €"
+       "amount": "110 €",
+       "duration": "45 to 60 min"
       }
      ],
      "intro": "Beautiful, soft and perfectly cared-for feet."
@@ -1063,37 +1138,44 @@
       {
        "name": "Semi-permanent polish (hands)",
        "href": null,
-       "amount": "30 €"
+       "amount": "30 €",
+       "duration": "45 to 60 min"
       },
       {
        "name": "Removal only (hands)",
        "href": null,
-       "amount": "15 €"
+       "amount": "15 €",
+       "duration": "45 to 60 min"
       },
       {
        "name": "Removal and new application (hands)",
        "href": null,
-       "amount": "35 €"
+       "amount": "35 €",
+       "duration": "45 to 60 min"
       },
       {
        "name": "Semi-permanent polish (feet)",
        "href": null,
-       "amount": "30 €"
+       "amount": "30 €",
+       "duration": "45 to 60 min"
       },
       {
        "name": "Removal only (feet)",
        "href": null,
-       "amount": "15 €"
+       "amount": "15 €",
+       "duration": "45 to 60 min"
       },
       {
        "name": "Removal and new application (feet)",
        "href": null,
-       "amount": "35 €"
+       "amount": "35 €",
+       "duration": "45 to 60 min"
       },
       {
        "name": "Removal with nail care",
        "href": null,
-       "amount": "20 €"
+       "amount": "20 €",
+       "duration": "45 to 60 min"
       }
      ]
     }

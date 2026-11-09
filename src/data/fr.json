@@ -196,17 +196,17 @@
      "id": "combines-visage",
      "cat": "visage",
      "title": "Soins visage combinés",
-     "intro": "45 à 60 minutes selon la formule.",
+     "intro": "90 minutes.",
      "items": [
       {
        "name": "Pureté & Lumière",
-       "duration": "60 min",
+       "duration": "90 min",
        "detail": "Brosse rotative + LED",
        "amount": "60 €"
       },
       {
        "name": "Éclat & Jeunesse",
-       "duration": "60 min",
+       "duration": "90 min",
        "detail": "Nettoyage + masque + LED rouge",
        "amount": "70 €",
        "was": "75 €",
@@ -214,7 +214,7 @@
       },
       {
        "name": "Peau Nette",
-       "duration": "60 min",
+       "duration": "90 min",
        "detail": "Nettoyage + LED bleue",
        "amount": "60 €"
       }
@@ -296,25 +296,29 @@
        "name": "HydraPure",
        "href": null,
        "desc": "Le nettoyage profond · Idéal pour les peaux encombrées, les pores dilatés et les imperfections.",
-       "amount": "120 €"
+       "amount": "120 €",
+       "duration": "90 min"
       },
       {
        "name": "HydraLift",
        "href": null,
        "desc": "Le soin anti-âge · Idéal pour les peaux matures, en manque de fermeté et présentant des signes de l'âge.",
-       "amount": "145 €"
+       "amount": "145 €",
+       "duration": "90 min"
       },
       {
        "name": "HydraGlow",
        "href": null,
        "desc": "Éclat & hydratation · Idéal pour les teints ternes, les peaux déshydratées et fatiguées.",
-       "amount": "145 €"
+       "amount": "145 €",
+       "duration": "90 min"
       },
       {
        "name": "Hydra Signature",
        "href": null,
        "desc": "Le soin complet personnalisé · Idéal pour celles qui souhaitent un soin global et une prise en charge personnalisée.",
-       "amount": "175 €"
+       "amount": "175 €",
+       "duration": "90 min"
       }
      ]
     },
@@ -329,31 +333,36 @@
        "name": "Signature Éclat",
        "href": null,
        "desc": "Pour raviver la luminosité du teint et améliorer son uniformité.",
-       "amount": "130 €"
+       "amount": "130 €",
+       "duration": "60 min"
       },
       {
        "name": "Signature Hydra",
        "href": null,
        "desc": "Pour une peau visiblement plus hydratée, souple et repulpée.",
-       "amount": "140 €"
+       "amount": "140 €",
+       "duration": "60 min"
       },
       {
        "name": "Signature Lift",
        "href": null,
        "desc": "Pour travailler l'apparence des ridules et le manque de fermeté.",
-       "amount": "155 €"
+       "amount": "155 €",
+       "duration": "60 min"
       },
       {
        "name": "Signature Skin",
        "href": null,
        "desc": "Pour améliorer l'apparence du grain de peau et des irrégularités de texture.",
-       "amount": "150 €"
+       "amount": "150 €",
+       "duration": "60 min"
       },
       {
        "name": "Signature Pure",
        "href": null,
        "desc": "Pour travailler l'apparence des imperfections résiduelles et des pores dilatés.",
-       "amount": "145 €"
+       "amount": "145 €",
+       "duration": "60 min"
       }
      ]
     },
@@ -563,13 +572,15 @@
        "name": "Signature Body",
        "href": null,
        "desc": "Soin ciblé sur l'apparence des vergetures, selon la zone à traiter.",
-       "amount": "Dès 180 €"
+       "amount": "Dès 180 €",
+       "duration": "60 min"
       },
       {
        "name": "Signature Scar",
        "href": null,
        "desc": "Soin ciblé sur l'apparence des cicatrices, après évaluation de la peau.",
-       "amount": "Dès 190 €"
+       "amount": "Dès 190 €",
+       "duration": "60 min"
       }
      ]
     },
@@ -582,12 +593,14 @@
       {
        "name": "1 séance",
        "href": null,
-       "amount": "90 €"
+       "amount": "90 €",
+       "duration": "45 à 60 min"
       },
       {
        "name": "2 séances",
        "href": null,
-       "amount": "120 €"
+       "amount": "120 €",
+       "duration": "45 à 60 min"
       }
      ]
     },
@@ -601,27 +614,32 @@
       {
        "name": "Sourcils",
        "href": null,
-       "amount": "12 €"
+       "amount": "12 €",
+       "duration": "15 à 20 min"
       },
       {
        "name": "Lèvre supérieure",
        "href": null,
-       "amount": "7,50 €"
+       "amount": "7,50 €",
+       "duration": "15 à 20 min"
       },
       {
        "name": "Menton",
        "href": null,
-       "amount": "7,50 €"
+       "amount": "7,50 €",
+       "duration": "15 à 20 min"
       },
       {
        "name": "Joues",
        "href": null,
-       "amount": "10 €"
+       "amount": "10 €",
+       "duration": "15 à 20 min"
       },
       {
        "name": "Visage complet",
        "href": null,
-       "amount": "30 €"
+       "amount": "30 €",
+       "duration": "15 à 20 min"
       }
      ]
     },
@@ -634,32 +652,38 @@
       {
        "name": "Aisselles",
        "href": null,
-       "amount": "10 €"
+       "amount": "10 €",
+       "duration": "15 à 20 min"
       },
       {
        "name": "Demi-bras",
        "href": null,
-       "amount": "12 €"
+       "amount": "12 €",
+       "duration": "15 à 20 min"
       },
       {
        "name": "Bras complets",
        "href": null,
-       "amount": "17,50 €"
+       "amount": "17,50 €",
+       "duration": "15 à 20 min"
       },
       {
        "name": "Ventre",
        "href": null,
-       "amount": "10 €"
+       "amount": "10 €",
+       "duration": "15 à 20 min"
       },
       {
        "name": "Bas du dos",
        "href": null,
-       "amount": "10 €"
+       "amount": "10 €",
+       "duration": "15 à 20 min"
       },
       {
        "name": "Dos complet",
        "href": null,
-       "amount": "25 €"
+       "amount": "25 €",
+       "duration": "15 à 20 min"
       }
      ]
     },
@@ -672,17 +696,20 @@
       {
        "name": "Demi-jambes",
        "href": null,
-       "amount": "22,50 €"
+       "amount": "22,50 €",
+       "duration": "15 à 20 min"
       },
       {
        "name": "Cuisses",
        "href": null,
-       "amount": "25 €"
+       "amount": "25 €",
+       "duration": "15 à 20 min"
       },
       {
        "name": "Jambes complètes",
        "href": null,
-       "amount": "30 €"
+       "amount": "30 €",
+       "duration": "15 à 20 min"
       }
      ]
     },
@@ -695,22 +722,26 @@
       {
        "name": "Maillot classique",
        "href": null,
-       "amount": "18 €"
+       "amount": "18 €",
+       "duration": "15 à 20 min"
       },
       {
        "name": "Maillot échancré",
        "href": null,
-       "amount": "25 €"
+       "amount": "25 €",
+       "duration": "15 à 20 min"
       },
       {
        "name": "Maillot intégral",
        "href": null,
-       "amount": "35 €"
+       "amount": "35 €",
+       "duration": "15 à 20 min"
       },
       {
        "name": "Sillon interfessier seul",
        "href": null,
-       "amount": "12 €"
+       "amount": "12 €",
+       "duration": "15 à 20 min"
       }
      ]
     },
@@ -723,32 +754,38 @@
       {
        "name": "Demi-jambes + aisselles",
        "href": null,
-       "amount": "33 €"
+       "amount": "33 €",
+       "duration": "15 à 20 min"
       },
       {
        "name": "Demi-jambes + maillot classique",
        "href": null,
-       "amount": "36 €"
+       "amount": "36 €",
+       "duration": "15 à 20 min"
       },
       {
        "name": "Demi-jambes + maillot intégral",
        "href": null,
-       "amount": "50 €"
+       "amount": "50 €",
+       "duration": "15 à 20 min"
       },
       {
        "name": "Jambes complètes + aisselles",
        "href": null,
-       "amount": "38 €"
+       "amount": "38 €",
+       "duration": "15 à 20 min"
       },
       {
        "name": "Jambes complètes + maillot classique",
        "href": null,
-       "amount": "53 €"
+       "amount": "53 €",
+       "duration": "15 à 20 min"
       },
       {
        "name": "Jambes complètes + maillot intégral",
        "href": null,
-       "amount": "65 €"
+       "amount": "65 €",
+       "duration": "15 à 20 min"
       }
      ]
     },
@@ -762,37 +799,44 @@
       {
        "name": "Lèvre supérieure",
        "href": null,
-       "amount": "45 €"
+       "amount": "45 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Menton",
        "href": null,
-       "amount": "50 €"
+       "amount": "50 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Joues",
        "href": null,
-       "amount": "55 €"
+       "amount": "55 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Favoris",
        "href": null,
-       "amount": "50 €"
+       "amount": "50 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Cou",
        "href": null,
-       "amount": "60 €"
+       "amount": "60 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Visage complet",
        "href": null,
-       "amount": "110 €"
+       "amount": "110 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Visage + cou",
        "href": null,
-       "amount": "135 €"
+       "amount": "135 €",
+       "duration": "20 à 25 min"
       }
      ]
     },
@@ -805,42 +849,50 @@
       {
        "name": "Aisselles",
        "href": null,
-       "amount": "65 €"
+       "amount": "65 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Avant-bras",
        "href": null,
-       "amount": "75 €"
+       "amount": "75 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Bras complets",
        "href": null,
-       "amount": "130 €"
+       "amount": "130 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Mains et doigts",
        "href": null,
-       "amount": "40 €"
+       "amount": "40 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Ligne du ventre",
        "href": null,
-       "amount": "40 €"
+       "amount": "40 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Ventre complet",
        "href": null,
-       "amount": "90 €"
+       "amount": "90 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Aréoles",
        "href": null,
-       "amount": "45 €"
+       "amount": "45 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Décolleté",
        "href": null,
-       "amount": "75 €"
+       "amount": "75 €",
+       "duration": "20 à 25 min"
       }
      ]
     },
@@ -853,27 +905,32 @@
       {
        "name": "Bikini classique",
        "href": null,
-       "amount": "65 €"
+       "amount": "65 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Bikini échancré",
        "href": null,
-       "amount": "75 €"
+       "amount": "75 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Bikini intégral",
        "href": null,
-       "amount": "95 €"
+       "amount": "95 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Sillon interfessier",
        "href": null,
-       "amount": "45 €"
+       "amount": "45 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Fesses",
        "href": null,
-       "amount": "85 €"
+       "amount": "85 €",
+       "duration": "20 à 25 min"
       }
      ]
     },
@@ -886,22 +943,26 @@
       {
        "name": "Cuisses",
        "href": null,
-       "amount": "120 €"
+       "amount": "120 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Demi-jambes",
        "href": null,
-       "amount": "120 €"
+       "amount": "120 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Jambes complètes",
        "href": null,
-       "amount": "200 €"
+       "amount": "200 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Pieds et orteils",
        "href": null,
-       "amount": "40 €"
+       "amount": "40 €",
+       "duration": "20 à 25 min"
       }
      ]
     },
@@ -914,27 +975,32 @@
       {
        "name": "Bas du dos",
        "href": null,
-       "amount": "75 €"
+       "amount": "75 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Dos complet",
        "href": null,
-       "amount": "180 €"
+       "amount": "180 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Poitrine",
        "href": null,
-       "amount": "100 €"
+       "amount": "100 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Ventre",
        "href": null,
-       "amount": "90 €"
+       "amount": "90 €",
+       "duration": "20 à 25 min"
       },
       {
        "name": "Épaules",
        "href": null,
-       "amount": "80 €"
+       "amount": "80 €",
+       "duration": "20 à 25 min"
       }
      ]
     },
@@ -991,25 +1057,29 @@
        "name": "Manucure essentielle",
        "href": null,
        "desc": "Mise en forme des ongles, soin des cuticules et finition soignée.",
-       "amount": "30 €"
+       "amount": "30 €",
+       "duration": "45 à 60 min"
       },
       {
        "name": "Manucure spa",
        "href": null,
        "desc": "Manucure classique, gommage, masque nourrissant et massage relaxant des mains.",
-       "amount": "45 €"
+       "amount": "45 €",
+       "duration": "45 à 60 min"
       },
       {
        "name": "Manucure beauté",
        "href": null,
        "desc": "Préparation des ongles, soin des cuticules et pose de vernis semi-permanent.",
-       "amount": "55 €"
+       "amount": "55 €",
+       "duration": "45 à 60 min"
       },
       {
        "name": "Manucure signature",
        "href": null,
        "desc": "Un rituel complet associant soin des ongles et cuticules, exfoliation, masque hydratant, massage et finition beauté.",
-       "amount": "65 €"
+       "amount": "65 €",
+       "duration": "45 à 60 min"
       }
      ],
      "intro": "Des mains soignées, sublimées et délicatement mises en beauté."
@@ -1024,31 +1094,36 @@
        "name": "Pédicure essentielle",
        "href": null,
        "desc": "Mise en forme des ongles, soin des cuticules, nettoyage et finition soignée.",
-       "amount": "35 €"
+       "amount": "35 €",
+       "duration": "45 à 60 min"
       },
       {
        "name": "Pédicure spa",
        "href": null,
        "desc": "Pédicure classique accompagnée d'un gommage, d'un soin hydratant et d'un massage relaxant.",
-       "amount": "50 €"
+       "amount": "50 €",
+       "duration": "45 à 60 min"
       },
       {
        "name": "Pédicure beauté",
        "href": null,
        "desc": "Soin des ongles et des cuticules, mise en forme et pose de vernis semi-permanent.",
-       "amount": "55 €"
+       "amount": "55 €",
+       "duration": "45 à 60 min"
       },
       {
        "name": "Pédicure signature",
        "href": null,
        "desc": "Un rituel complet comprenant le soin des ongles, l'entretien esthétique des pieds, l'exfoliation, un masque hydratant et un massage relaxant.",
-       "amount": "70 €"
+       "amount": "70 €",
+       "duration": "45 à 60 min"
       },
       {
        "name": "Rituel signature",
        "href": null,
        "desc": "Le plaisir de prendre soin de soi : une manucure et une pédicure pour des mains et des pieds parfaitement soignés.",
-       "amount": "110 €"
+       "amount": "110 €",
+       "duration": "45 à 60 min"
       }
      ],
      "intro": "Des pieds sublimés, doux et parfaitement entretenus."
@@ -1063,37 +1138,44 @@
       {
        "name": "Pose de vernis semi-permanent (mains)",
        "href": null,
-       "amount": "30 €"
+       "amount": "30 €",
+       "duration": "45 à 60 min"
       },
       {
        "name": "Dépose seule (mains)",
        "href": null,
-       "amount": "15 €"
+       "amount": "15 €",
+       "duration": "45 à 60 min"
       },
       {
        "name": "Dépose et nouvelle pose (mains)",
        "href": null,
-       "amount": "35 €"
+       "amount": "35 €",
+       "duration": "45 à 60 min"
       },
       {
        "name": "Pose de vernis semi-permanent (pieds)",
        "href": null,
-       "amount": "30 €"
+       "amount": "30 €",
+       "duration": "45 à 60 min"
       },
       {
        "name": "Dépose seule (pieds)",
        "href": null,
-       "amount": "15 €"
+       "amount": "15 €",
+       "duration": "45 à 60 min"
       },
       {
        "name": "Dépose et nouvelle pose (pieds)",
        "href": null,
-       "amount": "35 €"
+       "amount": "35 €",
+       "duration": "45 à 60 min"
       },
       {
        "name": "Dépose avec soin des ongles",
        "href": null,
-       "amount": "20 €"
+       "amount": "20 €",
+       "duration": "45 à 60 min"
       }
      ]
     }
