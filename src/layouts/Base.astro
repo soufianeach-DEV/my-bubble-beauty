@@ -19,9 +19,19 @@ interface Props {
   route?: string;
   /** Page d'outil (admin) : sans en-tête, pied de page ni barre d'appel publics. */
   bare?: boolean;
+  /** Image de partage propre à la page (chemin sous /assets/img/) ; sinon l'image générale. */
+  ogImage?: { src: string; w: number; h: number; alt: string };
 }
-const { lang, pageKey, title, description, ogType = 'website', jsonld, noindex = false, isHome = false, mainClass, canonicalPath, route, bare = false } = Astro.props;
+const { lang, pageKey, title, description, ogType = 'website', jsonld, noindex = false, isHome = false, mainClass, canonicalPath, route, bare = false, ogImage } = Astro.props;
 const d = t(lang);
+const OG_ALT: Record<Lang, string> = {
+  fr: 'Soin du visage en cabine, à la lumière des bougies',
+  nl: 'Gezichtsbehandeling in de cabine, bij kaarslicht',
+  en: 'Facial in the treatment room, by candlelight',
+};
+const og = ogImage
+  ? { url: SITE + '/assets/img/' + ogImage.src, w: ogImage.w, h: ogImage.h, alt: ogImage.alt }
+  : { url: SITE + '/assets/img/og-image.jpg', w: 1200, h: 630, alt: OG_ALT[lang] };
 const ui = d.ui;
 const home = pagePath(lang, 'home');
 const anchor = (hash: string) => (isHome ? hash : home + hash);
@@ -63,10 +73,13 @@ const year = new Date().getFullYear();
 <meta property="og:title" content={title}>
 <meta property="og:description" content={description}>
 <meta property="og:url" content={canonical}>
-<meta property="og:image" content={SITE + '/assets/img/og-image.jpg'}>
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta property="og:image" content={og.url}>
+<meta property="og:image:width" content={String(og.w)}>
+<meta property="og:image:height" content={String(og.h)}>
+<meta property="og:image:alt" content={og.alt}>
 <meta property="og:locale" content={d.ogLocale}>
+{!canonicalPath && LANGS.filter((l) => l !== lang).map((l) => <meta property="og:locale:alternate" content={t(l).ogLocale}>)}
+<meta name="twitter:image:alt" content={og.alt}>
 <meta name="twitter:card" content="summary_large_image">
 <script is:inline src={`/assets/js/motion-pref.js?v=${JS_VERSION}`}></script>
 <script is:inline src={`/assets/js/main.js?v=${JS_VERSION}`} defer></script>

@@ -56,8 +56,8 @@ const REDIRECTS = new Map([
   ['/confidentialite.html', '/fr/confidentialite.html'],
   // Page BB Glow retirée (07/11/2026) : les liens déjà partagés ou indexés mènent aux tarifs
   ...['fr', 'nl', 'eng'].map((l) => [`/${l}/subPages/bbglow.html`, `/${l}/index.html#package`]),
-  // Épilation à la cire retirée (09/11/2026) : sa page mène à l'épilation laser
-  ...['fr', 'nl', 'eng'].map((l) => [`/${l}/subPages/cire.html`, `/${l}/subPages/laserepilation.html`]),
+  // Épilation à la cire revenue le 09/11/2026 sous un nouveau nom : l'ancienne adresse mène à sa nouvelle page
+  ...['fr', 'nl', 'eng'].map((l) => [`/${l}/subPages/cire.html`, `/${l}/subPages/epilation-cire.html`]),
   // SOS Pureté retirée de la carte (8bac70c) : même traitement
   ...['fr', 'nl', 'eng'].map((l) => [`/${l}/subPages/sos.html`, `/${l}/index.html#package`]),
 ]);

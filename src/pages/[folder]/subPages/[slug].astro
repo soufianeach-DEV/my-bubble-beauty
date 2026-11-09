@@ -45,8 +45,13 @@ const jsonld = {
     { '@type': 'ListItem', position: 2, name: tr.title, item: SITE + pagePath(lang, key) },
   ] },
 };
+// Image de partage : la première photo de la fiche, seulement pour les fiches dont c'est une vraie photo (pas un schéma).
+// Plasma et dents gardent l'image générale tant que leur cadre légal n'est pas vérifié.
+const OG_PHOTO = ['charbon', 'hydra', 'mado', 'photo', 'massages', 'brosse', 'semi-permanent'];
+const fig0 = tr.figures?.[0];
+const ogImage = OG_PHOTO.includes(Astro.params.slug!) && fig0 ? { src: fig0.src, w: fig0.w, h: fig0.h, alt: fig0.alt } : undefined;
 ---
-<Base lang={lang} pageKey={key} title={tr.metaTitle} description={tr.description} ogType="article" jsonld={jsonld} mainClass="treatment lit">
+<Base lang={lang} pageKey={key} title={tr.metaTitle} description={tr.description} ogType="article" jsonld={jsonld} mainClass="treatment lit" ogImage={ogImage}>
 <div class="halo halo--rose" aria-hidden="true"></div>
 <div class="wrap">
 <p class="back"><a href={pagePath(lang, 'home') + (grp ? `#tarif-${grp.id}` : '#package')}>{d.ui.back}</a></p>
