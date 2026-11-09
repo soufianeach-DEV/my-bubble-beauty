@@ -36,9 +36,11 @@ export async function syncServices(tx, seed) {
     category = excluded.category, name_fr = excluded.name_fr, name_nl = excluded.name_nl, name_en = excluded.name_en,
     price_cents = excluded.price_cents, sort = excluded.sort`;
   const slugs = seed.map((s) => s.slug);
-  // Prestation retirée de la carte : effacée si rien n'y renvoie, sinon hors ligne et masquée (rendez-vous, codes promo)
+  // Prestation retirée de la carte : effacée si rien n'y renvoie, sinon hors ligne et masquée (rendez-vous, codes promo, bons cadeaux).
+  // Toute table qui pointe vers services doit figurer ici : sinon la clé étrangère bloque, migrate échoue et le site ne démarre plus.
   await tx`DELETE FROM services s WHERE slug <> ALL(${slugs}::text[])
-    AND NOT EXISTS (SELECT 1 FROM bookings b WHERE b.service_id = s.id) AND NOT EXISTS (SELECT 1 FROM promo_codes p WHERE s.id = ANY(p.service_ids))`;
+    AND NOT EXISTS (SELECT 1 FROM bookings b WHERE b.service_id = s.id) AND NOT EXISTS (SELECT 1 FROM promo_codes p WHERE s.id = ANY(p.service_ids))
+    AND NOT EXISTS (SELECT 1 FROM gift_cards g WHERE g.service_id = s.id)`;
   await tx`UPDATE services SET active = false, retired_at = coalesce(retired_at, now()) WHERE slug <> ALL(${slugs}::text[])`;
   // Revenue sur la carte : visible de nouveau, toujours fermée tant que la gérante ne la rouvre pas
   await tx`UPDATE services SET retired_at = NULL WHERE retired_at IS NOT NULL AND slug = ANY(${slugs}::text[])`;

@@ -17,7 +17,10 @@ test('synchro des prestations avec les tarifs du site', { skip: !url && 'TEST_DA
       // Prestation que la gérante a réglée et ouverte, et une autre retirée du site depuis
       await tx`INSERT INTO services (slug, category, name_fr, name_nl, name_en, duration_min, deposit_cents, price_cents, active)
         VALUES (${`${tag}-garde`}, 'regard', 'ancien', 'ancien', 'ancien', 45, 1000, 1500, true), (${`${tag}-retire`}, 'visage', 'x', 'x', 'x', 30, 0, 900, true),
-          (${`${tag}-vide`}, 'visage', 'y', 'y', 'y', NULL, 0, 3500, false)`;
+          (${`${tag}-vide`}, 'visage', 'y', 'y', 'y', NULL, 0, 3500, false), (${`${tag}-bon`}, 'visage', 'z', 'z', 'z', 60, 0, 6000, true)`;
+      // Un bon cadeau seul renvoie à « bon » : la clé étrangère bloquerait l'effacement et le démarrage
+      const [g] = await tx`SELECT id FROM services WHERE slug = ${`${tag}-bon`}`;
+      await tx`INSERT INTO gift_cards (code, recipient, service_id, expires_on) VALUES (${`CADEAU-${tag.slice(-4)}-TEST`}, 'Test', ${g.id}, current_date + 30)`;
       // Un rendez-vous renvoie à la prestation retirée ; « vide » n'a rien
       const [r] = await tx`SELECT id FROM services WHERE slug = ${`${tag}-retire`}`;
       await tx`INSERT INTO bookings (guest_name, service_id, starts_at, ends_at, status, price_cents)
@@ -31,6 +34,7 @@ test('synchro des prestations avec les tarifs du site', { skip: !url && 'TEST_DA
       assert.equal(s.retire.price_cents, 900, 'gardée telle quelle : un rendez-vous y renvoie');
       assert.equal(s.retire.retired, true, "masquée dans l'admin");
       assert.equal(s.vide, undefined, 'retirée sans rendez-vous ni code promo : effacée');
+      assert.equal(s.bon.retired, true, 'un bon cadeau y renvoie : gardée et masquée');
       // Revenue sur la carte : plus masquée
       await syncServices(tx, [row(`${tag}-garde`, 2000), row(`${tag}-retire`, 900)]);
       assert.equal((await tx`SELECT retired_at FROM services WHERE slug = ${`${tag}-retire`}`)[0].retired_at, null);
