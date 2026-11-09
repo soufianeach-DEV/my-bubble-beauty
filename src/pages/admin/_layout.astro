@@ -18,7 +18,6 @@ const section = here.startsWith('/admin/clientes/') ? '/admin/clientes' : here;
 const LINKS = [
   ['/admin', 'Accueil', 'M4 11l8-7 8 7M6 9.5V20h4v-5h4v5h4V9.5'],
   ['/admin/agenda', 'Agenda', 'M7 3v3M17 3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z'],
-  ['/admin/reservations/nouvelle', 'Nouveau rendez-vous', 'M12 5v14M5 12h14'],
   ['/admin/clientes', 'Clientes', 'M16 20v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9.5 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM21 20v-1a4 4 0 0 0-3-3.9M16 4.1a3.5 3.5 0 0 1 0 6.8'],
   ['/admin/prestations', 'Prestations', 'M12 3l2.4 5.2 5.6.6-4.2 3.8 1.2 5.6L12 15.4 7 18.2l1.2-5.6L4 8.8l5.6-.6z'],
   ['/admin/horaires', 'Horaires', 'M12 7v5l3 2M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z'],
@@ -38,6 +37,7 @@ const links = Astro.locals.user?.role === 'gestionnaire' ? LINKS.filter(([href])
 <article class="admin">
 <aside class="admin-side">
   <p class="admin-brand">My Bubble <span>Beauty</span><small>Administration</small></p>
+  {nav && <a class="admin-new" href="/admin/reservations/nouvelle" aria-current={section === '/admin/reservations/nouvelle' ? 'page' : undefined}><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>Nouveau rendez-vous</a>}
   {nav && <nav aria-label="Administration"><ul>{links.map(([href, label, d]) => (
     <li><a href={href} aria-current={href === section ? 'page' : undefined}>
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d={d} /></svg>{label}
@@ -67,6 +67,10 @@ const links = Astro.locals.user?.role === 'gestionnaire' ? LINKS.filter(([href])
   .admin-brand{margin:0 .75rem;font:300 1.6rem/1 var(--f-title);font-variation-settings:"SOFT" 100,"WONK" 0;color:inherit}
   .admin-brand span{display:block;font:400 1.3em/.9 "Allura",cursive;color:#E8C9A0}
   .admin-brand small{display:block;margin-top:.6rem;font:500 .7rem/1 var(--f-text);letter-spacing:.14em;text-transform:uppercase;color:rgb(255 251 249 / .6)}
+  /* Action la plus fréquente : bouton plein, au-dessus du menu */
+  .admin-new{display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:48px;padding:.6rem 1rem;border-radius:999px;background:#E8C9A0;color:#4E302C;font-weight:600;text-decoration:none}
+  .admin-new:hover,.admin-new:focus-visible,.admin-new[aria-current="page"]{background:#FFFBF9}
+  .admin-new svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
   .admin-side ul{display:grid;gap:.25rem;list-style:none;margin:0;padding:0}
   /* Cibles de 44 px : la gérante passe d'une page à l'autre au téléphone */
   .admin-side a{display:flex;align-items:center;gap:.75rem;min-height:44px;padding:.5rem .75rem;border-radius:12px;color:rgb(255 251 249 / .82);text-decoration:none;transition:background var(--dur-ui),color var(--dur-ui)}
