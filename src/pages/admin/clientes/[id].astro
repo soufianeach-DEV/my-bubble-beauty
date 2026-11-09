@@ -83,6 +83,9 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 {u.blocked_at && <p class="notice notice--error">Compte désactivé depuis le {day(u.blocked_at)}.</p>}
 {purgeOn && <p class="notice notice--error">Suppression demandée le {day(u.deleted_at!)}. Sans retour de la cliente, le compte sera effacé le {day(purgeOn)}.</p>}
 
+{/* Trois colonnes sur grand écran : identité et compte, fiche de soin, rendez-vous et séances */}
+<div class="cl-grid">
+<div class="cl-col">
 <section aria-labelledby="h-coord">
 <h2 id="h-coord">Coordonnées</h2>
 <dl class="recap">
@@ -96,135 +99,6 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
   <dt>Total des soins honorés</dt><dd>{euros(stats.spent_cents)}</dd>
 </dl>
 </section>
-
-<section aria-labelledby="h-notes">
-<h2 id="h-notes">Fiche de soin</h2>
-{/* Cases et boutons segmentés (radio) plutôt que des menus : utilisables au pouce sur téléphone */}
-<form class="form sheet" method="post" action={`${self}#h-notes`}>
-  <input type="hidden" name="scope" value="profil">
-  <fieldset><legend>Santé et sensibilités</legend>
-    {prof.consent ? (<>
-      <p class="hint">Données de santé : chiffrées, visibles par l'admin et la gestionnaire seulement, effacées si la cliente retire son accord.</p>
-      <fieldset class="group"><legend class="sub">Allergies et intolérances aux produits</legend>
-      <div class="chips">{Object.entries(ALLERGIES).map(([k, l]) => <label class="chip"><input type="checkbox" name="allergies" value={k} checked={prof.health?.allergies?.includes(k)}><span>{l}</span></label>)}</div></fieldset>
-      <label class="free">Autre allergie ou précision<input name="allergies_other" maxlength="200" value={prof.health?.allergies_other ?? ''}></label>
-      <fieldset class="group"><legend class="sub">Type de peau</legend>
-      <div class="chips">{Object.entries(SKIN).map(([k, l]) => <label class="chip"><input type="checkbox" name="skin" value={k} checked={prof.health?.skin?.includes(k)}><span>{l}</span></label>)}</div></fieldset>
-      <label class="free">Contre-indications et traitements en cours (rétinoïdes, grossesse…)<textarea name="contra" rows="3" maxlength="2000">{prof.health?.contra ?? ''}</textarea></label>
-    </>) : <p class="notice notice--error">Pas d'accord pour les données de santé : allergies, type de peau et contre-indications ne peuvent pas être notés. La cliente donne son accord en réservant ou depuis son compte.</p>}
-  </fieldset>
-  <fieldset><legend>Préférences de soin</legend>
-    {([['heat', 'Chaleur', HEAT], ['cover', 'Couverture pendant le soin', COVER], ['pressure', 'Pression du toucher', PRESSURE], ['ambience', 'Ambiance', AMBIENCE]] as const).map(([name, title, o]) => (
-      <fieldset class="seg-group"><legend class="sub">{title}</legend><div class="seg">
-        {Object.entries(o).map(([k, l]) => <label><input type="radio" name={name} value={k} checked={prof.care[name] === k}><span>{l}</span></label>)}
-        <label><input type="radio" name={name} value="" checked={!prof.care[name]}><span>Non précisé</span></label>
-      </div></fieldset>
-    ))}
-    <label class="free">Odeurs : parfums appréciés ou à éviter<input name="scents" maxlength="200" value={prof.care.scents ?? ''}></label>
-  </fieldset>
-  <fieldset><legend>Zones et toucher</legend>
-    <fieldset class="group"><legend class="sub">Zones à ne pas toucher</legend>
-    <div class="chips">{Object.entries(ZONES).map(([k, l]) => <label class="chip"><input type="checkbox" name="zones" value={k} checked={prof.care.zones?.includes(k)}><span>{l}</span></label>)}</div></fieldset>
-    <label class="free">Précision sur les zones<input name="zones_other" maxlength="200" value={prof.care.zones_other ?? ''}></label>
-    <fieldset class="seg-group"><legend class="sub">Sensibilité au toucher</legend><div class="seg">
-      {Object.entries(TOUCH).map(([k, l]) => <label><input type="radio" name="touch" value={k} checked={prof.care.touch === k}><span>{l}</span></label>)}
-      <label><input type="radio" name="touch" value="" checked={!prof.care.touch}><span>Non précisé</span></label>
-    </div></fieldset>
-  </fieldset>
-  <div class="field"><label for="notes">Notes libres</label><textarea id="notes" name="notes" rows="5" maxlength="4000">{notesDraft ?? prof.notes}</textarea>
-    <p class="hint">La cliente voit toute sa fiche si elle demande l'export de ses données. Écrivez des faits utiles aux soins, sans jugement.</p></div>
-  <button class="btn btn--solid" type="submit">Enregistrer la fiche</button>
-</form>
-</section>
-
-<section aria-labelledby="h-rdv">
-<h2 id="h-rdv">Rendez-vous</h2>
-{bookings.length === 0 ? <p>Aucun rendez-vous.</p> : (
-<div class="table-wrap"><table class="data-table">
-  <thead><tr><th scope="col">Date</th><th scope="col">Prestation</th><th scope="col">Statut</th><th scope="col">Montants</th><th scope="col">Actions</th></tr></thead>
-  <tbody>{bookings.map((b) => (
-    <tr id={`b-${b.id}`}>
-      <td><a href={`/admin/agenda?jour=${todayBrussels(b.starts_at)}&vue=jour#r-${b.id}`}>{fmtDateTime(b.starts_at)}</a>{b.moved && <><br><small>déplacé</small></>}</td>
-      <td>{b.service}</td>
-      <td>
-        {b.no_show ? 'Absente' : b.status === 'confirmed' && b.past ? 'Honoré' : STATUS[b.status]}
-        {b.cancel_reason && <><br><small>{REASON[b.cancel_reason]}</small></>}
-        {due(b) > 0 && b.status !== 'confirmed' && <><br><small>Acompte à rendre</small></>}
-      </td>
-      <td>Prix {euros(b.price_cents - b.discount_cents)}{b.deposit_cents > 0 && <><br>Acompte {euros(b.deposit_cents)}{b.paid ? ' payé' : ''}</>}{b.refunded_cents > 0 && <><br>Remboursé {euros(b.refunded_cents)}</>}</td>
-      <td>
-        {b.status === 'confirmed' && b.past && (
-          <form class="cell-form" method="post" action={self}>
-            <input type="hidden" name="scope" value="booking"><input type="hidden" name="id" value={b.id}>
-            <button class="btn btn--ghost" type="submit" name="action" value={b.no_show ? 'show' : 'no_show'}>{b.no_show ? "Retirer l'absence" : 'Marquer absente'}</button>
-          </form>
-        )}
-        {b.status !== 'confirmed' && b.status !== 'pending_payment' && due(b) > 0 && (
-          <form class="cell-form" method="post" action={self}>
-            <input type="hidden" name="scope" value="booking"><input type="hidden" name="id" value={b.id}>
-            <button class="btn btn--ghost" type="submit" name="action" value="manual_refund">Marquer remboursé hors site ({euros(due(b))})</button>
-          </form>
-        )}
-        {manage && <Supprimer id={b.id} label={`le rendez-vous du ${fmtDateTime(b.starts_at)}`} action={self} />}
-      </td>
-    </tr>
-  ))}</tbody>
-</table></div>
-)}
-</section>
-
-<section aria-labelledby="h-fidelite">
-<h2 id="h-fidelite">Carte de fidélité</h2>
-<p><strong>{card.sessions} séance{card.sessions > 1 ? 's' : ''}</strong> sur la carte en cours, <strong>{euros(card.spentCents)}</strong> payés.
-  Séance comptée à partir de {card.rules.min_euros} € payés. {card.rules.discount_percent} % de remise après {card.rules.discount_after} séances{card.discountUsed && ' (déjà utilisée)'} ;
-  {card.rules.free_label} ({card.rules.free_value} €) offert après {card.rules.free_after} séances et {card.rules.free_min_total} € payés.</p>
-{/* Rentabilité : avantages accordés (remises et soins offerts) rapportés à tout ce que la cliente a payé ; et coût du prochain soin offert rapporté à la carte en cours */}
-<p class="hint">Rentabilité : {euros(card.lifetime.rewardsCents)} d'avantages accordés pour {euros(card.lifetime.spentCents)} payés au total{card.lifetime.spentCents > 0 && ` (${(card.lifetime.rewardsCents / card.lifetime.spentCents * 100).toFixed(1).replace('.', ',')} %)`}.
-  {card.spentCents > 0 && `Le soin offert vaudrait ${(card.rules.free_value * 100 / card.spentCents * 100).toFixed(1).replace('.', ',')} % de la carte en cours.`}</p>
-<p class="meter" aria-hidden="true"><span>{Array.from({ length: card.rules.free_after }, (_, i) => <i class:list={{ on: i < card.sessions, mark: i + 1 === card.rules.discount_after }}></i>)}</span></p>
-{(card.discount || card.free) ? (
-  rewardable.length === 0 ? <p class="notice">Avantage disponible : {card.free ? `${card.rules.free_label} offert` : `${card.rules.discount_percent} % de remise`}. Saisissez d'abord le rendez-vous où l'appliquer.</p> : (
-  <form class="form" method="post" action={`${self}#h-fidelite`}>
-    <input type="hidden" name="scope" value="fidelite"><input type="hidden" name="id" value={u.id}><input type="hidden" name="kind" value={card.free ? 'free' : 'discount'}>
-    <p class="notice">Avantage disponible : <strong>{card.free ? `${card.rules.free_label} offert` : `${card.rules.discount_percent} % de remise sur le soin`}</strong></p>
-    <div class="field"><label for="reward-booking">Rendez-vous où l'appliquer</label>
-      <select id="reward-booking" name="booking" required>{rewardable.map((b) => <option value={b.id}>{fmtDateTime(b.starts_at)} · {b.service} · {euros(b.price_cents)}</option>)}</select></div>
-    <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
-    <button class="btn btn--solid" type="submit">Appliquer</button>
-  </form>)
-) : <p class="hint">Aucun avantage disponible pour l'instant.</p>}
-{card.last && <p class="hint">Dernier avantage : {card.last.kind === 'free' ? 'soin offert' : 'remise'} le {fmtDateTime(card.last.used_at)}.</p>}
-</section>
-
-<section aria-labelledby="h-suivi">
-<h2 id="h-suivi">Suivi des séances</h2>
-<form class="form" method="post" action={`${self}#h-suivi`}>
-  <input type="hidden" name="scope" value="suivi"><input type="hidden" name="action" value="health"><input type="hidden" name="id" value={u.id}>
-  <div class="field"><label for="birth_date">Date de naissance</label><input id="birth_date" name="birth_date" type="date" min="1900-01-02" value={birthDraft ?? sv.birthDate ?? ''}></div>
-  {sv.consent
-    ? <div class="field"><label for="medical_history">Antécédents médicaux</label><textarea id="medical_history" name="medical_history" rows="4" maxlength="4000">{historyDraft ?? sv.history ?? ''}</textarea>
-        <p class="hint">Données de santé : chiffrées, visibles par l'admin et la gestionnaire seulement, jamais dans un e-mail ni au journal. Effacées si la cliente retire son accord.</p></div>
-    : <p class="hint">Antécédents médicaux : la cliente n'a pas donné son accord pour ses données de santé. Rien ne peut être noté.</p>}
-  <button class="btn btn--ghost" type="submit">Enregistrer</button>
-</form>
-{sv.seances.length === 0 ? <p>Aucune séance réalisée.</p> : (
-<ol class="seances">{sv.seances.map((s, i) => (
-  <li id={`s-${s.id}`}>
-    <p><strong>Séance {i + 1}</strong> · {fmtDateTime(s.starts_at)}</p>
-    <p>{s.service}{s.zone && ` · zone : ${s.zone}`}{s.practitioner && ` · ${s.practitioner}`}</p>
-    <details><summary>Zone et praticienne</summary>
-      <form class="seance-form" method="post" action={`${self}#s-${s.id}`}>
-        <input type="hidden" name="scope" value="suivi"><input type="hidden" name="action" value="seance"><input type="hidden" name="id" value={u.id}><input type="hidden" name="booking" value={s.id}>
-        <label>Zone traitée<input name="zone" maxlength="100" value={s.zone ?? ''}></label>
-        <label>Praticienne<select name="practitioner"><option value="">—</option>{sv.team.map((t) => <option value={t.id} selected={t.id === s.practitioner_id}>{t.name}</option>)}</select></label>
-        <button class="btn btn--ghost" type="submit">Enregistrer</button>
-      </form>
-    </details>
-  </li>
-))}</ol>
-)}
-</section>
-
 <section aria-labelledby="h-consent">
 <h2 id="h-consent">Consentements</h2>
 {consents.length === 0 ? <p>Aucun consentement signé.</p> : (
@@ -233,7 +107,6 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 <p class="hint">Faire signer à l'institut, sur la tablette :</p>
 <p class="sign-links">{KINDS.map((k) => <a class="btn btn--ghost" href={`${self}/consentement?type=${k}`}>{FORMS[k].title.replace(/^Consentement (éclairé )?/, '')}</a>)}</p>
 </section>
-
 {manage && <section aria-labelledby="h-compte">
 <h2 id="h-compte">Compte</h2>
 {/* Chaque action demande la case « Je confirme », vérifiée aussi côté serveur (clientForm) */}
@@ -276,12 +149,10 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
   </form>
 </details>
 </section>}
-
 {gifts.length > 0 && <section aria-labelledby="h-gifts">
 <h2 id="h-gifts">Bons cadeaux</h2>
 <ul class="events">{gifts.map((g) => <li><a href={`/admin/bons-cadeaux/${g.id}`}>{g.code}</a> · {g.service} · {GIFT_STATES[g.state]} · jusqu'au {g.expires_on.split('-').reverse().join('/')}</li>)}</ul>
 </section>}
-
 {/* Journal (connexions, exports, IP) : admin seulement, comme la page Journal */}
 {manage && <section aria-labelledby="h-journal">
 <h2 id="h-journal">Journal récent</h2>
@@ -290,9 +161,147 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 )}
 <p><a href={`/admin/journal?cliente=${u.id}`}>Tout le journal de cette cliente</a></p>
 </section>}
+</div>
+<div class="cl-col">
+<section aria-labelledby="h-notes">
+<h2 id="h-notes">Fiche de soin</h2>
+{/* Cases et boutons segmentés (radio) plutôt que des menus : utilisables au pouce sur téléphone */}
+<form class="form sheet" method="post" action={`${self}#h-notes`}>
+  <input type="hidden" name="scope" value="profil">
+  <fieldset><legend>Santé et sensibilités</legend>
+    {prof.consent ? (<>
+      <p class="hint">Données de santé : chiffrées, visibles par l'admin et la gestionnaire seulement, effacées si la cliente retire son accord.</p>
+      <fieldset class="group"><legend class="sub">Allergies et intolérances aux produits</legend>
+      <div class="chips">{Object.entries(ALLERGIES).map(([k, l]) => <label class="chip"><input type="checkbox" name="allergies" value={k} checked={prof.health?.allergies?.includes(k)}><span>{l}</span></label>)}</div></fieldset>
+      <label class="free">Autre allergie ou précision<input name="allergies_other" maxlength="200" value={prof.health?.allergies_other ?? ''}></label>
+      <fieldset class="group"><legend class="sub">Type de peau</legend>
+      <div class="chips">{Object.entries(SKIN).map(([k, l]) => <label class="chip"><input type="checkbox" name="skin" value={k} checked={prof.health?.skin?.includes(k)}><span>{l}</span></label>)}</div></fieldset>
+      <label class="free">Contre-indications et traitements en cours (rétinoïdes, grossesse…)<textarea name="contra" rows="3" maxlength="2000">{prof.health?.contra ?? ''}</textarea></label>
+    </>) : <p class="notice notice--error">Pas d'accord pour les données de santé : allergies, type de peau et contre-indications ne peuvent pas être notés. La cliente donne son accord en réservant ou depuis son compte.</p>}
+  </fieldset>
+  <fieldset><legend>Préférences de soin</legend>
+    {([['heat', 'Chaleur', HEAT], ['cover', 'Couverture pendant le soin', COVER], ['pressure', 'Pression du toucher', PRESSURE], ['ambience', 'Ambiance', AMBIENCE]] as const).map(([name, title, o]) => (
+      <fieldset class="seg-group"><legend class="sub">{title}</legend><div class="seg">
+        {Object.entries(o).map(([k, l]) => <label><input type="radio" name={name} value={k} checked={prof.care[name] === k}><span>{l}</span></label>)}
+        <label><input type="radio" name={name} value="" checked={!prof.care[name]}><span>Non précisé</span></label>
+      </div></fieldset>
+    ))}
+    <label class="free">Odeurs : parfums appréciés ou à éviter<input name="scents" maxlength="200" value={prof.care.scents ?? ''}></label>
+  </fieldset>
+  <fieldset><legend>Zones et toucher</legend>
+    <fieldset class="group"><legend class="sub">Zones à ne pas toucher</legend>
+    <div class="chips">{Object.entries(ZONES).map(([k, l]) => <label class="chip"><input type="checkbox" name="zones" value={k} checked={prof.care.zones?.includes(k)}><span>{l}</span></label>)}</div></fieldset>
+    <label class="free">Précision sur les zones<input name="zones_other" maxlength="200" value={prof.care.zones_other ?? ''}></label>
+    <fieldset class="seg-group"><legend class="sub">Sensibilité au toucher</legend><div class="seg">
+      {Object.entries(TOUCH).map(([k, l]) => <label><input type="radio" name="touch" value={k} checked={prof.care.touch === k}><span>{l}</span></label>)}
+      <label><input type="radio" name="touch" value="" checked={!prof.care.touch}><span>Non précisé</span></label>
+    </div></fieldset>
+  </fieldset>
+  <div class="field"><label for="notes">Notes libres</label><textarea id="notes" name="notes" rows="5" maxlength="4000">{notesDraft ?? prof.notes}</textarea>
+    <p class="hint">La cliente voit toute sa fiche si elle demande l'export de ses données. Écrivez des faits utiles aux soins, sans jugement.</p></div>
+  {/* Collant en bas de l'écran : la fiche est longue, le bouton reste à portée */}
+  <div class="save-bar"><button class="btn btn--solid" type="submit">Enregistrer la fiche</button></div>
+</form>
+</section>
+</div>
+<div class="cl-col">
+<section aria-labelledby="h-rdv">
+<h2 id="h-rdv">Rendez-vous</h2>
+{bookings.length === 0 ? <p>Aucun rendez-vous.</p> : (
+<div class="table-wrap"><table class="data-table">
+  <thead><tr><th scope="col">Date</th><th scope="col">Prestation</th><th scope="col">Statut</th><th scope="col">Montants</th><th scope="col">Actions</th></tr></thead>
+  <tbody>{bookings.map((b) => (
+    <tr id={`b-${b.id}`}>
+      <td><a href={`/admin/agenda?jour=${todayBrussels(b.starts_at)}&vue=jour#r-${b.id}`}>{fmtDateTime(b.starts_at)}</a>{b.moved && <><br><small>déplacé</small></>}</td>
+      <td>{b.service}</td>
+      <td>
+        {b.no_show ? 'Absente' : b.status === 'confirmed' && b.past ? 'Honoré' : STATUS[b.status]}
+        {b.cancel_reason && <><br><small>{REASON[b.cancel_reason]}</small></>}
+        {due(b) > 0 && b.status !== 'confirmed' && <><br><small>Acompte à rendre</small></>}
+      </td>
+      <td>Prix {euros(b.price_cents - b.discount_cents)}{b.deposit_cents > 0 && <><br>Acompte {euros(b.deposit_cents)}{b.paid ? ' payé' : ''}</>}{b.refunded_cents > 0 && <><br>Remboursé {euros(b.refunded_cents)}</>}</td>
+      <td>
+        {b.status === 'confirmed' && b.past && (
+          <form class="cell-form" method="post" action={self}>
+            <input type="hidden" name="scope" value="booking"><input type="hidden" name="id" value={b.id}>
+            <button class="btn btn--ghost" type="submit" name="action" value={b.no_show ? 'show' : 'no_show'}>{b.no_show ? "Retirer l'absence" : 'Marquer absente'}</button>
+          </form>
+        )}
+        {b.status !== 'confirmed' && b.status !== 'pending_payment' && due(b) > 0 && (
+          <form class="cell-form" method="post" action={self}>
+            <input type="hidden" name="scope" value="booking"><input type="hidden" name="id" value={b.id}>
+            <button class="btn btn--ghost" type="submit" name="action" value="manual_refund">Marquer remboursé hors site ({euros(due(b))})</button>
+          </form>
+        )}
+        {manage && <Supprimer id={b.id} label={`le rendez-vous du ${fmtDateTime(b.starts_at)}`} action={self} />}
+      </td>
+    </tr>
+  ))}</tbody>
+</table></div>
+)}
+</section>
+<section aria-labelledby="h-fidelite">
+<h2 id="h-fidelite">Carte de fidélité</h2>
+<p><strong>{card.sessions} séance{card.sessions > 1 ? 's' : ''}</strong> sur la carte en cours, <strong>{euros(card.spentCents)}</strong> payés.
+  Séance comptée à partir de {card.rules.min_euros} € payés. {card.rules.discount_percent} % de remise après {card.rules.discount_after} séances{card.discountUsed && ' (déjà utilisée)'} ;
+  {card.rules.free_label} ({card.rules.free_value} €) offert après {card.rules.free_after} séances et {card.rules.free_min_total} € payés.</p>
+{/* Rentabilité : avantages accordés (remises et soins offerts) rapportés à tout ce que la cliente a payé ; et coût du prochain soin offert rapporté à la carte en cours */}
+<p class="hint">Rentabilité : {euros(card.lifetime.rewardsCents)} d'avantages accordés pour {euros(card.lifetime.spentCents)} payés au total{card.lifetime.spentCents > 0 && ` (${(card.lifetime.rewardsCents / card.lifetime.spentCents * 100).toFixed(1).replace('.', ',')} %)`}.
+  {card.spentCents > 0 && `Le soin offert vaudrait ${(card.rules.free_value * 100 / card.spentCents * 100).toFixed(1).replace('.', ',')} % de la carte en cours.`}</p>
+<p class="meter" aria-hidden="true"><span>{Array.from({ length: card.rules.free_after }, (_, i) => <i class:list={{ on: i < card.sessions, mark: i + 1 === card.rules.discount_after }}></i>)}</span></p>
+{(card.discount || card.free) ? (
+  rewardable.length === 0 ? <p class="notice">Avantage disponible : {card.free ? `${card.rules.free_label} offert` : `${card.rules.discount_percent} % de remise`}. Saisissez d'abord le rendez-vous où l'appliquer.</p> : (
+  <form class="form" method="post" action={`${self}#h-fidelite`}>
+    <input type="hidden" name="scope" value="fidelite"><input type="hidden" name="id" value={u.id}><input type="hidden" name="kind" value={card.free ? 'free' : 'discount'}>
+    <p class="notice">Avantage disponible : <strong>{card.free ? `${card.rules.free_label} offert` : `${card.rules.discount_percent} % de remise sur le soin`}</strong></p>
+    <div class="field"><label for="reward-booking">Rendez-vous où l'appliquer</label>
+      <select id="reward-booking" name="booking" required>{rewardable.map((b) => <option value={b.id}>{fmtDateTime(b.starts_at)} · {b.service} · {euros(b.price_cents)}</option>)}</select></div>
+    <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+    <button class="btn btn--solid" type="submit">Appliquer</button>
+  </form>)
+) : <p class="hint">Aucun avantage disponible pour l'instant.</p>}
+{card.last && <p class="hint">Dernier avantage : {card.last.kind === 'free' ? 'soin offert' : 'remise'} le {fmtDateTime(card.last.used_at)}.</p>}
+</section>
+<section aria-labelledby="h-suivi">
+<h2 id="h-suivi">Suivi des séances</h2>
+<form class="form" method="post" action={`${self}#h-suivi`}>
+  <input type="hidden" name="scope" value="suivi"><input type="hidden" name="action" value="health"><input type="hidden" name="id" value={u.id}>
+  <div class="field"><label for="birth_date">Date de naissance</label><input id="birth_date" name="birth_date" type="date" min="1900-01-02" value={birthDraft ?? sv.birthDate ?? ''}></div>
+  {sv.consent
+    ? <div class="field"><label for="medical_history">Antécédents médicaux</label><textarea id="medical_history" name="medical_history" rows="4" maxlength="4000">{historyDraft ?? sv.history ?? ''}</textarea>
+        <p class="hint">Données de santé : chiffrées, visibles par l'admin et la gestionnaire seulement, jamais dans un e-mail ni au journal. Effacées si la cliente retire son accord.</p></div>
+    : <p class="hint">Antécédents médicaux : la cliente n'a pas donné son accord pour ses données de santé. Rien ne peut être noté.</p>}
+  <button class="btn btn--ghost" type="submit">Enregistrer</button>
+</form>
+{sv.seances.length === 0 ? <p>Aucune séance réalisée.</p> : (
+<ol class="seances">{sv.seances.map((s, i) => (
+  <li id={`s-${s.id}`}>
+    <p><strong>Séance {i + 1}</strong> · {fmtDateTime(s.starts_at)}</p>
+    <p>{s.service}{s.zone && ` · zone : ${s.zone}`}{s.practitioner && ` · ${s.practitioner}`}</p>
+    <details><summary>Zone et praticienne</summary>
+      <form class="seance-form" method="post" action={`${self}#s-${s.id}`}>
+        <input type="hidden" name="scope" value="suivi"><input type="hidden" name="action" value="seance"><input type="hidden" name="id" value={u.id}><input type="hidden" name="booking" value={s.id}>
+        <label>Zone traitée<input name="zone" maxlength="100" value={s.zone ?? ''}></label>
+        <label>Praticienne<select name="practitioner"><option value="">—</option>{sv.team.map((t) => <option value={t.id} selected={t.id === s.practitioner_id}>{t.name}</option>)}</select></label>
+        <button class="btn btn--ghost" type="submit">Enregistrer</button>
+      </form>
+    </details>
+  </li>
+))}</ol>
+)}
+</section>
+</div>
+</div>
 </Admin>
 
 <style>
+  /* Fiche sans long défilement : 3 colonnes à partir de 1600 px, 2 à partir de 960 px (rendez-vous et suivi sur toute la largeur dessous) */
+  .cl-grid{display:grid;gap:0 2rem;align-items:start}
+  .cl-col{min-width:0}
+  .cl-col > section > h2{margin-top:1.25rem}
+  @media (min-width:960px){.cl-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr)}.cl-col:last-child{grid-column:1 / -1}}
+  @media (min-width:1600px){.cl-grid{grid-template-columns:minmax(0,.85fr) minmax(0,1.1fr) minmax(0,1.35fr)}.cl-col:last-child{grid-column:auto}}
+  .save-bar{position:sticky;bottom:0;z-index:2;padding:.75rem 0;background:var(--surface);border-top:1px solid var(--line-soft)}
   .recap{display:grid;grid-template-columns:auto 1fr;gap:.4rem 1.25rem;margin:0 0 1.5rem}
   .recap dt{color:var(--text-soft)}
   .recap dd{margin:0;min-width:0;overflow-wrap:anywhere}
