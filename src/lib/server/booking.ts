@@ -430,13 +430,16 @@ export async function deleteBooking(id: number, notifyClient: boolean): Promise<
           b.starts_at, b.price_cents, b.discount_cents, b.deposit_cents, b.starts_at > now() AND b.status = 'confirmed' AS upcoming
         FROM bookings b JOIN users u ON u.id = b.user_id JOIN services s ON s.id = b.service_id WHERE b.id = ${id}`
     : [];
-  const gone = await sql.begin(async (tx) => {
+  const [row] = await sql.begin(async (tx) => {
     await tx`DELETE FROM loyalty_rewards WHERE booking_id = ${id}`;
-    return (await tx`DELETE FROM bookings WHERE id = ${id} RETURNING id`).length > 0;
+    return tx<{ status: string; stripe_session_id: string | null }[]>`DELETE FROM bookings WHERE id = ${id} RETURNING status, stripe_session_id`;
   });
+  // Paiement en cours : la session Stripe est fermée, sinon un paiement fait après coup ne trouverait plus son rendez-vous.
+  // Échec ignoré sans log, comme le reste de la suppression (la session expire seule au bout de 30 minutes).
+  if (row?.status === 'pending_payment' && row.stripe_session_id) expireSession(row.stripe_session_id).catch(() => {});
   // Prévenir n'a de sens que pour un rendez-vous encore à venir
-  if (gone && mail?.upcoming) sendMail(mail.email, bookingCancelledMail(mail.locale, mail, 0));
-  return gone;
+  if (row && mail?.upcoming) sendMail(mail.email, bookingCancelledMail(mail.locale, mail, 0));
+  return !!row;
 }
 
 // Blanchiment dentaire terminé (et non marqué absente) : les recommandations de l'institut par e-mail, une seule fois.
