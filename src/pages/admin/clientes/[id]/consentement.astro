@@ -1,0 +1,106 @@
+---
+export const prerender = false;
+// Consentement d'une cliente, côté institut : ?type=laser fait signer sur la tablette de l'institut (la cliente saisit son nom
+// et la mention), ?voir=ID affiche un consentement signé, imprimable ou enregistrable en PDF. Admin et gestionnaire.
+import Admin from '../../_layout.astro';
+import { fmtDateTime, readForm, staffId } from '../../../../lib/server/admin.ts';
+import { clientDetail } from '../../../../lib/server/admin-clientes.ts';
+import { closingText, FORMS, isKind, MENTION, readConsent, signConsent, specialistName } from '../../../../lib/server/consentements.ts';
+import { JS_VERSION } from '../../../../lib/site';
+
+const me = staffId(Astro.locals);
+if (!me) return new Response(null, { status: 404 });
+const id = /^[1-9]\d{0,17}$/.test(Astro.params.id ?? '') ? Number(Astro.params.id) : null;
+const c = id && (await clientDetail(id));
+if (!c) return new Response(null, { status: 404 });
+const back = `/admin/clientes/${c.user.id}`;
+const q = Astro.url.searchParams;
+
+// Consentement signé : le texte du modèle est affiché tel quel s'il est identique à celui signé, sinon le texte brut gardé en base
+const voir = /^[1-9]\d{0,17}$/.test(q.get('voir') ?? '') ? await readConsent(c.user.id, Number(q.get('voir'))) : null;
+const parts = voir ? voir.text.split('\n\n') : [];
+const same = voir && FORMS[voir.kind].version === voir.version && parts[1] === FORMS[voir.kind].html;
+
+const kind = q.get('type');
+if (!voir && !isKind(kind)) return new Response(null, { status: 404 });
+const specialist = await specialistName();
+let error = '';
+let draft = { name: c.user.name ?? '', mention: '' };
+if (!voir && isKind(kind) && Astro.request.method === 'POST') {
+  const form = await readForm(Astro.request);
+  if (!form) return new Response(null, { status: 413 });
+  draft = { name: String(form.get('name') ?? '').slice(0, 100), mention: String(form.get('mention') ?? '').slice(0, 40) };
+  if (form.get('agree') !== 'on') error = 'La cliente coche la case pour signer.';
+  else {
+    const r = await signConsent({ userId: c.user.id, kind, signerName: draft.name, mention: draft.mention, ip: Astro.locals.ip, userAgent: Astro.request.headers.get('user-agent'), staffId: me });
+    if (r.ok) return Astro.redirect(`${back}/consentement?voir=${r.id}`, 303);
+    error = r.error === 'mention' ? 'Recopiez exactement : Lu et approuvé.' : r.error === 'name' ? 'Nom et prénom de la cliente (3 caractères au moins).' : "Indiquez d'abord le nom du spécialiste dans Réglages.";
+  }
+  Astro.response.status = 400;
+}
+const form = !voir && isKind(kind) ? FORMS[kind] : null;
+---
+<Admin title={voir ? FORMS[voir.kind].title : form!.title}>
+<script is:inline src={`/assets/js/imprimer.js?v=${JS_VERSION}`} defer></script>
+<p class="noprint"><a href={back}>← Fiche de {c.user.name || c.user.email}</a></p>
+{voir ? (
+  <>
+    <div class="noprint actions"><button class="btn btn--solid" type="button" data-print>Imprimer ou enregistrer en PDF</button></div>
+    {!voir.intact && <p class="notice notice--error" role="alert">L'empreinte du texte ne correspond plus : ce document a été modifié en base après la signature.</p>}
+    <article class="paper" lang="fr">
+      <header><p class="brand">My Bubble <span>Beauty</span></p><p>Rue Paloke 146, 1700 Dilbeek · 0484 11 83 95</p></header>
+      <h2>{parts[0]}</h2>
+      {same ? <Fragment set:html={FORMS[voir.kind].html} /> : <pre>{parts.slice(1, -1).join('\n\n')}</pre>}
+      <p class="closing"><strong>{parts.at(-1)}</strong></p>
+      <dl class="sig">
+        <dt>Nom et prénom</dt><dd>{voir.signer_name}</dd>
+        <dt>Date</dt><dd>{fmtDateTime(voir.signed_at)}</dd>
+        <dt>Mention</dt><dd>« {voir.mention} »</dd>
+        <dt>Signature</dt><dd>Électronique, {voir.channel === 'institut' ? `à l'institut (tablette tendue par ${voir.staff ?? "l'équipe"})` : 'en ligne depuis le compte de la cliente'}</dd>
+        <dt>Version du document</dt><dd>{voir.version}</dd>
+        <dt>Empreinte SHA-256</dt><dd class="hash">{voir.text_sha256}</dd>
+        <dt>Appareil</dt><dd>{voir.ip ?? '—'} · {voir.user_agent || '—'}</dd>
+      </dl>
+    </article>
+  </>
+) : (
+  <>
+    <p class="notice">À faire remplir par la cliente elle-même sur la tablette : elle lit le document, saisit son nom, recopie la mention et coche la case.</p>
+    <article class="paper" lang="fr">
+      <Fragment set:html={form!.html} />
+      <p class="closing"><strong>{closingText(form!, specialist)}</strong></p>
+    </article>
+    <form class="form" method="post">
+      {error && <p class="notice notice--error" role="alert">{error}</p>}
+      <div class="field"><label for="name">Nom et prénom</label><input id="name" name="name" required minlength="3" maxlength="100" autocomplete="off" value={draft.name}></div>
+      <div class="field"><label for="mention">Recopiez la mention « {MENTION} »</label><input id="mention" name="mention" required maxlength="40" autocomplete="off" value={draft.mention}></div>
+      <label class="check"><input type="checkbox" name="agree" required><span>Je signe ce document électroniquement.</span></label>
+      <button class="btn btn--solid" type="submit">Signer</button>
+    </form>
+  </>
+)}
+</Admin>
+
+<style>
+  .paper{max-width:52rem;padding:1.5rem;border:1px solid var(--line-soft);border-radius:16px;background:var(--bg);overflow-wrap:anywhere}
+  .paper header{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem;margin-bottom:1rem;font-size:.875rem;color:var(--text-soft)}
+  .brand{margin:0;font:300 1.4rem/1 var(--f-title);color:var(--text)}
+  .brand span{font:400 1.2em/1 "Allura",cursive}
+  .paper :global(h2){font-size:1.15rem;margin:1.25rem 0 .5rem}
+  .paper pre{white-space:pre-wrap;font:inherit}
+  .closing{margin:1.25rem 0}
+  .sig{display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;margin:1rem 0 0;padding-top:1rem;border-top:1px solid var(--line-soft)}
+  .sig dt{color:var(--text-soft)}
+  .sig dd{margin:0}
+  .hash{font-family:monospace;font-size:.8125rem}
+  .check{display:flex;align-items:center;gap:.5rem;min-height:44px}
+  .check input{width:1.25rem;height:1.25rem;margin:0;accent-color:var(--accent)}
+  .actions{margin-bottom:1rem}
+  @media (max-width:599px){.sig{grid-template-columns:1fr}.sig dd{margin-bottom:.5rem}}
+  /* Impression : la feuille seule, sans le menu ni les boutons de l'admin */
+  @media print{
+    :global(.admin-side),:global(.admin-head),.noprint{display:none !important}
+    :global(.admin-shell) :global(article.admin){display:block}
+    .paper{border:0;padding:0;max-width:none;color:#000;background:#fff}
+  }
+</style>

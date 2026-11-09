@@ -9,6 +9,7 @@ import { clientAction, clientDetail } from '../../../lib/server/admin-clientes.t
 import { ACTION_LABELS } from '../../../lib/server/journal.ts';
 import { euros, todayBrussels } from '../../../lib/server/pricing.ts';
 import { GRACE_DAYS } from '../../../lib/server/rgpd.ts';
+import { FORMS, KINDS, listConsents } from '../../../lib/server/consentements.ts';
 
 const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
@@ -32,6 +33,7 @@ if (Astro.request.method === 'POST') {
 const c = await clientDetail(id);
 if (!c) return new Response(null, { status: 404 });
 const { user: u, bookings, stats, events } = c;
+const consents = await listConsents(u.id);
 const DONE: Record<string, string> = {
   notes: 'Notes enregistrées.', block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte réactivé.',
   remove: "Compte supprimé : il n'apparaît plus dans les listes et ne peut plus se connecter. Ses rendez-vous restent.", unremove: 'Compte restauré : la cliente peut de nouveau se connecter.', restore: 'Suppression annulée : le compte est de nouveau actif. Les rendez-vous annulés le restent.',
@@ -116,6 +118,15 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 )}
 </section>
 
+<section aria-labelledby="h-consent">
+<h2 id="h-consent">Consentements</h2>
+{consents.length === 0 ? <p>Aucun consentement signé.</p> : (
+<ul class="consents">{consents.map((k) => <li><a href={`${self}/consentement?voir=${k.id}`}>{FORMS[k.kind].title}</a> · signé le {fmtDateTime(k.signed_at)} {k.channel === 'institut' ? "à l'institut" : 'en ligne'}{k.specialist && ` · spécialiste : ${k.specialist}`}</li>)}</ul>
+)}
+<p class="hint">Faire signer à l'institut, sur la tablette :</p>
+<p class="sign-links">{KINDS.map((k) => <a class="btn btn--ghost" href={`${self}/consentement?type=${k}`}>{FORMS[k].title.replace(/^Consentement (éclairé )?/, '')}</a>)}</p>
+</section>
+
 {manage && <section aria-labelledby="h-compte">
 <h2 id="h-compte">Compte</h2>
 {/* Chaque action demande la case « Je confirme », vérifiée aussi côté serveur (clientForm) */}
@@ -175,6 +186,9 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
   .cell-form{display:grid;gap:.5rem;justify-items:start}
   .cell-form .btn{min-height:44px;padding:.55rem 1rem;white-space:normal;text-align:left;line-height:1.3}
   .events{padding-left:1.1rem}
+  .consents{padding-left:1.1rem}
+  .sign-links{display:flex;flex-wrap:wrap;gap:.5rem}
+  .sign-links .btn{min-height:44px}
   section{margin-bottom:2rem}
   .check{display:flex;align-items:center;gap:.5rem;min-height:44px}
   .check input{width:1.25rem;height:1.25rem;margin:0;accent-color:var(--accent)}

@@ -1,0 +1,50 @@
+---
+export const prerender = false;
+// Réglages (admin seulement) : nom du spécialiste cité dans les consentements, règles de la carte de fidélité
+import Admin from './_layout.astro';
+import { adminId, readForm } from '../../lib/server/admin.ts';
+import { readSettings, saveSettings } from '../../lib/server/reglages.ts';
+
+const me = adminId(Astro.locals);
+if (!me) return new Response(null, { status: 404 });
+let error = '';
+let draft: Record<string, string> | null = null;
+if (Astro.request.method === 'POST') {
+  const form = await readForm(Astro.request);
+  if (!form) return new Response(null, { status: 413 });
+  const r = await saveSettings(me, form);
+  if (r.ok) return Astro.redirect('/admin/reglages?ok=1', 303);
+  error = r.error;
+  draft = Object.fromEntries([...form].map(([k, v]) => [k, String(v).slice(0, 100)]));
+  Astro.response.status = 400;
+}
+const s = await readSettings();
+const v = (k: string, fallback: string | number) => draft?.[k] ?? String(fallback);
+---
+<Admin title="Réglages">
+{Astro.url.searchParams.has('ok') && !error && <p class="notice" role="status">Réglages enregistrés.</p>}
+{error && <p class="notice notice--error" role="alert">{error}</p>}
+<form class="form" method="post">
+  <h2>Consentements</h2>
+  <div class="field">
+    <label for="specialist_name">Nom et prénom du spécialiste</label>
+    <input id="specialist_name" name="specialist_name" maxlength="100" value={v('specialist_name', s.specialist_name)} autocomplete="off">
+    <p class="hint">Cité dans « J'ai eu l'opportunité de poser toutes les questions à … ». Tant qu'il est vide, les consentements laser et photo-épilation ne peuvent pas être signés.</p>
+  </div>
+  <h2>Carte de fidélité</h2>
+  <p class="hint">Une séance compte quand un rendez-vous est passé et que la cliente est venue, quel que soit le soin. Les annulations et les absences ne comptent pas.</p>
+  <div class="grid">
+    <div class="field"><label for="discount_after">Remise après (séances)</label><input id="discount_after" name="discount_after" type="number" min="1" max="50" required value={v('discount_after', s.loyalty.discount_after)}></div>
+    <div class="field"><label for="discount_percent">Remise (%)</label><input id="discount_percent" name="discount_percent" type="number" min="1" max="100" required value={v('discount_percent', s.loyalty.discount_percent)}></div>
+    <div class="field"><label for="free_after">Soin offert après (séances)</label><input id="free_after" name="free_after" type="number" min="2" max="100" required value={v('free_after', s.loyalty.free_after)}></div>
+    <div class="field"><label for="free_label">Soin offert</label><input id="free_label" name="free_label" maxlength="60" required value={v('free_label', s.loyalty.free_label)}></div>
+  </div>
+  <p class="hint">La remise vaut une fois par carte. Le soin offert remet la carte à zéro.</p>
+  <button class="btn btn--solid" type="submit">Enregistrer</button>
+</form>
+</Admin>
+
+<style>
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:.75rem 1rem}
+  h2{margin-top:1.5rem}
+</style>

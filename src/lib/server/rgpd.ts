@@ -110,7 +110,7 @@ export async function setConsent(userId: number, give: boolean, ip: string) {
 
 // Accès et portabilité (art. 15 et 20) : tout ce que le site garde sur la cliente, notes de l'institut comprises
 export async function exportData(userId: number, ip: string) {
-  const [[account], bookings, sessions, events, linked] = await Promise.all([
+  const [[account], bookings, sessions, events, linked, consents] = await Promise.all([
     sql`SELECT email, name, phone, locale, created_at, email_verified_at, health_consent_at, notes AS institute_notes FROM users WHERE id = ${userId}`,
     sql`SELECT s.name_fr AS service, b.starts_at, b.ends_at, b.status, b.no_show, b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents,
           p.code AS promo_code, b.created_at, b.cancelled_at, b.moved_at
@@ -121,7 +121,9 @@ export async function exportData(userId: number, ip: string) {
     sql`SELECT action, at, CASE WHEN actor_id = ${userId} THEN ip END AS ip FROM audit_log WHERE client_id = ${userId} ORDER BY at`,
     // Comptes Google ou Microsoft liés : identifiant du fournisseur et date du lien
     sql`SELECT provider, subject, created_at FROM user_identities WHERE user_id = ${userId} ORDER BY created_at`,
+    // Consentements signés : texte exact, nom saisi, date et canal (le sien, donc rendu tel quel)
+    sql`SELECT kind, version, signer_name, mention, specialist, channel, signed_at, text FROM consents WHERE user_id = ${userId} ORDER BY signed_at`,
   ]);
   journal('data_exported', { actor: userId, client: userId, ip });
-  return { exported_at: new Date().toISOString(), controller: 'My Bubble Beauty', account, linked_accounts: linked, bookings, sessions, security_log: events };
+  return { exported_at: new Date().toISOString(), controller: 'My Bubble Beauty', account, linked_accounts: linked, bookings, consents, sessions, security_log: events };
 }

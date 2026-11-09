@@ -1,0 +1,66 @@
+---
+// Consentement avant un soin (laser…) : la cliente lit le document de l'institut et le signe depuis son compte.
+// Nom, mention « Lu et approuvé » recopiée et case cochée ; le texte exact, la date, l'IP et l'appareil sont gardés (consentements.ts).
+export const prerender = false;
+import { z } from 'astro/zod';
+import Base from '../../../layouts/Base.astro';
+import '../../../styles/forms.css';
+import { COMPTE } from '../../../data/i18n/compte.ts';
+import { CONTACT, FOLDER, langOfFolder } from '../../../lib/site';
+import { readForm } from '../../../lib/server/compte.ts';
+import { closingText, FORMS, isKind, listConsents, MENTION, signConsent, specialistName } from '../../../lib/server/consentements.ts';
+
+const lang = langOfFolder(Astro.params.folder!);
+const d = FOLDER[lang];
+const tc = COMPTE[lang].consent;
+const user = Astro.locals.user;
+if (!user) return Astro.redirect(`/${d}/compte/connexion`);
+const kind = Astro.url.searchParams.get('type');
+if (!isKind(kind)) return new Response(null, { status: 404 });
+const form = FORMS[kind];
+const specialist = await specialistName();
+const ready = !form.closing.includes('{specialiste}') || !!specialist;
+const day = new Intl.DateTimeFormat({ fr: 'fr-BE', nl: 'nl-BE', en: 'en-GB' }[lang], { timeZone: 'Europe/Brussels', dateStyle: 'long' }).format;
+
+const SIGN = z.object({ name: z.string().max(200), mention: z.string().max(100), agree: z.literal('on') });
+let error = '';
+let draft = { name: user.name ?? '', mention: '' };
+if (Astro.request.method === 'POST' && ready) {
+  const f = await readForm(Astro.request, SIGN);
+  draft = { name: (f.raw.name ?? '').slice(0, 100), mention: (f.raw.mention ?? '').slice(0, 40) };
+  if (f.data) {
+    const r = await signConsent({ userId: user.id, kind, signerName: f.data.name, mention: f.data.mention, ip: Astro.locals.ip, userAgent: Astro.request.headers.get('user-agent') });
+    if (r.ok) return Astro.redirect(`/${d}/compte?consentement=ok`, 303);
+    error = r.error === 'mention' ? tc.badMention : r.error === 'name' ? tc.badName : tc.notReady;
+  } else error = f.bad.has('mention') ? tc.badMention : f.bad.has('name') ? tc.badName : COMPTE[lang].invalid;
+  Astro.response.status = 400;
+}
+const signed = (await listConsents(user.id)).find((c) => c.kind === kind);
+---
+<Base lang={lang} pageKey="home" route="compte" title={`${tc.title} - My Bubble Beauty`} description={tc.description} noindex mainClass="legal">
+<div class="wrap"><article>
+<p><a href={`/${d}/compte`}>← {tc.back}</a></p>
+<h1 lang="fr">{form.title}</h1>
+{tc.frenchOnly && <p class="notice">{tc.frenchOnly}</p>}
+{signed && <p class="notice" role="status">{tc.already(day(signed.signed_at))}</p>}
+<div class="doc" lang="fr"><Fragment set:html={form.html} /></div>
+<p class="closing" lang="fr"><strong>{closingText(form, specialist)}</strong></p>
+<p class="hint">{tc.questions} <a href={`tel:${CONTACT.phone}`}>{CONTACT.phoneLabel}</a> · <a href={CONTACT.whatsapp}>WhatsApp</a></p>
+{!ready ? <p class="notice">{tc.notReady}</p> : (
+<form class="form" method="post">
+  {error && <p class="notice notice--error" role="alert">{error}</p>}
+  <div class="field"><label for="name">{tc.name}</label><input id="name" name="name" required minlength="3" maxlength="100" autocomplete="name" value={draft.name}></div>
+  <div class="field"><label for="mention">{tc.mention}</label><input id="mention" name="mention" required maxlength="40" autocomplete="off" value={draft.mention} placeholder={MENTION} lang="fr"></div>
+  <label class="check"><input type="checkbox" name="agree" required><span>{tc.agree}</span></label>
+  <button class="btn btn--solid" type="submit">{tc.submit}</button>
+</form>
+)}
+</article></div>
+</Base>
+
+<style>
+  .doc :global(h2){font-size:1.25rem;margin:1.5rem 0 .5rem}
+  .closing{margin:1.5rem 0 .75rem;padding:1rem 1.25rem;border:1px solid var(--line-soft);border-radius:12px}
+  .check{display:flex;align-items:center;gap:.5rem;min-height:44px}
+  .check input{width:1.25rem;height:1.25rem;margin:0;accent-color:var(--accent)}
+</style>
