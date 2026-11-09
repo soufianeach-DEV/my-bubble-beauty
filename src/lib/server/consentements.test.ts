@@ -99,6 +99,28 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     assert.ok(first >= 1);
     assert.equal((await sql`SELECT count(*)::int AS n FROM bookings WHERE service_id = ${wh.id} AND aftercare_sent_at IS NOT NULL`)[0].n, 1);
     assert.equal(await sendAftercare(), 0);
+
+    // Bon cadeau : code unique, valable pour son soin seulement, réservé puis rendu par une annulation, annulé pour de bon
+    const gifts = await import('./cadeaux.ts');
+    const made = await gifts.giftAction(other, f({ action: 'create', recipient: 'Maman', service: String(wh.id), duration_label: '60 min', message: 'Bon anniversaire' }));
+    assert.ok(made.ok, JSON.stringify(made));
+    const [gc] = await gifts.listGifts((made as { id: number }).id);
+    assert.match(gc.code, gifts.GIFT_CODE);
+    assert.equal(gc.state, 'valide');
+    assert.ok(gc.expires_on > gc.issued_on);
+    assert.deepEqual(await gifts.checkGift(sql, gc.code, laser.id), { problem: 'service' });
+    assert.deepEqual(await gifts.checkGift(sql, 'CADEAU-AAAA-AAAA', wh.id), { problem: 'unknown' });
+    assert.deepEqual(await gifts.checkGift(sql, gc.code, wh.id), { id: gc.id });
+    const later = new Date(Date.now() + 60 * 86_400_000);
+    const [gb] = await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, discount_cents, gift_card_id)
+      VALUES (${other}, ${wh.id}, ${later}, ${new Date(later.getTime() + 3_600_000)}, 'confirmed', 9000, 9000, ${gc.id}) RETURNING id`;
+    assert.deepEqual(await gifts.checkGift(sql, gc.code, wh.id), { problem: 'used' });
+    await sql`UPDATE bookings SET status = 'cancelled', cancelled_at = now() WHERE id = ${gb.id}`;
+    assert.equal((await gifts.listGifts(gc.id))[0].state, 'valide');
+    assert.ok((await gifts.giftAction(other, f({ action: 'cancel', id: String(gc.id), confirm: 'on' }))).ok);
+    assert.deepEqual(await gifts.checkGift(sql, gc.code, wh.id), { problem: 'unknown' });
+    await sql`UPDATE bookings SET gift_card_id = NULL WHERE gift_card_id = ${gc.id}`;
+    await sql`DELETE FROM gift_cards WHERE id = ${gc.id}`;
   } finally {
     await sql`DELETE FROM bookings WHERE service_id IN (SELECT id FROM services WHERE slug IN (${`laser-${tag}`}, ${`blanchiment-des-dents-${tag}`}))`;
     await sql`DELETE FROM services WHERE slug IN (${`laser-${tag}`}, ${`blanchiment-des-dents-${tag}`})`;

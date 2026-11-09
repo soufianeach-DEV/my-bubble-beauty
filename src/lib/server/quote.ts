@@ -6,6 +6,7 @@ import { sql } from './db.ts';
 import { amounts, promoProblem, type Promo, type PromoProblem } from './pricing.ts';
 import { promoDone, promoTry } from './rate.ts';
 import { isFree } from './slots.ts';
+import { checkGift, GIFT_CODE } from './cadeaux.ts';
 
 export type Quote = ReturnType<typeof amounts> & { name: string; duration_min: number; code: string | null };
 export type QuoteResult = { ok: true; quote: Quote } | { ok: false; error: 'unavailable' | 'limit' | 'promo'; promo?: PromoProblem | 'blocked' };
@@ -34,6 +35,12 @@ export async function quote(input: { userId: number; serviceId: number; startsAt
     const r = await sql.begin(async (tx) => {
       await tx`SELECT id FROM users WHERE id = ${userId} FOR UPDATE`;
       if (!promoTry(userId, ip)) return { problem: 'blocked' as const };
+      // Bon cadeau : le soin du bon est offert
+      if (GIFT_CODE.test(code)) {
+        const g = await checkGift(tx, code, serviceId);
+        promoDone(userId, ip, !('problem' in g));
+        return 'problem' in g ? { problem: g.problem } : { p: { kind: 'amount' as const, value: s.price_cents } as Promo };
+      }
       const [p] = /^[A-Z0-9-]{3,32}$/.test(code)
         ? await tx<(Promo & { id: number; today: string })[]>`SELECT id, kind, value, starts_on::text, ends_on::text, max_uses, once_per_user, service_ids, active, current_date::text AS today
             FROM promo_codes WHERE code = ${code}`

@@ -9,6 +9,7 @@ import { log } from './log.ts';
 import { bookingCancelledMail, bookingConfirmedMail, bookingMovedMail, bookingReminderMail, aftercareMail, sendMail } from './mail.ts';
 import { amounts, isDay, promoProblem, type Promo, type PromoProblem } from './pricing.ts';
 import { blocked, hit, promoDone, promoTry } from './rate.ts';
+import { checkGift, GIFT_CODE } from './cadeaux.ts';
 import { isFree } from './slots.ts';
 import { createCheckoutSession, expireSession, refund, retrieveSession, type CheckoutSession } from './stripe.ts';
 import { verifyWebhookSignature } from './stripe-signature.ts';
@@ -95,10 +96,19 @@ export async function createBooking(input: { userId: number; serviceId: number; 
         FROM services WHERE id = ${serviceId} AND active`;
       if (!s || !(await isFree(tx, serviceId, startsAt))) return { ok: false, error: 'unavailable' } as const;
       let promo: (Promo & { id: number }) | null = null;
+      let gift: number | null = null;
       if (code) {
         // Lu sous le verrou de la cliente : en rafale, chaque essai voit les échecs comptés par le précédent.
         // Après les contrôles de plafond, de prestation et de créneau : un créneau pris ne consomme aucun essai sur l'IP
         if (!promoTry(userId, ip)) return { ok: false, error: 'promo', promo: 'blocked' } as const;
+      }
+      // Bon cadeau : même champ et mêmes compteurs que le code promo ; le soin du bon est offert
+      if (code && GIFT_CODE.test(code)) {
+        const g = await checkGift(tx, code, serviceId, true);
+        promoDone(userId, ip, !('problem' in g));
+        if ('problem' in g) return { ok: false, error: 'promo', promo: g.problem } as const;
+        gift = g.id;
+      } else if (code) {
         const [p] = /^[A-Z0-9-]{3,32}$/.test(code)
           ? await tx<(Promo & { id: number; today: string })[]>`SELECT id, kind, value, starts_on::text, ends_on::text, max_uses, once_per_user, service_ids, active, current_date::text AS today
               FROM promo_codes WHERE code = ${code} FOR UPDATE`
@@ -113,11 +123,11 @@ export async function createBooking(input: { userId: number; serviceId: number; 
         promoDone(userId, ip, true);
         promo = p;
       }
-      const m = amounts(s.price_cents, s.deposit_cents, promo);
+      const m = amounts(s.price_cents, s.deposit_cents, gift ? { kind: 'amount', value: s.price_cents } : promo);
       const [b] = await tx`
-        INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, discount_cents, deposit_cents, promo_code_id)
+        INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, discount_cents, deposit_cents, promo_code_id, gift_card_id)
         VALUES (${userId}, ${serviceId}, ${startsAt}, ${startsAt}::timestamptz + make_interval(mins => ${s.busy_min}::int),
-          ${m.deposit_cents ? 'pending_payment' : 'confirmed'}, ${m.price_cents}, ${m.discount_cents}, ${m.deposit_cents}, ${promo?.id ?? null})
+          ${m.deposit_cents ? 'pending_payment' : 'confirmed'}, ${m.price_cents}, ${m.discount_cents}, ${m.deposit_cents}, ${promo?.id ?? null}, ${gift})
         RETURNING id`;
       return { ok: true, id: b.id as number, deposit: m.deposit_cents, label: `${DEPOSIT_LABEL[lang]} - ${s.name}` } as const;
     });

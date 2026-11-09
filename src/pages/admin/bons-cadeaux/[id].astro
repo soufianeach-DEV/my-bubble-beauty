@@ -1,0 +1,94 @@
+---
+export const prerender = false;
+// Un bon cadeau : carte imprimable au design My Bubble (Pour, Soin, Durée, Message, code, validité), puis « utilisé » ou « annulé »
+import Admin from '../_layout.astro';
+import { adminId, readForm } from '../../../lib/server/admin.ts';
+import { giftAction, listGifts, STATE_LABELS } from '../../../lib/server/cadeaux.ts';
+import { JS_VERSION } from '../../../lib/site';
+
+const me = adminId(Astro.locals);
+if (!me) return new Response(null, { status: 404 });
+const id = /^[1-9]\d{0,17}$/.test(Astro.params.id ?? '') ? Number(Astro.params.id) : null;
+if (!id) return new Response(null, { status: 404 });
+let error = '';
+if (Astro.request.method === 'POST') {
+  const form = await readForm(Astro.request);
+  if (!form) return new Response(null, { status: 413 });
+  const r = await giftAction(me, form);
+  if (r.ok) return Astro.redirect(`/admin/bons-cadeaux/${id}?ok=${r.key}`, 303);
+  error = r.error;
+  Astro.response.status = 400;
+}
+const [g] = await listGifts(id);
+if (!g) return new Response(null, { status: 404 });
+const DONE: Record<string, string> = { create: 'Bon créé. Imprimez-le ou enregistrez-le en PDF.', used: 'Bon noté utilisé.', cancel: 'Bon annulé : son code ne vaut plus rien.' };
+const done = !error && DONE[Astro.url.searchParams.get('ok') ?? ''];
+const day = (d: string) => new Intl.DateTimeFormat('fr-BE', { timeZone: 'UTC', dateStyle: 'long' }).format(new Date(`${d}T12:00:00Z`));
+---
+<Admin title={`Bon ${g.code}`}>
+<script is:inline src={`/assets/js/imprimer.js?v=${JS_VERSION}`} defer></script>
+<div class="noprint">
+  <p><a href="/admin/bons-cadeaux">← Tous les bons</a></p>
+  {done && <p class="notice" role="status">{done}</p>}
+  {error && <p class="notice notice--error" role="alert">{error}</p>}
+  <p>État : <strong>{STATE_LABELS[g.state]}</strong>{g.booking_at && ` · rendez-vous le ${new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', dateStyle: 'long', timeStyle: 'short' }).format(g.booking_at)}`}</p>
+  <p><button class="btn btn--solid" type="button" data-print>Imprimer ou enregistrer en PDF</button></p>
+</div>
+
+<article class="voucher" lang="fr">
+  <p class="kicker">Chèque cadeau</p>
+  <p class="brand">My Bubble <span>Beauty</span></p>
+  <dl>
+    <dt>Pour</dt><dd>{g.recipient}</dd>
+    <dt>Soin</dt><dd>{g.service.replace(/^[^,]+, /, '')}</dd>
+    {g.duration_label && <><dt>Durée</dt><dd>{g.duration_label}</dd></>}
+    {g.message && <><dt>Message</dt><dd class="msg">{g.message}</dd></>}
+  </dl>
+  <p class="code">{g.code}</p>
+  <p class="small">Valable jusqu'au {day(g.expires_on)}. Réservation en ligne avec ce code, ou au 0484 11 83 95. Rue Paloke 146, 1700 Dilbeek.</p>
+</article>
+
+{(g.state === 'valide' || g.state === 'reserve') && (
+<div class="noprint acts">
+  <form class="act" method="post">
+    <input type="hidden" name="action" value="used"><input type="hidden" name="id" value={g.id}>
+    <p class="hint">Soin offert réglé à la caisse avec ce bon.</p>
+    <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+    <button class="btn btn--ghost" type="submit">Noter utilisé</button>
+  </form>
+  <form class="act" method="post">
+    <input type="hidden" name="action" value="cancel"><input type="hidden" name="id" value={g.id}>
+    <p class="hint">Le code ne vaudra plus rien, même pour un rendez-vous déjà pris.</p>
+    <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+    <button class="btn btn--ghost" type="submit">Annuler le bon</button>
+  </form>
+</div>
+)}
+</Admin>
+
+<style>
+  /* Carte au format paysage, couleurs de la marque : brun de la barre d'admin, rose et doré du logo */
+  .voucher{max-width:40rem;aspect-ratio:3/2;display:grid;align-content:center;gap:.6rem;padding:2rem 2.5rem;border-radius:20px;background:#FFFBF9;color:#4E302C;border:1px solid #E8C9A0;box-shadow:0 10px 30px rgb(78 48 44 / .12);overflow-wrap:anywhere}
+  .kicker{margin:0;font:500 .75rem/1 var(--f-text);letter-spacing:.2em;text-transform:uppercase;color:#B07A5A}
+  /* Couleurs fixes : la carte reste claire même en thème sombre, comme le papier imprimé */
+  .voucher :is(p,dd,span){color:#4E302C}
+  .brand{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 .4rem;margin:0;font:300 clamp(1.7rem,6vw,2.2rem)/1.1 var(--f-title);overflow-wrap:normal}
+  .voucher .brand span{font:400 1.25em/1 "Allura",cursive;color:#C48A6A}
+  .voucher dl{display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;margin:.75rem 0}
+  .voucher dt{font-size:.8125rem;letter-spacing:.08em;text-transform:uppercase;color:#B07A5A}
+  .voucher dd{margin:0}
+  .msg{white-space:pre-line;font-style:italic}
+  .code{margin:0;font:600 1.25rem/1.2 monospace;letter-spacing:.12em}
+  .small{margin:0;font-size:.8125rem;color:#7A5A52}
+  .acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:.75rem;margin-top:1.5rem;max-width:40rem}
+  .act{display:grid;gap:.5rem;align-content:start;padding:.85rem 1rem;border:1px solid var(--line-soft);border-radius:12px}
+  .act .btn{min-height:44px;justify-self:start}
+  .check{display:flex;align-items:center;gap:.5rem;min-height:44px}
+  .check input{width:1.25rem;height:1.25rem;margin:0;accent-color:var(--accent)}
+  @media (max-width:599px){.voucher{aspect-ratio:auto;padding:1.5rem}.voucher dl{grid-template-columns:1fr}}
+  @media print{
+    :global(.admin-side),:global(.admin-head),.noprint{display:none !important}
+    :global(.admin-shell) :global(article.admin){display:block}
+    .voucher{box-shadow:none;margin:0 auto;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>

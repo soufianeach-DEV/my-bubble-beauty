@@ -1,0 +1,62 @@
+---
+export const prerender = false;
+// Bons cadeaux (admin) : création (Pour, Soin, Durée, Message), liste avec l'état de chaque bon ; un clic ouvre le bon imprimable
+import Admin from './_layout.astro';
+import { adminId, byCategory, listServices, readForm } from '../../lib/server/admin.ts';
+import { giftAction, listGifts, STATE_LABELS } from '../../lib/server/cadeaux.ts';
+
+const me = adminId(Astro.locals);
+if (!me) return new Response(null, { status: 404 });
+let error = '';
+let draft: Record<string, string> = {};
+if (Astro.request.method === 'POST') {
+  const form = await readForm(Astro.request);
+  if (!form) return new Response(null, { status: 413 });
+  const r = await giftAction(me, form);
+  if (r.ok) return Astro.redirect(`/admin/bons-cadeaux/${r.id}?ok=create`, 303);
+  error = r.error;
+  draft = Object.fromEntries([...form].map(([k, v]) => [k, String(v).slice(0, 300)]));
+  Astro.response.status = 400;
+}
+const [gifts, services] = await Promise.all([listGifts(), listServices()]);
+const groups = byCategory(services);
+const day = (d: string) => new Intl.DateTimeFormat('fr-BE', { timeZone: 'UTC', dateStyle: 'medium' }).format(new Date(`${d}T12:00:00Z`));
+---
+<Admin title="Bons cadeaux">
+<p>Un bon vaut pour un soin de la carte, pendant 12 mois. La cliente saisit son code dans le champ « Code promo ou bon cadeau » en réservant : le soin est alors offert. Le bon peut aussi être noté utilisé à la caisse.</p>
+<section aria-labelledby="h-new">
+<h2 id="h-new">Nouveau bon</h2>
+{error && <p class="notice notice--error" role="alert">{error}</p>}
+<form class="form" method="post">
+  <input type="hidden" name="action" value="create">
+  <div class="field"><label for="recipient">Pour</label><input id="recipient" name="recipient" required maxlength="100" value={draft.recipient ?? ''} autocomplete="off"></div>
+  <div class="field"><label for="service">Soin</label>
+    <select id="service" name="service" required>
+      <option value="">Choisir…</option>
+      {groups.map((g) => g.items.length > 0 && <optgroup label={g.label}>{g.items.map((s) => <option value={s.id} selected={draft.service === String(s.id)}>{s.name_fr}</option>)}</optgroup>)}
+    </select>
+  </div>
+  <div class="field"><label for="duration_label">Durée <span class="hint">(facultatif, ex. 60 min)</span></label><input id="duration_label" name="duration_label" maxlength="40" value={draft.duration_label ?? ''}></div>
+  <div class="field"><label for="message">Message <span class="hint">(facultatif)</span></label><textarea id="message" name="message" rows="3" maxlength="300">{draft.message ?? ''}</textarea></div>
+  <button class="btn btn--solid" type="submit">Créer le bon</button>
+</form>
+</section>
+<section aria-labelledby="h-list">
+<h2 id="h-list">Bons émis</h2>
+{gifts.length === 0 ? <p>Aucun bon pour l'instant.</p> : (
+<ul class="gifts">{gifts.map((g) => (
+  <li><a href={`/admin/bons-cadeaux/${g.id}`}><strong>{g.code}</strong></a> · pour {g.recipient}
+    <br><small>{g.service} · valable jusqu'au {day(g.expires_on)}</small>
+    <span class:list={['badge', { 'badge--ok': g.state === 'valide', 'badge--wait': g.state === 'reserve', 'badge--alert': g.state === 'expire' || g.state === 'annule' }]}>{STATE_LABELS[g.state]}</span></li>
+))}</ul>
+)}
+</section>
+</Admin>
+
+<style>
+  section{margin-bottom:2rem}
+  select,textarea{font:inherit}
+  .gifts{list-style:none;margin:0;padding:0;display:grid;gap:.6rem}
+  .gifts li{padding:.75rem 1rem;border:1px solid var(--line-soft);border-radius:12px;background:var(--bg);overflow-wrap:anywhere}
+  .gifts .badge{margin-left:.25rem}
+</style>
