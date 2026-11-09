@@ -24,7 +24,7 @@ const [[g], services] = await Promise.all([listGifts(id), listServices()]);
 if (!g) return new Response(null, { status: 404 });
 // Réattribution : soins de la carte ouverts à la réservation, prix affiché ; un soin plus cher est signalé, pas refusé
 const others = byCategory(services.filter((s) => s.active && s.id !== g.service_id));
-const DONE: Record<string, string> = { reassign: 'Bon réattribué : il vaut désormais pour le soin indiqué sur la carte.', 'reassign-plus': 'Bon réattribué. Attention : le nouveau soin coûte plus cher que l'ancien.', create: 'Bon créé. Imprimez-le ou enregistrez-le en PDF.', used: 'Bon noté utilisé.', cancel: 'Bon annulé : son code ne vaut plus rien.' };
+const DONE: Record<string, string> = { reassign: 'Bon réattribué : il vaut désormais pour le soin indiqué sur la carte.', 'reassign-plus': "Bon réattribué. Attention : le nouveau soin coûte plus cher que l'ancien.", create: 'Bon créé. Imprimez-le ou enregistrez-le en PDF.', used: 'Bon noté utilisé.', cancel: 'Bon annulé : son code ne vaut plus rien.' };
 const done = !error && DONE[Astro.url.searchParams.get('ok') ?? ''];
 const day = (d: string) => new Intl.DateTimeFormat('fr-BE', { timeZone: 'UTC', dateStyle: 'long' }).format(new Date(`${d}T12:00:00Z`));
 ---
