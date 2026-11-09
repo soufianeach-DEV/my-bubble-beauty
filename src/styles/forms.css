@@ -5,6 +5,12 @@
 .field{display:grid;gap:.4rem}
 .field label,.field legend{font-weight:500}
 .field input,.field select,.field textarea{font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line-soft);border-radius:12px;padding:.7rem .9rem;min-height:44px;width:100%}
+/* Mot de passe masqué : points plus gros et plus espacés, lisibles sur téléphone. Seul type="password" est visé : le texte affiché
+   par l'œil (type="text") et l'indication gardent la taille normale ; hauteur de ligne fixe, le champ ne saute pas au basculement. */
+.field input{line-height:1.5rem}
+/* Le point de la police du site est minuscule : police système à gros point pour le seul masque */
+.field input[type="password"]{font-family:Verdana,"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;font-size:1.375rem;letter-spacing:.2em}
+.field input[type="password"]::placeholder{font:inherit;font-family:var(--f-text);font-size:1rem;letter-spacing:normal}
 .field [aria-invalid="true"]{border:2px solid var(--accent)}
 .field .hint{font-size:.875rem;color:var(--text-soft)}
 fieldset.field{border:0;padding:0;margin:0}
