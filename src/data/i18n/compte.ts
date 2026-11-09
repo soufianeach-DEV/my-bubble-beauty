@@ -205,7 +205,7 @@ const fr = {
   loyalty: {
     title: 'Carte de fidélité',
     count: (n: number) => `${n} séance${n > 1 ? 's' : ''} sur votre carte.`,
-    rules: (pct: number, a: number, label: string, b: number) => `${pct} % de remise sur un soin après ${a} séances, ${label} offert après ${b} séances. Ensuite, la carte repart à zéro.`,
+    rules: (pct: number, a: number, label: string, b: number, min: number, total: number) => `Une séance compte à partir de ${min} € payés. ${pct} % de remise sur un soin après ${a} séances, ${label} offert après ${b} séances et ${total} € de soins. Ensuite, la carte repart à zéro.`,
     discount: (pct: number) => `Vous avez droit à ${pct} % de remise sur votre prochain soin. Elle est appliquée à l'institut.`,
     free: (label: string) => `Votre ${label} est offert ! Il est appliqué à l'institut.`,
   },
@@ -417,7 +417,7 @@ export const COMPTE: Record<Lang, typeof fr> = {
     loyalty: {
       title: 'Klantenkaart',
       count: (n: number) => `${n} sessie${n === 1 ? '' : 's'} op uw kaart.`,
-      rules: (pct: number, a: number, label: string, b: number) => `${pct} % korting op een behandeling na ${a} sessies, ${label} gratis na ${b} sessies. Daarna begint de kaart opnieuw.`,
+      rules: (pct: number, a: number, label: string, b: number, min: number, total: number) => `Een sessie telt vanaf ${min} € betaald. ${pct} % korting op een behandeling na ${a} sessies, ${label} gratis na ${b} sessies en ${total} € aan behandelingen. Daarna begint de kaart opnieuw.`,
       discount: (pct: number) => `U hebt recht op ${pct} % korting op uw volgende behandeling. Die wordt in het instituut toegepast.`,
       free: (label: string) => `Uw ${label} is gratis! Dit wordt in het instituut toegepast.`,
     },
@@ -626,7 +626,7 @@ export const COMPTE: Record<Lang, typeof fr> = {
     loyalty: {
       title: 'Loyalty card',
       count: (n: number) => `${n} session${n === 1 ? '' : 's'} on your card.`,
-      rules: (pct: number, a: number, label: string, b: number) => `${pct}% off one treatment after ${a} sessions, a free ${label} after ${b} sessions. Then the card starts again.`,
+      rules: (pct: number, a: number, label: string, b: number, min: number, total: number) => `A session counts from €${min} paid. ${pct}% off one treatment after ${a} sessions, a free ${label} after ${b} sessions and €${total} of treatments. Then the card starts again.`,
       discount: (pct: number) => `You are entitled to ${pct}% off your next treatment. It is applied at the salon.`,
       free: (label: string) => `Your ${label} is free! It is applied at the salon.`,
     },

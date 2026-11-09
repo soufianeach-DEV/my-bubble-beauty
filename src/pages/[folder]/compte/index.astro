@@ -168,7 +168,7 @@ const price = (b: (typeof bookings)[number]) => euros(b.price_cents - b.discount
 <h2 id="h-loyalty">{tl.title}</h2>
 <p><strong>{tl.count(card.sessions)}</strong></p>
 {card.free ? <p class="notice">{tl.free(card.rules.free_label)}</p> : card.discount && <p class="notice">{tl.discount(card.rules.discount_percent)}</p>}
-<p class="hint">{tl.rules(card.rules.discount_percent, card.rules.discount_after, card.rules.free_label, card.rules.free_after)}</p>
+<p class="hint">{tl.rules(card.rules.discount_percent, card.rules.discount_after, card.rules.free_label, card.rules.free_after, card.rules.min_euros, card.rules.free_min_total)}</p>
 </section>}
 
 <h2>{ta.history}</h2>

@@ -4,9 +4,12 @@ import { z } from 'astro/zod';
 import { audit, type Result } from './admin.ts';
 import { sql } from './db.ts';
 
-export type Loyalty = { discount_after: number; discount_percent: number; free_after: number; free_label: string };
-// Règles données par la gérante : -10 % après 5 séances, un Hydrafacial offert après 10, puis la carte repart à zéro
-export const LOYALTY_DEFAULT: Loyalty = { discount_after: 5, discount_percent: 10, free_after: 10, free_label: 'Hydrafacial' };
+// Montants en euros entiers. min_euros : prix payé minimum pour qu'une séance compte ; free_min_total : total payé sur la carte exigé
+// pour le soin offert ; free_value : prix du soin offert, pour mesurer la rentabilité.
+export type Loyalty = { discount_after: number; discount_percent: number; free_after: number; free_label: string; min_euros: number; free_min_total: number; free_value: number };
+// Règles données par la gérante : -10 % après 5 séances d'au moins 50 €, une HydraPure (120 €) offerte après 10 séances et 1 000 € payés,
+// puis la carte repart à zéro
+export const LOYALTY_DEFAULT: Loyalty = { discount_after: 5, discount_percent: 10, free_after: 10, free_label: 'HydraPure', min_euros: 50, free_min_total: 1000, free_value: 120 };
 
 const n = (min: number, max: number, msg: string) => z.coerce.number({ error: msg }).int(msg).min(min, msg).max(max, msg);
 export const settingsForm = z.object({
@@ -14,6 +17,9 @@ export const settingsForm = z.object({
   discount_after: n(1, 50, 'Remise : nombre de séances de 1 à 50.'),
   discount_percent: n(1, 100, 'Remise : pourcentage de 1 à 100.'),
   free_after: n(2, 100, 'Soin offert : nombre de séances de 2 à 100.'),
+  min_euros: n(0, 1000, 'Montant minimum par séance : de 0 à 1 000 €.'),
+  free_min_total: n(0, 100000, 'Total payé exigé : de 0 à 100 000 €.'),
+  free_value: n(0, 10000, 'Prix du soin offert : de 0 à 10 000 €.'),
   free_label: z.string({ error: 'Soin offert : 60 caractères au plus.' }).trim().min(1, 'Indiquez le soin offert.').max(60, 'Soin offert : 60 caractères au plus.').regex(/^\P{Cc}*$/u, 'Nom invalide.'),
 }).refine((f) => f.free_after > f.discount_after, { message: 'Le soin offert doit venir après la remise (plus de séances).' });
 

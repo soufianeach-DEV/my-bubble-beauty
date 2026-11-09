@@ -32,14 +32,17 @@ const v = (k: string, fallback: string | number) => draft?.[k] ?? String(fallbac
     <p class="hint">Cité dans « J'ai eu l'opportunité de poser toutes les questions à … ». Tant qu'il est vide, les consentements laser et photo-épilation ne peuvent pas être signés.</p>
   </div>
   <h2>Carte de fidélité</h2>
-  <p class="hint">Une séance compte quand un rendez-vous est passé et que la cliente est venue, quel que soit le soin. Les annulations et les absences ne comptent pas.</p>
+  <p class="hint">Une séance compte quand la cliente est venue et que le soin payé atteint le montant minimum (montant réellement payé, après remise et code promo). Un soin offert ou réglé par bon cadeau ne compte pas, ni les annulations et absences.</p>
   <div class="grid">
+    <div class="field"><label for="min_euros">Montant minimum par séance (€)</label><input id="min_euros" name="min_euros" type="number" min="0" max="1000" required value={v('min_euros', s.loyalty.min_euros)}></div>
     <div class="field"><label for="discount_after">Remise après (séances)</label><input id="discount_after" name="discount_after" type="number" min="1" max="50" required value={v('discount_after', s.loyalty.discount_after)}></div>
     <div class="field"><label for="discount_percent">Remise (%)</label><input id="discount_percent" name="discount_percent" type="number" min="1" max="100" required value={v('discount_percent', s.loyalty.discount_percent)}></div>
     <div class="field"><label for="free_after">Soin offert après (séances)</label><input id="free_after" name="free_after" type="number" min="2" max="100" required value={v('free_after', s.loyalty.free_after)}></div>
+    <div class="field"><label for="free_min_total">Soin offert : total payé exigé (€)</label><input id="free_min_total" name="free_min_total" type="number" min="0" max="100000" required value={v('free_min_total', s.loyalty.free_min_total)}></div>
     <div class="field"><label for="free_label">Soin offert</label><input id="free_label" name="free_label" maxlength="60" required value={v('free_label', s.loyalty.free_label)}></div>
+    <div class="field"><label for="free_value">Prix du soin offert (€)</label><input id="free_value" name="free_value" type="number" min="0" max="10000" required value={v('free_value', s.loyalty.free_value)}></div>
   </div>
-  <p class="hint">La remise vaut une fois par carte. Le soin offert remet la carte à zéro.</p>
+  <p class="hint">La remise vaut une fois par carte. Le soin offert demande le nombre de séances et le total payé ; il remet la carte à zéro.</p>
   <button class="btn btn--solid" type="submit">Enregistrer</button>
 </form>
 </Admin>

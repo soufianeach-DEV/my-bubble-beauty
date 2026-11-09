@@ -125,8 +125,12 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 
 <section aria-labelledby="h-fidelite">
 <h2 id="h-fidelite">Carte de fidélité</h2>
-<p><strong>{card.sessions} séance{card.sessions > 1 ? 's' : ''}</strong> sur la carte en cours.
-  {card.rules.discount_percent} % de remise après {card.rules.discount_after} séances{card.discountUsed && ' (déjà utilisée)'}, {card.rules.free_label} offert après {card.rules.free_after}.</p>
+<p><strong>{card.sessions} séance{card.sessions > 1 ? 's' : ''}</strong> sur la carte en cours, <strong>{euros(card.spentCents)}</strong> payés.
+  Séance comptée à partir de {card.rules.min_euros} € payés. {card.rules.discount_percent} % de remise après {card.rules.discount_after} séances{card.discountUsed && ' (déjà utilisée)'} ;
+  {card.rules.free_label} ({card.rules.free_value} €) offert après {card.rules.free_after} séances et {card.rules.free_min_total} € payés.</p>
+{/* Rentabilité : avantages accordés (remises et soins offerts) rapportés à tout ce que la cliente a payé ; et coût du prochain soin offert rapporté à la carte en cours */}
+<p class="hint">Rentabilité : {euros(card.lifetime.rewardsCents)} d'avantages accordés pour {euros(card.lifetime.spentCents)} payés au total{card.lifetime.spentCents > 0 && ` (${(card.lifetime.rewardsCents / card.lifetime.spentCents * 100).toFixed(1).replace('.', ',')} %)`}.
+  {card.spentCents > 0 && `Le soin offert vaudrait ${(card.rules.free_value * 100 / card.spentCents * 100).toFixed(1).replace('.', ',')} % de la carte en cours.`}</p>
 <p class="meter" aria-hidden="true"><span>{Array.from({ length: card.rules.free_after }, (_, i) => <i class:list={{ on: i < card.sessions, mark: i + 1 === card.rules.discount_after }}></i>)}</span></p>
 {(card.discount || card.free) ? (
   rewardable.length === 0 ? <p class="notice">Avantage disponible : {card.free ? `${card.rules.free_label} offert` : `${card.rules.discount_percent} % de remise`}. Saisissez d'abord le rendez-vous où l'appliquer.</p> : (

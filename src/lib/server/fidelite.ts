@@ -1,31 +1,43 @@
-// Carte de fidélité. Une séance compte quand un rendez-vous est passé et que la cliente est venue (confirmé, terminé, sans absence),
-// quel que soit le soin ; les annulations et absences ne comptent pas. Règles réglables dans /admin/reglages (par défaut :
-// -10 % une fois après 5 séances, un Hydrafacial offert après 10, puis la carte repart à zéro). L'avantage s'applique à la caisse
-// sur un rendez-vous de la cliente, en un clic, et passe au journal.
+// Carte de fidélité. Une séance compte quand la cliente est venue (confirmé, terminé, sans absence) et que le montant réellement payé
+// (prix - remise - remboursement) atteint le minimum réglé ; un soin réglé par bon cadeau ou portant un avantage ne compte pas.
+// Règles réglables dans /admin/reglages (par défaut : séance d'au moins 50 €, -10 % une fois après 5 séances, HydraPure offerte après
+// 10 séances et 1 000 € payés, puis la carte repart à zéro). L'avantage s'applique à la caisse en un clic et passe au journal.
 import { z } from 'astro/zod';
 import type { Result } from './admin.ts';
 import { sql } from './db.ts';
 import { journal } from './journal.ts';
 import { readSettings, type Loyalty } from './reglages.ts';
 
-export type LoyaltyCard = { rules: Loyalty; sessions: number; discount: boolean; free: boolean; discountUsed: boolean; last: { kind: 'discount' | 'free'; used_at: Date } | null };
+export type LoyaltyCard = {
+  rules: Loyalty; sessions: number; spentCents: number; discount: boolean; free: boolean; discountUsed: boolean;
+  last: { kind: 'discount' | 'free'; used_at: Date } | null;
+  // Rentabilité sur toute l'histoire de la cliente : avantages accordés rapportés au total payé
+  lifetime: { spentCents: number; rewardsCents: number };
+};
 
-// Carte en cours : depuis le dernier soin offert. Un rendez-vous qui porte un avantage ne compte pas comme séance.
 export async function loyaltyCard(userId: number): Promise<LoyaltyCard> {
   const { loyalty: rules } = await readSettings();
-  const [c] = await sql<{ sessions: number; discount_used: boolean; last_kind: 'discount' | 'free' | null; last_at: Date | null }[]>`
-    WITH start AS (SELECT coalesce(max(used_at), '-infinity'::timestamptz) AS at FROM loyalty_rewards WHERE user_id = ${userId} AND kind = 'free')
+  const min = rules.min_euros * 100;
+  const [c] = await sql<{ sessions: number; spent: number; discount_used: boolean; last_kind: 'discount' | 'free' | null; last_at: Date | null; life_spent: number; life_rewards: number }[]>`
+    WITH start AS (SELECT coalesce(max(used_at), '-infinity'::timestamptz) AS at FROM loyalty_rewards WHERE user_id = ${userId} AND kind = 'free'),
+    done AS (
+      SELECT b.ends_at, b.price_cents - b.discount_cents - b.refunded_cents AS paid FROM bookings b
+      WHERE b.user_id = ${userId} AND b.status = 'confirmed' AND b.ends_at < now() AND NOT b.no_show
+        AND b.gift_card_id IS NULL AND NOT EXISTS (SELECT 1 FROM loyalty_rewards r WHERE r.booking_id = b.id))
     SELECT
-      (SELECT count(*)::int FROM bookings b, start WHERE b.user_id = ${userId} AND b.status = 'confirmed' AND b.ends_at < now() AND NOT b.no_show
-        AND b.ends_at > start.at AND NOT EXISTS (SELECT 1 FROM loyalty_rewards r WHERE r.booking_id = b.id)) AS sessions,
+      (SELECT count(*)::int FROM done, start WHERE done.ends_at > start.at AND done.paid >= ${min}) AS sessions,
+      (SELECT coalesce(sum(paid), 0)::int FROM done, start WHERE done.ends_at > start.at AND done.paid >= ${min}) AS spent,
       EXISTS (SELECT 1 FROM loyalty_rewards r, start WHERE r.user_id = ${userId} AND r.kind = 'discount' AND r.used_at > start.at) AS discount_used,
       (SELECT kind FROM loyalty_rewards WHERE user_id = ${userId} ORDER BY used_at DESC LIMIT 1) AS last_kind,
-      (SELECT max(used_at) FROM loyalty_rewards WHERE user_id = ${userId}) AS last_at`;
+      (SELECT max(used_at) FROM loyalty_rewards WHERE user_id = ${userId}) AS last_at,
+      (SELECT coalesce(sum(greatest(paid, 0)), 0)::int FROM done) AS life_spent,
+      (SELECT coalesce(sum(amount_cents), 0)::int FROM loyalty_rewards WHERE user_id = ${userId}) AS life_rewards`;
   return {
-    rules, sessions: c.sessions, discountUsed: c.discount_used,
-    discount: c.sessions >= rules.discount_after && !c.discount_used && c.sessions < rules.free_after,
-    free: c.sessions >= rules.free_after,
+    rules, sessions: c.sessions, spentCents: c.spent, discountUsed: c.discount_used,
+    discount: c.sessions >= rules.discount_after && !c.discount_used && !(c.sessions >= rules.free_after && c.spent >= rules.free_min_total * 100),
+    free: c.sessions >= rules.free_after && c.spent >= rules.free_min_total * 100,
     last: c.last_kind && c.last_at ? { kind: c.last_kind, used_at: c.last_at } : null,
+    lifetime: { spentCents: c.life_spent, rewardsCents: c.life_rewards },
   };
 }
 

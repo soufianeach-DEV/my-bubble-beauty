@@ -135,19 +135,25 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     await sql`UPDATE bookings SET gift_card_id = NULL WHERE gift_card_id = ${gc.id}`;
     await sql`DELETE FROM gift_cards WHERE id = ${gc.id}`;
 
-    // Carte de fidélité (règles par défaut 5 / 10 %, 10 / soin offert) : les absences et annulations ne comptent pas,
-    // la remise vaut une fois par carte, le soin offert remet la carte à zéro
+    // Carte de fidélité (règles par défaut : séance à partir de 50 € payés, -10 % après 5, HydraPure après 10 séances et 1 000 € payés) :
+    // absences, annulations, petits soins et soins réglés par bon cadeau ne comptent pas ; la remise vaut une fois par carte,
+    // le soin offert remet la carte à zéro
     const fid = await import('./fidelite.ts');
     const fan = await mk('fidele');
-    const visit = (daysAgo: number, extra: Partial<{ status: string; no_show: boolean }> = {}) => {
+    const visit = (daysAgo: number, extra: Partial<{ status: string; no_show: boolean; price: number; discount: number }> = {}) => {
       const at = new Date(Date.now() - daysAgo * 86_400_000 + 3 * 3_600_000);
-      return sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, no_show)
-        VALUES (${fan}, ${wh.id}, ${at}, ${new Date(at.getTime() + 3_600_000)}, ${extra.status ?? 'confirmed'}, 9000, ${extra.no_show ?? false}) RETURNING id`;
+      return sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, discount_cents, no_show)
+        VALUES (${fan}, ${wh.id}, ${at}, ${new Date(at.getTime() + 3_600_000)}, ${extra.status ?? 'confirmed'}, ${extra.price ?? 9000}, ${extra.discount ?? 0},
+          ${extra.no_show ?? false}) RETURNING id`;
     };
     for (let i = 1; i <= 5; i++) await visit(100 + i * 2);
     await visit(80, { no_show: true });
     await visit(79, { status: 'cancelled' });
+    // Lèvre à 7,50 € ; soin à 60 € payé 45 € après code promo : sous le minimum, ne comptent pas
+    await visit(78, { price: 750 });
+    await visit(77, { price: 6000, discount: 1500 });
     let card = await fid.loyaltyCard(fan);
+    assert.equal(card.spentCents, 45000);
     assert.deepEqual({ n: card.sessions, discount: card.discount, free: card.free }, { n: 5, discount: true, free: false });
     const soonish = new Date(Date.now() + 70 * 86_400_000);
     const [next] = await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents)
@@ -161,8 +167,16 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
       VALUES (${fan}, ${wh.id}, ${new Date(soonish.getTime() + 86_400_000)}, ${new Date(soonish.getTime() + 90_000_000)}, 'confirmed', 9000) RETURNING id`;
     assert.equal((await apply('discount', next2.id)).ok, false);
     for (let i = 1; i <= 5; i++) await visit(60 - i * 2);
+    // 10 séances mais 900 € payés : le soin offert attend 1 000 €
     card = await fid.loyaltyCard(fan);
-    assert.deepEqual({ n: card.sessions, discount: card.discount, free: card.free }, { n: 10, discount: false, free: true });
+    assert.deepEqual({ n: card.sessions, discount: card.discount, free: card.free }, { n: 10, discount: false, free: false });
+    await visit(40);
+    card = await fid.loyaltyCard(fan);
+    assert.equal(card.free, false, '11 séances, 990 € : toujours sous les 1 000 €');
+    await visit(38);
+    card = await fid.loyaltyCard(fan);
+    assert.deepEqual({ n: card.sessions, discount: card.discount, free: card.free }, { n: 12, discount: false, free: true });
+    assert.ok(card.lifetime.rewardsCents === 900 && card.lifetime.spentCents > 0);
     assert.ok((await apply('free', next2.id)).ok);
     assert.equal((await sql`SELECT discount_cents FROM bookings WHERE id = ${next2.id}`)[0].discount_cents, 9000);
     card = await fid.loyaltyCard(fan);
