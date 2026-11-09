@@ -60,7 +60,7 @@ const cells = Array.from({ length: (Date.parse(gridTo) - Date.parse(gridFrom)) /
 const level = (n = 0) => (n === 0 ? 0 : n <= 2 ? 1 : n <= 4 ? 2 : 3);
 const guests = live.filter((r) => r.guest);
 const mailOff = !RESEND_API_KEY || !MAIL_FROM;
-const alertCount = al.pending.length + al.moved.length + al.cancelled.length + al.newClients.length + al.noDuration.length + al.closures.length + (mailOff ? 1 : 0);
+const alertCount = al.pending.length + al.moved.length + al.cancelled.length + al.newClients.length + al.closures.length + (mailOff ? 1 : 0);
 ---
 <Admin title="Accueil">
 {delError && <p class="notice notice--error" role="alert">{delError}</p>}
@@ -69,6 +69,11 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
 <script is:inline src={`/assets/js/compte-a-rebours.js?v=${JS_VERSION}`} defer></script>
 
 {/* 1. La journée */}
+{/* Les deux informations qui demandent une action ou orientent la journée, avant tout le reste */}
+<div class="priority">
+  {al.noDuration.length > 0 && <p class="prio prio--warn">{al.noDuration.length} prestation{al.noDuration.length > 1 ? 's' : ''} ne {al.noDuration.length > 1 ? 'peuvent' : 'peut'} pas être réservée{al.noDuration.length > 1 ? 's' : ''} en ligne : il leur manque une durée. <a href="/admin/prestations">Indiquer les durées</a></p>}
+  <p class="prio">Libre : <strong>{minutes(frame.freeMin)}</strong> aujourd'hui, <strong>{minutes(freeTomorrow)}</strong> demain. <a href={agenda(tomorrow)}>Voir demain</a></p>
+</div>
 <section class="today" aria-labelledby="h-today">
   <div>
     <h2 id="h-today">{fmtDay(today)}</h2>
@@ -121,8 +126,6 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
       {al.newClients.map((c) => <li class="al al--ok">Nouvelle inscrite : <a href={`/admin/clientes/${c.id}`}>{c.name ?? c.email}</a>, le {shortDate(c.created_at)}</li>)}
       {al.closures.map((c) => <li class="al">Fermeture : {fmtDateTime(c.starts_at)} → {fmtDateTime(c.ends_at)}{c.reason && ` (${c.reason})`}</li>)}
       {/* La durée sert à calculer les créneaux : sans elle, une prestation ne peut pas être réservée en ligne */}
-      {al.noDuration.length > 0 && <li class="al">{al.noDuration.length} prestation{al.noDuration.length > 1 ? 's' : ''} ne {al.noDuration.length > 1 ? 'peuvent' : 'peut'} pas encore être réservée{al.noDuration.length > 1 ? 's' : ''} en ligne : il leur manque une durée. <a href="/admin/prestations">Indiquer les durées</a></li>}
-      <li class="al al--info">Libre : {minutes(frame.freeMin)} aujourd'hui, {minutes(freeTomorrow)} demain. <a href={agenda(tomorrow)}>Voir demain</a></li>
     </ul>
     <p class="hint">Non disponible : anniversaires (aucune date de naissance enregistrée).</p>
   </section>
@@ -205,6 +208,9 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
   .today h2{margin:0 0 .35rem;font-size:1.6rem}
   .today h2::first-letter{text-transform:uppercase}
   .day-open{display:flex;flex-wrap:wrap;gap:.4rem .75rem;align-items:center;margin:0;color:var(--text-soft)}
+  .priority{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr));gap:.75rem;margin:0 0 1rem}
+  .prio{margin:0;padding:.9rem 1.1rem;border:1px solid var(--line-soft);border-radius:14px;background:var(--bg)}
+  .prio--warn{border-color:var(--accent);background:rgb(138 90 82 / .1)}
   .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.75rem;margin:0}
   @media (min-width:1024px){.kpis{grid-template-columns:auto auto minmax(14rem,auto)}}
   .kpis div{padding:.75rem 1rem;border-radius:12px;background:rgb(138 90 82 / .08)}
