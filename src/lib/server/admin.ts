@@ -200,9 +200,12 @@ export async function agendaAction(userId: number, form: FormData): Promise<Resu
     return { ok: true, id, key: 'deplace', day: p.data.day! };
   }
   const refund = action === 'refund' || p.data.refund;
+  // Rendez-vous jamais payé : son annulation par l'institut ne va pas au journal (demande de la gérante) ; la ligne du rendez-vous
+  // reste en base, statut « annulé ». Un rendez-vous payé (acompte, Stripe) reste toujours tracé, pour la comptabilité.
+  const [pay] = await sql<{ paid: boolean }[]>`SELECT stripe_payment_intent IS NOT NULL OR deposit_cents > 0 OR refunded_cents > 0 AS paid FROM bookings WHERE id = ${id}`;
   const r = await cancelByAdmin(id, refund);
   if (!r.ok) return { ok: false, error: 'Rendez-vous introuvable ou déjà terminé.' };
-  audit(userId, action === 'refund' ? 'booking_refund' : 'booking_cancel', { booking_id: id, refund, refunded: r.refunded });
+  if (pay?.paid || refund) audit(userId, action === 'refund' ? 'booking_refund' : 'booking_cancel', { booking_id: id, refund, refunded: r.refunded });
   return { ok: true, id, key: r.refunded ? 'rembourse' : refund ? 'echec' : 'annule' };
 }
 

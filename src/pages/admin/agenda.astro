@@ -48,7 +48,11 @@ const count = vue === 'jour' ? 1 : 7;
 const rows = await adminAgenda(from, count);
 // Badges d'alerte de la fiche de soin, à voir avant le soin
 const careAlerts = await alertsFor([...new Set(rows.map((r) => r.user_id).filter((x): x is number => !!x))]);
-const days = Array.from({ length: count }, (_, i) => addDays(from, i)).map((d) => ({ d, rows: rows.filter((r) => todayBrussels(r.starts_at) === d) }));
+// Annulés et expirés masqués par défaut (?annules=1 pour les voir) ; ceux qui ont encore un acompte à rendre restent visibles
+const showCancelled = q.get('annules') === '1';
+const gone = (r: (typeof rows)[number]) => (r.status === 'cancelled' || r.status === 'expired') && !(r.paid && r.deposit_cents - r.refunded_cents > 0);
+const hidden = rows.filter(gone).length;
+const days = Array.from({ length: count }, (_, i) => addDays(from, i)).map((d) => ({ d, rows: rows.filter((r) => todayBrussels(r.starts_at) === d && (showCancelled || !gone(r))) }));
 const STATUS = { confirmed: 'Confirmé', pending_payment: 'Paiement en cours', cancelled: 'Annulé', expired: 'Payé après expiration' };
 const TONE = { confirmed: 'ok', pending_payment: 'wait', cancelled: 'off', expired: 'alert' };
 // Acompte encaissé et pas encore rendu
@@ -58,6 +62,7 @@ const due = (r: (typeof rows)[number]) => (r.paid ? r.deposit_cents - r.refunded
 <a slot="actions" class="btn btn--solid" href="/admin/reservations/nouvelle">Saisir un rendez-vous</a>
 {done && <p class="notice" role="status">{done}</p>}
 {error && <p class="notice notice--error" role="alert">{error}</p>}
+{(hidden > 0 || showCancelled) && <p class="hint">{showCancelled ? <a href={link(jour)}>Masquer les rendez-vous annulés</a> : <a href={`${link(jour)}&annules=1`}>Afficher les rendez-vous annulés ({hidden})</a>}</p>}
 <div class="toolbar">
 <nav class="pager" aria-label="Période">
   <a href={link(addDays(from, -count))}><span aria-hidden="true">‹</span> <span class="long">{vue === 'jour' ? 'Jour précédent' : 'Semaine précédente'}</span></a>

@@ -101,7 +101,7 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
   <section class="panel timeline" aria-labelledby="h-line">
     <h2 id="h-line">Rendez-vous du jour <a class="more" href={agenda(today)}>Agenda du jour</a></h2>
     {rows.length === 0 ? <p class="none">Aucun rendez-vous aujourd'hui.</p> : (
-      <ol>{rows.map((r) => { const [label, tone] = state(r); return (
+      <ol>{rows.filter((r) => r.status !== 'cancelled' && r.status !== 'expired').map((r) => { const [label, tone] = state(r); return (
         <li class:list={[`tl tl--${tone}`, { 'tl--next': r.id === next?.id }]}>
           <span class="tl-time">{fmtTime(r.starts_at)}<small>{minutes(Math.round((r.ends_at.getTime() - r.starts_at.getTime()) / 60000))}</small></span>
           <span class="tl-who">
