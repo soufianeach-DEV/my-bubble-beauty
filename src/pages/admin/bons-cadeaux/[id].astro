@@ -59,7 +59,7 @@ const day = (d: string) => new Intl.DateTimeFormat('fr-BE', { timeZone: 'UTC', d
   </form>
   <form class="act" method="post">
     <input type="hidden" name="action" value="cancel"><input type="hidden" name="id" value={g.id}>
-    <p class="hint">Le code ne vaudra plus rien, même pour un rendez-vous déjà pris.</p>
+    <p class="hint">Le code ne vaudra plus rien pour une nouvelle réservation. Un rendez-vous déjà pris avec ce bon reste offert : annulez-le dans l'agenda si besoin.</p>
     <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
     <button class="btn btn--ghost" type="submit">Annuler le bon</button>
   </form>
