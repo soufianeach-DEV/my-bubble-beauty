@@ -392,13 +392,42 @@
     {
      "id": "peeling",
      "cat": "visage",
-     "title": "Superficial Peel",
+     "title": "Algae peels",
      "href": "peeling",
      "items": [
       {
-       "name": "Superficial Peel",
-       "href": null,
-       "amount": "90 €"
+       "name": "Green Peel",
+       "detail": "Green algae peel",
+       "amount": "89 €"
+      },
+      {
+       "name": "Green Peel – 3 sessions",
+       "amount": "240 €",
+       "note": "€80 per session · save €27 (–10%)",
+       "was": "267 €"
+      },
+      {
+       "name": "Green Peel – 5 sessions",
+       "amount": "395 €",
+       "note": "€79 per session · save €50 (–11%)",
+       "was": "445 €"
+      },
+      {
+       "name": "Marine Peel",
+       "detail": "Marine algae peel",
+       "amount": "99 €"
+      },
+      {
+       "name": "Marine Peel – 3 sessions",
+       "amount": "270 €",
+       "note": "€90 per session · save €27 (–9%)",
+       "was": "297 €"
+      },
+      {
+       "name": "Marine Peel – 5 sessions",
+       "amount": "445 €",
+       "note": "€89 per session · save €50 (–10%)",
+       "was": "495 €"
       }
      ]
     },
@@ -1698,15 +1727,35 @@
    ]
   },
   "peeling": {
-   "title": "Superficial Peel",
-   "metaTitle": "Superficial Peel - My Bubble Beauty",
-   "description": "A superficial peel is a gentle exfoliating treatment that aims to improve skin texture and even out skin tone. Find out how it works and the price.",
-   "articleHtml": "<p>A superficial peel is an aesthetic treatment aimed at improving skin texture, creating a more even tone, and reducing certain minor skin issues such as pigmentation, fine lines, and blemishes on acne-prone skin. This technique uses a mild chemical solution to exfoliate the top layer of the skin, with the aim of stimulating cell renewal and promoting smoother, more radiant skin. Here's how a superficial peel usually works:</p><h2>Initial Consultation</h2><p>Prior to a superficial peel, an aesthetic professional assesses the condition of your skin, discusses your specific concerns, and determines whether the peel is suitable for your skin type and needs. There are various types of chemical solutions for peels, and the choice depends on your skin type and the treatment's purpose.</p><p>Before the treatment, we check with you for any contraindications, such as pregnancy, ongoing medical treatment or damaged skin.</p><h2>Skin Cleansing</h2><p>Before applying the peel solution, the skin is carefully cleansed to remove dirt, makeup, and oils.</p><h2>Application of the Peel Solution</h2><p>Next, the aesthetic professional applies the peel solution to the skin, ensuring that the treated area is evenly covered. The solution may contain alpha hydroxy acids (AHAs), beta hydroxy acids (BHAs), or other mild exfoliating ingredients.</p><h2>Contact Time</h2><p>The peel solution remains on the skin for a short time determined by the professional, usually for several minutes. The duration depends on the solution's concentration and your skin's tolerance.</p><h2>Neutralization</h2><p>After the contact time has passed, the professional neutralizes the solution by rinsing it off or using a specific product to stop the chemical action.</p><h2>Post-Peel Care</h2><p>After the treatment, it's essential to follow the post-peel instructions provided by the aesthetic professional. This may include applying a moisturizing cream, using specific products, and avoiding sun exposure for some time, as the skin is often more sensitive after a peel.</p><h2>Results</h2><p>The results of a superficial peel are usually not immediately visible, as the skin needs time to renew itself. However, in the days and weeks following the treatment, the skin should appear brighter, more even, and smoother.</p><p>A superficial peel is considered a mild treatment and typically doesn't require extended recovery time. However, multiple sessions may be necessary to achieve the desired results, and it's essential to choose a qualified professional to minimize risks and optimize the benefits of the treatment. This treatment can be applied to various body parts, such as the face, neck, décolletage, and hands, depending on your needs.</p>",
-   "priceTitle": "Price",
+   "title": "Algae peels",
+   "metaTitle": "Algae peels - My Bubble Beauty",
+   "description": "Green Peel and Marine Peel: algae peels that refine skin texture and reveal the skin's natural radiance. Procedure, aftercare and prices.",
+   "articleHtml": "<p>The excellence of marine actives, for the beauty of your skin.</p><p>Treat your skin to an exceptional beauty experience with our collection of algae peels.</p><p>Inspired by the benefits of marine actives and skin renewal techniques, these treatments are designed to visibly improve the appearance of the skin, refine its texture and reveal its natural radiance.</p><p>Each protocol is tailored to your skin's needs, offering a personalised experience that combines effectiveness, expertise and well-being.</p><p><strong>Enhanced skin, a luminous complexion, beauty revealed.</strong></p><h2>Our three beauty experiences</h2><h3>01 — GREEN PEEL | Green algae peel</h3><p>€89 — Single treatment · Face</p><p>An intensive treatment inspired by plant and marine actives, designed to support skin renewal.</p><p><strong>Ideal for:</strong></p><ul><li>dull, uneven skin;</li><li>blemishes and visible pores;</li><li>skin lacking radiance;</li><li>uneven skin texture.</li></ul><p><strong>The intended result:</strong> skin that looks smoother and fresher, and a visibly more luminous complexion.</p><p><strong>Packages:</strong> 3 sessions €240 instead of €267; 5 sessions €395 instead of €445.</p><h3>02 — MARINE PEEL | Marine algae peel</h3><p>€99 — Single treatment · Face</p><p>A beauty experience using the properties of marine algae and, depending on the chosen protocol, natural micro-spicules.</p><p><strong>Ideal for:</strong></p><ul><li>skin with irregularities;</li><li>blemish-prone skin;</li><li>uneven skin texture;</li><li>complexions lacking evenness.</li></ul><p><strong>The intended result:</strong> a more even skin texture and a more uniform-looking complexion.</p><p><strong>Packages:</strong> 3 sessions €270 instead of €297; 5 sessions €445 instead of €495.</p><p>Every appointment starts with an analysis of your skin, so that we can select the most suitable protocol.</p><h2>Procedure</h2><ol><li><strong>Personalised diagnosis</strong>: identifying your needs and checking for contraindications.</li><li><strong>Skin preparation</strong>: cleansing and preparing the skin.</li><li><strong>Peel application</strong>: carrying out the appropriate professional protocol.</li><li><strong>Final care</strong>: applying the recommended products after the treatment.</li><li><strong>Personalised advice</strong>: recommendations to support your skin after your appointment.</li></ol><h2>Aftercare following your peel</h2><ul><li>avoid direct sun exposure;</li><li>apply SPF 50 sun protection;</li><li>avoid exfoliants and irritating actives for the recommended period;</li><li>follow the home-care instructions;</li><li>never pull off flaking skin during peeling.</li></ul><p>Recovery time and possible reactions depend on the chosen peel and its protocol.</p>",
+   "priceTitle": "Prices",
    "prices": [
     {
-     "name": "Superficial Peel",
-     "amount": "90 €"
+     "name": "Green Peel",
+     "amount": "89 €"
+    },
+    {
+     "name": "Green Peel – 3 sessions",
+     "amount": "240 €"
+    },
+    {
+     "name": "Green Peel – 5 sessions",
+     "amount": "395 €"
+    },
+    {
+     "name": "Marine Peel",
+     "amount": "99 €"
+    },
+    {
+     "name": "Marine Peel – 3 sessions",
+     "amount": "270 €"
+    },
+    {
+     "name": "Marine Peel – 5 sessions",
+     "amount": "445 €"
     }
    ],
    "figures": [
@@ -1720,7 +1769,7 @@
      "src": "soins/hydra2.webp",
      "w": 750,
      "h": 497,
-     "alt": "Diagram of the skin during the peel: the solution is applied with a cotton bud"
+     "alt": "Diagram of the skin during the peel"
     },
     {
      "src": "soins/hydra3.webp",

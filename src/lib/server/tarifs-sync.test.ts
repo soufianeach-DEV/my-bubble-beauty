@@ -17,6 +17,8 @@ test('durées de la carte : formats lus, toutes les lignes réelles de la grille
   for (const it of lines) if (it.duration) assert.ok(parseDuration(it.duration)! > 0, `illisible : ${it.duration}`);
   const seed = await serviceSeed();
   assert.equal(seed.length, lines.length);
+  // Deux lignes de même nom dans un groupe donneraient le même slug : l'insertion échouerait et le site ne démarrerait plus
+  assert.equal(new Set(seed.map((s: { slug: string }) => s.slug)).size, seed.length, 'slugs uniques');
   assert.equal(seed.filter((s: { duration_min: number | null }) => s.duration_min !== null).length, lines.filter((it: { duration?: string }) => it.duration).length);
   assert.ok(seed.every((s: { active: boolean; duration_min: number | null }) => s.active === (s.duration_min !== null)), 'en ligne si et seulement si la carte donne une durée');
 });

@@ -392,13 +392,42 @@
     {
      "id": "peeling",
      "cat": "visage",
-     "title": "Oppervlakkige peeling",
+     "title": "Algenpeelings",
      "href": "peeling",
      "items": [
       {
-       "name": "Oppervlakkige peeling",
-       "href": null,
-       "amount": "90 €"
+       "name": "Green Peel",
+       "detail": "Peeling met groene algen",
+       "amount": "89 €"
+      },
+      {
+       "name": "Green Peel – 3 sessies",
+       "amount": "240 €",
+       "note": "80 € per sessie · 27 € voordeel (–10 %)",
+       "was": "267 €"
+      },
+      {
+       "name": "Green Peel – 5 sessies",
+       "amount": "395 €",
+       "note": "79 € per sessie · 50 € voordeel (–11 %)",
+       "was": "445 €"
+      },
+      {
+       "name": "Marine Peel",
+       "detail": "Peeling met zeealgen",
+       "amount": "99 €"
+      },
+      {
+       "name": "Marine Peel – 3 sessies",
+       "amount": "270 €",
+       "note": "90 € per sessie · 27 € voordeel (–9 %)",
+       "was": "297 €"
+      },
+      {
+       "name": "Marine Peel – 5 sessies",
+       "amount": "445 €",
+       "note": "89 € per sessie · 50 € voordeel (–10 %)",
+       "was": "495 €"
       }
      ]
     },
@@ -1698,15 +1727,35 @@
    ]
   },
   "peeling": {
-   "title": "De oppervlakkige peeling",
-   "metaTitle": "De oppervlakkige peeling - My Bubble Beauty",
-   "description": "Een oppervlakkige peeling is een milde exfoliatie om de huidtextuur te verbeteren en de teint te egaliseren. Ontdek het verloop en het tarief.",
-   "articleHtml": "<p>De oppervlakkige peeling is een esthetische behandeling die tot doel heeft de huidtextuur te verbeteren, de teint gelijkmatiger te maken en bepaalde kleine huidproblemen, zoals pigmentvlekken, fijne lijntjes en onzuiverheden bij een huid met neiging tot acne, te verminderen. Deze techniek maakt gebruik van een milde chemische oplossing om de bovenste laag van de huid te exfoliëren, met als doel de celvernieuwing te stimuleren en bij te dragen aan een gladdere en stralendere huid. Zo werkt doorgaans een oppervlakkige peeling in de esthetiek:</p><h2>Eerste consultatie</h2><p>Voorafgaand aan een oppervlakkige peeling evalueert een schoonheidsspecialist de toestand van uw huid, bespreekt uw specifieke zorgen en bepaalt of de peeling geschikt is voor uw huidtype en behoeften. Er zijn verschillende soorten chemische oplossingen voor peelings, en de keuze hangt af van uw huidtype en het doel van de behandeling.</p><p>Vóór de behandeling overlopen we samen met u mogelijke contra-indicaties, zoals zwangerschap, een lopende medische behandeling of een beschadigde huid.</p><h2>Reiniging van de huid</h2><p>Voor het aanbrengen van de peelingoplossing wordt de huid zorgvuldig gereinigd om vuil, make-up en overtollige talg te verwijderen.</p><h2>Toepassing van de peelingoplossing</h2><p>Vervolgens brengt de schoonheidsspecialist de peelingoplossing op de huid aan en zorgt ervoor dat het te behandelen gebied gelijkmatig wordt bedekt. De oplossing kan alfahydroxyzuren (AHA's), bètahydroxyzuren (BHA's) of andere milde exfoliërende ingrediënten bevatten.</p><h2>Inwerktijd</h2><p>De peelingoplossing blijft gedurende een korte, door de professional bepaalde tijd op de huid, meestal enkele minuten. De duur hangt af van de concentratie van de oplossing en de tolerantie van uw huid.</p><h2>Neutralisatie</h2><p>Nadat de inwerktijd is verstreken, neutraliseert de professional de oplossing door deze af te spoelen of door een specifiek product te gebruiken om de chemische werking te stoppen.</p><h2>Verzorging na de peeling</h2><p>Na de behandeling is het belangrijk om de nazorginstructies van de schoonheidsspecialist op te volgen. Dit kan het aanbrengen van een vochtinbrengende crème, het gebruik van specifieke producten en het vermijden van blootstelling aan de zon gedurende enige tijd omvatten, omdat de huid vaak gevoeliger is na een peeling.</p><h2>Resultaten</h2><p>De resultaten van een oppervlakkige peeling zijn meestal niet onmiddellijk zichtbaar, omdat de huid tijd nodig heeft om zich te vernieuwen. In de dagen en weken na de behandeling zou de huid er echter stralender, egaler en gladder moeten uitzien.</p><p>Een oppervlakkige peeling wordt beschouwd als een milde behandeling en vereist meestal geen langdurige hersteltijd. Meerdere sessies kunnen echter nodig zijn om de gewenste resultaten te bereiken, en het is essentieel om een gekwalificeerde professional te kiezen om de risico's te minimaliseren en de voordelen van de behandeling te optimaliseren. Deze behandeling kan worden toegepast op verschillende delen van het lichaam, zoals het gezicht, de hals, het decolleté en de handen, afhankelijk van uw behoeften.</p>",
-   "priceTitle": "Tarief",
+   "title": "De algenpeelings",
+   "metaTitle": "De algenpeelings - My Bubble Beauty",
+   "description": "Green Peel en Marine Peel: algenpeelings die de huidstructuur verfijnen en de natuurlijke glans van de teint naar boven halen. Verloop, voorzorgen en tarieven.",
+   "articleHtml": "<p>Het beste van mariene actieve stoffen, voor de schoonheid van uw huid.</p><p>Gun uw huid een uitzonderlijke schoonheidservaring met onze collectie algenpeelings.</p><p>Geïnspireerd op de weldaden van mariene actieve stoffen en op technieken voor huidvernieuwing, zijn deze behandelingen ontworpen om het uiterlijk van de huid zichtbaar te verbeteren, de huidstructuur te verfijnen en haar natuurlijke glans te onthullen.</p><p>Elk protocol wordt afgestemd op de behoeften van uw huid, voor een persoonlijke ervaring die doeltreffendheid, expertise en welzijn combineert.</p><p><strong>Een stralende huid, een lichtende teint, een onthulde schoonheid.</strong></p><h2>Onze drie schoonheidservaringen</h2><h3>01 — GREEN PEEL | Peeling met groene algen</h3><p>89 € — Afzonderlijke behandeling · Gezicht</p><p>Een intensieve behandeling, geïnspireerd op plantaardige en mariene actieve stoffen, die de huidvernieuwing ondersteunt.</p><p><strong>Ideaal voor:</strong></p><ul><li>doffe en onregelmatige huid;</li><li>onzuiverheden en zichtbare poriën;</li><li>een huid die aan glans mist;</li><li>een onregelmatige huidstructuur.</li></ul><p><strong>Het beoogde resultaat:</strong> een huid die gladder en frisser oogt en een zichtbaar stralendere teint.</p><p><strong>Pakketten:</strong> 3 sessies 240 € in plaats van 267 €; 5 sessies 395 € in plaats van 445 €.</p><h3>02 — MARINE PEEL | Peeling met zeealgen</h3><p>99 € — Afzonderlijke behandeling · Gezicht</p><p>Een schoonheidservaring die de eigenschappen van zeealgen benut en, afhankelijk van het gekozen protocol, natuurlijke micro-spicules.</p><p><strong>Ideaal voor:</strong></p><ul><li>een huid met onregelmatigheden;</li><li>een huid met onzuiverheden;</li><li>een onregelmatige huidtextuur;</li><li>een teint die aan egaalheid mist.</li></ul><p><strong>Het beoogde resultaat:</strong> een regelmatigere huidtextuur en een teint die egaler oogt.</p><p><strong>Pakketten:</strong> 3 sessies 270 € in plaats van 297 €; 5 sessies 445 € in plaats van 495 €.</p><p>Elke afspraak begint met een analyse van uw huid, zodat we het best passende protocol kiezen.</p><h2>Verloop</h2><ol><li><strong>Persoonlijke diagnose</strong>: bepalen van de behoeften en nagaan van de contra-indicaties.</li><li><strong>Voorbereiding van de huid</strong>: reiniging en voorbereiding van de huid.</li><li><strong>Aanbrengen van de peeling</strong>: uitvoering van het aangepaste professionele protocol.</li><li><strong>Afsluitende verzorging</strong>: aanbrengen van de aanbevolen verzorging na de behandeling.</li><li><strong>Persoonlijk advies</strong>: aanbevelingen om uw huid na de afspraak te begeleiden.</li></ol><h2>Voorzorgen na uw peeling</h2><ul><li>vermijd rechtstreekse blootstelling aan de zon;</li><li>gebruik een zonnebescherming SPF 50;</li><li>vermijd scrubs en irriterende actieve stoffen gedurende de aanbevolen periode;</li><li>volg de verzorgingsrichtlijnen voor thuis;</li><li>trek nooit loszittende huidschilfers af bij vervelling.</li></ul><p>De hersteltijd en de mogelijke reacties hangen af van de gekozen peeling en het protocol.</p>",
+   "priceTitle": "Tarieven",
    "prices": [
     {
-     "name": "Oppervlakkige peeling",
-     "amount": "90 €"
+     "name": "Green Peel",
+     "amount": "89 €"
+    },
+    {
+     "name": "Green Peel – 3 sessies",
+     "amount": "240 €"
+    },
+    {
+     "name": "Green Peel – 5 sessies",
+     "amount": "395 €"
+    },
+    {
+     "name": "Marine Peel",
+     "amount": "99 €"
+    },
+    {
+     "name": "Marine Peel – 3 sessies",
+     "amount": "270 €"
+    },
+    {
+     "name": "Marine Peel – 5 sessies",
+     "amount": "445 €"
     }
    ],
    "figures": [
@@ -1720,7 +1769,7 @@
      "src": "soins/hydra2.webp",
      "w": 750,
      "h": 497,
-     "alt": "Schema van de huid tijdens de peeling: de oplossing wordt met een wattenstaafje aangebracht"
+     "alt": "Schema van de huid tijdens de peeling"
     },
     {
      "src": "soins/hydra3.webp",
