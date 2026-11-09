@@ -132,6 +132,13 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
       VALUES (${other}, ${wh.id}, ${new Date(later.getTime() + 86_400_000)}, ${new Date(later.getTime() + 90_000_000)}, 'confirmed', 9000, ${gc.id})`, /bookings_gift_idx/);
     await sql`UPDATE bookings SET status = 'cancelled', cancelled_at = now() WHERE id = ${gb.id}`;
     assert.equal((await gifts.listGifts(gc.id))[0].state, 'valide');
+    // Absence au rendez-vous du bon : le bon est consommé, affiché « Utilisé » comme le refuse la réservation
+    const missed = new Date(Date.now() - 20 * 86_400_000 + 3 * 3_600_000);
+    const [ab] = await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, discount_cents, gift_card_id, no_show)
+      VALUES (${other}, ${wh.id}, ${missed}, ${new Date(missed.getTime() + 3_600_000)}, 'confirmed', 9000, 9000, ${gc.id}, true) RETURNING id`;
+    assert.equal((await gifts.listGifts(gc.id))[0].state, 'utilise');
+    assert.deepEqual(await gifts.checkGift(sql, gc.code, wh.id), { problem: 'used' });
+    await sql`UPDATE bookings SET status = 'cancelled', cancelled_at = now() WHERE id = ${ab.id}`;
     assert.ok((await gifts.giftAction(other, f({ action: 'cancel', id: String(gc.id), confirm: 'on' }))).ok);
     assert.deepEqual(await gifts.checkGift(sql, gc.code, wh.id), { problem: 'unknown' });
     await sql`UPDATE bookings SET gift_card_id = NULL WHERE gift_card_id = ${gc.id}`;

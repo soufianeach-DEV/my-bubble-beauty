@@ -23,10 +23,11 @@ export const newGiftCode = () => {
 export type GiftState = 'valide' | 'reserve' | 'utilise' | 'expire' | 'annule';
 export const STATE_LABELS: Record<GiftState, string> = { valide: 'Valable', reserve: 'Réservé', utilise: 'Utilisé', expire: 'Expiré', annule: 'Annulé' };
 
-// État calculé : un rendez-vous terminé (présente) vaut utilisation, un rendez-vous à venir le réserve
+// État calculé : un rendez-vous terminé vaut utilisation, absence comprise (comme l'acompte, perdu en cas d'absence ; et l'index
+// unique bookings_gift_idx bloque de toute façon une nouvelle réservation). Un rendez-vous à venir le réserve.
 const state = (tx: Sql) => tx`CASE
   WHEN g.cancelled_at IS NOT NULL THEN 'annule'
-  WHEN g.used_at IS NOT NULL OR EXISTS (SELECT 1 FROM bookings b WHERE b.gift_card_id = g.id AND b.status = 'confirmed' AND b.ends_at < now() AND NOT b.no_show) THEN 'utilise'
+  WHEN g.used_at IS NOT NULL OR EXISTS (SELECT 1 FROM bookings b WHERE b.gift_card_id = g.id AND b.status = 'confirmed' AND b.ends_at < now()) THEN 'utilise'
   WHEN EXISTS (SELECT 1 FROM bookings b WHERE b.gift_card_id = g.id AND b.status IN ('pending_payment', 'confirmed') AND b.ends_at >= now()) THEN 'reserve'
   WHEN g.expires_on < current_date THEN 'expire'
   ELSE 'valide' END`;
