@@ -1249,6 +1249,33 @@
    "close": "Fermer",
    "items": [
     {
+     "n": "5",
+     "w": 1200,
+     "h": 1600,
+     "alt": "Les lettres en bois « Moment », « My Bubble » et « Beauty » au mur, à côté d'une plante verte",
+     "ariaLabel": "Agrandir la photo : Les lettres en bois « Moment », « My Bubble » et « Beauty » au mur, à côté d'une plante verte"
+    },
+    {
+     "n": "6",
+     "w": 900,
+     "h": 1600,
+     "alt": "Une tisane à la menthe fraîche servie en cabine, dans un verre décoré d'une fleur",
+     "ariaLabel": "Agrandir la photo : Une tisane à la menthe fraîche servie en cabine, dans un verre décoré d'une fleur"
+    },
+    {
+     "video": "galerie-vapeur",
+     "w": 480,
+     "h": 848,
+     "alt": "Vidéo : la vapeur du vaporisateur visage sur une main, dans la cabine de soins"
+    },
+    {
+     "n": "7",
+     "w": 1200,
+     "h": 1290,
+     "alt": "La fiche cliente My Bubble posée sur un support en bois, près de la fenêtre",
+     "ariaLabel": "Agrandir la photo : La fiche cliente My Bubble posée sur un support en bois, près de la fenêtre"
+    },
+    {
      "alt": "La cabine de soins, avec la table de soin et les appareils d'esthétique",
      "ariaLabel": "Agrandir la photo : La cabine de soins, avec la table de soin et les appareils d'esthétique",
      "n": "1"

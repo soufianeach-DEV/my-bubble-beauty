@@ -1249,6 +1249,33 @@
    "close": "Sluiten",
    "items": [
     {
+     "n": "5",
+     "w": 1200,
+     "h": 1600,
+     "alt": "De houten letters “Moment”, “My Bubble” en “Beauty” aan de muur, naast een groene plant",
+     "ariaLabel": "Foto vergroten: De houten letters “Moment”, “My Bubble” en “Beauty” aan de muur, naast een groene plant"
+    },
+    {
+     "n": "6",
+     "w": 900,
+     "h": 1600,
+     "alt": "Kruidenthee met verse munt, geserveerd in de behandelkamer in een glas met een bloem",
+     "ariaLabel": "Foto vergroten: Kruidenthee met verse munt, geserveerd in de behandelkamer in een glas met een bloem"
+    },
+    {
+     "video": "galerie-vapeur",
+     "w": 480,
+     "h": 848,
+     "alt": "Video: stoom van de gezichtsvaporisator op een hand, in de behandelkamer"
+    },
+    {
+     "n": "7",
+     "w": 1200,
+     "h": 1290,
+     "alt": "De klantenfiche van My Bubble op een houten standaard, bij het raam",
+     "ariaLabel": "Foto vergroten: De klantenfiche van My Bubble op een houten standaard, bij het raam"
+    },
+    {
      "alt": "De behandelruimte met de behandeltafel en de schoonheidstoestellen",
      "ariaLabel": "Foto vergroten: De behandelruimte met de behandeltafel en de schoonheidstoestellen",
      "n": "1"

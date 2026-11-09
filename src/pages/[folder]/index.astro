@@ -143,9 +143,14 @@ const jsonld = {
 <div class="wrap">
 <div class="section__head"><p class="eyebrow">{h.gallery.eyebrow}</p><h2 id="h-galerie">{h.gallery.title}</h2></div>
 <ul class="mosaic">
-{h.gallery.items.map((g) => (
-  <li><a class="frame" href={`/assets/img/galerie-${g.n}.webp`} aria-label={g.ariaLabel}><img src={`/assets/img/galerie-${g.n}-800.webp`} srcset={`/assets/img/galerie-${g.n}-800.webp 800w, /assets/img/galerie-${g.n}-1200.webp 1200w, /assets/img/galerie-${g.n}.webp 1600w`} sizes="(max-width: 767px) 100vw, 50vw" width="800" height="600" data-w="1600" data-h="1200" alt={g.alt} loading="lazy" decoding="async"></a></li>
-))}
+{h.gallery.items.map((g) => {
+  // Taille de l'image pleine (les photos d'origine sont en 1600 × 1200) ; variantes 800 et 1200 seulement si plus petites
+  const gw = g.w ?? 1600, gh = g.h ?? 1200;
+  // Vidéo : tuile à part (pas .frame, qui ouvre la visionneuse), muette, lancée seulement par la cliente
+  if (g.video) return <li><div class="frame-video"><video src={`/assets/video/${g.video}.mp4`} poster={`/assets/video/${g.video}.webp`} width={gw} height={gh} controls muted playsinline preload="none" aria-label={g.alt}></video></div></li>;
+  const srcset = [...[800, 1200].filter((x) => x < gw).map((x) => `/assets/img/galerie-${g.n}-${x}.webp ${x}w`), `/assets/img/galerie-${g.n}.webp ${gw}w`].join(', ');
+  return <li><a class="frame" href={`/assets/img/galerie-${g.n}.webp`} aria-label={g.ariaLabel}><img src={`/assets/img/galerie-${g.n}-800.webp`} srcset={srcset} sizes="(max-width: 767px) 100vw, 50vw" width="800" height={Math.round(800 * gh / gw)} data-w={gw} data-h={gh} alt={g.alt} loading="lazy" decoding="async"></a></li>;
+})}
 </ul>
 </div>
 <dialog class="lightbox" aria-label={h.gallery.dialogLabel}>

@@ -1249,6 +1249,33 @@
    "close": "Close",
    "items": [
     {
+     "n": "5",
+     "w": 1200,
+     "h": 1600,
+     "alt": "Wooden letters spelling “Moment”, “My Bubble” and “Beauty” on the wall, next to a green plant",
+     "ariaLabel": "Enlarge photo: Wooden letters spelling “Moment”, “My Bubble” and “Beauty” on the wall, next to a green plant"
+    },
+    {
+     "n": "6",
+     "w": 900,
+     "h": 1600,
+     "alt": "Fresh mint herbal tea served in the treatment room, in a glass decorated with a flower",
+     "ariaLabel": "Enlarge photo: Fresh mint herbal tea served in the treatment room, in a glass decorated with a flower"
+    },
+    {
+     "video": "galerie-vapeur",
+     "w": 480,
+     "h": 848,
+     "alt": "Video: steam from the facial steamer on a hand, in the treatment room"
+    },
+    {
+     "n": "7",
+     "w": 1200,
+     "h": 1290,
+     "alt": "The My Bubble client form on a wooden stand, by the window",
+     "ariaLabel": "Enlarge photo: The My Bubble client form on a wooden stand, by the window"
+    },
+    {
      "alt": "The treatment room, with the treatment table and beauty equipment",
      "ariaLabel": "Enlarge photo: The treatment room, with the treatment table and beauty equipment",
      "n": "1"
