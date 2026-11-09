@@ -177,6 +177,23 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     assert.match((await gifts.giftAction(other, f({ action: 'send', id: String((noMail as { id: number }).id) })) as { error: string }).error, /pas d'adresse/);
     await sql`DELETE FROM gift_cards WHERE id IN (${bc.id}, ${(noMail as { id: number }).id})`;
 
+    // Fiche remplie par la cliente : sans accord, la santé est ignorée ; avec la case cochée, accord daté et santé chiffrée ;
+    // son mot va dans client_note, jamais dans les notes internes
+    const profilMod = await import('./profil.ts');
+    const fc = await mk('fichecl');
+    const own = (o: Record<string, string | string[]>) => { const x = new FormData(); for (const [k, v] of Object.entries(o)) for (const w of [v].flat()) x.append(k, w); return profilMod.saveOwnProfile(fc, x, '127.0.0.1'); };
+    assert.ok((await own({ heat: 'chaud', zones: ['dos', 'pieds'], allergies: 'latex', client_note: 'Merci !' })).ok);
+    let mine = await profilMod.readProfile(fc);
+    assert.deepEqual({ heat: mine.care.heat, zones: mine.care.zones, consent: mine.consent, health: mine.health, note: mine.clientNote, notes: mine.notes, filled: !!mine.filledAt },
+      { heat: 'chaud', zones: ['dos', 'pieds'], consent: false, health: null, note: 'Merci !', notes: '', filled: true });
+    assert.ok((await own({ heat: 'frais', health_consent: 'on', allergies: 'latex', skin: 'sensible' })).ok);
+    mine = await profilMod.readProfile(fc);
+    assert.ok(mine.consent && !!mine.consentAt);
+    assert.deepEqual(mine.health?.allergies, ['latex']);
+    assert.equal((await own({ client_note: 'x'.repeat(501) })).ok, false, 'mot trop long refusé');
+    await profilMod.skipOwnProfile(fc);
+    assert.ok(!!(await profilMod.readProfile(fc)).skippedAt);
+
     // Carte de fidélité (règles par défaut : séance à partir de 50 € payés, -10 % après 5, HydraPure après 10 séances et 1 000 € payés) :
     // absences, annulations, petits soins et soins réglés par bon cadeau ne comptent pas ; la remise vaut une fois par carte,
     // le soin offert remet la carte à zéro

@@ -16,6 +16,8 @@ import { closeSession, listSessions } from '../../../lib/server/session.ts';
 import { deleteAccount, eraseNow, exportData, GRACE_DAYS, setConsent } from '../../../lib/server/rgpd.ts';
 import { FORMS, listConsents, pendingConsents } from '../../../lib/server/consentements.ts';
 import { loyaltyCard } from '../../../lib/server/fidelite.ts';
+import { readProfile } from '../../../lib/server/profil.ts';
+import { FICHE } from '../../../data/i18n/fiche.ts';
 
 const lang = langOfFolder(Astro.params.folder!);
 const d = FOLDER[lang];
@@ -110,10 +112,15 @@ if (Astro.request.method === 'POST') {
   else if (Astro.url.searchParams.get('deplace') === 'ok') notice = { text: ta.moved };
   else if (Astro.url.searchParams.get('reactive') === 'ok') notice = { text: ta.reactivated };
   else if (Astro.url.searchParams.get('consentement') === 'ok') notice = { text: tx.consent.done };
+  else if (Astro.url.searchParams.get('fiche') === 'ok') notice = { text: FICHE[lang].saved };
 }
 
 const [bookings, sessions, toSign, consents] = finished ? [[], [], [], []] : await Promise.all([clientBookings(user.id, lang), listSessions(user.id, session.hash), pendingConsents(user.id), listConsents(user.id)]);
 const card = finished || user.role ? null : await loyaltyCard(user.id);
+// Fiche de soin : proposée une fois à la première visite (ni remplie ni reportée), puis rappel discret tant qu'elle n'est pas remplie
+const tf = FICHE[lang];
+const fiche = finished || user.role ? null : await readProfile(user.id);
+if (fiche && Astro.request.method === 'GET' && [...Astro.url.searchParams.keys()].length === 0 && !fiche.filledAt && !fiche.skippedAt) return Astro.redirect(`/${d}/compte/fiche`);
 const tl = tx.loyalty;
 if (cancelled) {
   // Un acompte non nul sur une réservation confirmée a été payé : s'il n'a pas pu être rendu, l'admin le voit et le relance
@@ -156,6 +163,7 @@ const gauges = card
 </p>
 )}
 
+{fiche && !fiche.filledAt && <p class="notice">{tf.reminder} <a href={`/${d}/compte/fiche`}>{tf.reminderLink}</a></p>}
 <div class="dash-grid">
 <div class="dash-col">
 {toSign.length > 0 && <section class="consents" aria-labelledby="h-sign">
@@ -220,6 +228,7 @@ const gauges = card
 <h2 id="h-profile">{ta.profile}</h2>
 <p><strong>{tx.email}</strong><br>{user.email}</p>
 <p class="hint">{ta.emailFixed} <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>.</p>
+{fiche && <p><a class="btn btn--ghost" href={`/${d}/compte/fiche`}>{tf.edit}</a></p>}
 <form class="form" method="post" action={self}>
 <input type="hidden" name="action" value="profile">
 <div class="field">

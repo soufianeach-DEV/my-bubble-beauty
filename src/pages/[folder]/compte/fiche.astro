@@ -1,0 +1,107 @@
+---
+// « Ma fiche de soin » : la cliente choisit elle-même ses préférences (mêmes valeurs que la fiche de l'institut, boutons segmentés).
+// Proposée une fois après la première connexion (Mon compte y renvoie tant qu'elle n'est ni remplie ni reportée), puis depuis Mon compte.
+// Santé : seulement avec l'accord, donné sur cette page par une case séparée (art. 9 RGPD) ; sans accord, la section reste cachée (CSS :has)
+// et le serveur ignore ces champs. « Plus tard » ne bloque rien : la cliente réserve normalement.
+export const prerender = false;
+import Base from '../../../layouts/Base.astro';
+import '../../../styles/forms.css';
+import { FICHE } from '../../../data/i18n/fiche.ts';
+import { FOLDER, langOfFolder } from '../../../lib/site';
+import { readForm } from '../../../lib/server/admin.ts';
+import { ALLERGIES, AMBIENCE, COVER, HEAT, PRESSURE, readProfile, saveOwnProfile, skipOwnProfile, SKIN, TOUCH, ZONES } from '../../../lib/server/profil.ts';
+
+const lang = langOfFolder(Astro.params.folder!);
+const d = FOLDER[lang];
+const t = FICHE[lang];
+const user = Astro.locals.user;
+if (!user) return Astro.redirect(`/${d}/compte/connexion`);
+// L'équipe a sa fiche dans l'admin, pas ici
+if (user.role) return Astro.redirect(`/${d}/compte`);
+let error = false;
+if (Astro.request.method === 'POST') {
+  const form = await readForm(Astro.request);
+  if (!form) return new Response(null, { status: 413 });
+  if (form.get('action') === 'later') {
+    await skipOwnProfile(user.id);
+    return Astro.redirect(`/${d}/compte`, 303);
+  }
+  const r = await saveOwnProfile(user.id, form, Astro.locals.ip);
+  if (r.ok) return Astro.redirect(`/${d}/compte?fiche=ok`, 303);
+  error = true;
+  Astro.response.status = 400;
+}
+const prof = await readProfile(user.id);
+const day = new Intl.DateTimeFormat({ fr: 'fr-BE', nl: 'nl-BE', en: 'en-GB' }[lang], { timeZone: 'Europe/Brussels', dateStyle: 'long' }).format;
+const SEG = [['heat', HEAT, t.heat], ['cover', COVER, t.cover], ['pressure', PRESSURE, t.pressure], ['ambience', AMBIENCE, t.ambience]] as const;
+const keys = (o: Record<string, string>) => Object.keys(o);
+---
+<Base lang={lang} pageKey="home" route="compte/fiche" title={`${t.title} - My Bubble Beauty`} description={t.description} noindex mainClass="legal">
+<div class="wrap"><article class="fiche">
+<h1>{t.title}</h1>
+{error && <p class="notice notice--error" role="alert">{t.invalid}</p>}
+<p>{t.intro}</p>
+<form class="form sheet" method="post">
+  {SEG.map(([name, o, labels]) => (
+    <fieldset class="seg-group"><legend>{t.q[name]}</legend><div class="seg">
+      {keys(o).map((k) => <label><input type="radio" name={name} value={k} checked={prof.care[name] === k}><span>{(labels as Record<string, string>)[k]}</span></label>)}
+      <label><input type="radio" name={name} value="" checked={!prof.care[name]}><span>{t.none}</span></label>
+    </div></fieldset>
+  ))}
+  <div class="field"><label for="scents">{t.scents}</label><input id="scents" name="scents" maxlength="200" value={prof.care.scents ?? ''}></div>
+  <fieldset class="seg-group"><legend>{t.zones} <span class="hint">{t.zonesHint}</span></legend><div class="seg">
+    {keys(ZONES).map((k) => <label><input type="checkbox" name="zones" value={k} checked={prof.care.zones?.includes(k)}><span>{t.zone[k as keyof typeof t.zone]}</span></label>)}
+  </div></fieldset>
+  <div class="field"><label for="zones_other">{t.zonesOther}</label><input id="zones_other" name="zones_other" maxlength="200" value={prof.care.zones_other ?? ''}></div>
+  <fieldset class="seg-group"><legend>{t.q.touch}</legend><div class="seg">
+    {keys(TOUCH).map((k) => <label><input type="radio" name="touch" value={k} checked={prof.care.touch === k}><span>{t.touch[k as keyof typeof t.touch]}</span></label>)}
+    <label><input type="radio" name="touch" value="" checked={!prof.care.touch}><span>{t.none}</span></label>
+  </div></fieldset>
+
+  <fieldset class="health-box"><legend>{t.healthTitle}</legend>
+    {prof.consent ? <p class="hint">{t.consentDone(day(prof.consentAt!))}</p> : (
+      <div class="check consent"><input id="health_consent" name="health_consent" type="checkbox"><label for="health_consent">{t.consentLabel}</label></div>
+    )}
+    <p class="hint">{t.consentHint}</p>
+    {/* Visible seulement une fois l'accord coché (ou déjà donné) ; le serveur ignore ces champs sans accord */}
+    <div class:list={['health', { 'health--on': prof.consent }]}>
+      <fieldset class="seg-group"><legend>{t.allergies}</legend><div class="seg">
+        {keys(ALLERGIES).map((k) => <label><input type="checkbox" name="allergies" value={k} checked={prof.health?.allergies?.includes(k)}><span>{t.allergy[k as keyof typeof t.allergy]}</span></label>)}
+      </div></fieldset>
+      <div class="field"><label for="allergies_other">{t.allergiesOther}</label><input id="allergies_other" name="allergies_other" maxlength="200" value={prof.health?.allergies_other ?? ''}></div>
+      <fieldset class="seg-group"><legend>{t.skin}</legend><div class="seg">
+        {keys(SKIN).map((k) => <label><input type="checkbox" name="skin" value={k} checked={prof.health?.skin?.includes(k)}><span>{t.skinType[k as keyof typeof t.skinType]}</span></label>)}
+      </div></fieldset>
+      <div class="field"><label for="contra">{t.contra}</label><textarea id="contra" name="contra" rows="3" maxlength="2000">{prof.health?.contra ?? ''}</textarea></div>
+    </div>
+  </fieldset>
+
+  <div class="field"><label for="client_note">{t.note}</label><textarea id="client_note" name="client_note" rows="3" maxlength="500" aria-describedby="note-hint">{prof.clientNote}</textarea><p class="hint" id="note-hint">{t.noteHint}</p></div>
+  <div class="acts">
+    <button class="btn btn--solid" type="submit" name="action" value="save">{t.save}</button>
+    <button class="btn btn--ghost" type="submit" name="action" value="later" formnovalidate>{t.later}</button>
+  </div>
+</form>
+</article></div>
+</Base>
+
+<style>
+  .fiche{max-width:760px}
+  .sheet{display:grid;gap:1.1rem}
+  .seg-group{border:0;margin:0;padding:0;min-width:0}
+  .seg-group legend{font-weight:600;padding:0 0 .5rem}
+  .seg{display:flex;flex-wrap:wrap;gap:.4rem}
+  .seg label{position:relative;display:inline-flex}
+  .seg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+  .seg span{display:inline-flex;align-items:center;min-height:44px;padding:.4rem .9rem;border:1px solid var(--line-soft);border-radius:999px;font-size:.9375rem}
+  .seg input:checked + span{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+  .seg input:focus-visible + span{outline:2px solid var(--link);outline-offset:2px}
+  .health-box{display:grid;gap:.75rem;margin:0;padding:1rem 1.1rem;border:1px solid var(--line-soft);border-radius:14px;min-width:0}
+  .health-box > legend{font-weight:600;padding:0 .3rem}
+  .consent{display:flex;gap:.6rem;align-items:flex-start}
+  .consent input{width:1.25rem;height:1.25rem;margin:.15rem 0 0;flex:none;accent-color:var(--accent)}
+  /* Section santé cachée tant que l'accord n'est pas coché : rien à remplir sans accord */
+  .health{display:none;gap:.9rem}
+  .health--on,.health-box:has(#health_consent:checked) .health{display:grid}
+  .acts{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:.5rem}
+</style>

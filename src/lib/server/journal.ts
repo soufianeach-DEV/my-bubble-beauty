@@ -18,6 +18,7 @@ export function journal(action: string, e: Entry = {}): Promise<void> {
 
 // Libellés de l'écran Journal ; une action absente s'affiche telle quelle
 export const ACTION_LABELS: Record<string, string> = {
+  client_care_profile: 'Fiche de soin remplie par la cliente',
   login_ok: 'Connexion',
   login_failed: 'Connexion refusée',
   login_blocked: "Connexion d'un compte bloqué",

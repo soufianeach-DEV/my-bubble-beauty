@@ -165,6 +165,8 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 <div class="cl-col">
 <section aria-labelledby="h-notes">
 <h2 id="h-notes">Fiche de soin</h2>
+{prof.filledAt && <p class="hint">Remplie par la cliente le {day(prof.filledAt)}. Vous pouvez la corriger ci-dessous.</p>}
+{prof.clientNote && <p class="client-note"><strong>Mot de la cliente :</strong> {prof.clientNote}</p>}
 {/* Cases et boutons segmentés (radio) plutôt que des menus : utilisables au pouce sur téléphone */}
 <form class="form sheet" method="post" action={`${self}#h-notes`}>
   <input type="hidden" name="scope" value="profil">

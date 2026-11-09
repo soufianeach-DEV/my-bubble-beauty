@@ -5,6 +5,7 @@ import { PASSWORD_PEPPER } from 'astro:env/server';
 import { audit, type Result } from './admin.ts';
 import { sql } from './db.ts';
 import { openText, sealText } from './totp.ts';
+import { journal } from './journal.ts';
 
 const opts = <T extends Record<string, string>>(o: T) => o;
 export const ALLERGIES = opts({ fruits_coque: 'Fruits à coque', parfum: 'Parfum', huiles: 'Huiles essentielles', latex: 'Latex', lanoline: 'Lanoline', conservateurs: 'Conservateurs', nickel: 'Nickel', autre: 'Autre' });
@@ -26,9 +27,13 @@ export const openHealth = (blob: Buffer | null): Health | null => {
 };
 
 export async function readProfile(userId: number) {
-  const [u] = await sql<{ care_profile: Care; health_profile: Buffer | null; notes: string; consent: boolean }[]>`
-    SELECT care_profile, health_profile, notes, health_consent_at IS NOT NULL AS consent FROM users WHERE id = ${userId}`;
-  return { care: u?.care_profile ?? {}, health: u?.consent ? openHealth(u.health_profile) ?? {} : null, notes: u?.notes ?? '', consent: !!u?.consent };
+  const [u] = await sql<{ care_profile: Care; health_profile: Buffer | null; notes: string; consent: boolean; consent_at: Date | null; filled_at: Date | null; skipped_at: Date | null; client_note: string }[]>`
+    SELECT care_profile, health_profile, notes, health_consent_at IS NOT NULL AS consent, health_consent_at AS consent_at,
+      care_filled_at AS filled_at, care_skipped_at AS skipped_at, client_note FROM users WHERE id = ${userId}`;
+  return {
+    care: u?.care_profile ?? {}, health: u?.consent ? openHealth(u.health_profile) ?? {} : null, notes: u?.notes ?? '', consent: !!u?.consent,
+    consentAt: u?.consent_at ?? null, filledAt: u?.filled_at ?? null, skippedAt: u?.skipped_at ?? null, clientNote: u?.client_note ?? '',
+  };
 }
 
 // Une valeur parmi les clés connues, sinon rien ; plusieurs valeurs : seulement les clés connues ; texte : une ligne, longueur bornée
@@ -37,15 +42,51 @@ const many = (f: FormData, k: string, o: Record<string, string>) => [...new Set(
 const line = (f: FormData, k: string, max: number) => String(f.get(k) ?? '').replace(/\p{Cc}/gu, ' ').trim().slice(0, max) || undefined;
 const block = (f: FormData, k: string, max: number) => String(f.get(k) ?? '').replace(/\r\n/g, '\n').trim().slice(0, max) || undefined;
 
-export async function saveProfile(actor: number, clientId: number, form: FormData): Promise<Result> {
-  const notes = String(form.get('notes') ?? '').replace(/\r\n/g, '\n');
-  if (notes.length > 4000) return { ok: false, error: 'Notes : 4000 caractères au plus.' };
-  const care: Care = {
+// Lecture du formulaire de fiche (institut et cliente : mêmes champs, mêmes valeurs connues)
+function parseCare(form: FormData): Care {
+  return {
     heat: one(form, 'heat', HEAT), cover: one(form, 'cover', COVER), pressure: one(form, 'pressure', PRESSURE), ambience: one(form, 'ambience', AMBIENCE),
     scents: line(form, 'scents', 200), zones: many(form, 'zones', ZONES), zones_other: line(form, 'zones_other', 200), touch: one(form, 'touch', TOUCH),
   };
+}
+function parseHealth(form: FormData): { health: Health; hasHealth: boolean } {
   const health: Health = { allergies: many(form, 'allergies', ALLERGIES), allergies_other: line(form, 'allergies_other', 200), skin: many(form, 'skin', SKIN), contra: block(form, 'contra', 2000) };
-  const hasHealth = !!(health.allergies?.length || health.allergies_other || health.skin?.length || health.contra);
+  return { health, hasHealth: !!(health.allergies?.length || health.allergies_other || health.skin?.length || health.contra) };
+}
+
+// Fiche remplie par la cliente : l'accord santé se donne sur la même page (case séparée, art. 9 RGPD) ; sans accord, la partie santé
+// est ignorée. Le mot pour l'institut va dans client_note, jamais dans les notes internes de l'équipe.
+export async function saveOwnProfile(userId: number, form: FormData, ip: string): Promise<{ ok: boolean }> {
+  const note = String(form.get('client_note') ?? '').replace(/\r\n/g, '\n').trim();
+  if (note.length > 500) return { ok: false };
+  const care = JSON.parse(JSON.stringify(parseCare(form)));
+  const { health, hasHealth } = parseHealth(form);
+  const give = form.get('health_consent') === 'on';
+  return sql.begin(async (tx) => {
+    const [u] = await tx<{ consent: boolean }[]>`SELECT health_consent_at IS NOT NULL AS consent FROM users WHERE id = ${userId} AND role IS NULL FOR UPDATE`;
+    if (!u) return { ok: false };
+    if (give && !u.consent) {
+      await tx`UPDATE users SET health_consent_at = now() WHERE id = ${userId}`;
+      journal('consent_given', { actor: userId, client: userId, ip });
+    }
+    const consent = u.consent || give;
+    await tx`UPDATE users SET care_profile = ${tx.json(care)}, client_note = ${note}, care_filled_at = now(), care_skipped_at = NULL,
+      health_profile = CASE WHEN ${consent} AND health_consent_at IS NOT NULL THEN ${hasHealth ? sealText(PASSWORD_PEPPER, HEALTH, JSON.stringify(health)) : null}::bytea ELSE health_profile END,
+      updated_at = now() WHERE id = ${userId} AND role IS NULL`;
+    // Rien du contenu au journal (données de santé possibles)
+    journal('client_care_profile', { actor: userId, client: userId, details: { health: consent && hasHealth, zones: care.zones?.length ?? 0 } });
+    return { ok: true };
+  });
+}
+
+// « Plus tard » : la cliente n'est plus renvoyée vers sa fiche ; le rappel reste sur Mon compte
+export const skipOwnProfile = (userId: number) => sql`UPDATE users SET care_skipped_at = now() WHERE id = ${userId} AND care_skipped_at IS NULL`;
+
+export async function saveProfile(actor: number, clientId: number, form: FormData): Promise<Result> {
+  const notes = String(form.get('notes') ?? '').replace(/\r\n/g, '\n');
+  if (notes.length > 4000) return { ok: false, error: 'Notes : 4000 caractères au plus.' };
+  const care = parseCare(form);
+  const { health, hasHealth } = parseHealth(form);
   const [u] = await sql<{ consent: boolean }[]>`SELECT health_consent_at IS NOT NULL AS consent FROM users WHERE id = ${clientId} AND role IS NULL`;
   if (!u) return { ok: false, error: 'Cliente introuvable.' };
   if (hasHealth && !u.consent) return { ok: false, error: "Sans l'accord de la cliente pour ses données de santé, allergies, type de peau et contre-indications ne peuvent pas être notés." };

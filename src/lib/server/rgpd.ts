@@ -115,7 +115,7 @@ export async function setConsent(userId: number, give: boolean, ip: string) {
 // Accès et portabilité (art. 15 et 20) : tout ce que le site garde sur la cliente, notes de l'institut comprises
 export async function exportData(userId: number, ip: string) {
   const [[account], bookings, sessions, events, linked, consents, loyalty, gifts] = await Promise.all([
-    sql`SELECT email, name, phone, locale, created_at, email_verified_at, health_consent_at, notes AS institute_notes, birth_date::text, medical_history, care_profile, health_profile FROM users WHERE id = ${userId}`,
+    sql`SELECT email, name, phone, locale, created_at, email_verified_at, health_consent_at, notes AS institute_notes, client_note, care_filled_at, birth_date::text, medical_history, care_profile, health_profile FROM users WHERE id = ${userId}`,
     sql`SELECT s.name_fr AS service, b.starts_at, b.ends_at, b.status, b.no_show, b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents,
           p.code AS promo_code, b.created_at, b.cancelled_at, b.moved_at, b.zone, pr.name AS practitioner
         FROM bookings b JOIN services s ON s.id = b.service_id LEFT JOIN promo_codes p ON p.id = b.promo_code_id
