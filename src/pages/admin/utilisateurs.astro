@@ -41,7 +41,7 @@ const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', date
 
 <section aria-labelledby="h-add">
   <h2 id="h-add">Ajouter un admin ou un gestionnaire</h2>
-  <p class="hint">La personne crée d'abord son compte sur le site et confirme son adresse. Admin : tout l'espace. Gestionnaire : accueil, agenda, rendez-vous, fiches clientes (notes comprises) et prestations, sans horaires, codes promo, journal, métriques ni utilisateurs.</p>
+  <p class="hint">La personne crée d'abord son compte sur le site et confirme son adresse. Admin : tout l'espace. Gestionnaire : accueil, agenda, rendez-vous, fiches clientes (notes comprises), prestations et fermetures, sans horaires d'ouverture, codes promo, journal, métriques ni utilisateurs.</p>
   <form class="form add" method="post">
     <input type="hidden" name="action" value="grant">
     <div class="field grow"><label for="email">Adresse e-mail du compte</label><input id="email" name="email" type="email" value={draft.email} maxlength="254" autocomplete="off" required></div>
