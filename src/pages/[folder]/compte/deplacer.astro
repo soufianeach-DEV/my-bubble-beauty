@@ -4,6 +4,7 @@
 export const prerender = false;
 import { z } from 'astro/zod';
 import Base from '../../../layouts/Base.astro';
+import DayPicker from '../../../components/DayPicker.astro';
 import '../../../styles/forms.css';
 import { COMPTE } from '../../../data/i18n/compte.ts';
 import { RESERVER } from '../../../data/i18n/reserver';
@@ -60,11 +61,7 @@ const link = (x: string) => `${self}?id=${b?.id}&jour=${x}`;
 {error && <p class="notice notice--error" role="alert">{error}</p>}
 <p><strong>{tm.current}</strong>{b.service}, {when(b.starts_at, lang)}</p>
 <p>{tm.intro}</p>
-<form class="form" method="get" action={self}>
-<input type="hidden" name="id" value={b.id}>
-<div class="field"><label for="jour">{L.day}</label><input type="date" id="jour" name="jour" value={day} min={today} max={lastDay} required></div>
-<button class="btn btn--ghost" type="submit">{L.showSlots}</button>
-</form>
+<DayPicker lang={lang} day={day} today={today} lastDay={lastDay} label={L.day} href={(d) => `${self}?id=${b.id}&jour=${d}`} />
 <h2 id="h-slots">{L.slotsOf(dayLabel(day))}</h2>
 {list.length ? (
   <form method="post" action={self} aria-labelledby="h-slots">

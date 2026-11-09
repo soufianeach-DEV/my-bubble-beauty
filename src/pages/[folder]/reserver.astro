@@ -3,6 +3,7 @@
 // Aucun montant ne vient du formulaire : le devis et la réservation relisent tout en base à chaque POST.
 import { z } from 'astro/zod';
 import Base from '../../layouts/Base.astro';
+import DayPicker from '../../components/DayPicker.astro';
 import '../../styles/forms.css';
 import { CONTACT, FOLDER, langOfFolder, pagePath, t } from '../../lib/site';
 import { RESERVER } from '../../data/i18n/reserver';
@@ -168,11 +169,7 @@ const summary = error ?? promoMsg;
 <p class="eyebrow">{L.step(2)}</p>
 <h2 id="h-step">{L.chooseDay}</h2>
 <p><strong>{svc.name}</strong>, {L.minutes(svc.duration_min)}, {euros(svc.price_cents, lang)}. <a href={base}>{L.change}</a></p>
-<form class="form" method="get" action={base}>
-<input type="hidden" name="service" value={svc.id}>
-<div class="field"><label for="jour">{L.day}</label><input type="date" id="jour" name="jour" value={day} min={today} max={lastDay} required></div>
-<button class="btn btn--ghost" type="submit">{L.showSlots}</button>
-</form>
+<DayPicker lang={lang} day={day} today={today} lastDay={lastDay} label={L.day} href={(d) => `${base}?service=${svc.id}&jour=${d}`} />
 <h3 id="h-slots">{L.slotsOf(dayLabel(day))}</h3>
 {list.length ? (
   <form method="post" action={base} aria-labelledby="h-slots">

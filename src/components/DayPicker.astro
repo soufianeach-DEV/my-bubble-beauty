@@ -1,0 +1,78 @@
+---
+// Calendrier du mois, rendu par le serveur (aucun JS, CSP stricte) : remplace le champ date natif de la réservation et du déplacement.
+// Chaque jour ouvert est un lien vers la même page avec ?jour= ; jours fermés (aucune plage d'ouverture ce jour de semaine),
+// passés ou au-delà de la limite affichés grisés, sans lien. Les fermetures ponctuelles restent signalées par la liste des créneaux.
+import { sql } from '../lib/server/db.ts';
+import type { Lang } from '../lib/site';
+
+interface Props {
+  lang: Lang;
+  /** Jour choisi, AAAA-MM-JJ */
+  day: string;
+  today: string;
+  lastDay: string;
+  /** Lien vers un jour donné */
+  href: (day: string) => string;
+  label: string;
+}
+const { lang, day, today, lastDay, href, label } = Astro.props;
+const locale = { fr: 'fr-BE', nl: 'nl-BE', en: 'en-GB' }[lang];
+// Jours de semaine ISO (lundi = 1) qui ont au moins une plage d'ouverture
+const open = new Set((await sql<{ weekday: number }[]>`SELECT DISTINCT weekday FROM opening_hours`).map((r) => Number(r.weekday)));
+
+const utc = (d: string) => new Date(`${d}T12:00:00Z`);
+const iso = (d: Date) => d.toISOString().slice(0, 10);
+const month = day.slice(0, 7);
+const first = utc(`${month}-01`);
+const lead = (first.getUTCDay() + 6) % 7; // cases vides avant le 1er (semaine commençant le lundi)
+const count = new Date(Date.UTC(first.getUTCFullYear(), first.getUTCMonth() + 1, 0)).getUTCDate();
+const cells = Array.from({ length: count }, (_, i) => {
+  const d = iso(new Date(Date.UTC(first.getUTCFullYear(), first.getUTCMonth(), i + 1, 12)));
+  const wd = ((utc(d).getUTCDay() + 6) % 7) + 1;
+  return { d, n: i + 1, ok: d >= today && d <= lastDay && open.has(wd) };
+});
+const monthName = (d: Date) => new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(d);
+const fullDay = (d: string) => new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' }).format(utc(d));
+// En-têtes lundi → dimanche dans la langue de la page (5 janvier 2026 = un lundi)
+const heads = Array.from({ length: 7 }, (_, i) => new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: 'UTC' }).format(utc(`2026-01-${String(5 + i).padStart(2, '0')}`)));
+// Mois voisins : premier jour réservable du mois, sinon pas de lien
+const prevMonth = new Date(Date.UTC(first.getUTCFullYear(), first.getUTCMonth() - 1, 1, 12));
+const nextMonth = new Date(Date.UTC(first.getUTCFullYear(), first.getUTCMonth() + 1, 1, 12));
+const target = (m: Date) => {
+  const start = iso(m) < today ? today : iso(m);
+  return start.slice(0, 7) === iso(m).slice(0, 7) && start <= lastDay ? start : null;
+};
+const prev = month > today.slice(0, 7) ? target(prevMonth) : null;
+const next = target(nextMonth);
+---
+<nav class="daypick" aria-label={label}>
+<div class="dp-head">
+  {prev ? <a class="dp-nav" href={href(prev)} aria-label={monthName(prevMonth)}>‹</a> : <span class="dp-nav" aria-hidden="true"></span>}
+  <p class="dp-month">{monthName(first)}</p>
+  {next ? <a class="dp-nav" href={href(next)} aria-label={monthName(nextMonth)}>›</a> : <span class="dp-nav" aria-hidden="true"></span>}
+</div>
+<ol class="dp-grid" role="list">
+  {heads.map((h) => <li class="dp-wd" aria-hidden="true">{h}</li>)}
+  {Array.from({ length: lead }, () => <li aria-hidden="true"></li>)}
+  {cells.map((c) => (
+    <li>{c.ok
+      ? <a class:list={['dp-day', { 'dp-today': c.d === today }]} href={href(c.d)} aria-current={c.d === day ? 'date' : undefined} aria-label={fullDay(c.d)}>{c.n}</a>
+      : <span class="dp-day dp-off" aria-hidden="true">{c.n}</span>}</li>
+  ))}
+</ol>
+</nav>
+
+<style>
+.daypick{max-width:22rem;margin:0 0 1.25rem;padding:.75rem;border:1px solid var(--line-soft);border-radius:16px;background:var(--bg)}
+.dp-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.4rem}
+.dp-month{margin:0;font-weight:600;text-transform:capitalize}
+.dp-nav{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;font-size:1.4rem;line-height:1;text-decoration:none;color:var(--text)}
+a.dp-nav:hover,a.dp-nav:focus-visible{background:var(--line-soft)}
+.dp-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(7,1fr);gap:.2rem;text-align:center}
+.dp-wd{font-size:.75rem;color:var(--text-soft);padding:.2rem 0;text-transform:capitalize}
+.dp-day{display:grid;place-items:center;aspect-ratio:1;min-height:40px;border-radius:999px;text-decoration:none;color:var(--text);font-variant-numeric:tabular-nums}
+a.dp-day:hover,a.dp-day:focus-visible{background:var(--line-soft)}
+.dp-today{box-shadow:inset 0 0 0 1px var(--accent)}
+.dp-day[aria-current="date"]{background:var(--accent);color:var(--on-accent,#2a1d1a);font-weight:600}
+.dp-off{color:var(--text-soft);opacity:.45}
+</style>
