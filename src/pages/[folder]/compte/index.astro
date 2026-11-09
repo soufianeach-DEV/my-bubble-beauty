@@ -4,6 +4,7 @@
 export const prerender = false;
 import { z } from 'astro/zod';
 import Base from '../../../layouts/Base.astro';
+import Icon from '../../../components/Icon.astro';
 import PasswordField from './_password-field.astro';
 import '../../../styles/forms.css';
 import { COMPTE } from '../../../data/i18n/compte.ts';
@@ -16,6 +17,7 @@ import { closeSession, listSessions } from '../../../lib/server/session.ts';
 import { deleteAccount, eraseNow, exportData, GRACE_DAYS, setConsent } from '../../../lib/server/rgpd.ts';
 import { FORMS, listConsents, pendingConsents } from '../../../lib/server/consentements.ts';
 import { loyaltyCard } from '../../../lib/server/fidelite.ts';
+import { clientGifts } from '../../../lib/server/cadeaux.ts';
 import { readProfile } from '../../../lib/server/profil.ts';
 import { FICHE } from '../../../data/i18n/fiche.ts';
 
@@ -51,10 +53,15 @@ let cancelled: { id: number; refunded: boolean } | null = null;
 // Compte supprimé ou effacé pendant cette requête : la page ne montre plus que ce message
 let finished: string | null = null;
 let consent: Date | null = user.healthConsent;
+// Pages rares ouvertes depuis le menu profil (?p=…) ; après un envoi, la page de l'action reste affichée
+const PANEL: Record<string, 'securite' | 'donnees'> = { password: 'securite', others: 'securite', consent: 'donnees', delete: 'donnees' };
+const asked = Astro.url.searchParams.get('p') ?? '';
+let panel: 'securite' | 'donnees' | null = asked === 'securite' || asked === 'donnees' ? asked : null;
 if (Astro.request.method === 'POST') {
   const form = await readForm(Astro.request, ACTION);
   const f = form.data;
   bad = form.bad;
+  panel = PANEL[form.raw.action ?? ''] ?? null;
   if (!f) {
     notice = { text: tx.invalid, error: true };
     if (form.raw.action === 'profile') profile = { name: form.raw.name ?? '', phone: form.raw.phone ?? '' };
@@ -117,11 +124,13 @@ if (Astro.request.method === 'POST') {
   else if (Astro.url.searchParams.get('fiche') === 'ok') notice = { text: FICHE[lang].saved };
 }
 
-const [bookings, sessions, toSign, consents] = finished ? [[], [], [], []] : await Promise.all([clientBookings(user.id, lang), listSessions(user.id, session.hash), pendingConsents(user.id), listConsents(user.id)]);
-const card = finished || user.role ? null : await loyaltyCard(user.id);
+const [bookings, sessions, toSign, consents, allGifts] = finished ? [[], [], [], [], []] : await Promise.all([clientBookings(user.id, lang), listSessions(user.id, session.hash), pendingConsents(user.id), listConsents(user.id), clientGifts(user.id)]);
+const card = finished ? null : await loyaltyCard(user.id);
+// Bons encore utilisables : valables ou déjà posés sur un rendez-vous à venir
+const gifts = allGifts.flatMap((g) => (g.state === 'valide' || g.state === 'reserve' ? [{ ...g, state: g.state }] : []));
 // Fiche de soin : proposée une fois à la première visite (ni remplie ni reportée), puis rappel discret tant qu'elle n'est pas remplie
 const tf = FICHE[lang];
-const fiche = finished || user.role ? null : await readProfile(user.id);
+const fiche = finished ? null : await readProfile(user.id);
 if (fiche && Astro.request.method === 'GET' && [...Astro.url.searchParams.keys()].length === 0 && !fiche.filledAt && !fiche.skippedAt) return Astro.redirect(`/${d}/compte/fiche`);
 const tl = tx.loyalty;
 if (cancelled) {
@@ -135,6 +144,8 @@ const invalid = (k: string) => (bad.has(k) ? 'true' : undefined);
 const price = (b: (typeof bookings)[number]) => euros(b.price_cents - b.discount_cents, lang);
 // Nom saisi en entier : le champ « Nom et prénom » ne dit pas dans quel ordre ; sans nom, l'en-tête garde le titre de la page
 const firstName = profile.name.trim().slice(0, 60);
+const initials = (firstName ? firstName.split(/\s+/).slice(0, 2).map((w) => w[0]) : [user.email[0]]).join('').toUpperCase();
+const tm = ta.menu;
 const histState = (b: (typeof bookings)[number]) =>
   [b.no_show ? ta.noShow : b.status === 'confirmed' ? ta.status.past : ta.status[b.status], b.refunded_cents > 0 ? `${ta.refundedAmount}${euros(b.refunded_cents, lang)}` : ''].filter(Boolean).join(' · ');
 // Jauges de la carte : plafonnées à l'objectif (la carte repart à zéro une fois le soin offert pris)
@@ -149,13 +160,23 @@ const gauges = card
 <Base lang={lang} pageKey="home" route="compte" title={`${ta.title} - My Bubble Beauty`} description={ta.description} noindex mainClass="legal compte-dash">
 <Fragment slot="head"><script is:inline src={`/assets/js/password.js?v=${JS_VERSION}`} defer></script></Fragment>
 <div class="wrap"><article class="dash">
-{/* En-tête sur une ligne : salutation à gauche, actions à droite ; « Mon compte » reste dans le h1 pour les lecteurs d'écran */}
+{/* En-tête sur une ligne : salutation à gauche ; réservation et menu profil à droite. « Mon compte » reste dans le h1 pour les lecteurs d'écran */}
 <header class="dash-head">
 <h1><span class="visually-hidden">{ta.title} : </span>{firstName ? `${ta.hello} ${firstName}` : ta.title}</h1>
 {!finished && <div class="actions">
 <a class="btn btn--solid" href={`/${d}/reserver`}>{ta.book}</a>
-{user.role && <a class="btn btn--ghost" href="/admin">{ta.admin}</a>}
-<form class="inline-form" method="post" action={self}><input type="hidden" name="action" value="logout"><button class="btn btn--ghost" type="submit">{ta.logout}</button></form>
+{/* Menu profil : details refermé par main.js (clic ailleurs, Échap, lien suivi) ; les blocs rares y vivent sur leur propre page */}
+<details class="pmenu">
+<summary><span class="pm-avatar" aria-hidden="true">{initials}</span><span class="pm-who"><strong>{ta.title}</strong></span><span class="visually-hidden"> : {tm.label}</span><Icon name="chevron" /></summary>
+<ul class="pm-list">
+<li><a href={`${self}#h-profile`}>{tm.profile}</a></li>
+{fiche && <li><a href={`${self}/fiche`}>{tm.care}</a></li>}
+<li><a href={`${self}?p=securite#h-password`}>{tm.password}</a></li>
+<li><a href={`${self}?p=securite#h-sessions`}>{tm.devices}</a></li>
+<li><a href={`${self}?p=donnees`}>{tm.data}</a></li>
+<li><form method="post" action={self}><input type="hidden" name="action" value="logout"><button class="pm-item" type="submit">{ta.logout}</button></form></li>
+</ul>
+</details>
 </div>}
 </header>
 {finished ? <p class="notice" role="status">{finished} <a href={`/${d}/index.html`}>{ta.home}</a></p> : <>
@@ -165,7 +186,78 @@ const gauges = card
 </p>
 )}
 
-{fiche && !fiche.filledAt && <p class="notice">{tf.reminder} <a href={`/${d}/compte/fiche`}>{tf.reminderLink}</a></p>}
+{panel ? <>
+<p class="back"><a href={self}>{ta.back}</a></p>
+{panel === 'securite' ? (
+<div class="dash-pair">
+<section aria-labelledby="h-password">
+<h2 id="h-password">{ta.password}</h2>
+<form class="form" method="post" action={self}>
+<input type="hidden" name="action" value="password">
+<PasswordField id="current" name="current" label={ta.current} lang={lang} invalid={bad.has('current')} />
+<PasswordField id="next" name="next" label={ta.next} lang={lang} isNew invalid={bad.has('next')} />
+<PasswordField id="next2" name="next2" label={ta.next2} lang={lang} match="next" mismatch={tx.register.passwordMismatch} invalid={bad.has('next2')} />
+<button class="btn btn--solid" type="submit">{ta.changeSubmit}</button>
+</form>
+</section>
+
+<section aria-labelledby="h-sessions">
+<h2 id="h-sessions">{ta.sessions}</h2>
+<div class="table-wrap"><table class="data-table">
+<thead><tr>{ta.sessionCols.map((c) => <th scope="col">{c}</th>)}</tr></thead>
+<tbody>{sessions.map((s) => (
+<tr>
+<td>{device(s.user_agent) || ta.unknownDevice}{s.current && <Fragment> ({ta.thisDevice})</Fragment>}</td>
+<td>{when(s.created_at, lang, 'medium')}</td>
+<td>{when(s.last_seen_at, lang, 'medium')}</td>
+</tr>
+))}</tbody>
+</table></div>
+{sessions.length > 1 && (
+<form class="form" method="post" action={self}>
+<input type="hidden" name="action" value="others">
+<p class="hint">{ta.othersHint}</p>
+<PasswordField id="others-password" name="password" label={tx.pw.label} lang={lang} invalid={bad.has('password')} />
+<button class="btn btn--ghost" type="submit">{ta.others}</button>
+</form>
+)}
+</section>
+</div>
+) : (
+<div class="dash-pair">
+<section aria-labelledby="h-data">
+<h2 id="h-data">{ta.data}</h2>
+<p class="hint">{ta.exportHint}</p>
+<form class="inline-form" method="post" action={self}><input type="hidden" name="action" value="export"><button class="btn btn--ghost" type="submit">{ta.export}</button></form>
+<h3>{ta.consentTitle}</h3>
+<p>{consent ? ta.consentOn(dayOnly(consent)) : ta.consentOff}</p>
+{!consent && <p class="hint">{ta.consentText}</p>}
+<form class="inline-form" method="post" action={self}>
+<input type="hidden" name="action" value="consent"><input type="hidden" name="give" value={consent ? 'off' : 'on'}>
+<button class="btn btn--ghost" type="submit">{consent ? ta.consentWithdraw : ta.consentGive}</button>
+</form>
+{consents.length > 0 && <><h3>{tx.consent.signedTitle}</h3>
+<ul class="signed">{consents.map((c) => <li><span lang="fr">{FORMS[c.kind].title}</span>, {tx.consent.signedOn(dayOnly(c.signed_at))}</li>)}</ul></>}
+</section>
+
+<section aria-labelledby="h-delete">
+<h2 id="h-delete">{ta.deleteTitle}</h2>
+<details class="cancel" open={bad.has('delete-password') || undefined}><summary>{ta.deleteTitle}</summary>
+<form class="form" method="post" action={self}>
+<input type="hidden" name="action" value="delete">
+<p class="hint">{ta.deleteHint}</p>
+<p class="hint">{ta.deletePassword}</p>
+<PasswordField id="delete-password" name="password" label={tx.pw.label} lang={lang} invalid={bad.has('delete-password')} />
+<div class="actions">
+<button class="btn btn--ghost" type="submit" name="mode" value="soft">{ta.deleteSoft}</button>
+<button class="btn btn--ghost" type="submit" name="mode" value="now">{ta.deleteNow}</button>
+</div>
+</form>
+</details>
+</section>
+</div>
+)}
+</> : (
 <div class="dash-grid">
 <div class="dash-col">
 {toSign.length > 0 && <section class="consents" aria-labelledby="h-sign">
@@ -200,11 +292,11 @@ const gauges = card
 <h2 id="h-history">{ta.history}</h2>
 {history.length ? (<>
 <ul class="dense">{history.slice(0, 5).map((b) => (
-<li><strong>{when(b.starts_at, lang)}</strong><span>{b.service} · {price(b)}</span><span class="h-state">{histState(b)}</span></li>
+<li><strong>{when(b.starts_at, lang, 'medium')}</strong><span>{b.service} · {price(b)}</span><span class="h-state">{histState(b)}</span></li>
 ))}</ul>
 {history.length > 5 && <details class="more"><summary>{ta.showAll(history.length - 5)}</summary>
 <ul class="dense">{history.slice(5).map((b) => (
-<li><strong>{when(b.starts_at, lang)}</strong><span>{b.service} · {price(b)}</span><span class="h-state">{histState(b)}</span></li>
+<li><strong>{when(b.starts_at, lang, 'medium')}</strong><span>{b.service} · {price(b)}</span><span class="h-state">{histState(b)}</span></li>
 ))}</ul>
 </details>}
 </>) : <p>{ta.noHistory}</p>}
@@ -223,14 +315,25 @@ const gauges = card
 <p class="hint">{tl.minNote(card.rules.min_euros)}</p>
 </section>}
 
-{consents.length > 0 && <section aria-labelledby="h-signed"><h2 id="h-signed">{tx.consent.signedTitle}</h2>
-<ul class="signed">{consents.map((c) => <li><span lang="fr">{FORMS[c.kind].title}</span>, {tx.consent.signedOn(dayOnly(c.signed_at))}</li>)}</ul></section>}
+{gifts.length > 0 && <section aria-labelledby="h-gifts">
+<h2 id="h-gifts">{ta.gifts}</h2>
+<ul class="dense">{gifts.map((g) => (
+<li><strong>{g.service}</strong><span>{g.code} · {ta.giftUntil(dayOnly(new Date(`${g.expires_on}T12:00:00Z`)))}</span><span class="h-state">{ta.giftState[g.state]}</span></li>
+))}</ul>
+</section>}
+</div>
+
+<div class="dash-col">
+{fiche && <section aria-labelledby="h-care">
+<h2 id="h-care">{ta.care}</h2>
+{fiche.filledAt ? <p>{ta.careDone(dayOnly(fiche.filledAt))}</p> : <p>{tf.reminder}</p>}
+<p><a class="btn btn--ghost" href={`/${d}/compte/fiche`}>{fiche.filledAt ? tf.edit : tf.reminderLink}</a></p>
+</section>}
 
 <section aria-labelledby="h-profile">
 <h2 id="h-profile">{ta.profile}</h2>
 <p><strong>{tx.email}</strong><br>{user.email}</p>
 <p class="hint">{ta.emailFixed} <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>.</p>
-{fiche && <p><a class="btn btn--ghost" href={`/${d}/compte/fiche`}>{tf.edit}</a></p>}
 <form class="form" method="post" action={self}>
 <input type="hidden" name="action" value="profile">
 <div class="field">
@@ -244,96 +347,58 @@ const gauges = card
 <button class="btn btn--solid" type="submit">{ta.save}</button>
 </form>
 </section>
-
-<section aria-labelledby="h-password">
-<h2 id="h-password">{ta.password}</h2>
-<form class="form" method="post" action={self}>
-<input type="hidden" name="action" value="password">
-<PasswordField id="current" name="current" label={ta.current} lang={lang} invalid={bad.has('current')} />
-<PasswordField id="next" name="next" label={ta.next} lang={lang} isNew invalid={bad.has('next')} />
-<PasswordField id="next2" name="next2" label={ta.next2} lang={lang} match="next" mismatch={tx.register.passwordMismatch} invalid={bad.has('next2')} />
-<button class="btn btn--solid" type="submit">{ta.changeSubmit}</button>
-</form>
-</section>
-
-<section aria-labelledby="h-sessions">
-<h2 id="h-sessions">{ta.sessions}</h2>
-<div class="table-wrap"><table class="data-table">
-<thead><tr>{ta.sessionCols.map((c) => <th scope="col">{c}</th>)}</tr></thead>
-<tbody>{sessions.map((s) => (
-<tr>
-<td>{device(s.user_agent) || ta.unknownDevice}{s.current && <Fragment> ({ta.thisDevice})</Fragment>}</td>
-<td>{when(s.created_at, lang, 'medium')}</td>
-<td>{when(s.last_seen_at, lang, 'medium')}</td>
-</tr>
-))}</tbody>
-</table></div>
-{sessions.length > 1 && (
-<form class="form" method="post" action={self}>
-<input type="hidden" name="action" value="others">
-<p class="hint">{ta.othersHint}</p>
-<PasswordField id="others-password" name="password" label={tx.pw.label} lang={lang} invalid={bad.has('password')} />
-<button class="btn btn--ghost" type="submit">{ta.others}</button>
-</form>
+</div>
+</div>
 )}
-</section>
-
-<section aria-labelledby="h-data">
-<h2 id="h-data">{ta.data}</h2>
-<p class="hint">{ta.exportHint}</p>
-<form class="inline-form" method="post" action={self}><input type="hidden" name="action" value="export"><button class="btn btn--ghost" type="submit">{ta.export}</button></form>
-<h3>{ta.consentTitle}</h3>
-<p>{consent ? ta.consentOn(dayOnly(consent)) : ta.consentOff}</p>
-{!consent && <p class="hint">{ta.consentText}</p>}
-<form class="inline-form" method="post" action={self}>
-<input type="hidden" name="action" value="consent"><input type="hidden" name="give" value={consent ? 'off' : 'on'}>
-<button class="btn btn--ghost" type="submit">{consent ? ta.consentWithdraw : ta.consentGive}</button>
-</form>
-</section>
-
-<section aria-labelledby="h-delete">
-<h2 id="h-delete">{ta.deleteTitle}</h2>
-<details class="cancel"><summary>{ta.deleteTitle}</summary>
-<form class="form" method="post" action={self}>
-<input type="hidden" name="action" value="delete">
-<p class="hint">{ta.deleteHint}</p>
-<p class="hint">{ta.deletePassword}</p>
-<PasswordField id="delete-password" name="password" label={tx.pw.label} lang={lang} invalid={bad.has('delete-password')} />
-<div class="actions">
-<button class="btn btn--ghost" type="submit" name="mode" value="soft">{ta.deleteSoft}</button>
-<button class="btn btn--ghost" type="submit" name="mode" value="now">{ta.deleteNow}</button>
-</div>
-</form>
-</details>
-</section>
-</div>
-</div>
 </>}
 </article></div>
 </Base>
 
 <style>
-/* Comme l'accueil admin : page large sur grand écran, deux colonnes dès 960 px, une seule colonne sur téléphone */
-:global(.compte-dash) .dash{max-width:1280px}
+/* Toute la largeur sur ordinateur (jusqu'à 1600 px) : deux colonnes dès 960 px, trois dès 1440 px, une seule sur téléphone.
+   Marges réduites au-dessus de 600 px : avec cinq rendez-vous, tout tient sans défilement à 1920×1080. */
+@media (min-width:600px){
+  :global(main.legal.compte-dash){padding-block:clamp(1rem,2vw,2rem)}
+  :global(.compte-dash) > .wrap{width:min(100% - 2*var(--gutter),1600px)}
+  :global(.compte-dash) .dash{max-width:none;padding:clamp(1.5rem,2.5vw,3rem)}
+}
 .dash-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.75rem 1.5rem;margin-bottom:1rem}
 .dash-head h1{margin:0;font-size:clamp(1.75rem,3vw,2.4rem);overflow-wrap:anywhere}
-.dash-head .actions{display:flex;flex-wrap:wrap;gap:.5rem;margin:0}
+.dash-head .actions{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem;margin:0}
 .dash-grid{display:grid;gap:0 2.5rem}
 .dash-col{min-width:0}
-.dash-col h2{margin-top:1.5rem}
+.dash-col h2,.dash-pair h2{margin:1.25rem 0 .6rem;font-size:1.45rem}
+.dash-col > section:first-child h2{margin-top:.5rem}
+.dash-pair h3{margin:1.25rem 0 .4rem;font-size:1.1rem}
+/* 960-1439 px : rendez-vous à gauche, fidélité puis profil empilés à droite ; dès 1440 px, une colonne chacun */
 @media (min-width:960px){
-  .dash-grid{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);align-items:start}
+  .dash-grid{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);grid-template-rows:auto 1fr;align-items:start}
+  .dash-grid > .dash-col:first-child{grid-row:1 / span 2}
+  .dash-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 2.5rem;align-items:start}
+  .dash-pair > section > h2{margin-top:.5rem}
 }
+@media (min-width:1440px){
+  .dash-grid{grid-template-columns:minmax(0,1.7fr) minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto;gap:0 3rem}
+  .dash-grid > .dash-col:first-child{grid-row:auto}
+}
+.back{margin:0 0 .5rem}
+.back a{display:inline-flex;align-items:center;min-height:44px;font-weight:500}
+/* Liens du menu vers un titre : il ne passe pas sous l'en-tête collant du site */
+.dash h2{scroll-margin-top:7rem}
+.dash-head .pm-list{min-width:15rem}
+/* Téléphone : avatar seul, la réservation et le menu restent sur une ligne */
+@media (max-width:599px){.dash-head .pm-who{display:none}}
 /* Rendez-vous à venir : infos à gauche, Déplacer et Annuler alignés à droite */
-.bookings{list-style:none;margin:0 0 1rem;padding:0;display:grid;gap:.6rem}
-.bookings li{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem 1rem;border:1px solid var(--line-soft);border-radius:12px;padding:.7rem 1rem;background:var(--bg)}
-.bookings p{margin:0 0 .15rem}
+.bookings{list-style:none;margin:0 0 1rem;padding:0;display:grid;gap:.45rem}
+.bookings li{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem 1rem;border:1px solid var(--line-soft);border-radius:12px;padding:.5rem .9rem;background:var(--bg)}
+.bookings p{margin:0 0 .1rem}
+.bookings p + p{font-size:.9375rem}
 .b-info{min-width:0;flex:1 1 16rem;overflow-wrap:anywhere}
 .b-acts{display:flex;flex-wrap:wrap;align-items:flex-start;gap:.5rem}
 .b-acts .cancel{margin:0}
 /* Passés et annulés : une ligne par rendez-vous, cinq visibles, le reste replié */
 .dense{list-style:none;margin:0;padding:0}
-.dense li{display:flex;flex-wrap:wrap;gap:.15rem .75rem;padding:.5rem 0;border-bottom:1px solid var(--line-soft);font-size:.9375rem;overflow-wrap:anywhere}
+.dense li{display:flex;flex-wrap:wrap;gap:.1rem .75rem;padding:.4rem 0;border-bottom:1px solid var(--line-soft);font-size:.9375rem;overflow-wrap:anywhere}
 .dense .h-state{margin-left:auto;color:var(--text-soft)}
 .more summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:500}
 /* Jauges de fidélité : <progress> natif aux couleurs du thème */
