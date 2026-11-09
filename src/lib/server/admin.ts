@@ -204,7 +204,16 @@ export async function newBooking(userId: number, form: FormData): Promise<Result
   const p = newBookingForm.safeParse(fields(form));
   if (!p.success) return first(p.error);
   const b = p.data;
-  const [{ at }] = await sql<{ at: Date }[]>`SELECT (${b.day}::text::date + ${b.time}::time) AT TIME ZONE 'Europe/Brussels' AS at`;
+  const [{ at, open }] = await sql<{ at: Date; open: boolean }[]>`
+    WITH t AS (SELECT (${b.day}::text::date + ${b.time}::time) AT TIME ZONE 'Europe/Brussels' AS at),
+      len AS (SELECT make_interval(mins => coalesce(duration_min, 0) + buffer_min) AS l FROM services WHERE id = ${b.service})
+    SELECT t.at,
+      -- Dans une plage d'ouverture du jour et hors fermeture : sinon l'admin doit cocher « Ouvrir exceptionnellement »
+      EXISTS (SELECT 1 FROM opening_hours h, len WHERE h.weekday = extract(isodow FROM ${b.day}::text::date)
+        AND ${b.time}::time >= h.opens AND ${b.time}::time + len.l <= h.closes)
+      AND NOT EXISTS (SELECT 1 FROM closures c, len WHERE c.starts_at < t.at + len.l AND c.ends_at > t.at) AS open
+    FROM t`;
+  if (!open && !b.force) return { ok: false, error: "Ce créneau est en dehors des heures d'ouverture (jour fermé, hors plage ou fermeture). Cochez « Ouvrir exceptionnellement » pour l'enregistrer quand même." };
   const r = await createAdminBooking({ serviceId: b.service, startsAt: at, guestName: b.name, guestPhone: b.phone || null });
   if (!r.ok)
     return {
@@ -213,6 +222,6 @@ export async function newBooking(userId: number, form: FormData): Promise<Result
         ? 'Ce créneau chevauche un rendez-vous déjà pris ou un paiement en cours : choisissez une autre heure.'
         : 'Prestation introuvable ou sans durée : complétez sa durée dans Prestations.',
     };
-  audit(userId, 'booking_created', { booking_id: r.id });
+  audit(userId, 'booking_created', { booking_id: r.id, exceptional: !open });
   return { ok: true, id: r.id, day: b.day };
 }

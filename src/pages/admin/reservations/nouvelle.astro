@@ -45,7 +45,13 @@ const groups = byCategory((await listServices()).filter((s) => s.duration_min !=
       <input id="phone" name="phone" type="tel" maxlength="30" autocomplete="off" value={v.phone} aria-describedby="phone-hint">
       <span class="hint" id="phone-hint">Effacé automatiquement 3 ans après le rendez-vous.</span>
     </div>
+    <label class="check"><input type="checkbox" name="force"><span>Ouvrir exceptionnellement (jour fermé ou hors des heures d'ouverture)</span></label>
     <button class="btn btn--solid" type="submit">Enregistrer le rendez-vous</button>
   </form>
 )}
 </Admin>
+
+<style>
+  .check{display:flex;align-items:center;gap:.5rem;min-height:44px}
+  .check input{width:1.25rem;height:1.25rem;margin:0;accent-color:var(--accent)}
+</style>

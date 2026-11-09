@@ -74,8 +74,9 @@ test('agenda, saisie manuelle et code admin', () => {
   assert.deepEqual(agendaForm.safeParse({ action: 'move', id: '4', day: '2026-12-01', time: '10:30' }).data, { action: 'move', id: 4, refund: false, day: '2026-12-01', time: '10:30' });
   assert.ok(!agendaForm.safeParse({ action: 'delete', id: '4' }).success);
   const b = { service: '3', day: '2026-10-25', time: '02:30', name: ' Mme Dupont ', phone: '+32 484 11 83 95' };
-  assert.deepEqual(newBookingForm.safeParse(b).data, { service: 3, day: '2026-10-25', time: '02:30', name: 'Mme Dupont', phone: '+32 484 11 83 95' });
+  assert.deepEqual(newBookingForm.safeParse(b).data, { service: 3, day: '2026-10-25', time: '02:30', name: 'Mme Dupont', phone: '+32 484 11 83 95', force: false });
   assert.equal(newBookingForm.safeParse({ ...b, phone: undefined }).data?.phone, '');
+  assert.equal(newBookingForm.safeParse({ ...b, force: 'on' }).data?.force, true);
   assert.match(err(newBookingForm.safeParse({ ...b, phone: 'javascript:alert(1)' }))!, /Téléphone/);
   assert.match(err(newBookingForm.safeParse({ ...b, name: '' }))!, /Nom/);
   assert.match(err(newBookingForm.safeParse({ ...b, service: '' }))!, /prestation/);

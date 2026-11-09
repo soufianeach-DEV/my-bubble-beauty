@@ -145,6 +145,8 @@ export const newBookingForm = z.object({
     .max(30, 'Téléphone : 30 caractères au plus.')
     .regex(/^[0-9+()./ -]*$/, 'Téléphone : chiffres, espaces et + ( ) . / - seulement.')
     .default(''),
+  // « Ouvrir exceptionnellement » : enregistre un rendez-vous un jour fermé ou hors des plages d'ouverture
+  force: box,
 });
 
 // Code de l'appli d'authentification ; les espaces affichés par certaines applis sont retirés
