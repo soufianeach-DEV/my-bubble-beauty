@@ -2,7 +2,7 @@
 // Toute saisie passe par un schéma de admin-form.ts, toute requête est paramétrée, toute modification est journalisée avec l'admin.
 import { t } from '../site.ts';
 import { agendaForm, bulkServiceForm, deleteBookingForm, closureForm, hoursForm, idForm, newBookingForm, promoForm, serviceForm, toggleForm } from './admin-form.ts';
-import { cancelByAdmin, createAdminBooking, deleteBooking, markRefundedManually, rescheduleByAdmin, setNoShow } from './booking.ts';
+import { cancelByAdmin, createAdminBooking, deleteBooking, markRefundedManually, rescheduleByAdmin, setLate, setNoShow } from './booking.ts';
 import { sql } from './db.ts';
 import { journal } from './journal.ts';
 
@@ -188,6 +188,12 @@ export async function agendaAction(userId: number, form: FormData): Promise<Resu
     if (!b) return { ok: false, error: 'Seul un rendez-vous confirmé et passé peut être marqué.' };
     audit(userId, action === 'no_show' ? 'booking_no_show' : 'booking_attended', { booking_id: id, client_id: b.user_id });
     return { ok: true, id, key: action === 'no_show' ? 'absente' : 'venue' };
+  }
+  if (action === 'late' || action === 'on_time') {
+    const b = await setLate(id, action === 'late' ? (p.data.late as number) : null);
+    if (!b) return { ok: false, error: 'Seul un rendez-vous confirmé, passé et honoré peut porter un retard.' };
+    audit(userId, action === 'late' ? 'booking_late' : 'booking_on_time', { booking_id: id, client_id: b.user_id, ...(action === 'late' ? { minutes: p.data.late } : {}) });
+    return { ok: true, id, key: action === 'late' ? 'retard' : 'aheure' };
   }
   if (action === 'manual_refund') {
     const b = await markRefundedManually(id);

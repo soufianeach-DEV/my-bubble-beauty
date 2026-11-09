@@ -116,13 +116,15 @@ export const promoForm = z
 // Agenda et fiche cliente : day et time ne servent qu'au déplacement
 export const agendaForm = z
   .object({
-    action: z.enum(['cancel', 'refund', 'manual_refund', 'no_show', 'show', 'move'], { error: 'Action inconnue.' }),
+    action: z.enum(['cancel', 'refund', 'manual_refund', 'no_show', 'show', 'move', 'late', 'on_time'], { error: 'Action inconnue.' }),
     id,
+    late: z.union([z.literal(''), z.coerce.number().int('Retard en minutes entières.').min(1, 'Retard de 1 à 240 minutes.').max(240, 'Retard de 1 à 240 minutes.')]).optional(),
     refund: box,
     day: optDay('Nouvelle date invalide.'),
     time: optTime('Nouvelle heure au format HH:MM.'),
   })
-  .refine((a) => a.action !== 'move' || (a.day && a.time), "Pour déplacer, saisissez la nouvelle date et l'heure.");
+  .refine((a) => a.action !== 'move' || (a.day && a.time), "Pour déplacer, saisissez la nouvelle date et l'heure.")
+  .refine((a) => a.action !== 'late' || typeof a.late === 'number', 'Indiquez le retard en minutes (1 à 240).');
 
 // Suppression d'un rendez-vous (admin) : case « Je confirme » exigée, e-mail à la cliente seulement si coché
 export const deleteBookingForm = z.object({ action: z.literal('delete'), id, notify: box, confirm: z.literal('on', { error: 'Cochez la case pour confirmer.' }) });

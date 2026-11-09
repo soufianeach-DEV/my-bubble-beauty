@@ -163,6 +163,12 @@ test('comptes, réservations et sécurité sur une vraie base', { skip: !url && 
       const [p] = await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents)
         VALUES (${other.id}, ${svc.id}, ${new Date(past.getTime() - 86_400_000)}, ${past}, 'confirmed', 5000) RETURNING id`;
       assert.deepEqual(await booking.setNoShow(p.id, true), { user_id: other.id });
+      assert.deepEqual(await booking.setLate(p.id, 15), null, 'pas de retard sur une absence');
+      assert.deepEqual(await booking.setNoShow(p.id, false), { user_id: other.id });
+      assert.deepEqual(await booking.setLate(p.id, 15), { user_id: other.id });
+      await assert.rejects(booking.setLate(p.id, 300), 'retard borné à 240 min');
+      assert.deepEqual(await booking.setNoShow(p.id, true), { user_id: other.id });
+      assert.equal((await sql`SELECT late_minutes FROM bookings WHERE id = ${p.id}`)[0].late_minutes, null, "l'absence efface le retard");
       const soon = new Date(Date.now() + 20 * 3600_000);
       await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, created_at)
         VALUES (${other.id}, ${svc.id}, ${soon}, ${new Date(soon.getTime() + 3600_000)}, 'confirmed', 5000, now() - interval '3 days')`;

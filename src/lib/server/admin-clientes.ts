@@ -51,7 +51,7 @@ export async function listClients(q: string, filter: ClientFilter, page: number)
   return { rows: rows.filter((r) => !isAdminEmail(r.email)).slice(0, PAGE), more: rows.length > PAGE };
 }
 
-export type ClientBooking = { id: number; starts_at: Date; ends_at: Date; service: string; status: string; no_show: boolean; past: boolean; cancel_reason: string | null; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; moved: boolean };
+export type ClientBooking = { id: number; starts_at: Date; ends_at: Date; service: string; status: string; no_show: boolean; late_minutes: number | null; past: boolean; cancel_reason: string | null; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; moved: boolean };
 
 export async function clientDetail(id: number) {
   const [u] = await sql<{ id: number; name: string | null; email: string; phone: string | null; locale: string; created_at: Date; email_verified_at: Date | null; deleted_at: Date | null; blocked_at: Date | null; removed_at: Date | null; health_consent_at: Date | null; notes: string; role: string | null }[]>`
@@ -59,14 +59,15 @@ export async function clientDetail(id: number) {
   if (!u || isAdminEmail(u.email) || u.role) return null;
   const [bookings, [stats], events] = await Promise.all([
     sql<ClientBooking[]>`
-      SELECT b.id, b.starts_at, b.ends_at, s.name_fr AS service, b.status, b.no_show, b.starts_at < now() AS past, b.cancel_reason,
+      SELECT b.id, b.starts_at, b.ends_at, s.name_fr AS service, b.status, b.no_show, b.late_minutes, b.starts_at < now() AS past, b.cancel_reason,
         b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.stripe_payment_intent IS NOT NULL AS paid, b.moved_at IS NOT NULL AS moved
       FROM bookings b JOIN services s ON s.id = b.service_id
       WHERE b.user_id = ${id} AND (b.status <> 'expired' OR b.stripe_payment_intent IS NOT NULL)
       ORDER BY b.starts_at DESC`,
-    sql<{ done: number; no_shows: number; cancelled: number; spent_cents: number }[]>`
+    sql<{ done: number; no_shows: number; lates: number; late_minutes: number; cancelled: number; spent_cents: number }[]>`
       SELECT count(*) FILTER (WHERE status = 'confirmed' AND starts_at < now() AND NOT no_show)::int AS done,
         count(*) FILTER (WHERE no_show)::int AS no_shows,
+        count(*) FILTER (WHERE late_minutes IS NOT NULL)::int AS lates, coalesce(sum(late_minutes), 0)::int AS late_minutes,
         count(*) FILTER (WHERE status = 'cancelled')::int AS cancelled,
         coalesce(sum(price_cents - discount_cents) FILTER (WHERE status = 'confirmed' AND starts_at < now() AND NOT no_show), 0)::int AS spent_cents
       FROM bookings WHERE user_id = ${id}`,

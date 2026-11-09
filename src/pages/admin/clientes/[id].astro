@@ -63,7 +63,7 @@ if (profDraft) {
 const DONE: Record<string, string> = {
   notes: 'Fiche de soin enregistrée.', supprime: 'Rendez-vous supprimé.', sante: 'Date de naissance et antécédents enregistrés.', 'fidelite-remise': 'Remise de fidélité appliquée au rendez-vous.', 'fidelite-offert': 'Soin offert appliqué au rendez-vous : la carte repart à zéro.', seance: 'Séance mise à jour.', block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte réactivé.',
   remove: "Compte supprimé : il n'apparaît plus dans les listes et ne peut plus se connecter. Ses rendez-vous restent.", unremove: 'Compte restauré : la cliente peut de nouveau se connecter.', restore: 'Suppression annulée : le compte est de nouveau actif. Les rendez-vous annulés le restent.',
-  absente: 'Rendez-vous marqué « absente ».', venue: 'Absence retirée.', rendu: 'Acompte noté comme remboursé hors du site.',
+  absente: 'Rendez-vous marqué « absente ».', venue: 'Absence retirée.', retard: 'Retard noté.', aheure: 'Retard retiré.', rendu: 'Acompte noté comme remboursé hors du site.',
 };
 const done = !error && DONE[Astro.url.searchParams.get('ok') ?? ''];
 const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', dateStyle: 'long' }).format;
@@ -95,6 +95,7 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
   <dt>Cliente depuis</dt><dd>{day(u.created_at)}</dd>
   <dt>Rendez-vous honorés</dt><dd>{stats.done}</dd>
   <dt>Absences</dt><dd>{stats.no_shows}</dd>
+  <dt>Retards</dt><dd>{stats.lates}{stats.late_minutes > 0 && ` (${stats.late_minutes} min en tout)`}</dd>
   <dt>Annulations</dt><dd>{stats.cancelled}</dd>
   <dt>Total des soins honorés</dt><dd>{euros(stats.spent_cents)}</dd>
 </dl>
@@ -218,6 +219,7 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
       <td>{b.service}</td>
       <td>
         {b.no_show ? 'Absente' : b.status === 'confirmed' && b.past ? 'Honoré' : STATUS[b.status]}
+        {b.late_minutes && <><br><small>En retard : {b.late_minutes} min</small></>}
         {b.cancel_reason && <><br><small>{REASON[b.cancel_reason]}</small></>}
         {due(b) > 0 && b.status !== 'confirmed' && <><br><small>Acompte à rendre</small></>}
       </td>
@@ -229,6 +231,20 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
             <button class="btn btn--ghost" type="submit" name="action" value={b.no_show ? 'show' : 'no_show'}>{b.no_show ? "Retirer l'absence" : 'Marquer absente'}</button>
           </form>
         )}
+        {b.status === 'confirmed' && b.past && !b.no_show && (b.late_minutes ? (
+          <form class="cell-form" method="post" action={self}>
+            <input type="hidden" name="scope" value="booking"><input type="hidden" name="id" value={b.id}>
+            <button class="btn btn--ghost" type="submit" name="action" value="on_time">Retirer le retard</button>
+          </form>
+        ) : (
+          <details class="cancel"><summary>Arrivée en retard<span class="visually-hidden"> le {fmtDateTime(b.starts_at)}</span></summary>
+            <form class="cell-form" method="post" action={self}>
+              <input type="hidden" name="scope" value="booking"><input type="hidden" name="action" value="late"><input type="hidden" name="id" value={b.id}>
+              <label class="field">Minutes de retard<input type="number" name="late" required min="1" max="240" step="1" inputmode="numeric"></label>
+              <button class="btn btn--ghost" type="submit">Noter le retard</button>
+            </form>
+          </details>
+        ))}
         {b.status !== 'confirmed' && b.status !== 'pending_payment' && due(b) > 0 && (
           <form class="cell-form" method="post" action={self}>
             <input type="hidden" name="scope" value="booking"><input type="hidden" name="id" value={b.id}>

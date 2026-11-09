@@ -39,6 +39,8 @@ const DONE: Record<string, string> = {
   deplace: 'Rendez-vous déplacé. La cliente reçoit un e-mail si elle a un compte.',
   absente: 'Rendez-vous marqué « absente ».',
   venue: 'Absence retirée.',
+  retard: 'Retard noté.',
+  aheure: 'Retard retiré.',
   rendu: 'Acompte noté comme remboursé hors du site.',
 };
 // Le formulaire repart vers l'URL courante : après un refus, le ?ok= du succès précédent ne doit plus s'afficher
@@ -113,6 +115,7 @@ const due = (r: (typeof rows)[number]) => (r.paid ? r.deposit_cents - r.refunded
             </td>
             <td>
               <span class={`badge badge--${r.no_show ? 'alert' : TONE[r.status]}`}>{r.no_show ? 'Absente' : STATUS[r.status]}</span>
+              {r.late_minutes && <><br><small>Arrivée en retard : {r.late_minutes} min</small></>}
               {r.cancel_reason === 'account_deleted' && <><br><small>Compte supprimé par la cliente</small></>}
               {r.status === 'cancelled' && due(r) > 0 && <><br><small>Acompte gardé ou remboursement à relancer</small></>}
               {r.status === 'expired' && <><br><small>Créneau repris : acompte à rendre</small></>}
@@ -156,6 +159,20 @@ const due = (r: (typeof rows)[number]) => (r.paid ? r.deposit_cents - r.refunded
                   <button class="btn btn--ghost" type="submit" name="action" value={r.no_show ? 'show' : 'no_show'}>{r.no_show ? "Retirer l'absence" : 'Marquer absente'}</button>
                 </form>
               )}
+              {r.status === 'confirmed' && r.past && !r.no_show && (r.late_minutes ? (
+                <form class="cell-form" method="post">
+                  <input type="hidden" name="id" value={r.id}>
+                  <button class="btn btn--ghost" type="submit" name="action" value="on_time">Retirer le retard</button>
+                </form>
+              ) : (
+                <details class="cancel"><summary>Arrivée en retard<span class="visually-hidden"> au rendez-vous de {fmtTime(r.starts_at)}</span></summary>
+                  <form class="cell-form" method="post">
+                    <input type="hidden" name="action" value="late"><input type="hidden" name="id" value={r.id}>
+                    <label class="field">Minutes de retard<input type="number" name="late" required min="1" max="240" step="1" inputmode="numeric"></label>
+                    <button class="btn btn--ghost" type="submit">Noter le retard</button>
+                  </form>
+                </details>
+              ))}
               {admin && <Supprimer id={r.id} label={`le rendez-vous de ${fmtTime(r.starts_at)}, ${r.name ?? r.service}`} />}
             </td>
           </tr>
