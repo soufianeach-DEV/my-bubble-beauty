@@ -60,7 +60,10 @@ export async function suiviAction(actor: number, form: FormData): Promise<Result
     const [r] = await sql<{ consent: boolean }[]>`SELECT health_consent_at IS NOT NULL AS consent FROM users WHERE id = ${f.id} AND role IS NULL`;
     if (!r) return { ok: false, error: 'Cliente introuvable.' };
     if (text && !r.consent) return { ok: false, error: "Sans l'accord de la cliente pour ses données de santé, les antécédents ne peuvent pas être notés." };
-    await sql`UPDATE users SET birth_date = ${f.birth_date || null}, medical_history = ${text ? sealText(PASSWORD_PEPPER, HEALTH, text) : null}, updated_at = now() WHERE id = ${f.id}`;
+    // Accord relu dans l'écriture même : un retrait d'accord entre la lecture et l'écriture ne laisse aucun antécédent
+    await sql`UPDATE users SET birth_date = ${f.birth_date || null},
+      medical_history = CASE WHEN health_consent_at IS NOT NULL THEN ${text ? sealText(PASSWORD_PEPPER, HEALTH, text) : null}::bytea END,
+      updated_at = now() WHERE id = ${f.id} AND role IS NULL`;
     audit(actor, 'client_health', { client_id: f.id, length: text.length, birth_date: f.birth_date !== '' });
     return { ok: true, id: f.id, key: 'sante' };
   }
