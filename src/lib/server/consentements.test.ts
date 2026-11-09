@@ -197,6 +197,16 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     assert.equal((await sql`SELECT count(*)::int AS n FROM audit_log`)[0].n, before);
     assert.equal((await deleteAction(f({ action: 'delete', id: String(next2.id), confirm: 'on' }))).ok, false);
 
+    // Soin offert sur un rendez-vous à 200 € : plafonné au prix de l'HydraPure (120 €) ; annulé, l'avantage est rendu
+    const [big] = await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents)
+      VALUES (${fan}, ${wh.id}, ${new Date(soonish.getTime() + 3 * 86_400_000)}, ${new Date(soonish.getTime() + 3 * 86_400_000 + 3_600_000)}, 'confirmed', 20000) RETURNING id`;
+    assert.ok((await apply('free', big.id)).ok);
+    assert.deepEqual({ ...(await sql`SELECT amount_cents, percent FROM loyalty_rewards WHERE booking_id = ${big.id}`)[0] }, { amount_cents: 12000, percent: 60 });
+    const { cancelByAdmin } = await import('./booking.ts');
+    assert.ok((await cancelByAdmin(big.id, false)).ok);
+    assert.equal((await sql`SELECT 1 FROM loyalty_rewards WHERE booking_id = ${big.id}`).length, 0);
+    assert.equal((await fid.loyaltyCard(fan)).free, true, 'rendez-vous annulé : le soin offert redevient disponible');
+
     // Fiche de soin : préférences sans accord santé ; allergies refusées sans accord, chiffrées avec ; alertes ; export lisible
     const prof = await import('./profil.ts');
     const sheet = await mk('fiche');

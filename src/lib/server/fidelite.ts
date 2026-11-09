@@ -69,8 +69,10 @@ export async function applyReward(actor: number, form: FormData): Promise<Result
       SELECT price_cents FROM bookings WHERE id = ${f.booking} AND user_id = ${f.id} AND status = 'confirmed'
         AND starts_at > now() - interval '1 day' AND discount_cents = 0 FOR UPDATE`;
     if (!b) return { error: 'Rendez-vous introuvable ou déjà remisé.' };
-    const percent = f.kind === 'discount' ? card.rules.discount_percent : 100;
-    const amount = Math.round((b.price_cents * percent) / 100);
+    // Soin offert plafonné au prix du soin de la carte (free_value) : choisir un rendez-vous plus cher n'offre pas plus
+    const cap = f.kind === 'free' && card.rules.free_value > 0 ? card.rules.free_value * 100 : Infinity;
+    const amount = Math.min(Math.round((b.price_cents * (f.kind === 'discount' ? card.rules.discount_percent : 100)) / 100), cap);
+    const percent = f.kind === 'discount' ? card.rules.discount_percent : b.price_cents > 0 ? Math.max(1, Math.round((amount * 100) / b.price_cents)) : 100;
     await tx`UPDATE bookings SET discount_cents = ${amount} WHERE id = ${f.booking}`;
     await tx`INSERT INTO loyalty_rewards (user_id, kind, booking_id, percent, amount_cents, sessions, actor_id)
       VALUES (${f.id}, ${f.kind}, ${f.booking}, ${percent}, ${amount}, ${card.sessions}, ${actor})`;

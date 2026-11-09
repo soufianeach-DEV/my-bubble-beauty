@@ -257,6 +257,9 @@ export async function confirmReturn(userId: number, sessionId: unknown): Promise
   }
 }
 
+// Avantage de fidélité porté par un rendez-vous annulé : rendu à la cliente (ses séances comptent de nouveau, la remise redevient disponible)
+const releaseReward = (bookingId: number) => sql`DELETE FROM loyalty_rewards WHERE booking_id = ${bookingId}`;
+
 // Annulation par la cliente : 24 h avant au plus tard, garde atomique (un double clic n'annule ni ne rembourse deux fois)
 export async function cancelByClient(userId: number, bookingId: number): Promise<{ ok: true; refunded: boolean } | { ok: false; error: 'too_late' | 'not_found' }> {
   const [b] = await sql`
@@ -269,6 +272,7 @@ export async function cancelByClient(userId: number, bookingId: number): Promise
     return { ok: false, error: later ? 'too_late' : 'not_found' };
   }
   journal('booking_cancelled', { actor: userId, client: userId, booking: b.id, details: { by: 'client' } });
+  await releaseReward(b.id);
   const paid = b.stripe_payment_intent && b.deposit_cents > 0;
   const refunded = paid ? await refundBooking(b.id, b.stripe_payment_intent, b.deposit_cents) : false;
   notify(b.id, 'cancelled', paid ? b.deposit_cents : 0);
@@ -285,6 +289,7 @@ export async function cancelByAdmin(bookingId: number, refundDeposit: boolean): 
     UPDATE bookings k SET status = 'cancelled', cancelled_at = coalesce(k.cancelled_at, now()), cancel_reason = coalesce(k.cancel_reason, 'admin') FROM old WHERE k.id = old.id
     RETURNING k.id, old.status AS was, k.user_id, k.deposit_cents, k.refunded_cents, k.stripe_session_id, k.stripe_payment_intent`;
   if (!b) return { ok: false };
+  await releaseReward(b.id);
   if (b.was === 'pending_payment' && b.stripe_session_id) expireAtStripe([b.stripe_session_id]);
   const due = b.stripe_payment_intent ? b.deposit_cents - b.refunded_cents : 0;
   const refunded = refundDeposit && due > 0 ? await refundBooking(b.id, b.stripe_payment_intent, due) : false;
