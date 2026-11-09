@@ -38,6 +38,7 @@ export const ACTION_LABELS: Record<string, string> = {
   booking_moved: 'Rendez-vous déplacé',
   totp_ok: 'Code admin accepté',
   totp_failed: 'Code admin refusé',
+  totp_trusted: 'Code admin évité (appareil de confiance)',
   admin_denied: 'Accès admin refusé',
   admin_action: "Action de l'admin",
 };

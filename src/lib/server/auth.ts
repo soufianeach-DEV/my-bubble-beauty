@@ -1,7 +1,7 @@
 // Authentification : argon2id poivré, vérification à temps constant, limites de tentatives, code TOTP de l'admin.
 import { hash, verify } from '@node-rs/argon2';
 import { PASSWORD_PEPPER } from 'astro:env/server';
-import { deviceToken, isDevice } from './cookie.ts';
+import { deviceToken, isDevice, isMfaDevice, mfaToken } from './cookie.ts';
 import { sql } from './db.ts';
 import { journal } from './journal.ts';
 import { log } from './log.ts';
@@ -30,6 +30,11 @@ export type LoginUser = { id: number; email: string; locale: 'fr' | 'nl' | 'en' 
 
 // Valeur du cookie d'appareil pour cette adresse (posé par signIn après une connexion réussie)
 export const deviceCookie = (email: string) => deviceToken(PASSWORD_PEPPER, email);
+
+// Appareil de confiance (code TOTP) : la clé mêle poivre et secret de la gérante, changer l'un des deux oublie tous les appareils
+const mfaKey = `${PASSWORD_PEPPER}\n${ADMIN_TOTP_SECRET}`;
+export const mfaCookie = (who: string) => mfaToken(mfaKey, who);
+export const trustedMfa = (who: string, value: string | null | undefined) => isMfaDevice(mfaKey, who, value);
 
 // Un seul échec visible de l'extérieur : identifiants faux, compte non vérifié ou limite atteinte. L'adresse saisie n'est pas journalisée.
 // device : cookie d'appareil de la requête ; valide pour l'adresse, il dispense du verrou par e-mail, jamais des limites par couple et par IP.

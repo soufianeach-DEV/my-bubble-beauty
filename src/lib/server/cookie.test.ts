@@ -1,6 +1,24 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { COOKIE, DEVICE, DEVICE_COOKIE, SESSION_COOKIE, deviceToken, hashToken, isDevice, newToken, sessionCookie } from './cookie.ts';
+import { COOKIE, DEVICE, DEVICE_COOKIE, MFA, MFA_COOKIE, SESSION_COOKIE, deviceToken, hashToken, isDevice, isMfaDevice, mfaToken, newToken, sessionCookie } from './cookie.ts';
+
+test('appareil de confiance TOTP : __Host-, 30 jours, lié au compte, échéance vérifiée côté serveur', () => {
+  assert.match(MFA_COOKIE, /^__Host-/);
+  assert.deepEqual(MFA, { ...COOKIE, maxAge: 2_592_000 });
+  const key = 'poivre\nsecret', who = '1\nsuper\n\n2026-11-09T10:00:00.000Z', now = Date.UTC(2026, 10, 9);
+  const v = mfaToken(key, who, now);
+  assert.equal(isMfaDevice(key, who, v, now), true);
+  assert.equal(isMfaDevice(key, who, v, now + 29 * 86_400_000), true);
+  assert.equal(isMfaDevice(key, who, v, now + 31 * 86_400_000), false);
+  assert.equal(isMfaDevice(key, '2\nsuper\n\n2026-11-09T10:00:00.000Z', v, now), false);
+  assert.equal(isMfaDevice(key, '1\nsuper\n\n2026-11-10T10:00:00.000Z', v, now), false);
+  assert.equal(isMfaDevice('autre clé', who, v, now), false);
+  // Échéance repoussée à la main : la signature ne correspond plus
+  const [until, mac] = v.split('.');
+  assert.equal(isMfaDevice(key, who, `${Number(until) + 86_400 * 365}.${mac}`, now), false);
+  assert.equal(isMfaDevice(key, who, '', now), false);
+  assert.equal(isMfaDevice(key, who, undefined, now), false);
+});
 import { SESSION_REMEMBER_SECONDS } from './session-limits.mjs';
 
 test('cookie __Host- : Secure, HttpOnly, Path=/, Lax, sans Domain ni expiration', () => {

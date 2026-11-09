@@ -19,8 +19,24 @@ export const DEVICE = { ...COOKIE, maxAge: 365 * 24 * 3600 } as const;
 export const deviceToken = (key: string, email: string) => createHmac('sha256', key).update(email).digest('base64url');
 
 // Comparaison à temps constant : le délai ne dit pas combien de caractères du cookie sont justes
-export function isDevice(key: string, email: string, value: string | null | undefined): boolean {
-  const want = Buffer.from(deviceToken(key, email));
-  const got = Buffer.from(value ?? '');
-  return got.length === want.length && timingSafeEqual(got, want);
+const same = (a: string, b: string) => {
+  const x = Buffer.from(a), y = Buffer.from(b);
+  return x.length === y.length && timingSafeEqual(x, y);
+};
+export const isDevice = (key: string, email: string, value: string | null | undefined) => same(value ?? '', deviceToken(key, email));
+
+// Appareil de confiance de l'équipe : après un code TOTP juste, ce navigateur ne le redemande plus pendant 30 jours.
+// Valeur = « échéance.HMAC(compte, échéance, état du TOTP) » : l'échéance est relue côté serveur, et un changement de rôle,
+// un nouveau secret TOTP ou un autre poivre rend tous les cookies déjà posés invalides. Rien en base.
+export const MFA_COOKIE = '__Host-mb_mfa';
+export const MFA_DAYS = 30;
+export const MFA = { ...COOKIE, maxAge: MFA_DAYS * 24 * 3600 } as const;
+const mfaMac = (key: string, who: string, until: number) => createHmac('sha256', key).update(`mfa\n${who}\n${until}`).digest('base64url');
+export const mfaToken = (key: string, who: string, now = Date.now()) => {
+  const until = Math.floor(now / 1000) + MFA.maxAge;
+  return `${until}.${mfaMac(key, who, until)}`;
+};
+export function isMfaDevice(key: string, who: string, value: string | null | undefined, now = Date.now()): boolean {
+  const m = /^(\d{10})\.([A-Za-z0-9_-]{43})$/.exec(value ?? '');
+  return !!m && Number(m[1]) > now / 1000 && same(m[2], mfaMac(key, who, Number(m[1])));
 }

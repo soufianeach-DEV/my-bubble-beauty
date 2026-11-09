@@ -2,8 +2,8 @@
 // Les pages valident d'abord les champs (Zod : e-mail ≤ 254, nom ≤ 100, téléphone ≤ 30) ; ici, les règles de sécurité.
 import type { AstroCookies } from 'astro';
 import type { Lang } from '../site.ts';
-import { checkAdminCode, clearLoginLimits, deviceCookie, hashPassword, login, newPasswordProblem, verifyPassword, type LoginUser } from './auth.ts';
-import { DEVICE, DEVICE_COOKIE, hashToken, newToken } from './cookie.ts';
+import { checkAdminCode, clearLoginLimits, deviceCookie, hashPassword, login, mfaCookie, newPasswordProblem, trustedMfa, verifyPassword, type LoginUser } from './auth.ts';
+import { DEVICE, DEVICE_COOKIE, MFA, MFA_COOKIE, hashToken, newToken } from './cookie.ts';
 import { sql } from './db.ts';
 import { journal } from './journal.ts';
 import { log } from './log.ts';
@@ -85,9 +85,19 @@ export async function signIn(cookies: AstroCookies, email: string, password: str
   if (!u) return null;
   const [r] = await sql<{ role: string | null }[]>`SELECT role FROM users WHERE id = ${u.id}`;
   const admin = isAdminEmail(u.email) || !!r?.role;
-  await openSession(cookies, u.id, userAgent, false, remember && !admin);
+  // Appareil de confiance : le code TOTP juste d'il y a moins de 30 jours vaut pour cette connexion
+  const trusted = admin && trustedMfa(await mfaWho(u.id), cookies.get(MFA_COOKIE)?.value);
+  await openSession(cookies, u.id, userAgent, trusted, remember && !admin);
   cookies.set(DEVICE_COOKIE, deviceCookie(u.email), DEVICE);
-  return { ...u, mfaRequired: admin };
+  if (trusted) journal('totp_trusted', { actor: u.id, ip });
+  return { ...u, mfaRequired: admin && !trusted };
+}
+
+// Ce que signe le cookie d'appareil de confiance : changer de rôle ou réinitialiser le TOTP (role_at, totp_confirmed_at) l'invalide
+async function mfaWho(userId: number) {
+  const [u] = await sql<{ role: string | null; role_at: Date | null; totp_confirmed_at: Date | null }[]>`
+    SELECT role, role_at, totp_confirmed_at FROM users WHERE id = ${userId}`;
+  return [userId, u?.role, u?.role_at?.toISOString(), u?.totp_confirmed_at?.toISOString()].join('\n');
 }
 
 // Code de l'appli d'authentification (anti-rejeu par totp_last_step) ; la session est tournée et porte mfa_at.
@@ -97,6 +107,7 @@ export async function verifyAdminTotp(cookies: AstroCookies, user: SessionUser, 
   if (!state || state.kind === 'expired' || state.kind === 'relogin' || !(await checkAdminCode(user.id, state.secret, code.trim(), ip))) return false;
   if (state.kind === 'enrol') await confirmTotp(user.id);
   await openSession(cookies, user.id, userAgent, true);
+  cookies.set(MFA_COOKIE, mfaCookie(await mfaWho(user.id)), MFA);
   return true;
 }
 
