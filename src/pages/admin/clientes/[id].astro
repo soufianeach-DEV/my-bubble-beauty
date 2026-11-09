@@ -13,6 +13,7 @@ import { GRACE_DAYS } from '../../../lib/server/rgpd.ts';
 import { FORMS, KINDS, listConsents } from '../../../lib/server/consentements.ts';
 import { suivi, suiviAction } from '../../../lib/server/suivi.ts';
 import { applyReward, loyaltyCard, rewardableBookings } from '../../../lib/server/fidelite.ts';
+import { ALLERGIES, AMBIENCE, alertsOf, COVER, HEAT, PRESSURE, readProfile, saveProfile, SKIN, TOUCH, ZONES } from '../../../lib/server/profil.ts';
 
 const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
@@ -28,20 +29,21 @@ if (Astro.request.method === 'POST') {
   if (!form) return new Response(null, { status: 413 });
   // Les actions sur un rendez-vous passent par l'agenda (mêmes règles et même journal)
   const scope = form.get('scope');
-  const r = form.get('action') === 'delete' ? (manage ? await deleteAction(form) : { ok: false as const, error: "Seule l'admin peut supprimer un rendez-vous." }) : scope === 'booking' ? await agendaAction(me, form) : scope === 'suivi' ? await suiviAction(me, form) : scope === 'fidelite' ? await applyReward(me, form) : await clientAction(me, form, manage);
+  const r = form.get('action') === 'delete' ? (manage ? await deleteAction(form) : { ok: false as const, error: "Seule l'admin peut supprimer un rendez-vous." }) : scope === 'booking' ? await agendaAction(me, form) : scope === 'suivi' ? await suiviAction(me, form) : scope === 'fidelite' ? await applyReward(me, form) : scope === 'profil' ? await saveProfile(me, id, form) : await clientAction(me, form, manage);
   if (r.ok && r.key === 'efface') return Astro.redirect('/admin/clientes?ok=efface', 303);
   if (r.ok) return Astro.redirect(`${self}?ok=${r.key}${r.id !== id && r.key !== 'supprime' ? `#b-${r.id}` : ''}`, 303);
   error = r.error;
-  if (form.get('action') === 'notes') notesDraft = String(form.get('notes') ?? '');
+  if (form.get('action') === 'notes' || form.get('scope') === 'profil') notesDraft = String(form.get('notes') ?? '');
   if (form.get('action') === 'health') historyDraft = String(form.get('medical_history') ?? '').slice(0, 4000);
   Astro.response.status = 400;
 }
 const c = await clientDetail(id);
 if (!c) return new Response(null, { status: 404 });
 const { user: u, bookings, stats, events } = c;
-const [consents, sv, card, rewardable] = await Promise.all([listConsents(u.id), suivi(u.id), loyaltyCard(u.id), rewardableBookings(u.id)]);
+const [consents, sv, card, rewardable, prof] = await Promise.all([listConsents(u.id), suivi(u.id), loyaltyCard(u.id), rewardableBookings(u.id), readProfile(u.id)]);
+const careAlerts = alertsOf(prof.care, prof.health);
 const DONE: Record<string, string> = {
-  notes: 'Notes enregistrées.', supprime: 'Rendez-vous supprimé.', sante: 'Date de naissance et antécédents enregistrés.', 'fidelite-remise': 'Remise de fidélité appliquée au rendez-vous.', 'fidelite-offert': 'Soin offert appliqué au rendez-vous : la carte repart à zéro.', seance: 'Séance mise à jour.', block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte réactivé.',
+  notes: 'Fiche de soin enregistrée.', supprime: 'Rendez-vous supprimé.', sante: 'Date de naissance et antécédents enregistrés.', 'fidelite-remise': 'Remise de fidélité appliquée au rendez-vous.', 'fidelite-offert': 'Soin offert appliqué au rendez-vous : la carte repart à zéro.', seance: 'Séance mise à jour.', block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte réactivé.',
   remove: "Compte supprimé : il n'apparaît plus dans les listes et ne peut plus se connecter. Ses rendez-vous restent.", unremove: 'Compte restauré : la cliente peut de nouveau se connecter.', restore: 'Suppression annulée : le compte est de nouveau actif. Les rendez-vous annulés le restent.',
   absente: 'Rendez-vous marqué « absente ».', venue: 'Absence retirée.', rendu: 'Acompte noté comme remboursé hors du site.',
 };
@@ -58,6 +60,7 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 {done && <p class="notice" role="status">{done}</p>}
 {error && <p class="notice notice--error" role="alert">{error}</p>}
 <p><a href="/admin/clientes">← Toutes les clientes</a></p>
+{careAlerts.length > 0 && <p class="care-alerts" role="note">{careAlerts.map((a) => <span class="badge badge--alert">{a}</span>)}</p>}
 {u.removed_at && <p class="notice notice--error">Compte supprimé par l'institut le {day(u.removed_at)}. Il reste restaurable.</p>}
 {u.blocked_at && <p class="notice notice--error">Compte désactivé depuis le {day(u.blocked_at)}.</p>}
 {purgeOn && <p class="notice notice--error">Suppression demandée le {day(u.deleted_at!)}. Sans retour de la cliente, le compte sera effacé le {day(purgeOn)}.</p>}
@@ -77,15 +80,42 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 </section>
 
 <section aria-labelledby="h-notes">
-<h2 id="h-notes">Notes de l'institut</h2>
-{u.health_consent_at
-  ? <p class="hint">Accord pour les données de santé donné le {day(u.health_consent_at)} : vous pouvez noter allergies et contre-indications utiles aux soins.</p>
-  : <p class="notice notice--error">Pas d'accord pour les données de santé : n'inscrivez ici aucune allergie, grossesse, traitement ni contre-indication. La cliente donne son accord en réservant ou depuis son compte.</p>}
-<p class="hint">La cliente voit ces notes si elle demande l'export de ses données. Écrivez des faits utiles aux soins, sans jugement.</p>
-<form class="form" method="post" action={self}>
-  <input type="hidden" name="action" value="notes"><input type="hidden" name="id" value={u.id}>
-  <div class="field"><label for="notes">Notes</label><textarea id="notes" name="notes" rows="6" maxlength="4000">{notesDraft ?? u.notes}</textarea></div>
-  <button class="btn btn--solid" type="submit">Enregistrer les notes</button>
+<h2 id="h-notes">Fiche de soin</h2>
+{/* Cases et boutons segmentés (radio) plutôt que des menus : utilisables au pouce sur téléphone */}
+<form class="form sheet" method="post" action={`${self}#h-notes`}>
+  <input type="hidden" name="scope" value="profil">
+  <fieldset><legend>Santé et sensibilités</legend>
+    {prof.consent ? (<>
+      <p class="hint">Données de santé : chiffrées, visibles par l'admin et la gestionnaire seulement, effacées si la cliente retire son accord.</p>
+      <p class="sub">Allergies et intolérances aux produits</p>
+      <div class="chips">{Object.entries(ALLERGIES).map(([k, l]) => <label class="chip"><input type="checkbox" name="allergies" value={k} checked={prof.health?.allergies?.includes(k)}><span>{l}</span></label>)}</div>
+      <label class="free">Autre allergie ou précision<input name="allergies_other" maxlength="200" value={prof.health?.allergies_other ?? ''}></label>
+      <p class="sub">Type de peau</p>
+      <div class="chips">{Object.entries(SKIN).map(([k, l]) => <label class="chip"><input type="checkbox" name="skin" value={k} checked={prof.health?.skin?.includes(k)}><span>{l}</span></label>)}</div>
+      <label class="free">Contre-indications et traitements en cours (rétinoïdes, grossesse…)<textarea name="contra" rows="3" maxlength="2000">{prof.health?.contra ?? ''}</textarea></label>
+    </>) : <p class="notice notice--error">Pas d'accord pour les données de santé : allergies, type de peau et contre-indications ne peuvent pas être notés. La cliente donne son accord en réservant ou depuis son compte.</p>}
+  </fieldset>
+  <fieldset><legend>Préférences de soin</legend>
+    {([['heat', 'Chaleur', HEAT], ['cover', 'Couverture pendant le soin', COVER], ['pressure', 'Pression du toucher', PRESSURE], ['ambience', 'Ambiance', AMBIENCE]] as const).map(([name, title, o]) => (
+      <div class="seg-group"><p class="sub">{title}</p><div class="seg">
+        {Object.entries(o).map(([k, l]) => <label><input type="radio" name={name} value={k} checked={prof.care[name] === k}><span>{l}</span></label>)}
+        <label><input type="radio" name={name} value="" checked={!prof.care[name]}><span>Non précisé</span></label>
+      </div></div>
+    ))}
+    <label class="free">Odeurs : parfums appréciés ou à éviter<input name="scents" maxlength="200" value={prof.care.scents ?? ''}></label>
+  </fieldset>
+  <fieldset><legend>Zones et toucher</legend>
+    <p class="sub">Zones à ne pas toucher</p>
+    <div class="chips">{Object.entries(ZONES).map(([k, l]) => <label class="chip"><input type="checkbox" name="zones" value={k} checked={prof.care.zones?.includes(k)}><span>{l}</span></label>)}</div>
+    <label class="free">Précision sur les zones<input name="zones_other" maxlength="200" value={prof.care.zones_other ?? ''}></label>
+    <div class="seg-group"><p class="sub">Sensibilité au toucher</p><div class="seg">
+      {Object.entries(TOUCH).map(([k, l]) => <label><input type="radio" name="touch" value={k} checked={prof.care.touch === k}><span>{l}</span></label>)}
+      <label><input type="radio" name="touch" value="" checked={!prof.care.touch}><span>Non précisé</span></label>
+    </div></div>
+  </fieldset>
+  <div class="field"><label for="notes">Notes libres</label><textarea id="notes" name="notes" rows="5" maxlength="4000">{notesDraft ?? prof.notes}</textarea>
+    <p class="hint">La cliente voit toute sa fiche si elle demande l'export de ses données. Écrivez des faits utiles aux soins, sans jugement.</p></div>
+  <button class="btn btn--solid" type="submit">Enregistrer la fiche</button>
 </form>
 </section>
 
@@ -246,6 +276,18 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
   .cell-form .btn{min-height:44px;padding:.55rem 1rem;white-space:normal;text-align:left;line-height:1.3}
   .events{padding-left:1.1rem}
   .consents{padding-left:1.1rem}
+  .care-alerts{display:flex;flex-wrap:wrap;gap:.4rem;margin:0 0 1rem}
+  .sheet fieldset{display:grid;gap:.6rem;margin:0;padding:1rem;border:1px solid var(--line-soft);border-radius:14px;min-width:0}
+  .sheet legend{font-weight:600;padding:0 .3rem}
+  .sheet .sub{margin:.25rem 0 0;font-size:.875rem;color:var(--text-soft)}
+  .chips,.seg{display:flex;flex-wrap:wrap;gap:.4rem}
+  .chip,.seg label{position:relative;display:inline-flex}
+  .chip input,.seg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+  .chip span,.seg span{display:inline-flex;align-items:center;min-height:44px;padding:.4rem .85rem;border:1px solid var(--line-soft);border-radius:999px;font-size:.9375rem}
+  .chip input:checked + span,.seg input:checked + span{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+  .chip input:focus-visible + span,.seg input:focus-visible + span{outline:2px solid var(--link);outline-offset:2px}
+  .free{display:grid;gap:.25rem;font-size:.875rem;color:var(--text-soft)}
+  .free input,.free textarea{min-height:44px;font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line-soft);border-radius:12px;padding:.6rem .8rem;width:100%}
   .meter span{display:flex;flex-wrap:wrap;gap:.3rem}
   .meter i{width:1.1rem;height:1.1rem;border-radius:50%;border:1px solid var(--line-soft)}
   .meter i.on{background:var(--accent);border-color:var(--accent)}

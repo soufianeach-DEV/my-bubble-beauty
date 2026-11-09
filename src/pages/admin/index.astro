@@ -6,6 +6,7 @@ import { ADMIN_EMAIL, MAIL_FROM, RESEND_API_KEY } from 'astro:env/server';
 import Admin from './_layout.astro';
 import { adminId, deleteAction, readForm, staffId, fmtDateTime, fmtDay, fmtTime } from '../../lib/server/admin.ts';
 import Supprimer from './_supprimer.astro';
+import { alertsFor } from '../../lib/server/profil.ts';
 import { addDays, monday } from '../../lib/server/admin-form.ts';
 import { adminAgenda } from '../../lib/server/booking.ts';
 import { alerts, clientCards, dayFrame, freeMinutes, loadByDay } from '../../lib/server/accueil.ts';
@@ -40,6 +41,8 @@ const [rows, frame, cards, freeTomorrow, load, week, al] = await Promise.all([
   adminAgenda(today, 1), dayFrame(today), clientCards(today), freeMinutes(tomorrow),
   loadByDay(gridFrom, gridTo), loadByDay(today, addDays(today, 7)), alerts(ADMIN_EMAIL),
 ]);
+// Badges d'alerte (zones à ne pas toucher, allergies, toucher limité) des clientes du jour
+const careAlerts = await alertsFor(cards.map((c) => c.id));
 
 const live = rows.filter((r) => r.status === 'confirmed' || r.status === 'pending_payment');
 const next = live.find((r) => r.starts_at > now && !r.no_show);
@@ -139,10 +142,11 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
             <div><dt>Dernière visite</dt><dd>{c.last_visit ? shortDate(c.last_visit) : '—'}</dd></div>
             <div><dt>Cliente depuis</dt><dd>{shortDate(c.created_at)}</dd></div>
           </dl>
+          {(careAlerts.get(c.id) ?? []).length > 0 && <p class="care-alerts">{careAlerts.get(c.id)!.map((a) => <span class="badge badge--alert">{a}</span>)}</p>}
           {c.services.length > 0 && <p class="past"><b>Déjà faits :</b> {c.services.join(', ')}</p>}
           {/* RGPD : seulement ce qui est déjà en base. Sans accord, les notes ne doivent rien contenir de médical. */}
           <p class:list={['consent', { 'consent--no': !c.health_consent_at }]}>{c.health_consent_at
-            ? `Accord santé donné le ${shortDate(c.health_consent_at)}. Contre-indications : pas de champ dédié, voir les notes.`
+            ? `Accord santé donné le ${shortDate(c.health_consent_at)}. Allergies et contre-indications : voir la fiche de soin.`
             : 'Pas d\'accord pour les données de santé : rien de médical dans les notes.'}</p>
           {c.notes ? <p class="notes">{c.notes}</p> : <p class="notes notes--empty">Aucune note.</p>}
         </article>
@@ -241,6 +245,7 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
   .past{font-size:.875rem}
   .consent{padding:.45rem .65rem;border-radius:8px;font-size:.8125rem;background:rgb(76 128 92 / .14)}
   .consent--no{background:rgb(196 150 70 / .18)}
+  .care-alerts{display:flex;flex-wrap:wrap;gap:.35rem;margin:0}
   .notes{white-space:pre-line;font-size:.9375rem;padding:.6rem .75rem;border-radius:8px;background:rgb(138 90 82 / .06)}
   .notes--empty{color:var(--text-soft);background:none;padding:0}
 

@@ -4,6 +4,7 @@ export const prerender = false;
 import Admin from './_layout.astro';
 import { adminId, staffId, agendaAction, deleteAction, fmtDay, fmtTime, readForm } from '../../lib/server/admin.ts';
 import Supprimer from './_supprimer.astro';
+import { alertsFor } from '../../lib/server/profil.ts';
 import { addDays, monday } from '../../lib/server/admin-form.ts';
 import { adminAgenda } from '../../lib/server/booking.ts';
 import { euros, isDay, todayBrussels } from '../../lib/server/pricing.ts';
@@ -45,6 +46,8 @@ const done = !error && DONE[q.get('ok') ?? ''];
 const from = vue === 'jour' ? jour : monday(jour);
 const count = vue === 'jour' ? 1 : 7;
 const rows = await adminAgenda(from, count);
+// Badges d'alerte de la fiche de soin, à voir avant le soin
+const careAlerts = await alertsFor([...new Set(rows.map((r) => r.user_id).filter((x): x is number => !!x))]);
 const days = Array.from({ length: count }, (_, i) => addDays(from, i)).map((d) => ({ d, rows: rows.filter((r) => todayBrussels(r.starts_at) === d) }));
 const STATUS = { confirmed: 'Confirmé', pending_payment: 'Paiement en cours', cancelled: 'Annulé', expired: 'Payé après expiration' };
 const TONE = { confirmed: 'ok', pending_payment: 'wait', cancelled: 'off', expired: 'alert' };
@@ -98,6 +101,7 @@ const due = (r: (typeof rows)[number]) => (r.paid ? r.deposit_cents - r.refunded
             <td>{r.service}</td>
             <td>
               {r.user_id ? <a href={`/admin/clientes/${r.user_id}`}>{r.name ?? r.email}</a> : r.erased ? 'Compte supprimé' : r.name ?? '—'}
+              {r.user_id && (careAlerts.get(r.user_id) ?? []).map((a) => <><br><span class="badge badge--alert">{a}</span></>)}
               {r.guest && <small> (saisie par l'institut)</small>}{r.deleting && <small> (suppression demandée)</small>}
               {r.phone && <><br><a href={`tel:${r.phone.replace(/[^0-9+]/g, '')}`}>{r.phone}</a></>}
               {r.email && <><br><small>{r.email}</small></>}

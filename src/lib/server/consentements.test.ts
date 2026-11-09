@@ -196,6 +196,32 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     await new Promise((r) => setTimeout(r, 200));
     assert.equal((await sql`SELECT count(*)::int AS n FROM audit_log`)[0].n, before);
     assert.equal((await deleteAction(f({ action: 'delete', id: String(next2.id), confirm: 'on' }))).ok, false);
+
+    // Fiche de soin : préférences sans accord santé ; allergies refusées sans accord, chiffrées avec ; alertes ; export lisible
+    const prof = await import('./profil.ts');
+    const sheet = await mk('fiche');
+    const fd = (o: Record<string, string | string[]>) => Object.entries(o).reduce((x, [k, v]) => ((Array.isArray(v) ? v : [v]).forEach((y) => x.append(k, y)), x), new FormData());
+    const base = { heat: 'frais', cover: 'couverte', touch: 'prevenir', zones: ['ventre', 'pieds', 'inconnue'], notes: 'Ancienne note gardée.' };
+    assert.equal((await prof.saveProfile(other, sheet, fd({ ...base, allergies: ['latex'] }))).ok, false);
+    assert.ok((await prof.saveProfile(other, sheet, fd(base))).ok);
+    let read = await prof.readProfile(sheet);
+    assert.deepEqual(read.care.zones, ['ventre', 'pieds']);
+    assert.equal(read.notes, 'Ancienne note gardée.');
+    await rgpd.setConsent(sheet, true, '127.0.0.1');
+    assert.ok((await prof.saveProfile(other, sheet, fd({ ...base, allergies: ['latex', 'autre'], allergies_other: 'Cire au miel', skin: ['sensible'] }))).ok);
+    const [raw] = await sql`SELECT health_profile FROM users WHERE id = ${sheet}`;
+    assert.ok(!Buffer.from(raw.health_profile).includes(Buffer.from('latex')));
+    const alerts = (await prof.alertsFor([sheet])).get(sheet);
+    assert.deepEqual(alerts, ['Ne pas toucher : Ventre, Pieds', 'Allergie : Latex, Cire au miel', 'Prévenir avant chaque contact']);
+    const ex = await rgpd.exportData(sheet, '127.0.0.1');
+    assert.deepEqual(ex.account.care_sheet.sante.allergies, ['Latex', 'Autre']);
+    assert.equal(ex.account.care_sheet.zones_et_toucher.toucher, 'Prévenir avant chaque contact');
+    // Accord retiré : la partie santé est effacée, les préférences restent
+    await rgpd.setConsent(sheet, false, '127.0.0.1');
+    read = await prof.readProfile(sheet);
+    assert.equal(read.health, null);
+    assert.equal((await sql`SELECT health_profile FROM users WHERE id = ${sheet}`)[0].health_profile, null);
+    assert.equal(read.care.touch, 'prevenir');
   } finally {
     await sql`DELETE FROM bookings WHERE service_id IN (SELECT id FROM services WHERE slug IN (${`laser-${tag}`}, ${`blanchiment-des-dents-${tag}`}))`;
     await sql`DELETE FROM services WHERE slug IN (${`laser-${tag}`}, ${`blanchiment-des-dents-${tag}`})`;

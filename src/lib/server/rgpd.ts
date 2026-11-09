@@ -12,6 +12,7 @@ import { accountDeletedMail, accountErasedMail, sendMail } from './mail.ts';
 import { closeSession, isAdminEmail } from './session.ts';
 import { PASSWORD_PEPPER } from 'astro:env/server';
 import { openText } from './totp.ts';
+import { openHealth, readableProfile } from './profil.ts';
 import { expireSession } from './stripe.ts';
 
 export const GRACE_DAYS = 30;
@@ -107,14 +108,14 @@ export async function setConsent(userId: number, give: boolean, ip: string) {
   const [r] = give
     ? await sql`UPDATE users SET health_consent_at = now() WHERE id = ${userId} AND health_consent_at IS NULL RETURNING id`
     // Accord retiré : les antécédents médicaux notés par l'institut sont effacés avec lui
-    : await sql`UPDATE users SET health_consent_at = NULL, medical_history = NULL WHERE id = ${userId} AND health_consent_at IS NOT NULL RETURNING id`;
+    : await sql`UPDATE users SET health_consent_at = NULL, medical_history = NULL, health_profile = NULL WHERE id = ${userId} AND health_consent_at IS NOT NULL RETURNING id`;
   if (r) journal(give ? 'consent_given' : 'consent_withdrawn', { actor: userId, client: userId, ip });
 }
 
 // Accès et portabilité (art. 15 et 20) : tout ce que le site garde sur la cliente, notes de l'institut comprises
 export async function exportData(userId: number, ip: string) {
   const [[account], bookings, sessions, events, linked, consents] = await Promise.all([
-    sql`SELECT email, name, phone, locale, created_at, email_verified_at, health_consent_at, notes AS institute_notes, birth_date::text, medical_history FROM users WHERE id = ${userId}`,
+    sql`SELECT email, name, phone, locale, created_at, email_verified_at, health_consent_at, notes AS institute_notes, birth_date::text, medical_history, care_profile, health_profile FROM users WHERE id = ${userId}`,
     sql`SELECT s.name_fr AS service, b.starts_at, b.ends_at, b.status, b.no_show, b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents,
           p.code AS promo_code, b.created_at, b.cancelled_at, b.moved_at
         FROM bookings b JOIN services s ON s.id = b.service_id LEFT JOIN promo_codes p ON p.id = b.promo_code_id
@@ -130,5 +131,11 @@ export async function exportData(userId: number, ip: string) {
   journal('data_exported', { actor: userId, client: userId, ip });
   // Antécédents médicaux : déchiffrés pour la cliente elle-même
   if (account) account.medical_history = account.medical_history ? openText(PASSWORD_PEPPER, 'health', account.medical_history) : null;
+  // Fiche de soin avec des libellés lisibles ; la partie santé déchiffrée pour la cliente elle-même
+  if (account) {
+    account.care_sheet = readableProfile(account.care_profile ?? {}, openHealth(account.health_profile));
+    delete account.care_profile;
+    delete account.health_profile;
+  }
   return { exported_at: new Date().toISOString(), controller: 'My Bubble Beauty', account, linked_accounts: linked, bookings, consents, sessions, security_log: events };
 }
