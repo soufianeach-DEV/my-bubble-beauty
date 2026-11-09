@@ -33,8 +33,11 @@ const state = (tx: Sql) => tx`CASE
 
 // Contrôle à la réservation, sous le verrou de la cliente (createBooking) ou en lecture (devis). Mêmes réponses qu'un code promo.
 export async function checkGift(tx: Sql, code: string, serviceId: number, lock = false): Promise<{ id: number } | { problem: PromoProblem }> {
+  // Verrou d'abord, état ensuite dans une nouvelle requête : elle voit les réservations validées pendant l'attente du verrou
+  // (une sous-requête de la requête qui verrouille garderait l'instantané d'avant). L'index unique bookings_gift_idx fait le reste.
+  if (lock) await tx`SELECT id FROM gift_cards WHERE code = ${code} FOR UPDATE`;
   const [g] = await tx<{ id: number; service_id: number; state: GiftState }[]>`
-    SELECT g.id, g.service_id, ${state(tx)} AS state FROM gift_cards g WHERE g.code = ${code} ${lock ? tx`FOR UPDATE` : tx``}`;
+    SELECT g.id, g.service_id, ${state(tx)} AS state FROM gift_cards g WHERE g.code = ${code}`;
   if (!g || g.state === 'annule') return { problem: 'unknown' };
   if (g.state === 'expire') return { problem: 'expired' };
   if (g.state !== 'valide') return { problem: 'used' };

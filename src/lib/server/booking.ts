@@ -133,6 +133,8 @@ export async function createBooking(input: { userId: number; serviceId: number; 
     });
   } catch (e) {
     if (isTaken(e)) return { ok: false, error: 'unavailable' };
+    // Même bon cadeau réservé au même instant par une autre réservation : l'index unique tranche
+    if ((e as { constraint_name?: string })?.constraint_name === 'bookings_gift_idx') return { ok: false, error: 'promo', promo: 'used' };
     throw e;
   }
   expireAtStripe(stale);

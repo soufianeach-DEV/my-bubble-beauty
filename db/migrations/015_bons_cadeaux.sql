@@ -19,4 +19,5 @@ CREATE TABLE gift_cards (
 );
 ALTER TABLE gift_cards ENABLE ROW LEVEL SECURITY;
 ALTER TABLE bookings ADD COLUMN gift_card_id bigint REFERENCES gift_cards ON DELETE SET NULL;
-CREATE INDEX bookings_gift_idx ON bookings (gift_card_id) WHERE gift_card_id IS NOT NULL;
+-- Un seul rendez-vous en cours ou confirmé par bon : deux réservations simultanées avec le même code ne passent pas toutes les deux
+CREATE UNIQUE INDEX bookings_gift_idx ON bookings (gift_card_id) WHERE gift_card_id IS NOT NULL AND status IN ('pending_payment', 'confirmed');
