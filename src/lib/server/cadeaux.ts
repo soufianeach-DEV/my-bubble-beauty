@@ -77,8 +77,8 @@ export async function giftAction(actor: number, form: FormData): Promise<Result>
   if (!p.success) return { ok: false, error: p.error.issues[0]?.message ?? 'Saisie invalide.' };
   const f = p.data;
   if (f.action === 'create') {
-    const [s] = await sql`SELECT id FROM services WHERE id = ${f.service} AND retired_at IS NULL`;
-    if (!s) return { ok: false, error: 'Soin introuvable.' };
+    const [s] = await sql`SELECT id FROM services WHERE id = ${f.service} AND retired_at IS NULL AND active`;
+    if (!s) return { ok: false, error: 'Soin introuvable ou fermé à la réservation.' };
     // Un code ne doit jamais valoir à la fois bon cadeau et code promo ; nouvel essai en cas de collision
     for (let i = 0; i < 5; i++) {
       const code = newGiftCode();

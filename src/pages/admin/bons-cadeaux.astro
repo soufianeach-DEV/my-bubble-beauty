@@ -19,7 +19,8 @@ if (Astro.request.method === 'POST') {
   Astro.response.status = 400;
 }
 const [gifts, services] = await Promise.all([listGifts(), listServices()]);
-const groups = byCategory(services);
+// Soins ouverts à la réservation seulement : un bon sur un soin hors ligne ne pourrait pas être réservé en ligne
+const groups = byCategory(services.filter((s) => s.active));
 const day = (d: string) => new Intl.DateTimeFormat('fr-BE', { timeZone: 'UTC', dateStyle: 'medium' }).format(new Date(`${d}T12:00:00Z`));
 ---
 <Admin title="Bons cadeaux">
