@@ -16,7 +16,8 @@ const here = Astro.url.pathname.replace(/\/+$/, '') || '/admin';
 const section = here.startsWith('/admin/clientes/') ? '/admin/clientes' : here;
 // Tracés d'icônes au trait (24×24), dessinés par currentColor
 const LINKS = [
-  ['/admin', 'Agenda', 'M7 3v3M17 3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z'],
+  ['/admin', 'Accueil', 'M4 11l8-7 8 7M6 9.5V20h4v-5h4v5h4V9.5'],
+  ['/admin/agenda', 'Agenda', 'M7 3v3M17 3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z'],
   ['/admin/reservations/nouvelle', 'Nouveau rendez-vous', 'M12 5v14M5 12h14'],
   ['/admin/clientes', 'Clientes', 'M16 20v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9.5 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM21 20v-1a4 4 0 0 0-3-3.9M16 4.1a3.5 3.5 0 0 1 0 6.8'],
   ['/admin/prestations', 'Prestations', 'M12 3l2.4 5.2 5.6.6-4.2 3.8 1.2 5.6L12 15.4 7 18.2l1.2-5.6L4 8.8l5.6-.6z'],

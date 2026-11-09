@@ -84,7 +84,7 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
   <thead><tr><th scope="col">Date</th><th scope="col">Prestation</th><th scope="col">Statut</th><th scope="col">Montants</th><th scope="col">Actions</th></tr></thead>
   <tbody>{bookings.map((b) => (
     <tr id={`b-${b.id}`}>
-      <td><a href={`/admin?jour=${todayBrussels(b.starts_at)}&vue=jour#r-${b.id}`}>{fmtDateTime(b.starts_at)}</a>{b.moved && <><br><small>déplacé</small></>}</td>
+      <td><a href={`/admin/agenda?jour=${todayBrussels(b.starts_at)}&vue=jour#r-${b.id}`}>{fmtDateTime(b.starts_at)}</a>{b.moved && <><br><small>déplacé</small></>}</td>
       <td>{b.service}</td>
       <td>
         {b.no_show ? 'Absente' : b.status === 'confirmed' && b.past ? 'Honoré' : STATUS[b.status]}

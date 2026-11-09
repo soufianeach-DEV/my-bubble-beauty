@@ -1,202 +1,250 @@
 ---
 export const prerender = false;
-// Agenda : rendez-vous du jour ou de la semaine à l'heure de Bruxelles, annulation en deux temps et remboursement de l'acompte
+// Accueil de l'admin : la journée en un coup d'œil pour la gérante (le matin, entre deux soins), avant l'Agenda détaillé.
+// N'affiche que ce que la base contient ; ce qui manque est signalé, jamais déduit.
+import { ADMIN_EMAIL, MAIL_FROM, RESEND_API_KEY } from 'astro:env/server';
 import Admin from './_layout.astro';
-import { adminId, agendaAction, fmtDay, fmtTime, readForm } from '../../lib/server/admin.ts';
+import { adminId, fmtDateTime, fmtDay, fmtTime } from '../../lib/server/admin.ts';
 import { addDays, monday } from '../../lib/server/admin-form.ts';
 import { adminAgenda } from '../../lib/server/booking.ts';
-import { euros, isDay, todayBrussels } from '../../lib/server/pricing.ts';
+import { alerts, clientCards, dayFrame, freeMinutes, loadByDay } from '../../lib/server/accueil.ts';
+import { isDay, todayBrussels } from '../../lib/server/pricing.ts';
+import { JS_VERSION } from '../../lib/site';
 
 const me = adminId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
-const q = Astro.url.searchParams;
-const vue = q.get('vue') === 'jour' ? 'jour' : 'semaine';
+
+const now = new Date();
 const today = todayBrussels();
-const jour = isDay(q.get('jour')) ? q.get('jour')! : today;
-const link = (d: string, v = vue) => `/admin?jour=${d}&vue=${v}`;
-let error = '';
-if (Astro.request.method === 'POST') {
-  const form = await readForm(Astro.request);
-  if (!form) return new Response(null, { status: 413 });
-  const r = await agendaAction(me, form);
-  // Déplacé : l'agenda suit le rendez-vous à sa nouvelle date
-  if (r.ok) return Astro.redirect(`${link(r.day ?? jour)}&ok=${r.key}#r-${r.id}`, 303);
-  error = r.error;
-  Astro.response.status = 400;
-}
-const DONE: Record<string, string> = {
-  annule: 'Rendez-vous annulé.',
-  rembourse: 'Acompte remboursé, rendez-vous annulé.',
-  echec: "Le remboursement n'a pas abouti. S'il reste un acompte à rendre, le bouton « Rembourser l'acompte » reste sur la ligne : réessayez plus tard.",
-  cree: 'Rendez-vous enregistré.',
-  deplace: 'Rendez-vous déplacé. La cliente reçoit un e-mail si elle a un compte.',
-  absente: 'Rendez-vous marqué « absente ».',
-  venue: 'Absence retirée.',
-  rendu: 'Acompte noté comme remboursé hors du site.',
-};
-// Le formulaire repart vers l'URL courante : après un refus, le ?ok= du succès précédent ne doit plus s'afficher
-const done = !error && DONE[q.get('ok') ?? ''];
-const from = vue === 'jour' ? jour : monday(jour);
-const count = vue === 'jour' ? 1 : 7;
-const rows = await adminAgenda(from, count);
-const days = Array.from({ length: count }, (_, i) => addDays(from, i)).map((d) => ({ d, rows: rows.filter((r) => todayBrussels(r.starts_at) === d) }));
-const STATUS = { confirmed: 'Confirmé', pending_payment: 'Paiement en cours', cancelled: 'Annulé', expired: 'Payé après expiration' };
-const TONE = { confirmed: 'ok', pending_payment: 'wait', cancelled: 'off', expired: 'alert' };
-// Acompte encaissé et pas encore rendu
-const due = (r: (typeof rows)[number]) => (r.paid ? r.deposit_cents - r.refunded_cents : 0);
+const tomorrow = addDays(today, 1);
+// Mini-calendrier : mois demandé (?mois=AAAA-MM) ou mois en cours, grille du lundi au dimanche
+const asked = Astro.url.searchParams.get('mois') ?? '';
+const first = isDay(`${asked}-01`) ? `${asked}-01` : `${today.slice(0, 7)}-01`;
+const nextFirst = `${addDays(first, 32).slice(0, 7)}-01`;
+const prevMonth = addDays(first, -1).slice(0, 7);
+const gridFrom = monday(first);
+const gridTo = addDays(monday(addDays(nextFirst, -1)), 7);
+
+const [rows, frame, cards, freeTomorrow, load, week, al] = await Promise.all([
+  adminAgenda(today, 1), dayFrame(today), clientCards(today), freeMinutes(tomorrow),
+  loadByDay(gridFrom, gridTo), loadByDay(today, addDays(today, 7)), alerts(ADMIN_EMAIL),
+]);
+
+const live = rows.filter((r) => r.status === 'confirmed' || r.status === 'pending_payment');
+const next = live.find((r) => r.starts_at > now && !r.no_show);
+const state = (r: (typeof rows)[number]) =>
+  r.status === 'cancelled' ? ['Annulé', 'off'] : r.no_show ? ['Absente', 'alert'] : r.status === 'pending_payment' ? ['Paiement en cours', 'wait']
+  : r.status === 'expired' ? ['Expiré', 'off'] : now < r.starts_at ? ['À venir', 'wait'] : now < r.ends_at ? ['En cours', 'ok'] : ['Terminé', 'off'];
+const minutes = (n: number) => (n < 60 ? `${n} min` : `${Math.floor(n / 60)} h${n % 60 ? ` ${String(n % 60).padStart(2, '0')}` : ''}`);
+const until = (d: Date) => { const m = Math.max(0, Math.round((d.getTime() - now.getTime()) / 60000)); return m === 0 ? 'maintenant' : `dans ${minutes(m)}`; };
+const digits = (p: string) => p.replace(/[^0-9+]/g, '');
+const agenda = (d: string) => `/admin/agenda?jour=${d}&vue=jour`;
+const shortDate = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', day: 'numeric', month: 'short', year: 'numeric' }).format;
+const monthName = new Intl.DateTimeFormat('fr-BE', { timeZone: 'UTC', month: 'long', year: 'numeric' }).format(new Date(`${first}T12:00:00Z`));
+const weekDay = new Intl.DateTimeFormat('fr-BE', { timeZone: 'UTC', weekday: 'short', day: 'numeric' }).format;
+const cells = Array.from({ length: (Date.parse(gridTo) - Date.parse(gridFrom)) / 86400000 }, (_, i) => addDays(gridFrom, i));
+const level = (n = 0) => (n === 0 ? 0 : n <= 2 ? 1 : n <= 4 ? 2 : 3);
+const guests = live.filter((r) => r.guest);
+const mailOff = !RESEND_API_KEY || !MAIL_FROM;
+const alertCount = al.pending.length + al.moved.length + al.cancelled.length + al.newClients.length + al.noDuration.length + al.closures.length + (mailOff ? 1 : 0);
 ---
-<Admin title="Agenda">
-<a slot="actions" class="btn btn--solid" href="/admin/reservations/nouvelle">Saisir un rendez-vous</a>
-{done && <p class="notice" role="status">{done}</p>}
-{error && <p class="notice notice--error" role="alert">{error}</p>}
-<div class="toolbar">
-<nav class="pager" aria-label="Période">
-  <a href={link(addDays(from, -count))}><span aria-hidden="true">‹</span> <span class="long">{vue === 'jour' ? 'Jour précédent' : 'Semaine précédente'}</span></a>
-  <a href={link(today)}>Aujourd'hui</a>
-  <a href={link(addDays(from, count))}><span class="long">{vue === 'jour' ? 'Jour suivant' : 'Semaine suivante'}</span> <span aria-hidden="true">›</span></a>
-</nav>
-<form class="pick" method="get" action="/admin">
-  <div class="field"><label for="jour">Jour</label><input id="jour" name="jour" type="date" value={jour} required></div>
-  <div class="field"><label for="vue">Affichage</label>
-    <select id="vue" name="vue"><option value="semaine" selected={vue === 'semaine'}>Semaine</option><option value="jour" selected={vue === 'jour'}>Jour</option></select>
+<Admin title="Accueil">
+<Fragment slot="actions"><a class="btn btn--solid" href="/admin/reservations/nouvelle">Saisir un rendez-vous</a></Fragment>
+<script is:inline src={`/assets/js/compte-a-rebours.js?v=${JS_VERSION}`} defer></script>
+
+{/* 1. La journée */}
+<section class="today" aria-labelledby="h-today">
+  <div>
+    <h2 id="h-today">{fmtDay(today)}</h2>
+    <p class="day-open">{frame.hours.length ? <>Ouvert {frame.hours.map((h) => `${h.opens}–${h.closes}`).join(' et ')}</> : 'Fermé aujourd\'hui (aucune plage d\'ouverture)'}
+      {frame.closures.map((c) => <span class="badge badge--alert">Fermeture {fmtTime(c.starts_at)}–{fmtTime(c.ends_at)}{c.reason && ` · ${c.reason}`}</span>)}</p>
   </div>
-  <button class="btn btn--ghost" type="submit">Afficher</button>
-</form>
-</div>
-{/* Grand écran, vue semaine : les 7 jours côte à côte d'un coup d'œil ; le détail et les actions restent dessous */}
-{vue === 'semaine' && (
-  <ol class="week" aria-label="La semaine en un coup d'œil">{days.map(({ d, rows }) => {
-    const live = rows.filter((r) => r.status === 'confirmed' || r.status === 'pending_payment');
-    return (
-      <li class:list={['wk', { 'wk--today': d === today, 'wk--empty': live.length === 0 }]}>
-        <a class="wk-head" href={link(d, 'jour')}>{fmtDay(d)}<small>{live.length ? `${live.length} rendez-vous` : 'Libre'}</small></a>
-        {live.length > 0 && <ul>{live.map((r) => (
-          <li><a href={`#r-${r.id}`} class:list={{ 'wk-wait': r.status === 'pending_payment', 'wk-noshow': r.no_show }}>
-            <b>{fmtTime(r.starts_at)}</b> {r.name ?? (r.erased ? 'Compte supprimé' : '—')}<small>{r.service}</small>
-          </a></li>
-        ))}</ul>}
-      </li>
-    );
-  })}</ol>
-)}
-{days.map(({ d, rows }) => (
-  <section class:list={['day', { 'day--today': d === today, 'day--empty': rows.length === 0 }]} aria-labelledby={`d-${d}`}>
-    <h2 id={`d-${d}`}><a href={link(d, 'jour')}>{fmtDay(d)}</a>{d === today && <span class="badge">Aujourd'hui</span>}
-      {rows.length > 0 && <small>{rows.length} rendez-vous</small>}</h2>
-    {rows.length === 0 ? <p class="none">Aucun rendez-vous.</p> : (
-      <div class="table-wrap"><table class="data-table">
-        <thead><tr><th scope="col">Heure</th><th scope="col">Prestation</th><th scope="col">Cliente</th><th scope="col">Statut</th><th scope="col">Montants</th><th scope="col">Actions</th></tr></thead>
-        <tbody>{rows.map((r) => (
-          <tr id={`r-${r.id}`}>
-            <td class="time">{fmtTime(r.starts_at)}<small>{fmtTime(r.ends_at)}</small></td>
-            <td>{r.service}</td>
-            <td>
-              {r.user_id ? <a href={`/admin/clientes/${r.user_id}`}>{r.name ?? r.email}</a> : r.erased ? 'Compte supprimé' : r.name ?? '—'}
-              {r.guest && <small> (saisie par l'institut)</small>}{r.deleting && <small> (suppression demandée)</small>}
-              {r.phone && <><br><a href={`tel:${r.phone.replace(/[^0-9+]/g, '')}`}>{r.phone}</a></>}
-              {r.email && <><br><small>{r.email}</small></>}
-            </td>
-            <td>
-              <span class={`badge badge--${r.no_show ? 'alert' : TONE[r.status]}`}>{r.no_show ? 'Absente' : STATUS[r.status]}</span>
-              {r.cancel_reason === 'account_deleted' && <><br><small>Compte supprimé par la cliente</small></>}
-              {r.status === 'cancelled' && due(r) > 0 && <><br><small>Acompte gardé ou remboursement à relancer</small></>}
-              {r.status === 'expired' && <><br><small>Créneau repris : acompte à rendre</small></>}
-            </td>
-            <td>
-              Prix {euros(r.price_cents)}
-              {r.discount_cents > 0 && <><br>Remise −{euros(r.discount_cents)}{r.promo && ` (${r.promo})`}</>}
-              {r.deposit_cents > 0 && <><br>Acompte {euros(r.deposit_cents)}{r.paid ? ' payé' : ' non payé'}</>}
-              {r.refunded_cents > 0 && <><br>Remboursé {euros(r.refunded_cents)}</>}
-            </td>
-            <td>
-              {(r.status === 'confirmed' || r.status === 'pending_payment') && (
-                <details class="cancel"><summary>Annuler<span class="visually-hidden"> le rendez-vous de {fmtTime(r.starts_at)}, {r.name ?? r.service}</span></summary>
-                  <form class="cell-form" method="post">
-                    <input type="hidden" name="action" value="cancel"><input type="hidden" name="id" value={r.id}>
-                    {due(r) > 0 && <label class="check"><input type="checkbox" name="refund"><span>Rembourser l'acompte ({euros(due(r))})</span></label>}
-                    <button class="btn btn--ghost" type="submit">Confirmer l'annulation</button>
-                  </form>
-                </details>
-              )}
-              {(r.status === 'cancelled' || r.status === 'expired') && due(r) > 0 && (
-                <form class="cell-form" method="post">
-                  <input type="hidden" name="id" value={r.id}>
-                  <button class="btn btn--ghost" type="submit" name="action" value="refund">Rembourser l'acompte par Stripe ({euros(due(r))})</button>
-                  <button class="btn btn--ghost" type="submit" name="action" value="manual_refund">Marquer remboursé hors site</button>
-                </form>
-              )}
-              {r.status === 'confirmed' && !r.past && (
-                <details class="cancel"><summary>Déplacer<span class="visually-hidden"> le rendez-vous de {fmtTime(r.starts_at)}</span></summary>
-                  <form class="cell-form" method="post">
-                    <input type="hidden" name="action" value="move"><input type="hidden" name="id" value={r.id}>
-                    <label class="field">Date<input type="date" name="day" required value={todayBrussels(r.starts_at)}></label>
-                    <label class="field">Heure<input type="time" name="time" required step="900" value={fmtTime(r.starts_at)}></label>
-                    <button class="btn btn--ghost" type="submit">Confirmer le déplacement</button>
-                  </form>
-                </details>
-              )}
-              {r.status === 'confirmed' && r.past && (
-                <form class="cell-form" method="post">
-                  <input type="hidden" name="id" value={r.id}>
-                  <button class="btn btn--ghost" type="submit" name="action" value={r.no_show ? 'show' : 'no_show'}>{r.no_show ? "Retirer l'absence" : 'Marquer absente'}</button>
-                </form>
-              )}
-            </td>
-          </tr>
-        ))}</tbody>
-      </table></div>
+  <dl class="kpis">
+    <div><dt>Rendez-vous</dt><dd>{live.length}</dd></div>
+    <div><dt>Temps libre restant</dt><dd>{minutes(frame.freeMin)}</dd></div>
+    <div class="kpi-next"><dt>Prochain rendez-vous</dt>
+      <dd>{next ? <><time data-countdown datetime={next.starts_at.toISOString()}>{until(next.starts_at)}</time><small>{fmtTime(next.starts_at)} · {next.name ?? '—'} · {next.service}</small></> : <small>Plus rien aujourd'hui</small>}</dd>
+    </div>
+  </dl>
+  <nav class="quick" aria-label="Actions rapides">
+    <a class="btn btn--ghost" href="/admin/horaires#fermetures">Bloquer un créneau</a>
+    {next?.phone && <>
+      <a class="btn btn--ghost" href={`tel:${digits(next.phone)}`}>Appeler {next.name ?? 'la cliente'}</a>
+      <a class="btn btn--ghost" href={`https://wa.me/${digits(next.phone).replace(/^\+/, '')}`}>WhatsApp</a>
+    </>}
+  </nav>
+</section>
+
+<div class="grid">
+  {/* 2. Ligne du temps */}
+  <section class="panel timeline" aria-labelledby="h-line">
+    <h2 id="h-line">Rendez-vous du jour <a class="more" href={agenda(today)}>Agenda du jour</a></h2>
+    {rows.length === 0 ? <p class="none">Aucun rendez-vous aujourd'hui.</p> : (
+      <ol>{rows.map((r) => { const [label, tone] = state(r); return (
+        <li class:list={[`tl tl--${tone}`, { 'tl--next': r.id === next?.id }]}>
+          <span class="tl-time">{fmtTime(r.starts_at)}<small>{minutes(Math.round((r.ends_at.getTime() - r.starts_at.getTime()) / 60000))}</small></span>
+          <span class="tl-who">
+            {r.user_id ? <a href={`/admin/clientes/${r.user_id}`}>{r.name ?? r.email}</a> : <span>{r.name ?? (r.erased ? 'Compte supprimé' : '—')}</span>}
+            <small>{r.service}{r.guest && ' · saisie par l\'institut'}</small>
+          </span>
+          <span class={`badge badge--${tone}`}>{label}</span>
+        </li>
+      ); })}</ol>
     )}
   </section>
-))}
+
+  {/* 5. Alertes */}
+  <section class="panel alerts" aria-labelledby="h-alerts">
+    <h2 id="h-alerts">Alertes {alertCount > 0 && <span class="badge badge--alert">{alertCount}</span>}</h2>
+    <ul>
+      {mailOff && <li class="al al--alert">Envoi d'e-mails non configuré : confirmations et rappels ne partent pas.</li>}
+      {al.pending.map((r) => <li class="al al--wait">Paiement en cours : {r.name ?? '—'}, {fmtDateTime(r.starts_at)}</li>)}
+      {al.moved.map((r) => <li class="al"><a href={agenda(todayBrussels(r.starts_at))}>Déplacé</a> : {r.name ?? '—'}, {r.service}, maintenant le {fmtDateTime(r.starts_at)}</li>)}
+      {al.cancelled.map((r) => <li class="al al--off">Annulé : {r.name ?? '—'}, {r.service}, {fmtDateTime(r.starts_at)}{r.cancel_reason === 'account_deleted' && ' (compte supprimé)'}</li>)}
+      {al.newClients.map((c) => <li class="al al--ok">Nouvelle inscrite : <a href={`/admin/clientes/${c.id}`}>{c.name ?? c.email}</a>, le {shortDate(c.created_at)}</li>)}
+      {al.closures.map((c) => <li class="al">Fermeture : {fmtDateTime(c.starts_at)} → {fmtDateTime(c.ends_at)}{c.reason && ` (${c.reason})`}</li>)}
+      {al.noDuration.length > 0 && <li class="al"><a href="/admin/prestations">{al.noDuration.length} prestation{al.noDuration.length > 1 ? 's' : ''} sans durée</a> : pas réservable{al.noDuration.length > 1 ? 's' : ''} en ligne.</li>}
+      <li class="al al--info">Libre : {minutes(frame.freeMin)} aujourd'hui, {minutes(freeTomorrow)} demain. <a href={agenda(tomorrow)}>Voir demain</a></li>
+    </ul>
+    <p class="hint">Non disponible : anniversaires (aucune date de naissance enregistrée).</p>
+  </section>
+</div>
+
+{/* 3. Fiches des clientes du jour */}
+<section class="cards-wrap" aria-labelledby="h-cards">
+  <h2 id="h-cards">Fiches des clientes du jour</h2>
+  {cards.length === 0 && guests.length === 0 ? <p class="none">Aucune cliente attendue aujourd'hui.</p> : (
+    <div class="cards">
+      {cards.map((c) => (
+        <article class="card">
+          <h3><a href={`/admin/clientes/${c.id}`}>{c.name ?? c.email}</a>{c.visits === 0 && <span class="badge badge--wait">Première visite</span>}</h3>
+          <p class="contact">{c.phone ? <a href={`tel:${digits(c.phone)}`}>{c.phone}</a> : 'Pas de téléphone'} · <span>{c.email}</span></p>
+          <dl>
+            <div><dt>Visites</dt><dd>{c.visits}{c.no_shows > 0 && ` (+ ${c.no_shows} absence${c.no_shows > 1 ? 's' : ''})`}</dd></div>
+            <div><dt>Dernière visite</dt><dd>{c.last_visit ? shortDate(c.last_visit) : '—'}</dd></div>
+            <div><dt>Cliente depuis</dt><dd>{shortDate(c.created_at)}</dd></div>
+          </dl>
+          {c.services.length > 0 && <p class="past"><b>Déjà faits :</b> {c.services.join(', ')}</p>}
+          {/* RGPD : seulement ce qui est déjà en base. Sans accord, les notes ne doivent rien contenir de médical. */}
+          <p class:list={['consent', { 'consent--no': !c.health_consent_at }]}>{c.health_consent_at
+            ? `Accord santé donné le ${shortDate(c.health_consent_at)}. Contre-indications : pas de champ dédié, voir les notes.`
+            : 'Pas d\'accord pour les données de santé : rien de médical dans les notes.'}</p>
+          {c.notes ? <p class="notes">{c.notes}</p> : <p class="notes notes--empty">Aucune note.</p>}
+        </article>
+      ))}
+      {guests.map((r) => (
+        <article class="card card--guest">
+          <h3>{r.name ?? '—'}<span class="badge badge--off">Sans compte</span></h3>
+          <p class="contact">{r.phone ? <a href={`tel:${digits(r.phone)}`}>{r.phone}</a> : 'Pas de téléphone'}</p>
+          <p class="notes notes--empty">Rendez-vous saisi par l'institut : seuls le nom et le téléphone sont enregistrés.</p>
+        </article>
+      ))}
+    </div>
+  )}
+</section>
+
+<div class="grid">
+  {/* 4. Mini-calendrier du mois */}
+  <section class="panel cal" aria-labelledby="h-cal">
+    <h2 id="h-cal"><span class="cap">{monthName}</span>
+      <span class="cal-nav"><a href={`/admin?mois=${prevMonth}#h-cal`} aria-label="Mois précédent">‹</a><a href={`/admin?mois=${nextFirst.slice(0, 7)}#h-cal`} aria-label="Mois suivant">›</a></span></h2>
+    <ol class="cal-grid" aria-label={`Rendez-vous par jour, ${monthName}`}>
+      {['lun', 'mar', 'mer', 'jeu', 'ven', 'sam', 'dim'].map((d) => <li class="cal-dow" aria-hidden="true">{d}</li>)}
+      {cells.map((d) => (
+        <li class:list={['cal-day', `cal-l${level(load[d])}`, { 'cal-out': d.slice(0, 7) !== first.slice(0, 7), 'cal-today': d === today }]}>
+          <a href={agenda(d)} aria-label={`${fmtDay(d)} : ${load[d] ?? 0} rendez-vous`}><span>{Number(d.slice(8))}</span>{load[d] ? <small>{load[d]}</small> : null}</a>
+        </li>
+      ))}
+    </ol>
+    <p class="hint">Couleur : de 1–2 à 5 rendez-vous et plus. Un clic ouvre le jour dans l'Agenda.</p>
+  </section>
+
+  {/* 4 bis. Les 7 prochains jours */}
+  <section class="panel next7" aria-labelledby="h-week">
+    <h2 id="h-week">7 prochains jours <a class="more" href="/admin/agenda">Agenda</a></h2>
+    <ul>{Array.from({ length: 7 }, (_, i) => addDays(today, i)).map((d) => (
+      <li><a href={agenda(d)}><span class="cap">{d === today ? 'Aujourd\'hui' : d === tomorrow ? 'Demain' : weekDay(new Date(`${d}T12:00:00Z`))}</span>
+        <span class:list={['bar', `cal-l${level(week[d])}`]}>{week[d] ? `${week[d]} rendez-vous` : 'Libre'}</span></a></li>
+    ))}</ul>
+  </section>
+</div>
 </Admin>
 
 <style>
-  .toolbar{display:flex;flex-wrap:wrap;gap:1rem 1.5rem;align-items:flex-end;justify-content:space-between;margin:0 0 2rem;padding:1rem;border:1px solid var(--line-soft);border-radius:16px;background:var(--bg)}
-  /* Trois liens collés en une seule pastille : se lit comme une navigation, pas comme trois actions */
-  .pager{display:flex;flex-wrap:wrap;border:1px solid var(--line-soft);border-radius:999px;overflow:hidden}
-  .pager a{display:inline-flex;align-items:center;gap:.35rem;min-height:44px;padding:.5rem 1rem;color:var(--text);text-decoration:none;font-size:.9375rem}
-  .pager a + a{border-left:1px solid var(--line-soft)}
-  .pager a:hover,.pager a:focus-visible{background:rgb(var(--card))}
-  /* Petit écran : flèches seules, le libellé reste lu par les lecteurs d'écran */
-  @media (max-width:599px){
-    .pager{width:100%;flex-wrap:nowrap}
-    .pager a{flex:1;justify-content:center;padding-inline:.5rem}
-    .pager a:nth-child(2){flex:2}
-    .pager .long{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-    .pager span[aria-hidden]{font-size:1.4rem;line-height:1}
-  }
-  .pick{display:flex;flex-wrap:wrap;gap:.75rem;align-items:flex-end}
-  .pick .field{min-width:9rem;margin:0}
-  .day{margin:0 0 1.75rem}
-  .day h2{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem;margin:0 0 .75rem;font-size:1.35rem}
-  .day h2 small{margin-left:auto;font:500 .8125rem var(--f-text);color:var(--text-soft)}
-  .day--today h2 a{color:var(--accent)}
-  /* Jour vide : une ligne discrète, l'œil va droit aux jours chargés */
-  .day--empty{display:flex;flex-wrap:wrap;align-items:baseline;gap:.25rem 1rem;margin-bottom:.75rem;padding:0 0 .75rem;border-bottom:1px dashed var(--line-soft)}
-  .day--empty h2{margin:0;font-size:1.05rem;color:var(--text-soft)}
-  .none{margin:0;color:var(--text-soft);font-size:.9375rem}
-  h2 a{color:inherit;text-decoration:none}
-  h2 a:hover{text-decoration:underline}
-  .time{font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
-  .time small{display:block;font-weight:400;color:var(--text-soft)}
-  .cell-form{display:grid;gap:.5rem;justify-items:start}
-  /* Semaine en 7 colonnes : seulement quand la largeur le permet ; dessous, la liste par jour suffit */
-  .week{display:none}
-  @media (min-width:1024px){
-    .week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.5rem;list-style:none;margin:0 0 2.5rem;padding:0}
-    .wk{display:flex;flex-direction:column;gap:.5rem;min-height:11rem;padding:.75rem;border:1px solid var(--line-soft);border-radius:14px;background:var(--bg)}
-    .wk--today{border-color:var(--accent);box-shadow:inset 0 3px 0 var(--accent)}
-    .wk--empty{background:none;border-style:dashed}
-    .wk-head{display:grid;gap:.15rem;color:var(--text);text-decoration:none;font-weight:500;font-size:.9375rem;text-transform:capitalize}
-    .wk-head small{font-weight:400;text-transform:none;color:var(--text-soft);font-size:.8125rem}
-    .wk--today .wk-head{color:var(--accent)}
-    .wk ul{display:grid;gap:.35rem;list-style:none;margin:0;padding:0}
-    .wk ul a{display:grid;padding:.4rem .55rem;border-radius:10px;background:rgb(138 90 82 / .1);color:var(--text);text-decoration:none;font-size:.8125rem;line-height:1.35}
-    .wk ul a:hover,.wk ul a:focus-visible{background:rgb(138 90 82 / .2)}
-    .wk ul b{font-variant-numeric:tabular-nums}
-    .wk ul small{color:var(--text-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .wk-wait{outline:1px dashed rgb(196 150 70 / .7)}
-    .wk-noshow{opacity:.6;text-decoration:line-through}
-  }
-  .cell-form .btn{min-height:44px;padding:.55rem 1rem;white-space:normal;text-align:left;line-height:1.3}
+  h2{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem;margin:0 0 1rem;font-size:1.35rem}
+  .more{margin-left:auto;font:500 .875rem var(--f-text)}
+  .none,.hint{margin:0;color:var(--text-soft);font-size:.9375rem}
+  .hint{margin-top:.75rem;font-size:.8125rem}
+  .cap::first-letter{text-transform:uppercase}
+  .panel,.today,.card{border:1px solid var(--line-soft);border-radius:16px;background:var(--bg)}
+  .panel{padding:1.25rem}
+  .grid{display:grid;gap:1.25rem;margin:0 0 1.75rem}
+  @media (min-width:1024px){.grid{grid-template-columns:minmax(0,3fr) minmax(0,2fr)}}
+
+  .today{display:grid;gap:1rem 2rem;padding:1.25rem 1.5rem;margin:0 0 1.75rem}
+  @media (min-width:1024px){.today{grid-template-columns:minmax(0,1fr) auto;align-items:center}.quick{grid-column:1 / -1}}
+  .today h2{margin:0 0 .35rem;font-size:1.6rem}
+  .today h2::first-letter{text-transform:uppercase}
+  .day-open{display:flex;flex-wrap:wrap;gap:.4rem .75rem;align-items:center;margin:0;color:var(--text-soft)}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.75rem;margin:0}
+  @media (min-width:1024px){.kpis{grid-template-columns:auto auto minmax(14rem,auto)}}
+  .kpis div{padding:.75rem 1rem;border-radius:12px;background:rgb(138 90 82 / .08)}
+  .kpis dt{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-soft)}
+  .kpis dd{margin:.2rem 0 0;font:400 1.6rem/1.2 var(--f-title)}
+  .kpis small{display:block;font:400 .875rem/1.4 var(--f-text);color:var(--text-soft)}
+  .quick{display:flex;flex-wrap:wrap;gap:.5rem}
+
+  .timeline ol{display:grid;gap:.5rem;list-style:none;margin:0;padding:0}
+  .tl{display:grid;grid-template-columns:4.5rem minmax(0,1fr) auto;gap:.75rem;align-items:center;padding:.6rem .75rem;border-left:3px solid var(--line-soft);border-radius:10px;background:rgb(138 90 82 / .05)}
+  .tl--ok{border-left-color:rgb(76 128 92)}
+  .tl--wait{border-left-color:rgb(196 150 70)}
+  .tl--alert{border-left-color:rgb(176 70 60)}
+  .tl--off{opacity:.65}
+  .tl--next{box-shadow:0 0 0 2px var(--accent)}
+  .tl-time{font-weight:500;font-variant-numeric:tabular-nums}
+  .tl-time small,.tl-who small{display:block;font-weight:400;font-size:.8125rem;color:var(--text-soft)}
+  .tl-who{min-width:0}
+
+  .alerts ul{display:grid;gap:.4rem;list-style:none;margin:0;padding:0}
+  .al{padding:.55rem .75rem;border-radius:10px;font-size:.9375rem;background:rgb(138 90 82 / .08)}
+  .al--alert{background:rgb(176 70 60 / .16)}
+  .al--wait{background:rgb(196 150 70 / .2)}
+  .al--ok{background:rgb(76 128 92 / .16)}
+  .al--off{background:rgb(120 110 108 / .14)}
+  .al--info{background:none;border:1px dashed var(--line-soft)}
+
+  .cards-wrap{margin:0 0 1.75rem}
+  .cards{display:grid;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(min(100%,19rem),1fr))}
+  .card{display:grid;gap:.6rem;align-content:start;padding:1rem 1.15rem}
+  .card h3{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin:0;font-size:1.15rem}
+  .card p{margin:0}
+  .contact{font-size:.9375rem;overflow-wrap:anywhere}
+  .card dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem;margin:0}
+  .card dt{font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text-soft)}
+  .card dd{margin:0;font-weight:500}
+  .past{font-size:.875rem}
+  .consent{padding:.45rem .65rem;border-radius:8px;font-size:.8125rem;background:rgb(76 128 92 / .14)}
+  .consent--no{background:rgb(196 150 70 / .18)}
+  .notes{white-space:pre-line;font-size:.9375rem;padding:.6rem .75rem;border-radius:8px;background:rgb(138 90 82 / .06)}
+  .notes--empty{color:var(--text-soft);background:none;padding:0}
+
+  .cal h2{justify-content:space-between}
+  .cal-nav{display:flex;gap:.25rem}
+  .cal-nav a{display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--line-soft);border-radius:999px;color:var(--text);text-decoration:none;font-size:1.3rem}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.3rem;list-style:none;margin:0;padding:0}
+  .cal-dow{text-align:center;font-size:.75rem;text-transform:uppercase;color:var(--text-soft)}
+  .cal-day{border-radius:10px}
+  .cal-day a{display:grid;place-items:center;align-content:center;min-height:44px;height:2.9rem;border-radius:10px;color:var(--text);text-decoration:none;font-variant-numeric:tabular-nums}
+  .cal-day small{font-size:.7rem;line-height:1}
+  .cal-day a:hover,.cal-day a:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .cal-out a{opacity:.4}
+  .cal-today a{box-shadow:inset 0 0 0 2px var(--accent);font-weight:600}
+  .cal-l1{background:rgb(138 90 82 / .14)}
+  .cal-l2{background:rgb(138 90 82 / .3)}
+  .cal-l3{background:rgb(138 90 82 / .5)}
+
+  .next7 ul{display:grid;gap:.35rem;list-style:none;margin:0;padding:0}
+  .next7 a{display:grid;grid-template-columns:7rem minmax(0,1fr);gap:.75rem;align-items:center;min-height:44px;color:var(--text);text-decoration:none}
+  .next7 .bar{padding:.45rem .7rem;border-radius:8px;font-size:.875rem;border:1px dashed var(--line-soft)}
+  .next7 .bar:not(.cal-l0){border-style:solid;border-color:transparent}
 </style>

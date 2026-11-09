@@ -14,7 +14,7 @@ if (Astro.request.method === 'POST') {
   const form = await readForm(Astro.request);
   if (!form) return new Response(null, { status: 413 });
   const r = await newBooking(me, form);
-  if (r.ok) return Astro.redirect(`/admin?jour=${r.day}&vue=jour&ok=cree#r-${r.id}`, 303);
+  if (r.ok) return Astro.redirect(`/admin/agenda?jour=${r.day}&vue=jour&ok=cree#r-${r.id}`, 303);
   error = r.error;
   v = Object.fromEntries([...form].map(([k, x]) => [k, String(x)]));
   Astro.response.status = 400;

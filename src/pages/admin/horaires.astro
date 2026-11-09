@@ -68,7 +68,7 @@ const days = EXTRA.fr.days.map((label, i) => ({ label, ranges: hours.filter((h) 
 {conflicts.length > 0 && (
   <div class="notice notice--error" role="alert">
     <p><strong>{conflicts.length} rendez-vous déjà pris tombe{conflicts.length > 1 && 'nt'} pendant une fermeture.</strong> Prévenez la cliente, puis déplacez ou annulez le rendez-vous dans l'agenda.</p>
-    <ul>{conflicts.map((c) => <li><a href={`/admin?jour=${todayBrussels(c.starts_at)}&vue=jour#r-${c.id}`}>{fmtDateTime(c.starts_at)}</a> — {c.service}, {c.name ?? '—'}{c.phone && <>, <a href={`tel:${c.phone.replace(/[^0-9+]/g, '')}`}>{c.phone}</a></>}{c.reason && <> (fermeture : {c.reason})</>}</li>)}</ul>
+    <ul>{conflicts.map((c) => <li><a href={`/admin/agenda?jour=${todayBrussels(c.starts_at)}&vue=jour#r-${c.id}`}>{fmtDateTime(c.starts_at)}</a> — {c.service}, {c.name ?? '—'}{c.phone && <>, <a href={`tel:${c.phone.replace(/[^0-9+]/g, '')}`}>{c.phone}</a></>}{c.reason && <> (fermeture : {c.reason})</>}</li>)}</ul>
   </div>
 )}
 {closures.length === 0 ? <p>Aucune fermeture à venir.</p> : (
