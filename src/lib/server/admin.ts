@@ -220,7 +220,8 @@ export async function newBooking(userId: number, form: FormData): Promise<Result
     SELECT t.at,
       -- Dans une plage d'ouverture du jour et hors fermeture : sinon l'admin doit cocher « Ouvrir exceptionnellement »
       EXISTS (SELECT 1 FROM opening_hours h, len WHERE h.weekday = extract(isodow FROM ${b.day}::text::date)
-        AND ${b.time}::time >= h.opens AND ${b.time}::time + len.l <= h.closes)
+        -- En intervalles : time + interval repasse par minuit (23:30 + 1 h = 00:30), le créneau paraissait alors ouvert
+        AND ${b.time}::time >= h.opens AND ${b.time}::time::interval + len.l <= h.closes::interval)
       AND NOT EXISTS (SELECT 1 FROM closures c, len WHERE c.starts_at < t.at + len.l AND c.ends_at > t.at) AS open
     FROM t`;
   if (!open && !b.force) return { ok: false, error: "Ce créneau est en dehors des heures d'ouverture (jour fermé, hors plage ou fermeture). Cochez « Ouvrir exceptionnellement » pour l'enregistrer quand même." };
