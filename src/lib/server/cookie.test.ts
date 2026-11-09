@@ -1,11 +1,19 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { COOKIE, DEVICE, DEVICE_COOKIE, SESSION_COOKIE, deviceToken, hashToken, isDevice, newToken } from './cookie.ts';
+import { COOKIE, DEVICE, DEVICE_COOKIE, SESSION_COOKIE, deviceToken, hashToken, isDevice, newToken, sessionCookie } from './cookie.ts';
+import { SESSION_REMEMBER_SECONDS } from './session-limits.mjs';
 
 test('cookie __Host- : Secure, HttpOnly, Path=/, Lax, sans Domain ni expiration', () => {
   assert.match(SESSION_COOKIE, /^__Host-/);
   assert.deepEqual(COOKIE, { httpOnly: true, secure: true, sameSite: 'lax', path: '/' });
   assert.equal('domain' in COOKIE || 'maxAge' in COOKIE || 'expires' in COOKIE, false);
+});
+
+test('« Se souvenir de moi » : cookie persistant 30 jours si cochée, cookie de session sinon, mêmes protections', () => {
+  const long = sessionCookie(true, SESSION_REMEMBER_SECONDS);
+  assert.deepEqual(long, { ...COOKIE, maxAge: 30 * 24 * 3600 });
+  assert.equal(sessionCookie(false, SESSION_REMEMBER_SECONDS), COOKIE);
+  assert.equal('maxAge' in sessionCookie(false, SESSION_REMEMBER_SECONDS), false);
 });
 
 test('jeton : 32 octets aléatoires, seul un SHA-256 de 32 octets va en base', () => {

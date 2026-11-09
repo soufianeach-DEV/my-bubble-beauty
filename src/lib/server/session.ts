@@ -1,9 +1,9 @@
 // Sessions serveur (ASVS 3.3.2 niveau 2 pour toutes) : inactivité et durée maximale fixées dans session-limits.mjs, que la purge relit.
 import type { AstroCookies } from 'astro';
 import { ADMIN_EMAIL } from 'astro:env/server';
-import { COOKIE, SESSION_COOKIE, hashToken, newToken } from './cookie.ts';
+import { COOKIE, SESSION_COOKIE, hashToken, newToken, sessionCookie } from './cookie.ts';
 import { sql } from './db.ts';
-import { SESSION_IDLE, SESSION_MAX } from './session-limits.mjs';
+import { SESSION_IDLE, SESSION_MAX, SESSION_REMEMBER, SESSION_REMEMBER_SECONDS } from './session-limits.mjs';
 
 // deletedAt : compte en suppression (30 jours) ; le middleware ne lui ouvre que la page de réactivation
 export type SessionUser = { id: number; email: string; name: string | null; phone: string | null; locale: 'fr' | 'nl' | 'en'; isAdmin: boolean; deletedAt: Date | null; healthConsent: Date | null };
@@ -17,7 +17,9 @@ export async function readSession(token: string): Promise<{ user: SessionUser; s
   const [r] = await sql`
     UPDATE sessions s SET last_seen_at = now() FROM users u
     WHERE s.token_hash = ${hashToken(token)} AND u.id = s.user_id
-      AND s.expires_at > now() AND s.last_seen_at > now() - ${SESSION_IDLE}::interval
+      AND s.expires_at > now()
+      -- Inactivité tolérée : 30 min, ou toute la durée de la session si la cliente a coché « Se souvenir de moi »
+      AND s.last_seen_at > now() - (CASE WHEN s.remember THEN ${SESSION_REMEMBER} ELSE ${SESSION_IDLE} END)::interval
       -- Compte bloqué par l'institut : plus aucune session valable, même ouverte avant le blocage
       AND u.blocked_at IS NULL
     RETURNING s.token_hash, s.mfa_at, s.created_at, u.id, u.email, u.name, u.phone, u.locale, u.email_verified_at, u.deleted_at, u.health_consent_at`;
@@ -30,13 +32,14 @@ export async function readSession(token: string): Promise<{ user: SessionUser; s
 }
 
 // Nouvelle session à chaque connexion et à la validation du code admin (mfa) : l'ancien jeton est détruit, pas de fixation
-export async function openSession(cookies: AstroCookies, userId: number, userAgent: string | null, mfa = false) {
+// remember : cookie persistant et session de 30 jours (jamais pour l'admin, que l'appelant exclut)
+export async function openSession(cookies: AstroCookies, userId: number, userAgent: string | null, mfa = false, remember = false) {
   await closeSession(cookies);
   const token = newToken();
   await sql`
-    INSERT INTO sessions (token_hash, user_id, user_agent, mfa_at, expires_at)
-    VALUES (${hashToken(token)}, ${userId}, ${(userAgent ?? '').slice(0, 256)}, CASE WHEN ${mfa} THEN now() END, now() + ${SESSION_MAX}::interval)`;
-  cookies.set(SESSION_COOKIE, token, COOKIE);
+    INSERT INTO sessions (token_hash, user_id, user_agent, mfa_at, expires_at, remember)
+    VALUES (${hashToken(token)}, ${userId}, ${(userAgent ?? '').slice(0, 256)}, CASE WHEN ${mfa} THEN now() END, now() + ${remember ? SESSION_REMEMBER : SESSION_MAX}::interval, ${remember})`;
+  cookies.set(SESSION_COOKIE, token, sessionCookie(remember, SESSION_REMEMBER_SECONDS));
 }
 
 // Déconnexion (POST uniquement) : ligne supprimée et cookie expiré
@@ -59,6 +62,6 @@ export async function revokeAll(userId: number) {
 export async function listSessions(userId: number, current: Buffer) {
   return sql<{ user_agent: string; created_at: Date; last_seen_at: Date; current: boolean }[]>`
     SELECT user_agent, created_at, last_seen_at, token_hash = ${current} AS current FROM sessions
-    WHERE user_id = ${userId} AND expires_at > now() AND last_seen_at > now() - ${SESSION_IDLE}::interval
+    WHERE user_id = ${userId} AND expires_at > now() AND last_seen_at > now() - (CASE WHEN remember THEN ${SESSION_REMEMBER} ELSE ${SESSION_IDLE} END)::interval
     ORDER BY last_seen_at DESC`;
 }

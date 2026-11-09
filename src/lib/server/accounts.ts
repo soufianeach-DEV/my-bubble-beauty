@@ -78,12 +78,14 @@ export async function verifyEmail(cookies: AstroCookies, token: string, password
 
 // Connexion : message unique en cas d'échec (null). mfaRequired : rediriger vers /admin/code, la session n'ouvre pas /admin sans le code.
 // Lit puis pose le cookie d'appareil : la page de connexion n'a rien d'autre à faire.
-export async function signIn(cookies: AstroCookies, email: string, password: string, ip: string, userAgent: string | null): Promise<(LoginUser & { mfaRequired: boolean }) | null> {
+// remember (« Se souvenir de moi ») ignoré pour l'admin : sa session reste courte et le code TOTP la remplace de toute façon.
+export async function signIn(cookies: AstroCookies, email: string, password: string, ip: string, userAgent: string | null, remember = false): Promise<(LoginUser & { mfaRequired: boolean }) | null> {
   const u = await login(email, password, ip, cookies.get(DEVICE_COOKIE)?.value);
   if (!u) return null;
-  await openSession(cookies, u.id, userAgent);
+  const admin = isAdminEmail(u.email);
+  await openSession(cookies, u.id, userAgent, false, remember && !admin);
   cookies.set(DEVICE_COOKIE, deviceCookie(u.email), DEVICE);
-  return { ...u, mfaRequired: isAdminEmail(u.email) };
+  return { ...u, mfaRequired: admin };
 }
 
 // Code de l'appli d'authentification (anti-rejeu par totp_last_step) ; la session est tournée et porte mfa_at

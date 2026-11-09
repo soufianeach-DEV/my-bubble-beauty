@@ -26,8 +26,8 @@ let failed = false;
 const externe = Astro.url.searchParams.get('externe');
 if (Astro.request.method === 'POST') {
   // Format d'adresse non contrôlé ici : une adresse fausse reçoit le même échec et compte dans les mêmes limites
-  const { data, raw } = await readForm(Astro.request, z.object({ email: z.string().max(254), password: PASSWORD }));
-  const u = data && (await signIn(Astro.cookies, data.email, data.password, Astro.locals.ip, Astro.request.headers.get('user-agent')));
+  const { data, raw } = await readForm(Astro.request, z.object({ email: z.string().max(254), password: PASSWORD, remember: z.string().max(8).optional() }));
+  const u = data && (await signIn(Astro.cookies, data.email, data.password, Astro.locals.ip, Astro.request.headers.get('user-agent'), data.remember === 'on'));
   if (u) return Astro.redirect(u.mfaRequired ? '/admin/code' : back, 303);
   email = (raw.email ?? '').slice(0, 254);
   failed = true;
@@ -47,6 +47,10 @@ if (Astro.request.method === 'POST') {
 <input id="email" name="email" type="email" required maxlength="254" autocomplete="username" value={email}>
 </div>
 <PasswordField id="password" name="password" label={tx.pw.label} lang={lang} />
+<div class="check">
+<input id="remember" name="remember" type="checkbox" aria-describedby="remember-hint">
+<label for="remember">{tx.login.remember}<span class="hint" id="remember-hint">{tx.login.rememberHint}</span></label>
+</div>
 <button class="btn btn--solid" type="submit">{tx.login.submit}</button>
 </form>
 <p><a href={`/${d}/compte/mot-de-passe-oublie`}>{tx.login.forgot}</a></p>

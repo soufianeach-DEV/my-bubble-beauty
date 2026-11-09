@@ -5,6 +5,9 @@ import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypt
 export const SESSION_COOKIE = '__Host-mb_session';
 export const COOKIE = { httpOnly: true, secure: true, sameSite: 'lax', path: '/' } as const;
 
+// « Se souvenir de moi » : cookie persistant (Max-Age), même durée que la session en base ; sinon cookie de session
+export const sessionCookie = (remember: boolean, rememberSeconds: number) => (remember ? { ...COOKIE, maxAge: rememberSeconds } : COOKIE);
+
 // Jetons de session et d'e-mail : 32 octets aléatoires, seul le SHA-256 est stocké en base
 export const newToken = () => randomBytes(32).toString('base64url');
 export const hashToken = (token: string) => createHash('sha256').update(token).digest();

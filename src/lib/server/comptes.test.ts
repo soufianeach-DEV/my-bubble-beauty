@@ -226,6 +226,26 @@ test('comptes, réservations et sécurité sur une vraie base', { skip: !url && 
       assert.equal(await accounts.signInExternal(cookies(), who('g6', c.email), 'fr', '127.0.0.1', null), null);
     });
 
+    await t.test('« Se souvenir de moi » : 30 jours et cookie persistant si cochée, 30 min et cookie de session sinon', async () => {
+      const u = await mkUser('souvenir');
+      const opened = async (remember: boolean) => {
+        const jar = new Map<string, { v: string; o: { maxAge?: number } }>();
+        const c = { get: (k: string) => (jar.has(k) ? { value: jar.get(k)!.v } : undefined), set: (k: string, v: string, o: { maxAge?: number }) => jar.set(k, { v, o }), delete: (k: string) => jar.delete(k) } as never;
+        await openSession(c, u.id, 'test', false, remember);
+        const { v, o } = jar.get('__Host-mb_session')!;
+        const [row] = await sql`SELECT remember, round(extract(epoch FROM expires_at - created_at) / 3600) AS hours FROM sessions WHERE user_id = ${u.id} ORDER BY created_at DESC LIMIT 1`;
+        return { token: v, maxAge: o.maxAge, remember: row.remember, hours: Number(row.hours) };
+      };
+      const long = await opened(true);
+      assert.deepEqual({ ...long, token: 0 }, { token: 0, maxAge: 30 * 24 * 3600, remember: true, hours: 30 * 24 });
+      const short = await opened(false);
+      assert.deepEqual({ ...short, token: 0 }, { token: 0, maxAge: undefined, remember: false, hours: 12 });
+      // Deux heures sans activité : seule la session « souvenir » tient encore
+      await sql`UPDATE sessions SET last_seen_at = now() - interval '2 hours' WHERE user_id = ${u.id}`;
+      assert.ok(await readSession(long.token));
+      assert.equal(await readSession(short.token), null);
+    });
+
     await t.test('lien de connexion : ouvre la session une seule fois, refusé expiré', async () => {
       const c = await mkUser('lien');
       const token = newToken();

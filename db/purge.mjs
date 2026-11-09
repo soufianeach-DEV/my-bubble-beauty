@@ -1,5 +1,5 @@
 // Purge quotidienne (RGPD art. 5.1.e), selon les durées annoncées dans la page confidentialité ; les montants des réservations restent.
-import { SESSION_IDLE } from '../src/lib/server/session-limits.mjs';
+import { SESSION_IDLE, SESSION_REMEMBER } from '../src/lib/server/session-limits.mjs';
 
 // Comptes à effacer : leurs rendez-vous restent, marqués client_erased (sinon l'agenda les prendrait pour des saisies de l'institut),
 // et une ligne de journal par compte est écrite avant la suppression (client_id passe ensuite à NULL).
@@ -16,7 +16,7 @@ export async function purge(sql, adminEmail) {
   const admin = adminEmail.trim().toLowerCase();
   return sql.begin(async (tx) => ({
     // Mêmes durées que session.ts (session-limits.mjs) : expires_at porte le maximum, last_seen_at l'inactivité
-    sessions: (await tx`DELETE FROM sessions WHERE expires_at <= now() OR last_seen_at <= now() - ${SESSION_IDLE}::interval`).count,
+    sessions: (await tx`DELETE FROM sessions WHERE expires_at <= now() OR last_seen_at <= now() - (CASE WHEN remember THEN ${SESSION_REMEMBER} ELSE ${SESSION_IDLE} END)::interval`).count,
     tokens: (await tx`DELETE FROM email_tokens WHERE expires_at <= now() OR used_at IS NOT NULL`).count,
     unverified: await erase(tx, ids(await tx`SELECT id FROM users WHERE email_verified_at IS NULL AND created_at < now() - interval '7 days'`), 'unverified'),
     // Suppression demandée par la cliente : 30 jours pour revenir (rgpd.ts, GRACE_DAYS), puis effacement
