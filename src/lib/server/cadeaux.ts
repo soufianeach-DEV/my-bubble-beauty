@@ -45,11 +45,11 @@ export async function checkGift(tx: Sql, code: string, serviceId: number, lock =
   return { id: g.id };
 }
 
-export type Gift = { id: number; code: string; recipient: string; service: string; service_id: number; duration_label: string; message: string; issued_on: string; expires_on: string; state: GiftState; booking_at: Date | null; created_by: string | null };
+export type Gift = { id: number; code: string; recipient: string; recipient_email: string | null; service: string; service_id: number; duration_label: string; message: string; issued_on: string; expires_on: string; state: GiftState; booking_at: Date | null; created_by: string | null };
 
 export function listGifts(id?: number) {
   return sql<Gift[]>`
-    SELECT g.id, g.code, g.recipient, s.name_fr AS service, g.service_id, g.duration_label, g.message, g.issued_on::text, g.expires_on::text,
+    SELECT g.id, g.code, g.recipient, g.recipient_email, s.name_fr AS service, g.service_id, g.duration_label, g.message, g.issued_on::text, g.expires_on::text,
       ${state(sql)} AS state, (SELECT max(b.starts_at) FROM bookings b WHERE b.gift_card_id = g.id AND b.status IN ('pending_payment', 'confirmed')) AS booking_at,
       coalesce(u.name, u.email) AS created_by
     FROM gift_cards g JOIN services s ON s.id = g.service_id LEFT JOIN users u ON u.id = g.created_by
@@ -62,6 +62,8 @@ export const giftForm = z.discriminatedUnion('action', [
   z.object({
     action: z.literal('create'),
     recipient: line(100, 'Pour : 100 caractères au plus.').min(1, 'Indiquez pour qui est le bon.'),
+    recipient_email: z.string({ error: 'Adresse e-mail invalide.' }).trim().toLowerCase().max(254, 'Adresse e-mail invalide.')
+      .refine((v) => v === '' || z.email().safeParse(v).success, 'Adresse e-mail du bénéficiaire invalide.').default(''),
     service: z.coerce.number({ error: 'Choisissez le soin.' }).int().min(1, 'Choisissez le soin.'),
     duration_label: line(40, 'Durée : 40 caractères au plus.').default(''),
     message: z.string({ error: 'Message : 300 caractères au plus.' }).max(300, 'Message : 300 caractères au plus.').default('').transform((v) => v.replace(/\r\n/g, '\n').trim()),
@@ -81,8 +83,8 @@ export async function giftAction(actor: number, form: FormData): Promise<Result>
       const code = newGiftCode();
       if ((await sql`SELECT 1 FROM promo_codes WHERE code = ${code}`).length) continue;
       const [g] = await sql<{ id: number }[]>`
-        INSERT INTO gift_cards (code, recipient, service_id, duration_label, message, expires_on, created_by)
-        VALUES (${code}, ${f.recipient}, ${f.service}, ${f.duration_label}, ${f.message}, (current_date + interval '12 months')::date, ${actor})
+        INSERT INTO gift_cards (code, recipient, recipient_email, service_id, duration_label, message, expires_on, created_by)
+        VALUES (${code}, ${f.recipient}, ${f.recipient_email || null}, ${f.service}, ${f.duration_label}, ${f.message}, (current_date + interval '12 months')::date, ${actor})
         ON CONFLICT (code) DO NOTHING RETURNING id`;
       if (!g) continue;
       audit(actor, 'gift_created', { gift_id: g.id, service_id: f.service });

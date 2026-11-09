@@ -31,6 +31,7 @@ const day = (d: string) => new Intl.DateTimeFormat('fr-BE', { timeZone: 'UTC', d
   <p><a href="/admin/bons-cadeaux">← Tous les bons</a></p>
   {done && <p class="notice" role="status">{done}</p>}
   {error && <p class="notice notice--error" role="alert">{error}</p>}
+  {g.recipient_email && <p>E-mail du bénéficiaire : <a href={`mailto:${g.recipient_email}`}>{g.recipient_email}</a></p>}
   <p>État : <strong>{STATE_LABELS[g.state]}</strong>{g.booking_at && ` · rendez-vous le ${new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', dateStyle: 'long', timeStyle: 'short' }).format(g.booking_at)}`}</p>
   <p><button class="btn btn--solid" type="button" data-print>Imprimer ou enregistrer en PDF</button></p>
 </div>

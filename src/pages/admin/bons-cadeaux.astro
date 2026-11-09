@@ -30,6 +30,7 @@ const day = (d: string) => new Intl.DateTimeFormat('fr-BE', { timeZone: 'UTC', d
 <form class="form" method="post">
   <input type="hidden" name="action" value="create">
   <div class="field"><label for="recipient">Pour</label><input id="recipient" name="recipient" required maxlength="100" value={draft.recipient ?? ''} autocomplete="off"></div>
+  <div class="field"><label for="recipient_email">E-mail du bénéficiaire <span class="hint">(facultatif)</span></label><input id="recipient_email" name="recipient_email" type="email" maxlength="254" autocomplete="off" value={draft.recipient_email ?? ''}></div>
   <div class="field"><label for="service">Soin</label>
     <select id="service" name="service" required>
       <option value="">Choisir…</option>
@@ -45,7 +46,7 @@ const day = (d: string) => new Intl.DateTimeFormat('fr-BE', { timeZone: 'UTC', d
 <h2 id="h-list">Bons émis</h2>
 {gifts.length === 0 ? <p>Aucun bon pour l'instant.</p> : (
 <ul class="gifts">{gifts.map((g) => (
-  <li><a href={`/admin/bons-cadeaux/${g.id}`}><strong>{g.code}</strong></a> · pour {g.recipient}
+  <li><a href={`/admin/bons-cadeaux/${g.id}`}><strong>{g.code}</strong></a> · pour {g.recipient}{g.recipient_email && ` (${g.recipient_email})`}
     <br><small>{g.service} · valable jusqu'au {day(g.expires_on)}</small>
     <span class:list={['badge', { 'badge--ok': g.state === 'valide', 'badge--wait': g.state === 'reserve', 'badge--alert': g.state === 'expire' || g.state === 'annule' }]}>{STATE_LABELS[g.state]}</span></li>
 ))}</ul>
