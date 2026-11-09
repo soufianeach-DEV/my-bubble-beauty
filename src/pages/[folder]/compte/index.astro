@@ -15,6 +15,7 @@ import { euros } from '../../../lib/server/pricing.ts';
 import { closeSession, listSessions } from '../../../lib/server/session.ts';
 import { deleteAccount, eraseNow, exportData, GRACE_DAYS, setConsent } from '../../../lib/server/rgpd.ts';
 import { FORMS, listConsents, pendingConsents } from '../../../lib/server/consentements.ts';
+import { loyaltyCard } from '../../../lib/server/fidelite.ts';
 
 const lang = langOfFolder(Astro.params.folder!);
 const d = FOLDER[lang];
@@ -108,6 +109,8 @@ if (Astro.request.method === 'POST') {
 }
 
 const [bookings, sessions, toSign, consents] = finished ? [[], [], [], []] : await Promise.all([clientBookings(user.id, lang), listSessions(user.id, session.hash), pendingConsents(user.id), listConsents(user.id)]);
+const card = finished || user.role ? null : await loyaltyCard(user.id);
+const tl = tx.loyalty;
 if (cancelled) {
   // Un acompte non nul sur une réservation confirmée a été payé : s'il n'a pas pu être rendu, l'admin le voit et le relance
   const paid = (bookings.find((b) => b.id === cancelled!.id)?.deposit_cents ?? 0) > 0;
@@ -160,6 +163,13 @@ const price = (b: (typeof bookings)[number]) => euros(b.price_cents - b.discount
 </section>}
 {consents.length > 0 && <><h2>{tx.consent.signedTitle}</h2>
 <ul class="signed">{consents.map((c) => <li><span lang="fr">{FORMS[c.kind].title}</span>, {tx.consent.signedOn(dayOnly(c.signed_at))}</li>)}</ul></>}
+
+{card && <section class="loyalty" aria-labelledby="h-loyalty">
+<h2 id="h-loyalty">{tl.title}</h2>
+<p><strong>{tl.count(card.sessions)}</strong></p>
+{card.free ? <p class="notice">{tl.free(card.rules.free_label)}</p> : card.discount && <p class="notice">{tl.discount(card.rules.discount_percent)}</p>}
+<p class="hint">{tl.rules(card.rules.discount_percent, card.rules.discount_after, card.rules.free_label, card.rules.free_after)}</p>
+</section>}
 
 <h2>{ta.history}</h2>
 {history.length ? (

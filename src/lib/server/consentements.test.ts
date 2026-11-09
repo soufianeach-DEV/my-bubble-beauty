@@ -115,12 +115,50 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     const [gb] = await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, discount_cents, gift_card_id)
       VALUES (${other}, ${wh.id}, ${later}, ${new Date(later.getTime() + 3_600_000)}, 'confirmed', 9000, 9000, ${gc.id}) RETURNING id`;
     assert.deepEqual(await gifts.checkGift(sql, gc.code, wh.id), { problem: 'used' });
+    // Deux réservations actives sur le même bon : refusée par l'index unique, même si les contrôles se croisent
+    await assert.rejects(sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, gift_card_id)
+      VALUES (${other}, ${wh.id}, ${new Date(later.getTime() + 86_400_000)}, ${new Date(later.getTime() + 90_000_000)}, 'confirmed', 9000, ${gc.id})`, /bookings_gift_idx/);
     await sql`UPDATE bookings SET status = 'cancelled', cancelled_at = now() WHERE id = ${gb.id}`;
     assert.equal((await gifts.listGifts(gc.id))[0].state, 'valide');
     assert.ok((await gifts.giftAction(other, f({ action: 'cancel', id: String(gc.id), confirm: 'on' }))).ok);
     assert.deepEqual(await gifts.checkGift(sql, gc.code, wh.id), { problem: 'unknown' });
     await sql`UPDATE bookings SET gift_card_id = NULL WHERE gift_card_id = ${gc.id}`;
     await sql`DELETE FROM gift_cards WHERE id = ${gc.id}`;
+
+    // Carte de fidélité (règles par défaut 5 / 10 %, 10 / soin offert) : les absences et annulations ne comptent pas,
+    // la remise vaut une fois par carte, le soin offert remet la carte à zéro
+    const fid = await import('./fidelite.ts');
+    const fan = await mk('fidele');
+    const visit = (daysAgo: number, extra: Partial<{ status: string; no_show: boolean }> = {}) => {
+      const at = new Date(Date.now() - daysAgo * 86_400_000 + 3 * 3_600_000);
+      return sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, no_show)
+        VALUES (${fan}, ${wh.id}, ${at}, ${new Date(at.getTime() + 3_600_000)}, ${extra.status ?? 'confirmed'}, 9000, ${extra.no_show ?? false}) RETURNING id`;
+    };
+    for (let i = 1; i <= 5; i++) await visit(100 + i * 2);
+    await visit(80, { no_show: true });
+    await visit(79, { status: 'cancelled' });
+    let card = await fid.loyaltyCard(fan);
+    assert.deepEqual({ n: card.sessions, discount: card.discount, free: card.free }, { n: 5, discount: true, free: false });
+    const soonish = new Date(Date.now() + 70 * 86_400_000);
+    const [next] = await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents)
+      VALUES (${fan}, ${wh.id}, ${soonish}, ${new Date(soonish.getTime() + 3_600_000)}, 'confirmed', 9000) RETURNING id`;
+    const apply = (kind: string, booking: number) => fid.applyReward(other, f({ id: String(fan), kind, booking: String(booking), confirm: 'on' }));
+    assert.equal((await apply('free', next.id)).ok, false);
+    assert.ok((await apply('discount', next.id)).ok);
+    assert.equal((await sql`SELECT discount_cents FROM bookings WHERE id = ${next.id}`)[0].discount_cents, 900);
+    // Une seule remise par carte, même sur un autre rendez-vous
+    const [next2] = await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents)
+      VALUES (${fan}, ${wh.id}, ${new Date(soonish.getTime() + 86_400_000)}, ${new Date(soonish.getTime() + 90_000_000)}, 'confirmed', 9000) RETURNING id`;
+    assert.equal((await apply('discount', next2.id)).ok, false);
+    for (let i = 1; i <= 5; i++) await visit(60 - i * 2);
+    card = await fid.loyaltyCard(fan);
+    assert.deepEqual({ n: card.sessions, discount: card.discount, free: card.free }, { n: 10, discount: false, free: true });
+    assert.ok((await apply('free', next2.id)).ok);
+    assert.equal((await sql`SELECT discount_cents FROM bookings WHERE id = ${next2.id}`)[0].discount_cents, 9000);
+    card = await fid.loyaltyCard(fan);
+    assert.deepEqual({ n: card.sessions, discount: card.discount, free: card.free }, { n: 0, discount: false, free: false });
+    const [{ n: logged }] = await sql`SELECT count(*)::int AS n FROM audit_log WHERE client_id = ${fan} AND details->>'action' = 'loyalty_applied'`;
+    assert.equal(logged, 2);
   } finally {
     await sql`DELETE FROM bookings WHERE service_id IN (SELECT id FROM services WHERE slug IN (${`laser-${tag}`}, ${`blanchiment-des-dents-${tag}`}))`;
     await sql`DELETE FROM services WHERE slug IN (${`laser-${tag}`}, ${`blanchiment-des-dents-${tag}`})`;

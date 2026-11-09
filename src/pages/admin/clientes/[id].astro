@@ -11,6 +11,7 @@ import { euros, todayBrussels } from '../../../lib/server/pricing.ts';
 import { GRACE_DAYS } from '../../../lib/server/rgpd.ts';
 import { FORMS, KINDS, listConsents } from '../../../lib/server/consentements.ts';
 import { suivi, suiviAction } from '../../../lib/server/suivi.ts';
+import { applyReward, loyaltyCard, rewardableBookings } from '../../../lib/server/fidelite.ts';
 
 const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
@@ -26,7 +27,7 @@ if (Astro.request.method === 'POST') {
   if (!form) return new Response(null, { status: 413 });
   // Les actions sur un rendez-vous passent par l'agenda (mêmes règles et même journal)
   const scope = form.get('scope');
-  const r = scope === 'booking' ? await agendaAction(me, form) : scope === 'suivi' ? await suiviAction(me, form) : await clientAction(me, form, manage);
+  const r = scope === 'booking' ? await agendaAction(me, form) : scope === 'suivi' ? await suiviAction(me, form) : scope === 'fidelite' ? await applyReward(me, form) : await clientAction(me, form, manage);
   if (r.ok && r.key === 'efface') return Astro.redirect('/admin/clientes?ok=efface', 303);
   if (r.ok) return Astro.redirect(`${self}?ok=${r.key}${r.id !== id ? `#b-${r.id}` : ''}`, 303);
   error = r.error;
@@ -37,9 +38,9 @@ if (Astro.request.method === 'POST') {
 const c = await clientDetail(id);
 if (!c) return new Response(null, { status: 404 });
 const { user: u, bookings, stats, events } = c;
-const [consents, sv] = await Promise.all([listConsents(u.id), suivi(u.id)]);
+const [consents, sv, card, rewardable] = await Promise.all([listConsents(u.id), suivi(u.id), loyaltyCard(u.id), rewardableBookings(u.id)]);
 const DONE: Record<string, string> = {
-  notes: 'Notes enregistrées.', sante: 'Date de naissance et antécédents enregistrés.', seance: 'Séance mise à jour.', block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte réactivé.',
+  notes: 'Notes enregistrées.', sante: 'Date de naissance et antécédents enregistrés.', 'fidelite-remise': 'Remise de fidélité appliquée au rendez-vous.', 'fidelite-offert': 'Soin offert appliqué au rendez-vous : la carte repart à zéro.', seance: 'Séance mise à jour.', block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte réactivé.',
   remove: "Compte supprimé : il n'apparaît plus dans les listes et ne peut plus se connecter. Ses rendez-vous restent.", unremove: 'Compte restauré : la cliente peut de nouveau se connecter.', restore: 'Suppression annulée : le compte est de nouveau actif. Les rendez-vous annulés le restent.',
   absente: 'Rendez-vous marqué « absente ».', venue: 'Absence retirée.', rendu: 'Acompte noté comme remboursé hors du site.',
 };
@@ -120,6 +121,25 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
   ))}</tbody>
 </table></div>
 )}
+</section>
+
+<section aria-labelledby="h-fidelite">
+<h2 id="h-fidelite">Carte de fidélité</h2>
+<p><strong>{card.sessions} séance{card.sessions > 1 ? 's' : ''}</strong> sur la carte en cours.
+  {card.rules.discount_percent} % de remise après {card.rules.discount_after} séances{card.discountUsed && ' (déjà utilisée)'}, {card.rules.free_label} offert après {card.rules.free_after}.</p>
+<p class="meter" aria-hidden="true"><span>{Array.from({ length: card.rules.free_after }, (_, i) => <i class:list={{ on: i < card.sessions, mark: i + 1 === card.rules.discount_after }}></i>)}</span></p>
+{(card.discount || card.free) ? (
+  rewardable.length === 0 ? <p class="notice">Avantage disponible : {card.free ? `${card.rules.free_label} offert` : `${card.rules.discount_percent} % de remise`}. Saisissez d'abord le rendez-vous où l'appliquer.</p> : (
+  <form class="form" method="post" action={`${self}#h-fidelite`}>
+    <input type="hidden" name="scope" value="fidelite"><input type="hidden" name="id" value={u.id}><input type="hidden" name="kind" value={card.free ? 'free' : 'discount'}>
+    <p class="notice">Avantage disponible : <strong>{card.free ? `${card.rules.free_label} offert` : `${card.rules.discount_percent} % de remise sur le soin`}</strong></p>
+    <div class="field"><label for="reward-booking">Rendez-vous où l'appliquer</label>
+      <select id="reward-booking" name="booking" required>{rewardable.map((b) => <option value={b.id}>{fmtDateTime(b.starts_at)} · {b.service} · {euros(b.price_cents)}</option>)}</select></div>
+    <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+    <button class="btn btn--solid" type="submit">Appliquer</button>
+  </form>)
+) : <p class="hint">Aucun avantage disponible pour l'instant.</p>}
+{card.last && <p class="hint">Dernier avantage : {card.last.kind === 'free' ? 'soin offert' : 'remise'} le {fmtDateTime(card.last.used_at)}.</p>}
 </section>
 
 <section aria-labelledby="h-suivi">
@@ -220,6 +240,10 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
   .cell-form .btn{min-height:44px;padding:.55rem 1rem;white-space:normal;text-align:left;line-height:1.3}
   .events{padding-left:1.1rem}
   .consents{padding-left:1.1rem}
+  .meter span{display:flex;flex-wrap:wrap;gap:.3rem}
+  .meter i{width:1.1rem;height:1.1rem;border-radius:50%;border:1px solid var(--line-soft)}
+  .meter i.on{background:var(--accent);border-color:var(--accent)}
+  .meter i.mark{outline:2px solid var(--accent);outline-offset:1px}
   .seances{list-style:none;margin:1rem 0 0;padding:0;display:grid;gap:.6rem}
   .seances li{padding:.75rem 1rem;border:1px solid var(--line-soft);border-radius:12px;scroll-margin-top:1rem}
   .seances p{margin:0 0 .2rem}
