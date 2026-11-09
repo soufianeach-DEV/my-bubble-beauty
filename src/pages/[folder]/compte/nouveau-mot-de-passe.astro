@@ -17,14 +17,15 @@ const tx = COMPTE[lang];
 const t = tx.reset;
 
 let token = Astro.url.searchParams.get('token');
-let result: Awaited<ReturnType<typeof resetPassword>> | 'form' | null = null;
+let result: Awaited<ReturnType<typeof resetPassword>> | 'form' | 'mismatch' | null = null;
 if (Astro.request.method === 'POST') {
-  const { data, raw } = await readForm(Astro.request, z.object({ token: TOKEN, password: PASSWORD }));
+  const { data, raw } = await readForm(Astro.request, z.object({ token: TOKEN, password: PASSWORD, password2: PASSWORD }));
   token = raw.token ?? null;
-  result = data ? await resetPassword(data.token, data.password) : 'form';
+  // Confirmation vérifiée avant de consommer le jeton : un écart laisse le lien utilisable
+  result = !data ? 'form' : data.password2 !== data.password ? 'mismatch' : await resetPassword(data.token, data.password);
 }
 const valid = result !== 'invalid' && TOKEN.safeParse(token).success;
-const error = result === 'short' || result === 'long' || result === 'pwned' ? tx.problem[result] : result === 'form' ? tx.invalid : null;
+const error = result === 'short' || result === 'long' || result === 'pwned' ? tx.problem[result] : result === 'form' ? tx.invalid : result === 'mismatch' ? tx.register.passwordMismatch : null;
 ---
 <Base lang={lang} pageKey="home" route="compte/nouveau-mot-de-passe" title={`${t.title} - My Bubble Beauty`} description={t.description} noindex mainClass="legal">
 <Fragment slot="head"><meta name="referrer" content="no-referrer"><script is:inline src={`/assets/js/password.js?v=${JS_VERSION}`} defer></script></Fragment>
@@ -41,7 +42,8 @@ const error = result === 'short' || result === 'long' || result === 'pwned' ? tx
 <p>{t.intro}</p>
 <form class="form" method="post" action={`/${d}/compte/nouveau-mot-de-passe`}>
 <input type="hidden" name="token" value={token}>
-<PasswordField id="password" name="password" label={t.label} lang={lang} isNew invalid={!!error} />
+<PasswordField id="password" name="password" label={t.label} lang={lang} isNew invalid={!!error && result !== 'mismatch'} />
+<PasswordField id="password2" name="password2" label={tx.register.password2} lang={lang} match="password" mismatch={tx.register.passwordMismatch} invalid={result === 'mismatch'} />
 <button class="btn btn--solid" type="submit">{t.submit}</button>
 </form>
 </Fragment>

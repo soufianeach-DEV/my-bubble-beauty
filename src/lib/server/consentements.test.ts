@@ -160,6 +160,8 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     // absences, annulations, petits soins et soins réglés par bon cadeau ne comptent pas ; la remise vaut une fois par carte,
     // le soin offert remet la carte à zéro
     const fid = await import('./fidelite.ts');
+    // Règles figées pour ce test (le défaut du site peut changer) : soin offert à 1 000 €
+    await sql`INSERT INTO settings (key, value) VALUES ('loyalty', ${sql.json({ discount_after: 5, discount_percent: 10, free_after: 10, free_label: 'HydraPure', min_euros: 50, free_min_total: 1000, free_value: 120 })}) ON CONFLICT (key) DO UPDATE SET value = excluded.value`;
     const fan = await mk('fidele');
     const visit = (daysAgo: number, extra: Partial<{ status: string; no_show: boolean; price: number; discount: number }> = {}) => {
       const at = new Date(Date.now() - daysAgo * 86_400_000 + 3 * 3_600_000);
@@ -260,7 +262,7 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     await sql`DELETE FROM bookings WHERE service_id IN (SELECT id FROM services WHERE slug IN (${`laser-${tag}`}, ${`blanchiment-des-dents-${tag}`}))`;
     await sql`DELETE FROM services WHERE slug IN (${`laser-${tag}`}, ${`blanchiment-des-dents-${tag}`})`;
     await sql`DELETE FROM users WHERE email LIKE ${`${tag}%`}`;
-    await sql`DELETE FROM settings WHERE key = 'specialist_name'`;
+    await sql`DELETE FROM settings WHERE key IN ('specialist_name', 'loyalty')`;
     await sql.end();
   }
 });

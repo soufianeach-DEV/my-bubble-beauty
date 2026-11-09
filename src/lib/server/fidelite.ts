@@ -1,7 +1,7 @@
 // Carte de fidélité. Une séance compte quand la cliente est venue (confirmé, terminé, sans absence) et que le montant réellement payé
 // (prix - remise - remboursement) atteint le minimum réglé ; un soin réglé par bon cadeau ou portant un avantage ne compte pas.
 // Règles réglables dans /admin/reglages (par défaut : séance d'au moins 50 €, -10 % une fois après 5 séances, HydraPure offerte après
-// 10 séances et 1 000 € payés, puis la carte repart à zéro). L'avantage s'applique à la caisse en un clic et passe au journal.
+// 10 séances et 500 € payés (réglable), puis la carte repart à zéro). L'avantage s'applique à la caisse en un clic et passe au journal.
 import { z } from 'astro/zod';
 import type { Result } from './admin.ts';
 import { sql } from './db.ts';

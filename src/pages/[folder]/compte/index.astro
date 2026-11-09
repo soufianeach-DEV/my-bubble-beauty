@@ -32,7 +32,7 @@ const dayOnly = new Intl.DateTimeFormat({ fr: 'fr-BE', nl: 'nl-BE', en: 'en-GB' 
 const ACTION = z.discriminatedUnion('action', [
   z.object({ action: z.literal('cancel'), id: z.coerce.number().int().positive() }),
   z.object({ action: z.literal('profile'), name: NAME, phone: PHONE }),
-  z.object({ action: z.literal('password'), current: PASSWORD, next: PASSWORD }),
+  z.object({ action: z.literal('password'), current: PASSWORD, next: PASSWORD, next2: PASSWORD }),
   z.object({ action: z.literal('others'), password: PASSWORD }),
   z.object({ action: z.literal('logout') }),
   z.object({ action: z.literal('export') }),
@@ -82,6 +82,10 @@ if (Astro.request.method === 'POST') {
     await updateProfile(user.id, f);
     profile = f;
     notice = { text: ta.saved };
+  } else if (f.action === 'password' && f.next2 !== f.next) {
+    // Confirmation refusée avant tout contrôle du mot de passe actuel
+    notice = { text: tx.register.passwordMismatch, error: true };
+    bad.add('next2');
   } else if (f.action === 'password') {
     const r = await changePassword(user.id, f.current, f.next, session.hash);
     if (r === 'ok') notice = { text: ta.changed };
@@ -120,69 +124,100 @@ const upcoming = bookings.filter((b) => b.upcoming && b.status !== 'cancelled').
 const history = bookings.filter((b) => !b.upcoming || b.status === 'cancelled');
 const invalid = (k: string) => (bad.has(k) ? 'true' : undefined);
 const price = (b: (typeof bookings)[number]) => euros(b.price_cents - b.discount_cents, lang);
+// Nom saisi en entier : le champ « Nom et prénom » ne dit pas dans quel ordre ; sans nom, l'en-tête garde le titre de la page
+const firstName = profile.name.trim().slice(0, 60);
+const histState = (b: (typeof bookings)[number]) =>
+  [b.no_show ? ta.noShow : b.status === 'confirmed' ? ta.status.past : ta.status[b.status], b.refunded_cents > 0 ? `${ta.refundedAmount}${euros(b.refunded_cents, lang)}` : ''].filter(Boolean).join(' · ');
+// Jauges de la carte : plafonnées à l'objectif (la carte repart à zéro une fois le soin offert pris)
+const gauges = card
+  ? [
+      { label: tl.toDiscount(card.rules.discount_percent), value: Math.min(card.sessions, card.rules.discount_after), max: card.rules.discount_after },
+      { label: tl.toFree(card.rules.free_label), value: Math.min(card.sessions, card.rules.free_after), max: card.rules.free_after },
+      { label: tl.toTotal, value: Math.min(Math.floor(card.spentCents / 100), card.rules.free_min_total), max: card.rules.free_min_total, euros: true },
+    ].map((g) => ({ ...g, text: g.euros ? tl.ofEuros(g.value, g.max) : tl.of(g.value, g.max) }))
+  : [];
 ---
-<Base lang={lang} pageKey="home" route="compte" title={`${ta.title} - My Bubble Beauty`} description={ta.description} noindex mainClass="legal">
+<Base lang={lang} pageKey="home" route="compte" title={`${ta.title} - My Bubble Beauty`} description={ta.description} noindex mainClass="legal compte-dash">
 <Fragment slot="head"><script is:inline src={`/assets/js/password.js?v=${JS_VERSION}`} defer></script></Fragment>
-<div class="wrap"><article>
-<h1>{ta.title}</h1>
+<div class="wrap"><article class="dash">
+{/* En-tête sur une ligne : salutation à gauche, actions à droite ; « Mon compte » reste dans le h1 pour les lecteurs d'écran */}
+<header class="dash-head">
+<h1><span class="visually-hidden">{ta.title} : </span>{firstName ? `${ta.hello} ${firstName}` : ta.title}</h1>
+{!finished && <div class="actions">
+<a class="btn btn--solid" href={`/${d}/reserver`}>{ta.book}</a>
+{user.role && <a class="btn btn--ghost" href="/admin">{ta.admin}</a>}
+<form class="inline-form" method="post" action={self}><input type="hidden" name="action" value="logout"><button class="btn btn--ghost" type="submit">{ta.logout}</button></form>
+</div>}
+</header>
 {finished ? <p class="notice" role="status">{finished} <a href={`/${d}/index.html`}>{ta.home}</a></p> : <>
 {notice && (
 <p class:list={['notice', notice.error && 'notice--error']} role={notice.error ? 'alert' : 'status'}>
 {notice.text}{notice.call && <Fragment>{' '}<a href={`tel:${CONTACT.phone}`}>{CONTACT.phoneLabel}</a>.</Fragment>}
 </p>
 )}
-<p>{[ta.hello, profile.name].filter(Boolean).join(' ')}</p>
-<div class="actions">
-<a class="btn btn--solid" href={`/${d}/reserver`}>{ta.book}</a>
-{user.role && <a class="btn btn--ghost" href="/admin">{ta.admin}</a>}
-<form class="inline-form" method="post" action={self}><input type="hidden" name="action" value="logout"><button class="btn btn--ghost" type="submit">{ta.logout}</button></form>
-</div>
 
-<h2>{ta.upcoming}</h2>
-{upcoming.length ? (
-<ul class="bookings">{upcoming.map((b) => (
-<li>
-<p><strong>{when(b.starts_at, lang)}</strong></p>
-<p>{b.service} · {price(b)}</p>
-<p>{ta.status[b.status]}{b.status === 'confirmed' && b.deposit_cents > 0 && ` · ${ta.depositPaid}${euros(b.deposit_cents, lang)}`}</p>
-{b.status === 'pending_payment' && <p class="hint">{ta.pending}</p>}
-{b.cancellable && <p><a class="btn btn--ghost" href={`${self}/deplacer?id=${b.id}`}>{ta.move}<span class="visually-hidden"> {ta.moveHidden} {when(b.starts_at, lang)}</span></a></p>}
-{b.cancellable ? (
-<details class="cancel"><summary>{ta.cancel}<span class="visually-hidden"> {ta.cancelHidden} {when(b.starts_at, lang)}</span></summary>
-<form method="post" action={self}><input type="hidden" name="action" value="cancel"><input type="hidden" name="id" value={b.id}><button class="btn btn--ghost" type="submit">{ta.cancelConfirm}</button></form>
-</details>
-) : b.status === 'confirmed' && <p class="hint">{ta.callToCancel}{' '}<a href={`tel:${CONTACT.phone}`}>{CONTACT.phoneLabel}</a></p>}
-</li>
-))}</ul>
-) : <p>{ta.noUpcoming}</p>}
-
+<div class="dash-grid">
+<div class="dash-col">
 {toSign.length > 0 && <section class="consents" aria-labelledby="h-sign">
 <h2 id="h-sign">{tx.consent.pendingTitle}</h2>
 <p>{tx.consent.pending}</p>
 <ul>{toSign.map((k) => <li><span lang="fr">{FORMS[k].title}</span> <a class="btn btn--solid" href={`${self}/consentement?type=${k}`}>{tx.consent.read}</a></li>)}</ul>
 </section>}
-{consents.length > 0 && <><h2>{tx.consent.signedTitle}</h2>
-<ul class="signed">{consents.map((c) => <li><span lang="fr">{FORMS[c.kind].title}</span>, {tx.consent.signedOn(dayOnly(c.signed_at))}</li>)}</ul></>}
 
+<section aria-labelledby="h-upcoming">
+<h2 id="h-upcoming">{ta.upcoming}</h2>
+{upcoming.length ? (
+<ul class="bookings">{upcoming.map((b) => (
+<li>
+<div class="b-info">
+<p><strong>{when(b.starts_at, lang)}</strong></p>
+<p>{b.service} · {price(b)} · {ta.status[b.status]}{b.status === 'confirmed' && b.deposit_cents > 0 && ` · ${ta.depositPaid}${euros(b.deposit_cents, lang)}`}</p>
+{b.status === 'pending_payment' && <p class="hint">{ta.pending}</p>}
+{!b.cancellable && b.status === 'confirmed' && <p class="hint">{ta.callToCancel}{' '}<a href={`tel:${CONTACT.phone}`}>{CONTACT.phoneLabel}</a></p>}
+</div>
+{b.cancellable && <div class="b-acts">
+<a class="btn btn--ghost" href={`${self}/deplacer?id=${b.id}`}>{ta.move}<span class="visually-hidden"> {ta.moveHidden} {when(b.starts_at, lang)}</span></a>
+<details class="cancel"><summary>{ta.cancel}<span class="visually-hidden"> {ta.cancelHidden} {when(b.starts_at, lang)}</span></summary>
+<form method="post" action={self}><input type="hidden" name="action" value="cancel"><input type="hidden" name="id" value={b.id}><button class="btn btn--ghost" type="submit">{ta.cancelConfirm}</button></form>
+</details>
+</div>}
+</li>
+))}</ul>
+) : <p>{ta.noUpcoming}</p>}
+</section>
+
+<section aria-labelledby="h-history">
+<h2 id="h-history">{ta.history}</h2>
+{history.length ? (<>
+<ul class="dense">{history.slice(0, 5).map((b) => (
+<li><strong>{when(b.starts_at, lang)}</strong><span>{b.service} · {price(b)}</span><span class="h-state">{histState(b)}</span></li>
+))}</ul>
+{history.length > 5 && <details class="more"><summary>{ta.showAll(history.length - 5)}</summary>
+<ul class="dense">{history.slice(5).map((b) => (
+<li><strong>{when(b.starts_at, lang)}</strong><span>{b.service} · {price(b)}</span><span class="h-state">{histState(b)}</span></li>
+))}</ul>
+</details>}
+</>) : <p>{ta.noHistory}</p>}
+</section>
+</div>
+
+<div class="dash-col">
 {card && <section class="loyalty" aria-labelledby="h-loyalty">
 <h2 id="h-loyalty">{tl.title}</h2>
 <p><strong>{tl.count(card.sessions)}</strong></p>
 {card.free ? <p class="notice">{tl.free(card.rules.free_label)}</p> : card.discount && <p class="notice">{tl.discount(card.rules.discount_percent)}</p>}
-<p class="hint">{tl.rules(card.rules.discount_percent, card.rules.discount_after, card.rules.free_label, card.rules.free_after, card.rules.min_euros, card.rules.free_min_total)}</p>
+{/* Trois jauges : séances vers la remise, séances vers le soin offert, montant payé vers le seuil du soin offert */}
+<dl class="gauges">{gauges.map((g) => (
+<div class="gauge"><dt>{g.label}</dt><dd><progress value={g.value} max={g.max} aria-label={g.label} aria-valuetext={g.text}>{g.text}</progress><span aria-hidden="true">{g.text}</span></dd></div>
+))}</dl>
+<p class="hint">{tl.minNote(card.rules.min_euros)}</p>
 </section>}
 
-<h2>{ta.history}</h2>
-{history.length ? (
-<ul class="bookings">{history.map((b) => (
-<li>
-<p><strong>{when(b.starts_at, lang)}</strong></p>
-<p>{b.service} · {price(b)}</p>
-<p>{b.no_show ? ta.noShow : b.status === 'confirmed' ? ta.status.past : ta.status[b.status]}{b.refunded_cents > 0 && ` · ${ta.refundedAmount}${euros(b.refunded_cents, lang)}`}</p>
-</li>
-))}</ul>
-) : <p>{ta.noHistory}</p>}
+{consents.length > 0 && <section aria-labelledby="h-signed"><h2 id="h-signed">{tx.consent.signedTitle}</h2>
+<ul class="signed">{consents.map((c) => <li><span lang="fr">{FORMS[c.kind].title}</span>, {tx.consent.signedOn(dayOnly(c.signed_at))}</li>)}</ul></section>}
 
-<h2>{ta.profile}</h2>
+<section aria-labelledby="h-profile">
+<h2 id="h-profile">{ta.profile}</h2>
 <p><strong>{tx.email}</strong><br>{user.email}</p>
 <p class="hint">{ta.emailFixed} <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>.</p>
 <form class="form" method="post" action={self}>
@@ -197,16 +232,21 @@ const price = (b: (typeof bookings)[number]) => euros(b.price_cents - b.discount
 </div>
 <button class="btn btn--solid" type="submit">{ta.save}</button>
 </form>
+</section>
 
-<h2>{ta.password}</h2>
+<section aria-labelledby="h-password">
+<h2 id="h-password">{ta.password}</h2>
 <form class="form" method="post" action={self}>
 <input type="hidden" name="action" value="password">
 <PasswordField id="current" name="current" label={ta.current} lang={lang} invalid={bad.has('current')} />
 <PasswordField id="next" name="next" label={ta.next} lang={lang} isNew invalid={bad.has('next')} />
+<PasswordField id="next2" name="next2" label={ta.next2} lang={lang} match="next" mismatch={tx.register.passwordMismatch} invalid={bad.has('next2')} />
 <button class="btn btn--solid" type="submit">{ta.changeSubmit}</button>
 </form>
+</section>
 
-<h2>{ta.sessions}</h2>
+<section aria-labelledby="h-sessions">
+<h2 id="h-sessions">{ta.sessions}</h2>
 <div class="table-wrap"><table class="data-table">
 <thead><tr>{ta.sessionCols.map((c) => <th scope="col">{c}</th>)}</tr></thead>
 <tbody>{sessions.map((s) => (
@@ -225,11 +265,12 @@ const price = (b: (typeof bookings)[number]) => euros(b.price_cents - b.discount
 <button class="btn btn--ghost" type="submit">{ta.others}</button>
 </form>
 )}
+</section>
 
-<h2>{ta.data}</h2>
+<section aria-labelledby="h-data">
+<h2 id="h-data">{ta.data}</h2>
 <p class="hint">{ta.exportHint}</p>
 <form class="inline-form" method="post" action={self}><input type="hidden" name="action" value="export"><button class="btn btn--ghost" type="submit">{ta.export}</button></form>
-
 <h3>{ta.consentTitle}</h3>
 <p>{consent ? ta.consentOn(dayOnly(consent)) : ta.consentOff}</p>
 {!consent && <p class="hint">{ta.consentText}</p>}
@@ -237,8 +278,10 @@ const price = (b: (typeof bookings)[number]) => euros(b.price_cents - b.discount
 <input type="hidden" name="action" value="consent"><input type="hidden" name="give" value={consent ? 'off' : 'on'}>
 <button class="btn btn--ghost" type="submit">{consent ? ta.consentWithdraw : ta.consentGive}</button>
 </form>
+</section>
 
-<h2>{ta.deleteTitle}</h2>
+<section aria-labelledby="h-delete">
+<h2 id="h-delete">{ta.deleteTitle}</h2>
 <details class="cancel"><summary>{ta.deleteTitle}</summary>
 <form class="form" method="post" action={self}>
 <input type="hidden" name="action" value="delete">
@@ -251,17 +294,47 @@ const price = (b: (typeof bookings)[number]) => euros(b.price_cents - b.discount
 </div>
 </form>
 </details>
+</section>
+</div>
+</div>
 </>}
 </article></div>
 </Base>
 
 <style>
-.actions{margin-bottom:1rem}
-/* Cartes plutôt que tableau : cinq colonnes ne tiennent pas sur un téléphone */
-.bookings{list-style:none;margin:0 0 1.5rem;padding:0;display:grid;gap:.75rem}
-.bookings li{border:1px solid var(--line-soft);border-radius:12px;padding:.9rem 1rem;background:var(--bg)}
-.bookings p{margin:0 0 .25rem}
-.consents{margin:0 0 1.5rem;padding:1rem 1.25rem;border:1px solid var(--accent);border-radius:12px}
+/* Comme l'accueil admin : page large sur grand écran, deux colonnes dès 960 px, une seule colonne sur téléphone */
+:global(.compte-dash) .dash{max-width:1280px}
+.dash-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.75rem 1.5rem;margin-bottom:1rem}
+.dash-head h1{margin:0;font-size:clamp(1.75rem,3vw,2.4rem);overflow-wrap:anywhere}
+.dash-head .actions{display:flex;flex-wrap:wrap;gap:.5rem;margin:0}
+.dash-grid{display:grid;gap:0 2.5rem}
+.dash-col{min-width:0}
+.dash-col h2{margin-top:1.5rem}
+@media (min-width:960px){
+  .dash-grid{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);align-items:start}
+}
+/* Rendez-vous à venir : infos à gauche, Déplacer et Annuler alignés à droite */
+.bookings{list-style:none;margin:0 0 1rem;padding:0;display:grid;gap:.6rem}
+.bookings li{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem 1rem;border:1px solid var(--line-soft);border-radius:12px;padding:.7rem 1rem;background:var(--bg)}
+.bookings p{margin:0 0 .15rem}
+.b-info{min-width:0;flex:1 1 16rem;overflow-wrap:anywhere}
+.b-acts{display:flex;flex-wrap:wrap;align-items:flex-start;gap:.5rem}
+.b-acts .cancel{margin:0}
+/* Passés et annulés : une ligne par rendez-vous, cinq visibles, le reste replié */
+.dense{list-style:none;margin:0;padding:0}
+.dense li{display:flex;flex-wrap:wrap;gap:.15rem .75rem;padding:.5rem 0;border-bottom:1px solid var(--line-soft);font-size:.9375rem;overflow-wrap:anywhere}
+.dense .h-state{margin-left:auto;color:var(--text-soft)}
+.more summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:500}
+/* Jauges de fidélité : <progress> natif aux couleurs du thème */
+.gauges{margin:.75rem 0;display:grid;gap:.6rem}
+.gauge dt{font-size:.875rem;color:var(--text-soft)}
+.gauge dd{margin:.2rem 0 0;display:flex;align-items:center;gap:.75rem}
+.gauge progress{flex:1;min-width:0;height:.6rem;appearance:none;border:0;border-radius:999px;background:var(--line-soft);overflow:hidden;accent-color:var(--accent)}
+.gauge progress::-webkit-progress-bar{background:var(--line-soft);border-radius:999px}
+.gauge progress::-webkit-progress-value{background:var(--accent);border-radius:999px}
+.gauge progress::-moz-progress-bar{background:var(--accent);border-radius:999px}
+.gauge span{font-size:.875rem;white-space:nowrap}
+.consents{margin:1.5rem 0 0;padding:1rem 1.25rem;border:1px solid var(--accent);border-radius:12px}
 .consents ul{list-style:none;margin:0;padding:0;display:grid;gap:.75rem}
 .consents li{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center}
 </style>

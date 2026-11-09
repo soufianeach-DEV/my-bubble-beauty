@@ -9,7 +9,7 @@ import { sql } from './db.ts';
 export type Loyalty = { discount_after: number; discount_percent: number; free_after: number; free_label: string; min_euros: number; free_min_total: number; free_value: number };
 // Règles données par la gérante : -10 % après 5 séances d'au moins 50 €, une HydraPure (120 €) offerte après 10 séances et 1 000 € payés,
 // puis la carte repart à zéro
-export const LOYALTY_DEFAULT: Loyalty = { discount_after: 5, discount_percent: 10, free_after: 10, free_label: 'HydraPure', min_euros: 50, free_min_total: 1000, free_value: 120 };
+export const LOYALTY_DEFAULT: Loyalty = { discount_after: 5, discount_percent: 10, free_after: 10, free_label: 'HydraPure', min_euros: 50, free_min_total: 500, free_value: 120 };
 
 const n = (min: number, max: number, msg: string) => z.coerce.number({ error: msg }).int(msg).min(min, msg).max(max, msg);
 export const settingsForm = z.object({
