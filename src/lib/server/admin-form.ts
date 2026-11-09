@@ -56,6 +56,13 @@ export const serviceForm = z
   // Même règle que la contrainte en base, avec un message lisible
   .refine((s) => !s.active || s.duration !== null, "Une prestation ne s'ouvre à la réservation qu'avec une durée : saisissez-la d'abord.");
 
+// Prestations en lot : cases cochées (ids), en ligne ou hors ligne, durée facultative donnée d'abord à toute la sélection
+export const bulkServiceForm = z.object({
+  ids: z.array(id, { error: 'Cochez au moins une prestation.' }).min(1, 'Cochez au moins une prestation.').max(1000, 'Sélection trop longue.'),
+  bulk: z.enum(['on', 'off'], { error: 'Choisissez « Mettre en ligne » ou « Mettre hors ligne ».' }).transform((v) => v === 'on'),
+  duration: optInt(5, 600, 'Durée : nombre de minutes de 5 à 600.'),
+});
+
 export const hoursForm = z
   .object({
     weekday: int(1, 7, 'Jour de la semaine invalide.'),

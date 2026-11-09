@@ -1,7 +1,7 @@
 // Gestion de l'institut par l'admin : prestations, horaires, fermetures, codes promo, saisie et annulation de rendez-vous.
 // Toute saisie passe par un schéma de admin-form.ts, toute requête est paramétrée, toute modification est journalisée avec l'admin.
 import { t } from '../site.ts';
-import { agendaForm, closureForm, hoursForm, idForm, newBookingForm, promoForm, serviceForm, toggleForm } from './admin-form.ts';
+import { agendaForm, bulkServiceForm, closureForm, hoursForm, idForm, newBookingForm, promoForm, serviceForm, toggleForm } from './admin-form.ts';
 import { cancelByAdmin, createAdminBooking, markRefundedManually, rescheduleByAdmin, setNoShow } from './booking.ts';
 import { sql } from './db.ts';
 import { journal } from './journal.ts';
@@ -54,6 +54,20 @@ export async function saveService(userId: number, form: FormData): Promise<Resul
   if (!r) return { ok: false, error: 'Prestation introuvable.' };
   audit(userId, 'service_saved', { service_id: s.id, active: s.active, duration: s.duration, buffer: s.buffer, price: s.price });
   return { ok: true, id: s.id };
+}
+
+// Lot : la durée saisie va d'abord à toute la sélection, puis en ligne / hors ligne.
+// Une prestation encore sans durée reste hors ligne (même règle que la contrainte en base) et est comptée à part.
+export async function bulkServices(userId: number, form: FormData): Promise<{ ok: true; changed: number; skipped: number } | { ok: false; error: string }> {
+  const p = bulkServiceForm.safeParse({ ids: form.getAll('ids'), bulk: form.get('bulk') ?? undefined, duration: form.get('duration') ?? '' });
+  if (!p.success) return first(p.error) as { ok: false; error: string };
+  const { ids, bulk: active, duration } = p.data;
+  return sql.begin(async (tx) => {
+    if (duration !== null) await tx`UPDATE services SET duration_min = ${duration} WHERE id = ANY(${ids}::bigint[])`;
+    const done = await tx`UPDATE services SET active = ${active} WHERE id = ANY(${ids}::bigint[]) AND (${!active} OR duration_min IS NOT NULL) RETURNING id`;
+    audit(userId, 'services_bulk', { count: ids.length, active, duration, changed: done.length });
+    return { ok: true as const, changed: done.length, skipped: ids.length - done.length };
+  });
 }
 
 // Horaires : plusieurs plages par jour, une plage inversée est refusée (aussi par la contrainte en base)

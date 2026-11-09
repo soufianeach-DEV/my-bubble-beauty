@@ -103,7 +103,8 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
       {al.cancelled.map((r) => <li class="al al--off">Annulé : {r.name ?? '—'}, {r.service}, {fmtDateTime(r.starts_at)}{r.cancel_reason === 'account_deleted' && ' (compte supprimé)'}</li>)}
       {al.newClients.map((c) => <li class="al al--ok">Nouvelle inscrite : <a href={`/admin/clientes/${c.id}`}>{c.name ?? c.email}</a>, le {shortDate(c.created_at)}</li>)}
       {al.closures.map((c) => <li class="al">Fermeture : {fmtDateTime(c.starts_at)} → {fmtDateTime(c.ends_at)}{c.reason && ` (${c.reason})`}</li>)}
-      {al.noDuration.length > 0 && <li class="al"><a href="/admin/prestations">{al.noDuration.length} prestation{al.noDuration.length > 1 ? 's' : ''} sans durée</a> : pas réservable{al.noDuration.length > 1 ? 's' : ''} en ligne.</li>}
+      {/* La durée sert à calculer les créneaux : sans elle, une prestation ne peut pas être réservée en ligne */}
+      {al.noDuration.length > 0 && <li class="al">{al.noDuration.length} prestation{al.noDuration.length > 1 ? 's' : ''} ne {al.noDuration.length > 1 ? 'peuvent' : 'peut'} pas encore être réservée{al.noDuration.length > 1 ? 's' : ''} en ligne : il leur manque une durée. <a href="/admin/prestations">Indiquer les durées</a></li>}
       <li class="al al--info">Libre : {minutes(frame.freeMin)} aujourd'hui, {minutes(freeTomorrow)} demain. <a href={agenda(tomorrow)}>Voir demain</a></li>
     </ul>
     <p class="hint">Non disponible : anniversaires (aucune date de naissance enregistrée).</p>

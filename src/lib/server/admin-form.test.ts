@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { addDays, agendaForm, centsInput, closureForm, hoursForm, monday, newBookingForm, promoForm, serviceForm, toCents, totpForm } from './admin-form.ts';
+import { addDays, agendaForm, centsInput, closureForm, hoursForm, monday, newBookingForm, promoForm, serviceForm, toCents, totpForm, bulkServiceForm } from './admin-form.ts';
 
 const err = (r: { success: boolean; error?: { issues: { message: string }[] } }) => (r.success ? null : r.error!.issues[0].message);
 
@@ -82,4 +82,13 @@ test('agenda, saisie manuelle et code admin', () => {
   assert.equal(totpForm.safeParse({ code: '123 456' }).data?.code, '123456');
   assert.ok(!totpForm.safeParse({ code: '12345' }).success);
   assert.ok(!totpForm.safeParse({}).success);
+});
+
+test('prestations en lot : au moins une case, en ligne ou hors ligne, durée facultative', () => {
+  assert.deepEqual(bulkServiceForm.safeParse({ ids: ['3', '8'], bulk: 'on', duration: '' }).data, { ids: [3, 8], bulk: true, duration: null });
+  assert.deepEqual(bulkServiceForm.safeParse({ ids: ['3'], bulk: 'off', duration: '45' }).data, { ids: [3], bulk: false, duration: 45 });
+  assert.match(err(bulkServiceForm.safeParse({ ids: [], bulk: 'on', duration: '' }))!, /Cochez/);
+  assert.match(err(bulkServiceForm.safeParse({ ids: ['3'], bulk: 'peut-être', duration: '' }))!, /en ligne/);
+  assert.match(err(bulkServiceForm.safeParse({ ids: ['3'], bulk: 'on', duration: '4' }))!, /Durée/);
+  assert.match(err(bulkServiceForm.safeParse({ ids: ['x'], bulk: 'on', duration: '' }))!, /Identifiant/);
 });
