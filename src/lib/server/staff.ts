@@ -45,14 +45,15 @@ export async function totpState(user: { id: number; email: string; role: Role | 
 // Premier code juste : le secret devient celui de la personne
 export const confirmTotp = (userId: number) => sql`UPDATE users SET totp_confirmed_at = now() WHERE id = ${userId} AND totp_confirmed_at IS NULL`;
 
-export type StaffRow = { id: number; name: string | null; email: string; role: Role; role_at: Date | null; blocked_at: Date | null; removed_at: Date | null; totp_confirmed_at: Date | null; enrol_until: Date | null };
+export type StaffRow = { id: number; name: string | null; email: string; role: Role; role_at: Date | null; blocked_at: Date | null; removed_at: Date | null; totp_confirmed_at: Date | null; enrol_until: Date | null; last_login: Date | null };
 
 // La gérante d'abord, puis l'équipe active, puis les comptes désactivés ou supprimés
 export function listStaff() {
   const admin = ADMIN_EMAIL.trim().toLowerCase();
   return sql<StaffRow[]>`
     SELECT id, name, email, CASE WHEN email = ${admin} THEN 'super' ELSE role END AS role, role_at, blocked_at, removed_at, totp_confirmed_at,
-      CASE WHEN role_at > now() - make_interval(days => ${ENROL_DAYS}) THEN role_at + make_interval(days => ${ENROL_DAYS}) END AS enrol_until
+      CASE WHEN role_at > now() - make_interval(days => ${ENROL_DAYS}) THEN role_at + make_interval(days => ${ENROL_DAYS}) END AS enrol_until,
+      (SELECT max(at) FROM audit_log a WHERE a.actor_id = users.id AND a.action = 'login_ok') AS last_login
     FROM users
     WHERE email_verified_at IS NOT NULL AND (role IS NOT NULL OR email = ${admin})
     ORDER BY email = ${admin} DESC, (blocked_at IS NOT NULL OR removed_at IS NOT NULL), lower(coalesce(name, email)), id`;

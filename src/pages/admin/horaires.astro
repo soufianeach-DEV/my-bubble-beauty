@@ -1,13 +1,15 @@
 ---
 export const prerender = false;
-// Horaires d'ouverture (plusieurs plages par jour) et fermetures (congés, créneaux bloqués), en heure de Bruxelles
+// Horaires d'ouverture (plusieurs plages par jour) et fermetures (congés, créneaux bloqués), en heure de Bruxelles.
+// La gestionnaire pose et retire les fermetures ; les plages d'ouverture habituelles restent à l'admin (lecture seule pour elle).
 import Admin from './_layout.astro';
-import { addClosure, addHours, adminId, closureConflicts, deleteClosure, deleteHours, fmtDateTime, listClosures, listHours, readForm } from '../../lib/server/admin.ts';
+import { addClosure, addHours, adminId, closureConflicts, staffId, deleteClosure, deleteHours, fmtDateTime, listClosures, listHours, readForm } from '../../lib/server/admin.ts';
 import { todayBrussels } from '../../lib/server/pricing.ts';
 import { EXTRA } from '../../lib/site';
 
-const me = adminId(Astro.locals);
+const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
+const admin = adminId(Astro.locals) !== null;
 const ACTIONS = { 'add-hours': addHours, 'del-hours': deleteHours, 'add-closure': addClosure, 'del-closure': deleteClosure };
 const DONE: Record<string, string> = { 'add-hours': 'Plage ajoutée.', 'del-hours': 'Plage supprimée.', 'add-closure': 'Fermeture ajoutée.', 'del-closure': 'Fermeture supprimée.' };
 let error = '';
@@ -17,7 +19,8 @@ if (Astro.request.method === 'POST') {
   const form = await readForm(Astro.request);
   if (!form) return new Response(null, { status: 413 });
   const action = String(form.get('action'));
-  const r = Object.hasOwn(ACTIONS, action) ? await ACTIONS[action as keyof typeof ACTIONS](me, form) : { ok: false as const, error: 'Action inconnue.' };
+  const allowed = admin || action === 'add-closure' || action === 'del-closure';
+  const r = !allowed ? { ok: false as const, error: "Seule l'admin modifie les plages d'ouverture." } : Object.hasOwn(ACTIONS, action) ? await ACTIONS[action as keyof typeof ACTIONS](me, form) : { ok: false as const, error: 'Action inconnue.' };
   if (r.ok) return Astro.redirect(`/admin/horaires?ok=${action}`, 303);
   error = r.error;
   v = Object.fromEntries([...form].map(([k, x]) => [k, String(x)]));
@@ -43,15 +46,15 @@ const days = EXTRA.fr.days.map((label, i) => ({ label, ranges: hours.filter((h) 
       <td>{d.ranges.length === 0 ? 'Fermé' : (
         <ul class="ranges">{d.ranges.map((h) => (
           <li>{h.opens}–{h.closes}
-            <form class="inline-form" method="post"><input type="hidden" name="action" value="del-hours"><input type="hidden" name="id" value={h.id}>
-              <button class="btn btn--ghost" type="submit">Supprimer<span class="visually-hidden"> la plage {h.opens}–{h.closes} du {d.label.toLowerCase()}</span></button></form>
+            {admin && <form class="inline-form" method="post"><input type="hidden" name="action" value="del-hours"><input type="hidden" name="id" value={h.id}>
+              <button class="btn btn--ghost" type="submit">Supprimer<span class="visually-hidden"> la plage {h.opens}–{h.closes} du {d.label.toLowerCase()}</span></button></form>}
           </li>
         ))}</ul>
       )}</td>
     </tr>
   ))}</tbody>
 </table></div>
-<form class="form row" method="post">
+{admin && <form class="form row" method="post">
   <input type="hidden" name="action" value="add-hours">
   <div class="field"><label for="weekday">Jour</label>
     <select id="weekday" name="weekday" required>{EXTRA.fr.days.map((label, i) => <option value={i + 1} selected={v.action === 'add-hours' && v.weekday === String(i + 1)}>{label}</option>)}</select>
@@ -59,7 +62,7 @@ const days = EXTRA.fr.days.map((label, i) => ({ label, ranges: hours.filter((h) 
   <div class="field"><label for="opens">Ouverture</label><input id="opens" name="opens" type="time" required value={v.action === 'add-hours' ? v.opens : undefined}></div>
   <div class="field"><label for="closes">Fermeture</label><input id="closes" name="closes" type="time" required value={v.action === 'add-hours' ? v.closes : undefined}></div>
   <button class="btn btn--solid" type="submit">Ajouter la plage</button>
-</form>
+</form>}
 </section>
 
 <section aria-labelledby="fermetures">

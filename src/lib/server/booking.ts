@@ -427,6 +427,7 @@ export async function sendAftercare(): Promise<number> {
     UPDATE bookings b SET aftercare_sent_at = now() FROM users u, services s
     WHERE u.id = b.user_id AND s.id = b.service_id AND s.slug LIKE 'blanchiment-des-dents%'
       AND b.status = 'confirmed' AND NOT b.no_show AND b.aftercare_sent_at IS NULL
+      AND u.blocked_at IS NULL AND u.removed_at IS NULL
       AND b.ends_at <= now() AND b.ends_at > now() - interval '1 day'
     RETURNING u.email, u.locale`;
   for (const r of rows) sendMail(r.email, aftercareMail(r.locale));
@@ -437,6 +438,8 @@ export async function sendReminders(): Promise<number> {
   const rows = await sql<{ id: number }[]>`
     UPDATE bookings SET reminder_sent_at = now()
     WHERE status = 'confirmed' AND user_id IS NOT NULL AND reminder_sent_at IS NULL
+      -- Compte désactivé ou supprimé par l'institut : le rendez-vous reste à l'agenda, sans rappel
+      AND user_id IN (SELECT id FROM users WHERE blocked_at IS NULL AND removed_at IS NULL)
       AND starts_at > now() + interval '2 hours' AND starts_at <= now() + interval '26 hours'
       AND created_at < starts_at - interval '26 hours'
     RETURNING id`;

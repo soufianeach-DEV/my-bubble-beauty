@@ -67,8 +67,7 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
     </div>
   </dl>
   <nav class="quick" aria-label="Actions rapides">
-    {/* Horaires et fermetures : réservés à l'admin */}
-    {Astro.locals.user?.role !== 'gestionnaire' && <a class="btn btn--ghost" href="/admin/horaires#fermetures">Bloquer un créneau</a>}
+    <a class="btn btn--ghost" href="/admin/horaires#fermetures">Bloquer un créneau</a>
     {next?.phone && <>
       <a class="btn btn--ghost" href={`tel:${digits(next.phone)}`}>Appeler {next.name ?? 'la cliente'}</a>
       <a class="btn btn--ghost" href={`https://wa.me/${digits(next.phone).replace(/^\+/, '')}`}>WhatsApp</a>

@@ -30,7 +30,7 @@ const LINKS = [
   ['/admin/utilisateurs', 'Utilisateurs', 'M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6zM9 12l2 2 4-4'],
 ] as const;
 // La gestionnaire ne voit que ses pages (staffId) ; les autres lui répondent 404 de toute façon
-const STAFF = new Set(['/admin', '/admin/agenda', '/admin/reservations/nouvelle', '/admin/clientes', '/admin/prestations']);
+const STAFF = new Set(['/admin', '/admin/agenda', '/admin/reservations/nouvelle', '/admin/clientes', '/admin/prestations', '/admin/horaires']);
 const links = Astro.locals.user?.role === 'gestionnaire' ? LINKS.filter(([href]) => STAFF.has(href)) : LINKS;
 // La déconnexion est ouverte avant le code par le middleware : le bouton reste aussi sur la page du code
 ---

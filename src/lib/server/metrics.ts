@@ -28,7 +28,7 @@ export async function metrics(days: Period) {
       coalesce(sum(${net}) FILTER (WHERE b.status = 'confirmed' AND b.starts_at >= now()), 0)::int AS "upcomingRevenue",
       count(*) FILTER (WHERE b.status IN ('confirmed', 'cancelled') AND b.created_at >= ${from} AND b.created_at < ${to})::int AS created,
       count(*) FILTER (WHERE b.status = 'cancelled' AND b.created_at >= ${from} AND b.created_at < ${to})::int AS cancelled,
-      (SELECT count(*)::int FROM users u WHERE u.email_verified_at IS NOT NULL AND u.email <> ${admin}
+      (SELECT count(*)::int FROM users u WHERE u.email_verified_at IS NOT NULL AND u.email <> ${admin} AND u.role IS NULL
          AND u.created_at >= ${from} AND u.created_at < ${to}) AS "newClients",
       -- Visites = visiteurs distincts de chaque jour, additionnés (l'empreinte change chaque jour, db/visits.mjs)
       (SELECT count(*)::int FROM site_visits v WHERE v.day > (${from})::date AND v.day <= (${to})::date) AS visits,

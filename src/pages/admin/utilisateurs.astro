@@ -29,7 +29,10 @@ const DONE: Record<string, string> = {
   reset_totp: `Application d'authentification relancée : la personne en enregistre une nouvelle dans les ${ENROL_DAYS} jours.`,
 };
 const done = !error && DONE[Astro.url.searchParams.get('ok') ?? ''];
-const staff = await listStaff();
+const all = await listStaff();
+// Anciens membres : comptes de l'équipe supprimés, restaurables ; ils n'ont plus aucun accès (connexion refusée)
+const staff = all.filter((s) => !s.removed_at);
+const former = all.filter((s) => s.removed_at);
 const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', dateStyle: 'medium' }).format;
 ---
 <Admin title="Utilisateurs">
@@ -54,7 +57,7 @@ const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', date
 </section>
 
 <section aria-labelledby="h-team">
-  <h2 id="h-team">Équipe</h2>
+  <h2 id="h-team">Équipe <small>({staff.length})</small></h2>
   <ul class="team">{staff.map((s) => {
     const locked = s.role === 'super' || s.id === me;
     const totp = s.role === 'super' ? 'Code de la gérante' : s.totp_confirmed_at ? 'Application enregistrée' : s.enrol_until ? `Application à enregistrer avant le ${day(s.enrol_until)}` : "Délai pour enregistrer l'application passé";
@@ -68,6 +71,7 @@ const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', date
           {s.removed_at && <span class="badge badge--alert">Supprimé le {day(s.removed_at)}</span>}
           <span class={s.totp_confirmed_at || s.role === 'super' ? 'badge' : 'badge badge--wait'}>{totp}</span>
         </p>
+        <small>Statut : {s.blocked_at ? 'désactivé' : s.role !== 'super' && !s.totp_confirmed_at ? "application d'authentification en attente" : 'actif'} · dernière connexion : {s.last_login ? fmtDateTime(s.last_login) : 'jamais'}</small>
         {s.role_at && s.role !== 'super' && <small>Dans l'équipe depuis le {fmtDateTime(s.role_at)}</small>}
       </div>
       {errorId === s.id && <p class="notice notice--error" role="alert">{error}</p>}
@@ -94,7 +98,7 @@ const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', date
             </form>
             <form class="act" method="post">
               <input type="hidden" name="action" value={s.removed_at ? 'restore' : 'remove'}><input type="hidden" name="id" value={s.id}>
-              <p class="hint">{s.removed_at ? "Le compte redevient utilisable (sauf s'il est aussi désactivé)." : "Masque le compte et bloque sa connexion. Rien n'est effacé, restaurable."}</p>
+              <p class="hint">{s.removed_at ? "Le compte redevient utilisable (sauf s'il est aussi désactivé)." : "Retire tout accès : sessions fermées, connexion refusée, compte masqué. Il passe dans « Anciens membres », restaurable."}</p>
               <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
               <button class="btn btn--ghost" type="submit">{s.removed_at ? 'Restaurer' : 'Supprimer'}</button>
             </form>
@@ -116,6 +120,31 @@ const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', date
     </li>
   ); })}</ul>
 </section>
+
+<section aria-labelledby="h-former">
+  <h2 id="h-former">Anciens membres <small>({former.length})</small></h2>
+  {former.length === 0 ? <p>Aucun.</p> : (
+  <ul class="team">{former.map((s) => (
+    <li id={`u-${s.id}`} class="member member--off">
+      <div class="who"><strong>{s.name || s.email}</strong>{s.name && <small>{s.email}</small>}
+        <p class="tags"><span class="badge">{ROLE_LABELS[s.role]}</span><span class="badge badge--alert">Supprimé le {day(s.removed_at!)}</span></p>
+        <small>Dernière connexion : {s.last_login ? fmtDateTime(s.last_login) : 'jamais'}</small></div>
+      {errorId === s.id && <p class="notice notice--error" role="alert">{error}</p>}
+      <form class="act" method="post">
+        <input type="hidden" name="action" value="restore"><input type="hidden" name="id" value={s.id}>
+        <p class="hint">Rend l'accès avec le même rôle{s.blocked_at ? ' (le compte reste désactivé : réactivez-le ensuite)' : ''}.</p>
+        <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+        <button class="btn btn--ghost" type="submit">Restaurer</button>
+      </form>
+      <form class="act" method="post">
+        <input type="hidden" name="action" value="demote"><input type="hidden" name="id" value={s.id}>
+        <p class="hint">Retire définitivement le rôle : le compte redevient un compte client (toujours supprimé).</p>
+        <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+        <button class="btn btn--ghost" type="submit">Retirer le rôle</button>
+      </form>
+    </li>
+  ))}</ul>)}
+</section>
 </Admin>
 
 <style>
@@ -132,6 +161,7 @@ const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', date
   .who small{color:var(--text-soft)}
   .tags{display:flex;flex-wrap:wrap;gap:.4rem;margin:.25rem 0 0}
   .member .notice,.member .hint{margin:0}
+  h2 small{font-size:1rem;color:var(--text-soft)}
   .manage summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:500}
   /* Une carte par action : côte à côte sur ordinateur, l'une sous l'autre sur téléphone */
   .acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:.75rem;margin-top:.5rem}
