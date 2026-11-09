@@ -10,6 +10,16 @@ export const NAME = z.string().trim().min(1).max(100).regex(/^\P{Cc}+$/u);
 export const PHONE = z.string().trim().regex(/^(\+?[0-9(][0-9 ./()-]{5,28})?$/);
 // La longueur réelle (12 à 128 caractères Unicode) est jugée par le socle, qui renvoie 'short' ou 'long' ; ici seulement un plafond
 export const PASSWORD = z.string().min(1).max(1024);
+// Inscription : champs de confirmation. Adresse comparée comme EMAIL la range (espaces et casse ignorés), mot de passe à l'identique.
+// Renvoie les noms des champs de confirmation qui ne correspondent pas (pour aria-invalid et le message sous le champ).
+export function confirmMismatch(raw: Record<string, string>): Set<string> {
+  const mail = (v?: string) => (v ?? '').trim().toLowerCase();
+  const out = new Set<string>();
+  if (mail(raw.email2) !== mail(raw.email)) out.add('email2');
+  if ((raw.password2 ?? '') !== (raw.password ?? '')) out.add('password2');
+  return out;
+}
+
 // Jeton d'e-mail : 32 octets en base64url
 export const TOKEN = z.string().regex(/^[A-Za-z0-9_-]{43}$/);
 

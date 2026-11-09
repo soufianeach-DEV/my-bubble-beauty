@@ -1,7 +1,15 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { z } from 'astro/zod';
-import { EMAIL, NAME, PHONE, TOKEN, device, readForm, when } from './compte.ts';
+import { EMAIL, NAME, PHONE, TOKEN, confirmMismatch, device, readForm, when } from './compte.ts';
+
+test("inscription : confirmation de l'adresse (casse et espaces ignorés) et du mot de passe (à l'identique)", () => {
+  const pw = 'un-long-mot-de-passe';
+  assert.deepEqual([...confirmMismatch({ email: 'Anne@Ex.be', email2: ' anne@ex.be ', password: pw, password2: pw })], []);
+  assert.deepEqual([...confirmMismatch({ email: 'anne@ex.be', email2: 'ane@ex.be', password: pw, password2: pw })], ['email2']);
+  assert.deepEqual([...confirmMismatch({ email: 'anne@ex.be', email2: 'anne@ex.be', password: pw, password2: pw + ' ' })], ['password2']);
+  assert.deepEqual([...confirmMismatch({ email: 'anne@ex.be', password: pw })].sort(), ['email2', 'password2'], 'confirmations absentes = refus');
+});
 
 test('champs : e-mail normalisé, nom sans saut de ligne, téléphone facultatif, jeton base64url', () => {
   assert.equal(EMAIL.parse('  Anne@Exemple.BE '), 'anne@exemple.be');

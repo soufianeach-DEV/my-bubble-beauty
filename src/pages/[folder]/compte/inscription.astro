@@ -10,7 +10,7 @@ import '../../../styles/forms.css';
 import { COMPTE } from '../../../data/i18n/compte.ts';
 import { FOLDER, JS_VERSION, langOfFolder, pagePath } from '../../../lib/site';
 import { register, type PasswordProblem } from '../../../lib/server/accounts.ts';
-import { EMAIL, NAME, PASSWORD, PHONE, readForm } from '../../../lib/server/compte.ts';
+import { confirmMismatch, EMAIL, NAME, PASSWORD, PHONE, readForm } from '../../../lib/server/compte.ts';
 
 const lang = langOfFolder(Astro.params.folder!);
 const d = FOLDER[lang];
@@ -26,7 +26,10 @@ let raw: Record<string, string> = {};
 if (Astro.request.method === 'POST') {
   const form = await readForm(Astro.request, SCHEMA);
   ({ bad, raw } = form);
-  if (form.data) {
+  // Confirmations refusées côté serveur aussi : le formulaire revient rempli, sans les mots de passe
+  const off = confirmMismatch(raw);
+  for (const k of off) bad.add(k);
+  if (form.data && off.size === 0) {
     problem = await register({ ...form.data, locale: lang, ip: Astro.locals.ip });
     if (problem) bad.add('password');
     else sent = true;
@@ -56,7 +59,14 @@ const [t0, cgv, t2, privacy, t4] = t.terms;
 <label for="email">{tx.email}</label>
 <input id="email" name="email" type="email" required maxlength="254" autocomplete="username" value={(raw.email ?? '').slice(0, 254)} aria-invalid={invalid('email')}>
 </div>
+{/* Confirmation : le collage reste permis (accessibilité, gestionnaires de mots de passe) */}
+<div class="field">
+<label for="email2">{t.email2}</label>
+<input id="email2" name="email2" type="email" required maxlength="254" autocomplete="email" value={(raw.email2 ?? '').slice(0, 254)} aria-invalid={invalid('email2')} aria-describedby="email2-match" data-match="email" data-mismatch={t.emailMismatch}>
+<p class="hint field-error" id="email2-match" data-match-msg aria-live="polite" hidden={!bad.has('email2')}>{t.emailMismatch}</p>
+</div>
 <PasswordField id="password" name="password" label={tx.pw.label} lang={lang} isNew invalid={bad.has('password')} />
+<PasswordField id="password2" name="password2" label={t.password2} lang={lang} match="password" mismatch={t.passwordMismatch} invalid={bad.has('password2')} />
 <div class="form__row">
 <div class="field">
 <label for="name">{t.name}</label>

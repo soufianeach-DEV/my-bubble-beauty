@@ -13,4 +13,17 @@ for(const box of document.querySelectorAll('[data-pw]')){
   const sync=()=>{const n=[...input.value].length;meter.hidden=!n;meter.textContent=n<12?meter.dataset.short:n>128?meter.dataset.long:meter.dataset.ok};
   input.addEventListener('input',sync);sync();
 }
+/* Champs de confirmation (data-match = id du champ d'origine) : message sous le champ et refus à l'envoi tant qu'ils diffèrent.
+   Comparaison d'adresse sans casse ni espaces autour, comme le serveur. Le collage n'est jamais bloqué. */
+for(const twin of document.querySelectorAll('[data-match]')){
+  const src=document.getElementById(twin.dataset.match),msg=document.getElementById(twin.id+'-match');
+  if(!src)continue;
+  const norm=v=>twin.type==='email'?v.trim().toLowerCase():v;
+  let touched=false;
+  const check=()=>{const off=twin.value!==''&&norm(twin.value)!==norm(src.value);twin.setCustomValidity(off?twin.dataset.mismatch:'');
+    if(touched||!off){twin.setAttribute('aria-invalid',off?'true':'false');if(msg)msg.hidden=!off}};
+  twin.addEventListener('blur',()=>{touched=true;check()});
+  /* Pas de contrôle au chargement : il effacerait le refus rendu par le serveur (mots de passe renvoyés vides) */
+  twin.addEventListener('input',check);src.addEventListener('input',check);
+}
 })();
