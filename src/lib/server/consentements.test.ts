@@ -86,9 +86,22 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     assert.deepEqual((await sv.suivi(other)).seances.map((s) => s.zone), ['Aisselles']);
     // Une séance d'une autre cliente n'est pas modifiable par cette fiche
     assert.equal((await sv.suiviAction(other, f({ action: 'seance', id: String(cl), booking: String(b.id), zone: 'x', practitioner: '' }))).ok, false);
+
+    // Blanchiment terminé : recommandations envoyées une seule fois ; une absence n'en reçoit pas
+    const { sendAftercare } = await import('./booking.ts');
+    const [wh] = await sql`INSERT INTO services (slug, category, name_fr, name_nl, name_en, duration_min, price_cents, active)
+      VALUES (${`blanchiment-des-dents-${tag}`}, 'sourire', 'Blanchiment test', 'x', 'x', 60, 9000, true) RETURNING id`;
+    const ended = new Date(Date.now() - 3_600_000 * 2);
+    await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, no_show) VALUES
+      (${other}, ${wh.id}, ${ended}, ${new Date(ended.getTime() + 3_600_000)}, 'confirmed', 9000, false),
+      (${other}, ${wh.id}, ${new Date(ended.getTime() - 3 * 3_600_000)}, ${new Date(ended.getTime() - 2 * 3_600_000)}, 'confirmed', 9000, true)`;
+    const first = await sendAftercare();
+    assert.ok(first >= 1);
+    assert.equal((await sql`SELECT count(*)::int AS n FROM bookings WHERE service_id = ${wh.id} AND aftercare_sent_at IS NOT NULL`)[0].n, 1);
+    assert.equal(await sendAftercare(), 0);
   } finally {
-    await sql`DELETE FROM bookings WHERE service_id IN (SELECT id FROM services WHERE slug = ${`laser-${tag}`})`;
-    await sql`DELETE FROM services WHERE slug = ${`laser-${tag}`}`;
+    await sql`DELETE FROM bookings WHERE service_id IN (SELECT id FROM services WHERE slug IN (${`laser-${tag}`}, ${`blanchiment-des-dents-${tag}`}))`;
+    await sql`DELETE FROM services WHERE slug IN (${`laser-${tag}`}, ${`blanchiment-des-dents-${tag}`})`;
     await sql`DELETE FROM users WHERE email LIKE ${`${tag}%`}`;
     await sql`DELETE FROM settings WHERE key = 'specialist_name'`;
     await sql.end();

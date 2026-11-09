@@ -6,7 +6,7 @@ import type { Lang } from '../site.ts';
 import { sql } from './db.ts';
 import { journal } from './journal.ts';
 import { log } from './log.ts';
-import { bookingCancelledMail, bookingConfirmedMail, bookingMovedMail, bookingReminderMail, sendMail } from './mail.ts';
+import { bookingCancelledMail, bookingConfirmedMail, bookingMovedMail, bookingReminderMail, aftercareMail, sendMail } from './mail.ts';
 import { amounts, isDay, promoProblem, type Promo, type PromoProblem } from './pricing.ts';
 import { blocked, hit, promoDone, promoTry } from './rate.ts';
 import { isFree } from './slots.ts';
@@ -408,6 +408,19 @@ export async function markRefundedManually(bookingId: number): Promise<{ amount:
 
 // Rappel la veille (de 26 h à 2 h avant), une seule fois par rendez-vous : la ligne est réservée par l'UPDATE avant l'envoi.
 // Seulement pour les réservations prises plus de 26 h à l'avance (la confirmation vient de partir pour les autres).
+// Blanchiment dentaire terminé (et non marqué absente) : les recommandations de l'institut par e-mail, une seule fois.
+// Fenêtre d'un jour : un rendez-vous ancien, saisi après coup, ne déclenche rien.
+export async function sendAftercare(): Promise<number> {
+  const rows = await sql<{ email: string; locale: Lang }[]>`
+    UPDATE bookings b SET aftercare_sent_at = now() FROM users u, services s
+    WHERE u.id = b.user_id AND s.id = b.service_id AND s.slug LIKE 'blanchiment-des-dents%'
+      AND b.status = 'confirmed' AND NOT b.no_show AND b.aftercare_sent_at IS NULL
+      AND b.ends_at <= now() AND b.ends_at > now() - interval '1 day'
+    RETURNING u.email, u.locale`;
+  for (const r of rows) sendMail(r.email, aftercareMail(r.locale));
+  return rows.length;
+}
+
 export async function sendReminders(): Promise<number> {
   const rows = await sql<{ id: number }[]>`
     UPDATE bookings SET reminder_sent_at = now()

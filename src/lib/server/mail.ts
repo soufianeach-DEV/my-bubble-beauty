@@ -53,6 +53,11 @@ const T = {
     reminder: "Rappel : votre rendez-vous de demain",
     reminderIntro: "Nous vous rappelons votre rendez-vous chez My Bubble Beauty.",
     reminderLate: `Un empêchement ? Moins de 24 heures avant, appelez-nous au ${CONTACT.phoneLabel}.`,
+    aftercare: ['Vos recommandations après le blanchiment des dents', 'Merci pour votre visite. Pour garder un résultat optimal le plus longtemps possible, voici nos recommandations.',
+      "Pendant 3 à 4 heures après votre séance : ne mangez pas, buvez uniquement de l'eau, ne fumez pas, pas de bains de bouche colorés, ne vous brossez pas les dents.",
+      'Pendant les 7 jours qui suivent :',
+      ["l'eau et les boissons transparentes sont les seules boissons autorisées ;", 'le thé, le café, les tisanes, le sirop coloré, le vin, les sodas et les boissons acides sont déconseillés (ou à la paille) ;', 'évitez les aliments colorés comme les épices (curry, safran) ou les sauces (ketchup, andalouse…), mais aussi les fraises, betteraves, épinards ;', 'les pâtes à tartiner, la confiture et le chocolat sont également à éviter ;', "les fumeurs doivent effectuer un brossage de dents léger obligatoirement après chaque cigarette. Si vous êtes à l'extérieur, un bon rinçage suffira ;", 'pas de bains de bouche colorés ;', 'nous conseillons un dentifrice blanc (sans lignes de couleur), par exemple Sensodyne ou Elmex.'],
+      'Revoir les recommandations'] as const,
     create: "Créer un compte",
   },
   nl: {
@@ -82,6 +87,11 @@ const T = {
     reminder: "Herinnering: uw afspraak van morgen",
     reminderIntro: "We herinneren u aan uw afspraak bij My Bubble Beauty.",
     reminderLate: `Verhinderd? Minder dan 24 uur op voorhand belt u ons op ${CONTACT.phoneLabel}.`,
+    aftercare: ['Uw aanbevelingen na de tandenbleking', 'Dank u voor uw bezoek. Zo blijft het resultaat zo lang mogelijk optimaal:',
+      'Gedurende 3 tot 4 uur na uw sessie: eet niet, drink alleen water, rook niet, geen gekleurd mondwater, poets uw tanden niet.',
+      'Gedurende de 7 dagen daarna:',
+      ['water en kleurloze dranken zijn de enige toegestane dranken;', 'thee, koffie, kruidenthee, gekleurde siroop, wijn, frisdrank en zure dranken worden afgeraden (of drink ze met een rietje);', 'vermijd gekleurde voeding zoals kruiden (curry, saffraan) of sauzen (ketchup, andalouse…), maar ook aardbeien, rode biet en spinazie;', "vermijd ook smeerpasta's, confituur en chocolade;", 'rokers poetsen na elke sigaret verplicht licht hun tanden. Bent u buitenshuis, dan volstaat goed spoelen;', 'geen gekleurd mondwater;', 'wij raden een witte tandpasta aan (zonder gekleurde strepen), bijvoorbeeld Sensodyne of Elmex.'],
+      'De aanbevelingen herlezen'] as const,
     create: "Een account aanmaken",
   },
   en: {
@@ -111,6 +121,11 @@ const T = {
     reminder: "Reminder: your appointment tomorrow",
     reminderIntro: "This is a reminder of your appointment at My Bubble Beauty.",
     reminderLate: `Can't make it? Less than 24 hours before, please call us on ${CONTACT.phoneLabel}.`,
+    aftercare: ['Your recommendations after teeth whitening', 'Thank you for your visit. To keep an optimal result for as long as possible, here are our recommendations.',
+      'For 3 to 4 hours after your session: do not eat, drink only water, do not smoke, no coloured mouthwash, do not brush your teeth.',
+      'For the 7 days after:',
+      ['water and clear drinks are the only drinks allowed;', 'tea, coffee, herbal tea, coloured syrup, wine, soft drinks and acidic drinks are not recommended (or drink them through a straw);', 'avoid coloured foods such as spices (curry, saffron) or sauces (ketchup, andalouse…), as well as strawberries, beetroot and spinach;', 'spreads, jam and chocolate should also be avoided;', 'smokers must brush their teeth gently after every cigarette. If you are outside, a good rinse will do;', 'no coloured mouthwash;', 'we recommend a white toothpaste (without coloured stripes), for example Sensodyne or Elmex.'],
+      'Read the recommendations again'] as const,
     create: "Create an account",
   },
 } as const;
@@ -182,6 +197,12 @@ export function bookingMovedMail(lang: Lang, b: BookingMail): Mail {
 export function bookingReminderMail(lang: Lang, b: BookingMail): Mail {
   const t = T[lang];
   return build('booking_reminder', lang, t.reminder, [t.hello, t.reminderIntro, t.service + b.service, t.date + when(b.starts_at, lang), t.address + ADDRESS, t.reminderLate], [t.account, accountUrl(lang)]);
+}
+
+// Après un rendez-vous de blanchiment dentaire : les recommandations de l'institut, sans rien de personnel
+export function aftercareMail(lang: Lang): Mail {
+  const [subject, intro, hours, days, list, label] = T[lang].aftercare;
+  return build('aftercare_whitening', lang, subject, [T[lang].hello, intro, hours, days, ...list.map((l) => `• ${l}`)], [label, `${SITE_URL}/${FOLDER[lang]}/subPages/dents.html`]);
 }
 
 // Envoi détaché : la réponse n'attend jamais Resend (une adresse connue ne répond pas plus lentement qu'une inconnue).
