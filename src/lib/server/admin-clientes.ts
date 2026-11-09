@@ -5,17 +5,23 @@ import { ADMIN_EMAIL } from 'astro:env/server';
 import { audit, type Result } from './admin.ts';
 import { clientForm } from './admin-form.ts';
 import { sql } from './db.ts';
+import { readSettings } from './reglages.ts';
 import { eraseUser, GRACE_DAYS } from './rgpd.ts';
 import { isAdminEmail } from './session.ts';
 import { setBlocked, setRemoved } from './staff.ts';
 
-const PAGE = 50;
+const PAGE = 25;
 // Recherche par morceau de texte : % et _ saisis comptent comme des caractères, pas comme des jokers
 const like = (q: string) => `%${q.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
 
 // supprimees : comptes retirés par l'admin, absents de tous les autres onglets
 export type ClientFilter = 'actives' | 'suppression' | 'bloquees' | 'toutes' | 'supprimees';
-export type ClientRow = { id: number; name: string | null; email: string; phone: string | null; created_at: Date; deleted_at: Date | null; blocked_at: Date | null; removed_at: Date | null; done: number; upcoming: number; no_shows: number; last_at: Date | null };
+export type ClientRow = { id: number; name: string | null; email: string; phone: string | null; locale: string; created_at: Date; deleted_at: Date | null; blocked_at: Date | null; removed_at: Date | null;
+  done: number; upcoming: number; no_shows: number; lates: number; late_minutes: number; last_at: Date | null; spent_cents: number; gifts: number; loyalty_sessions: number; loyalty_spent_cents: number; loyalty_discount_used: boolean };
+// Tri de la liste : clé d'URL -> expression SQL (liste fermée, jamais de texte saisi dans ORDER BY) ; sens par défaut
+export const CLIENT_SORTS = { nom: ['lower(coalesce(u.name, u.email))', 'asc'], visites: ['agg.done', 'desc'], avenir: ['agg.upcoming', 'desc'], derniere: ['agg.last_at', 'desc'],
+  total: ['agg.spent_cents', 'desc'], absences: ['agg.no_shows', 'desc'], retards: ['agg.lates', 'desc'], depuis: ['u.created_at', 'desc'] } as const;
+export type ClientSort = keyof typeof CLIENT_SORTS;
 
 // Comptes confirmés seulement ; la gérante n'est pas une cliente. Téléphone cherché sur ses seuls chiffres (0484 11 83 95 = 0484118395).
 // Nombre de comptes par onglet de la liste (adresse confirmée, admin exclue)
@@ -29,26 +35,53 @@ export async function clientCounts(): Promise<Record<ClientFilter, number>> {
   return c;
 }
 
-export async function listClients(q: string, filter: ClientFilter, page: number) {
+// Tableau de bord : agrégats des rendez-vous, bons cadeaux valables et carte de fidélité dans la même requête (pas une requête par ligne).
+// Fidélité : mêmes règles que loyaltyCard (séances payées au moins le minimum depuis le dernier soin offert, hors bons et avantages).
+export async function listClients(q: string, filter: ClientFilter, page: number, sort: ClientSort = 'nom', dir?: 'asc' | 'desc') {
   q = q.trim().slice(0, 100);
   const digits = q.replace(/\D/g, '');
+  const { loyalty } = await readSettings();
+  const [expr, def] = CLIENT_SORTS[Object.hasOwn(CLIENT_SORTS, sort) ? sort : 'nom'];
+  const order = sql.unsafe(`${expr} ${(dir ?? def) === 'asc' ? 'ASC' : 'DESC'} NULLS LAST, lower(coalesce(u.name, u.email)), u.id`);
   const rows = await sql<ClientRow[]>`
-    SELECT u.id, u.name, u.email, u.phone, u.created_at, u.deleted_at, u.blocked_at, u.removed_at,
-      count(b.id) FILTER (WHERE b.status = 'confirmed' AND b.starts_at < now() AND NOT b.no_show)::int AS done,
-      count(b.id) FILTER (WHERE b.status = 'confirmed' AND b.starts_at >= now())::int AS upcoming,
-      count(b.id) FILTER (WHERE b.no_show)::int AS no_shows,
-      max(b.starts_at) FILTER (WHERE b.status = 'confirmed' AND b.starts_at < now()) AS last_at
-    FROM users u LEFT JOIN bookings b ON b.user_id = u.id
+    SELECT u.id, u.name, u.email, u.phone, u.locale, u.created_at, u.deleted_at, u.blocked_at, u.removed_at, agg.*, gift.gifts,
+      loy.sessions AS loyalty_sessions, loy.spent AS loyalty_spent_cents, loy.discount_used AS loyalty_discount_used
+    FROM users u
+    CROSS JOIN LATERAL (
+      SELECT count(*) FILTER (WHERE b.status = 'confirmed' AND b.starts_at < now() AND NOT b.no_show)::int AS done,
+        count(*) FILTER (WHERE b.status = 'confirmed' AND b.starts_at >= now())::int AS upcoming,
+        count(*) FILTER (WHERE b.no_show)::int AS no_shows,
+        count(*) FILTER (WHERE b.late_minutes IS NOT NULL)::int AS lates, coalesce(sum(b.late_minutes), 0)::int AS late_minutes,
+        max(b.starts_at) FILTER (WHERE b.status = 'confirmed' AND b.starts_at < now() AND NOT b.no_show) AS last_at,
+        coalesce(sum(b.price_cents - b.discount_cents) FILTER (WHERE b.status = 'confirmed' AND b.starts_at < now() AND NOT b.no_show), 0)::int AS spent_cents
+      FROM bookings b WHERE b.user_id = u.id) agg
+    CROSS JOIN LATERAL (
+      SELECT count(*)::int AS gifts FROM gift_cards g
+      WHERE g.user_id = u.id AND g.cancelled_at IS NULL AND g.used_at IS NULL AND g.expires_on >= current_date
+        AND NOT EXISTS (SELECT 1 FROM bookings b WHERE b.gift_card_id = g.id AND b.status IN ('pending_payment', 'confirmed') AND NOT b.no_show)) gift
+    CROSS JOIN LATERAL (
+      WITH start AS (SELECT coalesce(max(used_at), '-infinity'::timestamptz) AS at FROM loyalty_rewards WHERE user_id = u.id AND kind = 'free'),
+      done AS (
+        SELECT b.price_cents - b.discount_cents - b.refunded_cents AS paid FROM bookings b, start
+        WHERE b.user_id = u.id AND b.status = 'confirmed' AND b.ends_at < now() AND NOT b.no_show AND b.ends_at > start.at
+          AND b.gift_card_id IS NULL AND NOT EXISTS (SELECT 1 FROM loyalty_rewards r WHERE r.booking_id = b.id))
+      SELECT (SELECT count(*)::int FROM done WHERE paid >= ${loyalty.min_euros * 100}) AS sessions,
+        (SELECT coalesce(sum(paid), 0)::int FROM done WHERE paid >= ${loyalty.min_euros * 100}) AS spent,
+        EXISTS (SELECT 1 FROM loyalty_rewards r, start WHERE r.user_id = u.id AND r.kind = 'discount' AND r.used_at > start.at) AS discount_used) loy
     WHERE u.email_verified_at IS NOT NULL AND u.role IS NULL
       AND (${q} = '' OR u.name ILIKE ${like(q)} OR u.email ILIKE ${like(q)}
         OR (${digits.length >= 3} AND regexp_replace(coalesce(u.phone, ''), '[^0-9]', '', 'g') LIKE ${like(digits)}))
       AND CASE ${filter} WHEN 'supprimees' THEN u.removed_at IS NOT NULL ELSE u.removed_at IS NULL AND CASE ${filter}
         WHEN 'actives' THEN u.deleted_at IS NULL AND u.blocked_at IS NULL
         WHEN 'suppression' THEN u.deleted_at IS NOT NULL WHEN 'bloquees' THEN u.blocked_at IS NOT NULL ELSE true END END
-    GROUP BY u.id
-    ORDER BY lower(coalesce(u.name, u.email)), u.id
+    ORDER BY ${order}
     LIMIT ${PAGE + 1} OFFSET ${Math.max(0, page - 1) * PAGE}`;
-  return { rows: rows.filter((r) => !isAdminEmail(r.email)).slice(0, PAGE), more: rows.length > PAGE };
+  // Avantage dû : même calcul que loyaltyCard (le soin offert prime sur la remise)
+  const reward = (r: ClientRow) => {
+    const free = r.loyalty_sessions >= loyalty.free_after && r.loyalty_spent_cents >= loyalty.free_min_total * 100;
+    return free ? 'free' as const : r.loyalty_sessions >= loyalty.discount_after && !r.loyalty_discount_used ? 'discount' as const : null;
+  };
+  return { rows: rows.filter((r) => !isAdminEmail(r.email)).slice(0, PAGE).map((r) => ({ ...r, reward: reward(r) })), more: rows.length > PAGE, loyalty };
 }
 
 export type ClientBooking = { id: number; starts_at: Date; ends_at: Date; service: string; status: string; no_show: boolean; late_minutes: number | null; past: boolean; cancel_reason: string | null; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; moved: boolean };

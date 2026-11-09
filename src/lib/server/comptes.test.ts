@@ -169,6 +169,12 @@ test('comptes, réservations et sécurité sur une vraie base', { skip: !url && 
       await assert.rejects(booking.setLate(p.id, 300), 'retard borné à 240 min');
       assert.deepEqual(await booking.setNoShow(p.id, true), { user_id: other.id });
       assert.equal((await sql`SELECT late_minutes FROM bookings WHERE id = ${p.id}`)[0].late_minutes, null, "l'absence efface le retard");
+      // Tableau de bord : mêmes chiffres que la fiche et que la carte de fidélité, tri par une clé de la liste fermée
+      const row = (await listClients(other.email, 'toutes', 1, 'absences', 'desc')).rows.find((r) => r.id === other.id)!;
+      const { stats } = (await clientDetail(other.id))!;
+      assert.deepEqual([row.done, row.no_shows, row.spent_cents], [stats.done, stats.no_shows, stats.spent_cents]);
+      assert.equal(row.loyalty_sessions, (await (await import('./fidelite.ts')).loyaltyCard(other.id)).sessions);
+      assert.ok((await listClients('', 'toutes', 1, 'pas-une-cle' as never)).rows.length > 0, 'clé de tri inconnue : tri par nom');
       const soon = new Date(Date.now() + 20 * 3600_000);
       await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, created_at)
         VALUES (${other.id}, ${svc.id}, ${soon}, ${new Date(soon.getTime() + 3600_000)}, 'confirmed', 5000, now() - interval '3 days')`;

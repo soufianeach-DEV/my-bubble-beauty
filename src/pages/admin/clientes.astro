@@ -1,11 +1,13 @@
 ---
 export const prerender = false;
-// Clientes : comptes confirmés, recherche par nom, e-mail ou téléphone, filtre par état ; un clic ouvre la fiche.
+// Clientes : tableau de bord des comptes confirmés (séances, total, absences, retards, avantages), recherche, filtre par état,
+// tri par colonne, 25 par page ; un clic sur le nom ouvre la fiche.
 // Colonne Actions (admin seulement, comme sur la fiche) : désactiver ou réactiver, supprimer (suppression douce) ou restaurer.
 // Même chemin que la fiche (clientAction) : sessions fermées, journal ; l'effacement définitif reste sur la fiche.
 import Admin from './_layout.astro';
 import { adminId, staffId, fmtDateTime, readForm } from '../../lib/server/admin.ts';
-import { clientAction, clientCounts, listClients, type ClientFilter } from '../../lib/server/admin-clientes.ts';
+import { CLIENT_SORTS, clientAction, clientCounts, listClients, type ClientFilter, type ClientSort } from '../../lib/server/admin-clientes.ts';
+import { euros } from '../../lib/server/pricing.ts';
 
 const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
@@ -34,8 +36,15 @@ const q = (sp.get('q') ?? '').slice(0, 100);
 const FILTERS: Record<ClientFilter, string> = { actives: 'Actives', suppression: 'En suppression (30 jours)', bloquees: 'Désactivées', toutes: 'Toutes', supprimees: 'Supprimées' };
 const filter = (Object.hasOwn(FILTERS, sp.get('etat') ?? '') ? sp.get('etat') : 'actives') as ClientFilter;
 const page = Math.min(Math.max(Number.parseInt(sp.get('page') ?? '1', 10) || 1, 1), 1000);
-const [{ rows, more }, counts] = await Promise.all([listClients(q, filter, page), clientCounts()]);
-const link = (p: number, etat: string = filter) => `/admin/clientes?${new URLSearchParams({ q, etat, page: String(p) })}`;
+const SORTS: Record<ClientSort, string> = { nom: 'Nom', visites: 'Séances faites', avenir: 'Séances à venir', derniere: 'Dernière visite', total: 'Total payé', absences: 'Absences', retards: 'Retards', depuis: 'Inscription' };
+const sort = (Object.hasOwn(SORTS, sp.get('tri') ?? '') ? sp.get('tri') : 'nom') as ClientSort;
+const dir = sp.get('sens') === 'asc' || sp.get('sens') === 'desc' ? (sp.get('sens') as 'asc' | 'desc') : CLIENT_SORTS[sort][1];
+const [{ rows, more, loyalty }, counts] = await Promise.all([listClients(q, filter, page, sort, dir), clientCounts()]);
+const link = (p: number, etat: string = filter, tri: ClientSort = sort, sens: string = dir) => `/admin/clientes?${new URLSearchParams({ q, etat, tri, sens, page: String(p) })}`;
+// En-tête triable : un clic trie, un second clic inverse le sens
+const th = (k: ClientSort) => ({ href: link(1, filter, k, k === sort ? (dir === 'asc' ? 'desc' : 'asc') : CLIENT_SORTS[k][1]), sort: k === sort ? (dir === 'asc' ? 'ascending' : 'descending') : undefined });
+const LANGS: Record<string, string> = { fr: 'FR', nl: 'NL', en: 'EN' };
+const plural = (n: number, one: string, many: string) => `${n} ${n > 1 ? many : one}`;
 const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', dateStyle: 'medium' }).format;
 const erased = sp.get('ok') === 'efface';
 const DONE: Record<string, string> = { block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter ni réserver. Ses rendez-vous restent.', unblock: 'Compte réactivé.',
@@ -52,20 +61,39 @@ const done = !error && DONE[sp.get('ok') ?? ''];
 <form class="actions bar" method="get" action="/admin/clientes" role="search">
   <input type="hidden" name="etat" value={filter}>
   <div class="field grow"><label for="q">Nom, e-mail ou téléphone</label><input id="q" name="q" type="search" value={q} maxlength="100" autocomplete="off"></div>
-  <button class="btn btn--ghost" type="submit">Chercher</button>
+  <div class="field"><label for="tri">Trier par</label><select id="tri" name="tri">{(Object.keys(SORTS) as ClientSort[]).map((k) => <option value={k} selected={k === sort}>{SORTS[k]}</option>)}</select></div>
+  <button class="btn btn--ghost" type="submit">Afficher</button>
 </form>
 <p class="hint">Seuls les comptes dont l'adresse est confirmée apparaissent. Les rendez-vous saisis pour une personne sans compte restent dans l'agenda.</p>
 {rows.length === 0 ? <p>Aucune cliente ne correspond.</p> : (
-<div class="table-wrap"><table class="data-table">
-  <thead><tr><th scope="col">Cliente</th><th scope="col">Téléphone</th><th scope="col">Rendez-vous</th><th scope="col">Dernière visite</th><th scope="col">État</th>{manage && <th scope="col">Actions</th>}</tr></thead>
+<div class="table-wrap"><table class="data-table dash">
+  <caption class="visually-hidden">Clientes, triées par {SORTS[sort].toLowerCase()} ({dir === 'asc' ? 'croissant' : 'décroissant'})</caption>
+  <thead><tr>
+    <th scope="col" aria-sort={th('nom').sort}><a href={th('nom').href}>Cliente</a></th>
+    <th scope="col" aria-sort={th('visites').sort}><a href={th('visites').href}>Séances</a></th>
+    <th scope="col" aria-sort={th('total').sort} class="num"><a href={th('total').href}>Total payé</a></th>
+    <th scope="col" aria-sort={th('absences').sort}><a href={th('absences').href}>Absences et retards</a></th>
+    <th scope="col">Abonnements et avantages</th>
+    <th scope="col">État</th>{manage && <th scope="col">Actions</th>}
+  </tr></thead>
   <tbody>{rows.map((c) => (
     <tr id={`c-${c.id}`} class:list={{ 'row-error': errorId === c.id }}>
-      <td><a href={`/admin/clientes/${c.id}`}>{c.name || c.email}</a>{c.name && <><br><small>{c.email}</small></>}</td>
-      <td>{c.phone ? <a href={`tel:${c.phone.replace(/[^0-9+]/g, '')}`}>{c.phone}</a> : '—'}</td>
-      <td>{c.done} passé{c.done > 1 && 's'} · {c.upcoming} à venir{c.no_shows > 0 && <><br><small>{c.no_shows} absence{c.no_shows > 1 && 's'}</small></>}</td>
-      <td>{c.last_at ? day(c.last_at) : '—'}</td>
+      <td><a class="who" href={`/admin/clientes/${c.id}`}>{c.name || c.email}</a> <small class="lang">{LANGS[c.locale] ?? c.locale}</small>
+        {c.name && <><br><small>{c.email}</small></>}
+        {c.phone && <><br><small><a href={`tel:${c.phone.replace(/[^0-9+]/g, '')}`}>{c.phone}</a></small></>}</td>
+      <td>{c.done} faite{c.done > 1 && 's'} · {c.upcoming} à venir
+        <br><small>{c.last_at ? <>Dernière visite : {day(c.last_at)}</> : 'Pas encore venue'}</small></td>
+      <td class="num">{euros(c.spent_cents)}</td>
+      <td>{c.no_shows === 0 && c.lates === 0 ? '—' : <>
+        {c.no_shows > 0 && <span class="badge badge--alert">{plural(c.no_shows, 'absence', 'absences')}</span>}
+        {c.lates > 0 && <span class="badge badge--wait">{plural(c.lates, 'retard', 'retards')} · {c.late_minutes} min</span>}</>}</td>
+      <td><small>Abonnement : —</small>
+        {c.gifts > 0 && <><br><small>{plural(c.gifts, 'bon cadeau valable', 'bons cadeaux valables')}</small></>}
+        <br><small>Fidélité : {c.loyalty_sessions} / {loyalty.free_after} séances</small>
+        {c.reward === 'free' && <><br><span class="badge badge--ok">Soin offert dû</span></>}
+        {c.reward === 'discount' && <><br><span class="badge badge--ok">Remise de {loyalty.discount_percent} % due</span></>}</td>
       <td>{c.removed_at && <span class="badge badge--alert">Supprimée le {day(c.removed_at)}</span>}{c.blocked_at && <span class="badge badge--alert">Désactivée</span>}{c.deleted_at && <span class="badge badge--wait">Suppression demandée le {day(c.deleted_at)}</span>}
-        {!c.blocked_at && !c.deleted_at && !c.removed_at && <>Cliente depuis {day(c.created_at)}</>}</td>
+        {!c.blocked_at && !c.deleted_at && !c.removed_at && <small>Cliente depuis {day(c.created_at)}</small>}</td>
       {manage && <td>
         <details class="row-acts">
           <summary>Actions<span class="visually-hidden"> pour {c.name || c.email}</span></summary>
@@ -112,4 +140,15 @@ const done = !error && DONE[sp.get('ok') ?? ''];
   .row-acts .check input{width:1.25rem;height:1.25rem;margin:0;accent-color:var(--accent)}
   .row-acts .warn{margin:0;font-size:.8125rem;color:var(--text-soft);max-width:16rem}
   .row-error{outline:2px solid var(--accent);outline-offset:-2px}
+  /* Tableau de bord : en-têtes triables, montants alignés à droite, badges compacts */
+  .dash th a{color:inherit;text-decoration:none}
+  .dash th a:hover,.dash th a:focus-visible{text-decoration:underline}
+  .dash th[aria-sort="ascending"] a::after{content:' ↑'}
+  .dash th[aria-sort="descending"] a::after{content:' ↓'}
+  .dash .num{text-align:right;white-space:nowrap}
+  .dash td{vertical-align:top}
+  .dash .who{font-weight:600}
+  .dash .lang{color:var(--text-soft)}
+  .dash td .badge{display:inline-block;margin:0 .25rem .25rem 0}
+  .dash tbody tr:hover{background:rgb(var(--card))}
 </style>
