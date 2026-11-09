@@ -35,7 +35,13 @@ export async function syncServices(tx, seed) {
   await tx`INSERT INTO services ${tx(seed)} ON CONFLICT (slug) DO UPDATE SET
     category = excluded.category, name_fr = excluded.name_fr, name_nl = excluded.name_nl, name_en = excluded.name_en,
     price_cents = excluded.price_cents, sort = excluded.sort`;
-  await tx`UPDATE services SET active = false WHERE active AND slug <> ALL(${seed.map((s) => s.slug)}::text[])`;
+  const slugs = seed.map((s) => s.slug);
+  // Prestation retirée de la carte : effacée si rien n'y renvoie, sinon hors ligne et masquée (rendez-vous, codes promo)
+  await tx`DELETE FROM services s WHERE slug <> ALL(${slugs}::text[])
+    AND NOT EXISTS (SELECT 1 FROM bookings b WHERE b.service_id = s.id) AND NOT EXISTS (SELECT 1 FROM promo_codes p WHERE s.id = ANY(p.service_ids))`;
+  await tx`UPDATE services SET active = false, retired_at = coalesce(retired_at, now()) WHERE slug <> ALL(${slugs}::text[])`;
+  // Revenue sur la carte : visible de nouveau, toujours fermée tant que la gérante ne la rouvre pas
+  await tx`UPDATE services SET retired_at = NULL WHERE retired_at IS NOT NULL AND slug = ANY(${slugs}::text[])`;
 }
 
 export async function migrate(sql) {
@@ -58,9 +64,9 @@ export async function migrate(sql) {
       applied.push('graine_services');
     }
     // Tarifs du site modifiés (empreinte différente) : la réservation suit les pages. Nouvelles prestations ajoutées (inactives),
-    // noms, catégorie, prix et ordre repris du site, prestations disparues retirées de la réservation (jamais supprimées : des rendez-vous y renvoient).
-    // Durée et activation restent celles de la gérante. Rejoué seulement quand les tarifs changent, pas à chaque démarrage.
-    const step = `tarifs_site:${createHash('sha256').update(JSON.stringify(seed)).digest('hex').slice(0, 16)}`;
+    // noms, catégorie, prix et ordre repris du site, prestations disparues effacées ou masquées (syncServices).
+    // Durée et activation restent celles de la gérante. Rejoué seulement quand les tarifs ou la règle (v2) changent, pas à chaque démarrage.
+    const step = `tarifs_site:${createHash('sha256').update(JSON.stringify({ v: 2, seed })).digest('hex').slice(0, 16)}`;
     if (!done.has(step)) {
       await syncServices(tx, seed);
       await tx`INSERT INTO migrations (name) VALUES (${step})`;

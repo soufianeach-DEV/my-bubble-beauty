@@ -290,7 +290,7 @@ export async function createAdminBooking(input: { serviceId: number; startsAt: D
     const [b] = await sql`
       INSERT INTO bookings (guest_name, guest_phone, service_id, starts_at, ends_at, status, price_cents)
       SELECT ${input.guestName}, ${input.guestPhone || null}, id, ${input.startsAt}, ${input.startsAt}::timestamptz + make_interval(mins => duration_min + buffer_min), 'confirmed', price_cents
-      FROM services WHERE id = ${input.serviceId} AND duration_min IS NOT NULL
+      FROM services WHERE id = ${input.serviceId} AND duration_min IS NOT NULL AND retired_at IS NULL
       RETURNING id`;
     if (!b) return { ok: false, error: 'service' };
     log('admin_booking', { booking_id: b.id });

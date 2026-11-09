@@ -43,7 +43,7 @@ export const fmtDay = (day: string) => dayFormat.format(new Date(`${day}T12:00:0
 // Prestations : jamais supprimées (les rendez-vous passés y renvoient), seulement retirées de la réservation en ligne
 export type Service = { id: number; category: string; name_fr: string; name_nl: string; name_en: string; duration_min: number | null; buffer_min: number; price_cents: number; deposit_cents: number; active: boolean; sort: number };
 export const listServices = () =>
-  sql<Service[]>`SELECT id, category, name_fr, name_nl, name_en, duration_min, buffer_min, price_cents, deposit_cents, active, sort FROM services ORDER BY sort, id`;
+  sql<Service[]>`SELECT id, category, name_fr, name_nl, name_en, duration_min, buffer_min, price_cents, deposit_cents, active, sort FROM services WHERE retired_at IS NULL ORDER BY sort, id`;
 
 export async function saveService(userId: number, form: FormData): Promise<Result> {
   const p = serviceForm.safeParse(fields(form));

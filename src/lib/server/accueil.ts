@@ -104,7 +104,7 @@ export async function alerts(adminEmail: string) {
       WHERE created_at > now() - interval '7 days' AND email_verified_at IS NOT NULL AND deleted_at IS NULL AND removed_at IS NULL AND role IS NULL AND email <> ${adminEmail.trim().toLowerCase()}
       ORDER BY created_at DESC`,
     // Sans durée, une prestation ne peut pas s'ouvrir à la réservation en ligne
-    sql<{ id: number; name: string }[]>`SELECT id, name_fr AS name FROM services WHERE duration_min IS NULL ORDER BY sort, id`,
+    sql<{ id: number; name: string }[]>`SELECT id, name_fr AS name FROM services WHERE duration_min IS NULL AND retired_at IS NULL ORDER BY sort, id`,
     sql<{ starts_at: Date; ends_at: Date; reason: string }[]>`
       SELECT starts_at, ends_at, reason FROM closures WHERE ends_at > now() AND starts_at < now() + interval '30 days' ORDER BY starts_at`,
   ]);
