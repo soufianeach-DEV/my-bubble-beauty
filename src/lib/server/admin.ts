@@ -51,7 +51,9 @@ export async function saveService(userId: number, form: FormData): Promise<Resul
   const s = p.data;
   const [r] = await sql`
     UPDATE services SET name_fr = ${s.name_fr}, name_nl = ${s.name_nl}, name_en = ${s.name_en}, duration_min = ${s.duration}, buffer_min = ${s.buffer},
-      price_cents = ${s.price}, deposit_cents = 0, sort = ${s.sort}, active = ${s.active}
+      price_cents = ${s.price}, deposit_cents = 0, sort = ${s.sort}, active = ${s.active},
+      -- Valeurs d'avant la mise à jour : une durée changée ici n'est plus reprise de la carte, une fermeture ici n'est plus rouverte au démarrage
+      duration_manual = duration_manual OR duration_min IS DISTINCT FROM ${s.duration}, closed_by_admin = NOT ${s.active}
     WHERE id = ${s.id} RETURNING id`;
   if (!r) return { ok: false, error: 'Prestation introuvable.' };
   audit(userId, 'service_saved', { service_id: s.id, active: s.active, duration: s.duration, buffer: s.buffer, price: s.price });
@@ -65,8 +67,8 @@ export async function bulkServices(userId: number, form: FormData): Promise<{ ok
   if (!p.success) return first(p.error) as { ok: false; error: string };
   const { ids, bulk: active, duration } = p.data;
   return sql.begin(async (tx) => {
-    if (duration !== null) await tx`UPDATE services SET duration_min = ${duration} WHERE id = ANY(${ids}::bigint[])`;
-    const done = await tx`UPDATE services SET active = ${active} WHERE id = ANY(${ids}::bigint[]) AND (${!active} OR duration_min IS NOT NULL) RETURNING id`;
+    if (duration !== null) await tx`UPDATE services SET duration_min = ${duration}, duration_manual = true WHERE id = ANY(${ids}::bigint[])`;
+    const done = await tx`UPDATE services SET active = ${active}, closed_by_admin = ${!active} WHERE id = ANY(${ids}::bigint[]) AND (${!active} OR duration_min IS NOT NULL) RETURNING id`;
     audit(userId, 'services_bulk', { count: ids.length, active, duration, changed: done.length });
     return { ok: true as const, changed: done.length, skipped: ids.length - done.length };
   });
