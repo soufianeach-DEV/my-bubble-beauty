@@ -284,7 +284,7 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 <style>
   .recap{display:grid;grid-template-columns:auto 1fr;gap:.4rem 1.25rem;margin:0 0 1.5rem}
   .recap dt{color:var(--text-soft)}
-  .recap dd{margin:0}
+  .recap dd{margin:0;min-width:0;overflow-wrap:anywhere}
   textarea{width:100%;font:inherit}
   .cell-form{display:grid;gap:.5rem;justify-items:start}
   .cell-form .btn{min-height:44px;padding:.55rem 1rem;white-space:normal;text-align:left;line-height:1.3}
