@@ -156,6 +156,24 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     await sql`UPDATE bookings SET gift_card_id = NULL WHERE gift_card_id = ${gc.id}`;
     await sql`DELETE FROM gift_cards WHERE id = ${gc.id}`;
 
+    // Bon pour une cliente existante : nom et e-mail repris, rattaché à sa fiche ; envoi sans Resend = échec dit, bon gardé, journal sans code
+    const fille = await mk('bonfille');
+    const forClient = await gifts.giftAction(other, f({ action: 'create', client: `bonfille <${tag}bonfille@test.local>`, service: String(wh.id), send: 'on' }));
+    assert.ok(forClient.ok && forClient.key === 'create-unsent', JSON.stringify(forClient));
+    const [bc] = await gifts.listGifts((forClient as { id: number }).id);
+    assert.deepEqual({ who: bc.recipient, mail: bc.recipient_email, user: bc.user_id }, { who: 'bonfille', mail: `${tag}bonfille@test.local`, user: fille });
+    assert.deepEqual((await gifts.clientGifts(fille)).map((x) => x.id), [bc.id]);
+    const sent = await gifts.giftAction(other, f({ action: 'send', id: String(bc.id) }));
+    assert.equal(sent.ok, false);
+    assert.match((sent as { error: string }).error, /n'a pas pu partir/);
+    const logs = await sql`SELECT details FROM audit_log WHERE details->>'action' = 'gift_sent' AND (details->>'gift_id')::bigint = ${bc.id}`;
+    assert.equal(logs.length, 2);
+    assert.ok(logs.every((l) => l.details.ok === false && !JSON.stringify(l.details).includes(bc.code)), 'journal sans le code');
+    assert.equal((await gifts.giftAction(other, f({ action: 'create', client: 'inconnue@nulle.part', service: String(wh.id) }))).ok, false, 'cliente inconnue refusée');
+    const noMail = await gifts.giftAction(other, f({ action: 'create', recipient: 'Sans adresse', service: String(wh.id) }));
+    assert.match((await gifts.giftAction(other, f({ action: 'send', id: String((noMail as { id: number }).id) })) as { error: string }).error, /pas d'adresse/);
+    await sql`DELETE FROM gift_cards WHERE id IN (${bc.id}, ${(noMail as { id: number }).id})`;
+
     // Carte de fidélité (règles par défaut : séance à partir de 50 € payés, -10 % après 5, HydraPure après 10 séances et 1 000 € payés) :
     // absences, annulations, petits soins et soins réglés par bon cadeau ne comptent pas ; la remise vaut une fois par carte,
     // le soin offert remet la carte à zéro

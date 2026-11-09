@@ -8,6 +8,9 @@ import { z } from 'astro/zod';
 import type { Result } from './admin.ts';
 import { sql } from './db.ts';
 import { journal } from './journal.ts';
+import { giftMail, sendMailNow } from './mail.ts';
+import { ADMIN_EMAIL } from 'astro:env/server';
+import type { Lang } from '../site.ts';
 
 // Même ligne de journal que audit() d'admin.ts, sans l'importer : booking.ts lit ce module, et admin.ts lit booking.ts
 const audit = (actor: number, action: string, details: Record<string, unknown>) => journal('admin_action', { actor, details: { action, ...details } });
@@ -46,11 +49,11 @@ export async function checkGift(tx: Sql, code: string, serviceId: number, lock =
   return { id: g.id };
 }
 
-export type Gift = { id: number; code: string; recipient: string; recipient_email: string | null; service: string; service_id: number; service_price_cents: number; duration_label: string; message: string; issued_on: string; expires_on: string; state: GiftState; booking_at: Date | null; created_by: string | null };
+export type Gift = { id: number; code: string; recipient: string; recipient_email: string | null; user_id: number | null; service: string; service_id: number; service_price_cents: number; duration_label: string; message: string; issued_on: string; expires_on: string; state: GiftState; booking_at: Date | null; created_by: string | null };
 
 export function listGifts(id?: number) {
   return sql<Gift[]>`
-    SELECT g.id, g.code, g.recipient, g.recipient_email, s.name_fr AS service, g.service_id, s.price_cents AS service_price_cents, g.duration_label, g.message, g.issued_on::text, g.expires_on::text,
+    SELECT g.id, g.code, g.recipient, g.recipient_email, g.user_id, s.name_fr AS service, g.service_id, s.price_cents AS service_price_cents, g.duration_label, g.message, g.issued_on::text, g.expires_on::text,
       ${state(sql)} AS state, (SELECT max(b.starts_at) FROM bookings b WHERE b.gift_card_id = g.id AND b.status IN ('pending_payment', 'confirmed')) AS booking_at,
       coalesce(u.name, u.email) AS created_by
     FROM gift_cards g JOIN services s ON s.id = g.service_id LEFT JOIN users u ON u.id = g.created_by
@@ -58,11 +61,45 @@ export function listGifts(id?: number) {
     ORDER BY g.created_at DESC LIMIT 300`;
 }
 
+// Bons d'une cliente (fiche cliente)
+export const clientGifts = (userId: number) => sql<{ id: number; code: string; service: string; expires_on: string; state: GiftState }[]>`
+  SELECT g.id, g.code, s.name_fr AS service, g.expires_on::text, ${state(sql)} AS state
+  FROM gift_cards g JOIN services s ON s.id = g.service_id WHERE g.user_id = ${userId} ORDER BY g.created_at DESC`;
+
+// Clientes proposées dans « Pour » : même périmètre que l'onglet « Actives » de la liste Clientes (adresse confirmée, ni équipe,
+// ni gérante, ni désactivée, supprimée ou en suppression). Proposition « Nom <e-mail> » ; l'e-mail désigne la cliente.
+export function giftClients() {
+  return sql<{ id: number; name: string | null; email: string }[]>`
+    SELECT id, name, email FROM users WHERE email_verified_at IS NOT NULL AND role IS NULL AND email <> ${ADMIN_EMAIL.trim().toLowerCase()}
+      AND blocked_at IS NULL AND removed_at IS NULL AND deleted_at IS NULL
+    ORDER BY lower(coalesce(name, email)) LIMIT 2000`;
+}
+export const clientLabel = (c: { name: string | null; email: string }) => (c.name ? `${c.name} <${c.email}>` : c.email);
+
+// Envoi du bon par e-mail, dans la langue de la cliente rattachée (français sinon). Échec dit tel quel : jamais de faux succès.
+// Journal gift_sent sans le code ni l'adresse.
+export async function sendGift(actor: number, giftId: number): Promise<{ ok: true } | { ok: false; error: string }> {
+  const [g] = await sql<{ recipient: string; recipient_email: string | null; code: string; expires_on: string; message: string; state: GiftState; locale: Lang | null; name_fr: string; name_nl: string; name_en: string }[]>`
+    SELECT g.recipient, g.recipient_email, g.code, g.expires_on::text, g.message, ${state(sql)} AS state, u.locale, s.name_fr, s.name_nl, s.name_en
+    FROM gift_cards g JOIN services s ON s.id = g.service_id LEFT JOIN users u ON u.id = g.user_id WHERE g.id = ${giftId}`;
+  if (!g) return { ok: false, error: 'Bon introuvable.' };
+  if (!g.recipient_email) return { ok: false, error: "Ce bon n'a pas d'adresse e-mail : ajoutez-la ou imprimez le bon." };
+  if (g.state !== 'valide' && g.state !== 'reserve') return { ok: false, error: `Ce bon est ${STATE_LABELS[g.state].toLowerCase()} : il n'est pas envoyé.` };
+  const lang: Lang = g.locale ?? 'fr';
+  const service = { fr: g.name_fr, nl: g.name_nl, en: g.name_en }[lang].replace(/^[^,]+, /, '');
+  const sent = await sendMailNow(g.recipient_email, giftMail(lang, { recipient: g.recipient, service, code: g.code, expires_on: g.expires_on, message: g.message }));
+  audit(actor, 'gift_sent', { gift_id: giftId, ok: sent, lang });
+  return sent ? { ok: true } : { ok: false, error: "L'e-mail n'a pas pu partir. Le bon est bien enregistré : réessayez plus tard ou imprimez-le." };
+}
+
 const line = (max: number, msg: string) => z.string({ error: msg }).trim().max(max, msg).regex(/^\P{Cc}*$/u, msg);
 export const giftForm = z.discriminatedUnion('action', [
   z.object({
     action: z.literal('create'),
-    recipient: line(100, 'Pour : 100 caractères au plus.').min(1, 'Indiquez pour qui est le bon.'),
+    // Cliente existante choisie dans la liste (« Nom <e-mail> » ou e-mail) ; vide pour une personne sans compte
+    client: z.string().max(400).default(''),
+    recipient: line(100, 'Pour : 100 caractères au plus.').default(''),
+    send: z.literal('on').optional(),
     recipient_email: z.string({ error: 'Adresse e-mail invalide.' }).trim().toLowerCase().max(254, 'Adresse e-mail invalide.')
       .refine((v) => v === '' || z.email().safeParse(v).success, 'Adresse e-mail du bénéficiaire invalide.').default(''),
     service: z.coerce.number({ error: 'Choisissez le soin.' }).int().min(1, 'Choisissez le soin.').max(2_000_000_000, 'Choisissez le soin.'),
@@ -72,6 +109,7 @@ export const giftForm = z.discriminatedUnion('action', [
   z.object({ action: z.literal('reassign'), id: z.coerce.number().int().min(1).max(2_000_000_000),
     service: z.coerce.number({ error: 'Choisissez le nouveau soin.' }).int().min(1, 'Choisissez le nouveau soin.').max(2_000_000_000, 'Choisissez le nouveau soin.'),
     confirm: z.literal('on', { error: 'Cochez la case pour confirmer.' }) }),
+  z.object({ action: z.literal('send'), id: z.coerce.number().int().min(1).max(2_000_000_000) }),
   z.object({ action: z.enum(['used', 'cancel']), id: z.coerce.number().int().min(1).max(2_000_000_000), confirm: z.literal('on', { error: 'Cochez la case pour confirmer.' }) }),
 ], { error: 'Action inconnue.' });
 
@@ -82,19 +120,38 @@ export async function giftAction(actor: number, form: FormData): Promise<Result>
   if (f.action === 'create') {
     const [s] = await sql`SELECT id FROM services WHERE id = ${f.service} AND retired_at IS NULL AND active`;
     if (!s) return { ok: false, error: 'Soin introuvable ou fermé à la réservation.' };
+    // Cliente choisie : son nom et son e-mail remplissent ce qui est vide ; une saisie qui ne correspond à aucune cliente active est refusée
+    let userId: number | null = null;
+    let recipient = f.recipient;
+    let recipientEmail = f.recipient_email;
+    if (f.client.trim()) {
+      const email = (/<([^<>]+)>\s*$/.exec(f.client)?.[1] ?? f.client).trim().toLowerCase();
+      const c = (await giftClients()).find((x) => x.email === email);
+      if (!c) return { ok: false, error: 'Cliente introuvable : choisissez-la dans la liste, ou videz le champ pour une personne sans compte.' };
+      userId = c.id;
+      recipient ||= c.name ?? '';
+      recipientEmail ||= c.email;
+    }
+    if (!recipient) return { ok: false, error: 'Indiquez pour qui est le bon.' };
     // Un code ne doit jamais valoir à la fois bon cadeau et code promo ; nouvel essai en cas de collision
     for (let i = 0; i < 5; i++) {
       const code = newGiftCode();
       if ((await sql`SELECT 1 FROM promo_codes WHERE code = ${code}`).length) continue;
       const [g] = await sql<{ id: number }[]>`
-        INSERT INTO gift_cards (code, recipient, recipient_email, service_id, duration_label, message, expires_on, created_by)
-        VALUES (${code}, ${f.recipient}, ${f.recipient_email || null}, ${f.service}, ${f.duration_label}, ${f.message}, (current_date + interval '12 months')::date, ${actor})
+        INSERT INTO gift_cards (code, recipient, recipient_email, user_id, service_id, duration_label, message, expires_on, created_by)
+        VALUES (${code}, ${recipient}, ${recipientEmail || null}, ${userId}, ${f.service}, ${f.duration_label}, ${f.message}, (current_date + interval '12 months')::date, ${actor})
         ON CONFLICT (code) DO NOTHING RETURNING id`;
       if (!g) continue;
-      audit(actor, 'gift_created', { gift_id: g.id, service_id: f.service });
-      return { ok: true, id: g.id, key: 'create' };
+      audit(actor, 'gift_created', { gift_id: g.id, service_id: f.service, client_id: userId });
+      // « Créer et envoyer » : le bon reste créé même si l'e-mail ne part pas, la page le dit
+      if (!f.send) return { ok: true, id: g.id, key: 'create' };
+      return { ok: true, id: g.id, key: (await sendGift(actor, g.id)).ok ? 'create-sent' : 'create-unsent' };
     }
     return { ok: false, error: 'Code impossible à créer, réessayez.' };
+  }
+  if (f.action === 'send') {
+    const r = await sendGift(actor, f.id);
+    return r.ok ? { ok: true, id: f.id, key: 'sent' } : r;
   }
   const [g] = await listGifts(f.id);
   if (!g) return { ok: false, error: 'Bon introuvable.' };

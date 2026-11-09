@@ -53,6 +53,7 @@ const T = {
     reminder: "Rappel : votre rendez-vous de demain",
     reminderIntro: "Nous vous rappelons votre rendez-vous chez My Bubble Beauty.",
     reminderLate: `Un empêchement ? Moins de 24 heures avant, appelez-nous au ${CONTACT.phoneLabel}.`,
+    gift: ['Votre bon cadeau My Bubble Beauty', (to: string) => `Bonjour ${to},`, 'Un bon cadeau vous attend chez My Bubble Beauty.', 'Soin offert : ', 'Votre code : ', (d: string) => `Valable jusqu'au ${d} (12 mois).`, 'Message : ', 'Réservez en ligne et saisissez votre code dans le champ « Code promo ou bon cadeau ». Vous pouvez aussi nous appeler.', 'Réserver mon soin'],
     aftercare: ['Vos recommandations après le blanchiment des dents', 'Merci pour votre visite. Pour garder un résultat optimal le plus longtemps possible, voici nos recommandations.',
       "Pendant 3 à 4 heures après votre séance : ne mangez pas, buvez uniquement de l'eau, ne fumez pas, pas de bains de bouche colorés, ne vous brossez pas les dents.",
       'Pendant les 7 jours qui suivent :',
@@ -87,6 +88,7 @@ const T = {
     reminder: "Herinnering: uw afspraak van morgen",
     reminderIntro: "We herinneren u aan uw afspraak bij My Bubble Beauty.",
     reminderLate: `Verhinderd? Minder dan 24 uur op voorhand belt u ons op ${CONTACT.phoneLabel}.`,
+    gift: ['Uw cadeaubon van My Bubble Beauty', (to: string) => `Hallo ${to},`, 'Er wacht een cadeaubon op u bij My Bubble Beauty.', 'Aangeboden behandeling: ', 'Uw code: ', (d: string) => `Geldig tot ${d} (12 maanden).`, 'Bericht: ', 'Reserveer online en vul uw code in bij « Promocode of cadeaubon ». U kunt ons ook bellen.', 'Mijn behandeling reserveren'],
     aftercare: ['Uw aanbevelingen na de tandenbleking', 'Dank u voor uw bezoek. Zo blijft het resultaat zo lang mogelijk optimaal:',
       'Gedurende 3 tot 4 uur na uw sessie: eet niet, drink alleen water, rook niet, geen gekleurd mondwater, poets uw tanden niet.',
       'Gedurende de 7 dagen daarna:',
@@ -121,6 +123,7 @@ const T = {
     reminder: "Reminder: your appointment tomorrow",
     reminderIntro: "This is a reminder of your appointment at My Bubble Beauty.",
     reminderLate: `Can't make it? Less than 24 hours before, please call us on ${CONTACT.phoneLabel}.`,
+    gift: ['Your My Bubble Beauty gift voucher', (to: string) => `Hello ${to},`, 'A gift voucher is waiting for you at My Bubble Beauty.', 'Treatment: ', 'Your code: ', (d: string) => `Valid until ${d} (12 months).`, 'Message: ', 'Book online and enter your code in the « Promo code or gift voucher » field. You can also call us.', 'Book my treatment'],
     aftercare: ['Your recommendations after teeth whitening', 'Thank you for your visit. To keep an optimal result for as long as possible, here are our recommendations.',
       'For 3 to 4 hours after your session: do not eat, drink only water, do not smoke, no coloured mouthwash, do not brush your teeth.',
       'For the 7 days after:',
@@ -203,6 +206,36 @@ export function bookingReminderMail(lang: Lang, b: BookingMail): Mail {
 export function aftercareMail(lang: Lang): Mail {
   const [subject, intro, hours, days, list, label] = T[lang].aftercare;
   return build('aftercare_whitening', lang, subject, [T[lang].hello, intro, hours, days, ...list.map((l) => `• ${l}`)], [label, `${SITE_URL}/${FOLDER[lang]}/subPages/dents.html`]);
+}
+
+// Bon cadeau : soin, code CADEAU-, validité et message de l'institut (saisi par l'équipe, jamais par un tiers)
+export function giftMail(lang: Lang, g: { recipient: string; service: string; code: string; expires_on: string; message: string }): Mail {
+  // Tuple mixte (textes et fonctions) : typé ici, le tableau T ne l'est pas élément par élément
+  const [subject, hello, intro, service, code, valid, message, how, label] = T[lang].gift as unknown as [string, (to: string) => string, string, string, string, (d: string) => string, string, string, string];
+  const day = new Intl.DateTimeFormat(LOCALE[lang], { timeZone: 'UTC', dateStyle: 'long' }).format(new Date(`${g.expires_on}T12:00:00Z`));
+  return build('gift', lang, subject, [hello(g.recipient), intro, service + g.service, code + g.code, valid(day), !!g.message && message + g.message, how], [label, `${SITE_URL}/${FOLDER[lang]}/reserver`]);
+}
+
+// Envoi attendu, pour un écran qui doit dire si l'e-mail est parti (bon cadeau) : true seulement si Resend l'a accepté
+export async function sendMailNow(to: string, mail: Mail): Promise<boolean> {
+  if (!RESEND_API_KEY || !MAIL_FROM) {
+    log('mail_unconfigured', { kind: mail.kind });
+    return false;
+  }
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: MAIL_FROM, to: [to], subject: mail.subject, text: mail.text, html: mail.html }),
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    log('mail_sent', { kind: mail.kind });
+    return true;
+  } catch (e) {
+    log('mail_failed', { kind: mail.kind, error: String(e) });
+    return false;
+  }
 }
 
 // Envoi détaché : la réponse n'attend jamais Resend (une adresse connue ne répond pas plus lentement qu'une inconnue).

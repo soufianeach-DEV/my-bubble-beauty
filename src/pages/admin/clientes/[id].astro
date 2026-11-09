@@ -12,6 +12,7 @@ import { euros, todayBrussels } from '../../../lib/server/pricing.ts';
 import { GRACE_DAYS } from '../../../lib/server/rgpd.ts';
 import { FORMS, KINDS, listConsents } from '../../../lib/server/consentements.ts';
 import { suivi, suiviAction } from '../../../lib/server/suivi.ts';
+import { clientGifts, STATE_LABELS as GIFT_STATES } from '../../../lib/server/cadeaux.ts';
 import { applyReward, loyaltyCard, rewardableBookings } from '../../../lib/server/fidelite.ts';
 import { ALLERGIES, AMBIENCE, alertsOf, COVER, HEAT, PRESSURE, readProfile, saveProfile, SKIN, TOUCH, ZONES } from '../../../lib/server/profil.ts';
 
@@ -48,6 +49,8 @@ if (!c) return new Response(null, { status: 404 });
 const { user: u, bookings, stats, events } = c;
 // Rendez-vous à venir : signalés avant une suppression (ils restent dans l'agenda)
 const upcoming = bookings.filter((b) => !b.past && b.status === 'confirmed');
+// Bons cadeaux rattachés à la cliente (pages des bons : admin seulement)
+const gifts = manage ? await clientGifts(u.id) : [];
 const [consents, sv, card, rewardable, prof] = await Promise.all([listConsents(u.id), suivi(u.id), loyaltyCard(u.id), rewardableBookings(u.id), readProfile(u.id)]);
 // Badges d'alerte d'après la fiche enregistrée ; après un refus, le formulaire réaffiche toute la saisie, pas seulement les notes
 const careAlerts = alertsOf(prof.care, prof.health);
@@ -275,7 +278,12 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 </section>}
 
 {/* Journal (connexions, exports, IP) : admin seulement, comme la page Journal */}
-{manage && <section aria-labelledby="h-journal">
+{manage && {gifts.length > 0 && <section aria-labelledby="h-gifts">
+<h2 id="h-gifts">Bons cadeaux</h2>
+<ul class="events">{gifts.map((g) => <li><a href={`/admin/bons-cadeaux/${g.id}`}>{g.code}</a> · {g.service} · {GIFT_STATES[g.state]} · jusqu'au {g.expires_on.split('-').reverse().join('/')}</li>)}</ul>
+</section>}
+
+<section aria-labelledby="h-journal">
 <h2 id="h-journal">Journal récent</h2>
 {events.length === 0 ? <p>Aucune ligne.</p> : (
 <ul class="events">{events.map((e) => <li><time datetime={e.at.toISOString()}>{fmtDateTime(e.at)}</time> — {ACTION_LABELS[e.action] ?? e.action}{e.action === 'admin_action' && typeof e.details.action === 'string' && ` (${e.details.action})`}</li>)}</ul>
