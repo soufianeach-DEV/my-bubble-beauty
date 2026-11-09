@@ -257,6 +257,16 @@ test('comptes, réservations et sécurité sur une vraie base', { skip: !url && 
       assert.equal(await accounts.signInWithLink(cookies(), old, '127.0.0.1', null), null);
     });
 
+    await t.test("équipe : ni lien de connexion ni Google, mot de passe et TOTP seulement", async () => {
+      const g = await mkUser('equipe-lien');
+      await sql`UPDATE users SET role = 'gestionnaire', role_at = now() WHERE id = ${g.id}`;
+      const token = newToken();
+      await sql`INSERT INTO email_tokens (token_hash, user_id, purpose, expires_at) VALUES (${hashToken(token)}, ${g.id}, 'login', now() + interval '15 minutes')`;
+      assert.equal(await accounts.signInWithLink(cookies(), token, '127.0.0.1', null), null);
+      assert.equal(await accounts.signInExternal(cookies(), who('g7', g.email), 'fr', '127.0.0.1', null), null);
+      assert.equal((await sql`SELECT count(*)::int AS n FROM sessions WHERE user_id = ${g.id}`)[0].n, 0);
+    });
+
     await t.test("équipe : rôle, second facteur propre, gardes, désactivation et suppression douce", async () => {
       const { listStaff, staffAction, totpState } = await import('./staff.ts');
       const { base32Decode, totp } = await import('./totp.ts');

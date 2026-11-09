@@ -193,11 +193,17 @@ async function claimUnverified(tx: Tx, userId: number) {
 
 // Dernières vérifications puis session : bloqué, supprimé par l'admin ou depuis plus de 30 jours = même échec que les autres.
 // Un compte en suppression (moins de 30 jours) ouvre la session : le middleware l'envoie vers « Réactiver ».
+// L'équipe (rôle admin ou gestionnaire) n'entre que par mot de passe puis TOTP : un lien ou Google/Microsoft suffirait sinon
+// à qui lit sa boîte mail pour ouvrir une session et, pendant l'enrôlement, enregistrer sa propre application TOTP.
 async function finishSignIn(cookies: AstroCookies, userId: number, via: string, ip: string, userAgent: string | null): Promise<LoginUser | null> {
-  const [u] = await sql<{ id: number; email: string; locale: Lang; blocked: boolean; gone: boolean }[]>`
-    SELECT id, email, locale, blocked_at IS NOT NULL AS blocked, (deleted_at IS NOT NULL AND deleted_at <= now() - interval '30 days') OR removed_at IS NOT NULL AS gone
+  const [u] = await sql<{ id: number; email: string; locale: Lang; blocked: boolean; gone: boolean; staff: boolean }[]>`
+    SELECT id, email, locale, blocked_at IS NOT NULL AS blocked, role IS NOT NULL AS staff, (deleted_at IS NOT NULL AND deleted_at <= now() - interval '30 days') OR removed_at IS NOT NULL AS gone
     FROM users WHERE id = ${userId}`;
   if (!u || u.gone || isAdminEmail(u.email)) return null;
+  if (u.staff) {
+    log('login_staff_refused', { via, ip });
+    return null;
+  }
   if (u.blocked) {
     journal('login_blocked', { client: u.id, ip, details: { via } });
     return null;
@@ -243,7 +249,7 @@ export async function signInExternal(cookies: AstroCookies, who: Identity, lang:
 }
 
 // « Recevoir un lien de connexion » : rien n'est dit sur l'existence du compte, mêmes limites d'envoi que l'inscription.
-// Lien de 15 minutes à usage unique ; aucun pour la gérante.
+// Lien de 15 minutes à usage unique ; aucun pour la gérante ni pour l'équipe.
 export async function requestLoginLink(email: string, lang: Lang, ip: string): Promise<void> {
   email = email.trim().toLowerCase();
   if (badEmail(email) || isAdminEmail(email)) return;
@@ -251,7 +257,7 @@ export async function requestLoginLink(email: string, lang: Lang, ip: string): P
     log('login_link_limited', { ip });
     return;
   }
-  const [u] = await sql<{ id: number }[]>`SELECT id FROM users WHERE email = ${email} AND blocked_at IS NULL AND removed_at IS NULL`;
+  const [u] = await sql<{ id: number }[]>`SELECT id FROM users WHERE email = ${email} AND blocked_at IS NULL AND removed_at IS NULL AND role IS NULL`;
   log('login_link_requested', { user_id: u?.id ?? null, ip });
   if (u) mailWithToken(u.id, email, 'login', 15, (t) => loginLinkMail(lang, t));
 }
