@@ -100,31 +100,31 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
   <fieldset><legend>Santé et sensibilités</legend>
     {prof.consent ? (<>
       <p class="hint">Données de santé : chiffrées, visibles par l'admin et la gestionnaire seulement, effacées si la cliente retire son accord.</p>
-      <p class="sub">Allergies et intolérances aux produits</p>
-      <div class="chips">{Object.entries(ALLERGIES).map(([k, l]) => <label class="chip"><input type="checkbox" name="allergies" value={k} checked={prof.health?.allergies?.includes(k)}><span>{l}</span></label>)}</div>
+      <fieldset class="group"><legend class="sub">Allergies et intolérances aux produits</legend>
+      <div class="chips">{Object.entries(ALLERGIES).map(([k, l]) => <label class="chip"><input type="checkbox" name="allergies" value={k} checked={prof.health?.allergies?.includes(k)}><span>{l}</span></label>)}</div></fieldset>
       <label class="free">Autre allergie ou précision<input name="allergies_other" maxlength="200" value={prof.health?.allergies_other ?? ''}></label>
-      <p class="sub">Type de peau</p>
-      <div class="chips">{Object.entries(SKIN).map(([k, l]) => <label class="chip"><input type="checkbox" name="skin" value={k} checked={prof.health?.skin?.includes(k)}><span>{l}</span></label>)}</div>
+      <fieldset class="group"><legend class="sub">Type de peau</legend>
+      <div class="chips">{Object.entries(SKIN).map(([k, l]) => <label class="chip"><input type="checkbox" name="skin" value={k} checked={prof.health?.skin?.includes(k)}><span>{l}</span></label>)}</div></fieldset>
       <label class="free">Contre-indications et traitements en cours (rétinoïdes, grossesse…)<textarea name="contra" rows="3" maxlength="2000">{prof.health?.contra ?? ''}</textarea></label>
     </>) : <p class="notice notice--error">Pas d'accord pour les données de santé : allergies, type de peau et contre-indications ne peuvent pas être notés. La cliente donne son accord en réservant ou depuis son compte.</p>}
   </fieldset>
   <fieldset><legend>Préférences de soin</legend>
     {([['heat', 'Chaleur', HEAT], ['cover', 'Couverture pendant le soin', COVER], ['pressure', 'Pression du toucher', PRESSURE], ['ambience', 'Ambiance', AMBIENCE]] as const).map(([name, title, o]) => (
-      <div class="seg-group"><p class="sub">{title}</p><div class="seg">
+      <fieldset class="seg-group"><legend class="sub">{title}</legend><div class="seg">
         {Object.entries(o).map(([k, l]) => <label><input type="radio" name={name} value={k} checked={prof.care[name] === k}><span>{l}</span></label>)}
         <label><input type="radio" name={name} value="" checked={!prof.care[name]}><span>Non précisé</span></label>
-      </div></div>
+      </div></fieldset>
     ))}
     <label class="free">Odeurs : parfums appréciés ou à éviter<input name="scents" maxlength="200" value={prof.care.scents ?? ''}></label>
   </fieldset>
   <fieldset><legend>Zones et toucher</legend>
-    <p class="sub">Zones à ne pas toucher</p>
-    <div class="chips">{Object.entries(ZONES).map(([k, l]) => <label class="chip"><input type="checkbox" name="zones" value={k} checked={prof.care.zones?.includes(k)}><span>{l}</span></label>)}</div>
+    <fieldset class="group"><legend class="sub">Zones à ne pas toucher</legend>
+    <div class="chips">{Object.entries(ZONES).map(([k, l]) => <label class="chip"><input type="checkbox" name="zones" value={k} checked={prof.care.zones?.includes(k)}><span>{l}</span></label>)}</div></fieldset>
     <label class="free">Précision sur les zones<input name="zones_other" maxlength="200" value={prof.care.zones_other ?? ''}></label>
-    <div class="seg-group"><p class="sub">Sensibilité au toucher</p><div class="seg">
+    <fieldset class="seg-group"><legend class="sub">Sensibilité au toucher</legend><div class="seg">
       {Object.entries(TOUCH).map(([k, l]) => <label><input type="radio" name="touch" value={k} checked={prof.care.touch === k}><span>{l}</span></label>)}
       <label><input type="radio" name="touch" value="" checked={!prof.care.touch}><span>Non précisé</span></label>
-    </div></div>
+    </div></fieldset>
   </fieldset>
   <div class="field"><label for="notes">Notes libres</label><textarea id="notes" name="notes" rows="5" maxlength="4000">{notesDraft ?? prof.notes}</textarea>
     <p class="hint">La cliente voit toute sa fiche si elle demande l'export de ses données. Écrivez des faits utiles aux soins, sans jugement.</p></div>
@@ -293,6 +293,9 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
   .care-alerts{display:flex;flex-wrap:wrap;gap:.4rem;margin:0 0 1rem}
   .sheet fieldset{display:grid;gap:.6rem;margin:0;padding:1rem;border:1px solid var(--line-soft);border-radius:14px;min-width:0}
   .sheet legend{font-weight:600;padding:0 .3rem}
+  /* Groupes de cases et de boutons : fieldset + legend pour les lecteurs d'écran, sans cadre visible */
+  .sheet fieldset.group,.sheet fieldset.seg-group{display:block;border:0;padding:0;border-radius:0}
+  .sheet legend.sub{padding:0 0 .6rem;font-weight:400}
   .sheet .sub{margin:.25rem 0 0;font-size:.875rem;color:var(--text-soft)}
   .chips,.seg{display:flex;flex-wrap:wrap;gap:.4rem}
   .chip,.seg label{position:relative;display:inline-flex}
