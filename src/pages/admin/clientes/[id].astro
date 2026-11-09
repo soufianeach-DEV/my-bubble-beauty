@@ -258,13 +258,14 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 </details>
 </section>}
 
-<section aria-labelledby="h-journal">
+{/* Journal (connexions, exports, IP) : admin seulement, comme la page Journal */}
+{manage && <section aria-labelledby="h-journal">
 <h2 id="h-journal">Journal récent</h2>
 {events.length === 0 ? <p>Aucune ligne.</p> : (
 <ul class="events">{events.map((e) => <li><time datetime={e.at.toISOString()}>{fmtDateTime(e.at)}</time> — {ACTION_LABELS[e.action] ?? e.action}{e.action === 'admin_action' && typeof e.details.action === 'string' && ` (${e.details.action})`}</li>)}</ul>
 )}
-{manage && <p><a href={`/admin/journal?cliente=${u.id}`}>Tout le journal de cette cliente</a></p>}
-</section>
+<p><a href={`/admin/journal?cliente=${u.id}`}>Tout le journal de cette cliente</a></p>
+</section>}
 </Admin>
 
 <style>
