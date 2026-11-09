@@ -60,6 +60,20 @@ if (profDraft) {
   prof.care = { heat: one('heat'), cover: one('cover'), pressure: one('pressure'), ambience: one('ambience'), scents: one('scents'), zones: all('zones'), zones_other: one('zones_other'), touch: one('touch') };
   if (prof.health) prof.health = { allergies: all('allergies'), allergies_other: one('allergies_other'), skin: all('skin'), contra: one('contra') };
 }
+// Lecture de la fiche : [titre, valeurs, alerte] ; seules les lignes renseignées s'affichent
+const pick = <T extends Record<string, string>>(o: T, keys: string[] | undefined, other?: string) => [...(keys ?? []).filter((k) => k !== 'autre' || !other).map((k) => o[k as keyof T] ?? k), ...(other ? [other] : [])];
+const sheetRows = ([
+  ['Allergies', pick(ALLERGIES, prof.health?.allergies, prof.health?.allergies_other), true],
+  ['Peau', pick(SKIN, prof.health?.skin), false],
+  ['Contre-indications', prof.health?.contra ? [prof.health.contra] : [], true],
+  ['Ne pas toucher', pick(ZONES, prof.care.zones, prof.care.zones_other), true],
+  ['Toucher', prof.care.touch ? [TOUCH[prof.care.touch as keyof typeof TOUCH]] : [], prof.care.touch === 'limite' || prof.care.touch === 'prevenir'],
+  ['Chaleur', prof.care.heat ? [HEAT[prof.care.heat as keyof typeof HEAT]] : [], false],
+  ['Couverture', prof.care.cover ? [COVER[prof.care.cover as keyof typeof COVER]] : [], false],
+  ['Pression', prof.care.pressure ? [PRESSURE[prof.care.pressure as keyof typeof PRESSURE]] : [], false],
+  ['Ambiance', prof.care.ambience ? [AMBIENCE[prof.care.ambience as keyof typeof AMBIENCE]] : [], false],
+  ['Odeurs', prof.care.scents ? [prof.care.scents] : [], false],
+] as [string, (string | undefined)[], boolean][]).map(([t, v, a]) => [t, v.filter(Boolean) as string[], a] as const).filter(([, v]) => v.length > 0);
 const DONE: Record<string, string> = {
   notes: 'Fiche de soin enregistrée.', supprime: 'Rendez-vous supprimé.', sante: 'Date de naissance et antécédents enregistrés.', 'fidelite-remise': 'Remise de fidélité appliquée au rendez-vous.', 'fidelite-offert': 'Soin offert appliqué au rendez-vous : la carte repart à zéro.', seance: 'Séance mise à jour.', block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte réactivé.',
   remove: "Compte supprimé : il n'apparaît plus dans les listes et ne peut plus se connecter. Ses rendez-vous restent.", unremove: 'Compte restauré : la cliente peut de nouveau se connecter.', restore: 'Suppression annulée : le compte est de nouveau actif. Les rendez-vous annulés le restent.',
@@ -119,6 +133,9 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
     <button class="btn btn--solid" type="submit" name="action" value="restore">Annuler la suppression</button>
   </form>
 )}
+{/* Actions rares repliées : la fiche tient sur un écran */}
+<details class="cancel acct" open={!!(u.blocked_at || u.removed_at)}>
+<summary>Désactiver, supprimer ou effacer le compte</summary>
 <form class="form" method="post" action={self}>
   <input type="hidden" name="id" value={u.id}>
   {u.blocked_at
@@ -149,6 +166,7 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
     <button class="btn btn--ghost" type="submit">Effacer définitivement</button>
   </form>
 </details>
+</details>
 </section>}
 {gifts.length > 0 && <section aria-labelledby="h-gifts">
 <h2 id="h-gifts">Bons cadeaux</h2>
@@ -168,6 +186,15 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 <h2 id="h-notes">Fiche de soin</h2>
 {prof.filledAt && <p class="hint">Remplie par la cliente le {day(prof.filledAt)}. Vous pouvez la corriger ci-dessous.</p>}
 {prof.clientNote && <p class="client-note"><strong>Mot de la cliente :</strong> {prof.clientNote}</p>}
+{/* Lecture d'abord : badges compacts ; le formulaire complet se déplie sous « Modifier la fiche » */}
+{sheetRows.length === 0 && !prof.notes ? <p class="hint">Fiche vide pour l'instant.</p> : (
+<dl class="recap sheet-read">
+  {sheetRows.map(([t, vals, alert]) => <><dt>{t}</dt><dd class="tags">{vals.map((v) => <span class={`badge${alert ? ' badge--alert' : ''}`}>{v}</span>)}</dd></>)}
+  {prof.notes && <><dt>Notes</dt><dd class="note-text">{prof.notes}</dd></>}
+</dl>)}
+{!prof.consent && <p class="hint">Pas d'accord pour les données de santé : allergies, peau et contre-indications ne sont pas notées.</p>}
+<details class="sheet-edit" open={!!profDraft}>
+<summary class="btn btn--ghost">Modifier la fiche</summary>
 {/* Cases et boutons segmentés (radio) plutôt que des menus : utilisables au pouce sur téléphone */}
 <form class="form sheet" method="post" action={`${self}#h-notes`}>
   <input type="hidden" name="scope" value="profil">
@@ -205,6 +232,7 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
   {/* Collant en bas de l'écran : la fiche est longue, le bouton reste à portée */}
   <div class="save-bar"><button class="btn btn--solid" type="submit">Enregistrer la fiche</button></div>
 </form>
+</details>
 </section>
 </div>
 <div class="cl-col">
@@ -313,12 +341,20 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 </Admin>
 
 <style>
-  /* Fiche sans long défilement : 3 colonnes à partir de 1600 px, 2 à partir de 960 px (rendez-vous et suivi sur toute la largeur dessous) */
+  /* Fiche sans long défilement : 3 colonnes dès 1600 px ; 2 dès 1200 px (rendez-vous à droite) ; 2 dès 960 px (rendez-vous dessous) */
   .cl-grid{display:grid;gap:0 2rem;align-items:start}
   .cl-col{min-width:0}
   .cl-col > section > h2{margin-top:1.25rem}
   @media (min-width:960px){.cl-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr)}.cl-col:last-child{grid-column:1 / -1}}
-  @media (min-width:1600px){.cl-grid{grid-template-columns:minmax(0,.85fr) minmax(0,1.1fr) minmax(0,1.35fr)}.cl-col:last-child{grid-column:auto}}
+  /* Dès 1200 px : identité et fiche à gauche, rendez-vous et séances à droite */
+  @media (min-width:1200px){.cl-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.3fr)}.cl-col:first-child{grid-row:1}.cl-col:nth-child(2){grid-column:1;grid-row:2}.cl-col:last-child{grid-column:2;grid-row:1 / span 2}}
+  @media (min-width:1600px){.cl-grid{grid-template-columns:minmax(0,.85fr) minmax(0,1.1fr) minmax(0,1.35fr)}.cl-col:nth-child(n){grid-column:auto;grid-row:auto}}
+  .sheet-read{grid-template-columns:auto 1fr;margin-bottom:1rem}
+  .tags{display:flex;flex-wrap:wrap;gap:.35rem}
+  .note-text{white-space:pre-line}
+  .sheet-edit > summary{list-style:none;display:inline-flex;margin:0 0 1rem;cursor:pointer}
+  .sheet-edit > summary::-webkit-details-marker{display:none}
+  .sheet-edit[open] > summary{margin-bottom:1rem}
   .save-bar{position:sticky;bottom:0;z-index:2;padding:.75rem 0;background:var(--surface);border-top:1px solid var(--line-soft)}
   .recap{display:grid;grid-template-columns:auto 1fr;gap:.4rem 1.25rem;margin:0 0 1.5rem}
   .recap dt{color:var(--text-soft)}
