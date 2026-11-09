@@ -91,7 +91,9 @@ export const closureForm = z
 export const promoForm = z
   .object({
     id: optInt(1, 2_000_000_000, 'Identifiant invalide.'),
-    code: str('Code : 3 à 32 caractères, lettres, chiffres ou tirets.').toUpperCase().regex(/^[A-Z0-9-]{3,32}$/, 'Code : 3 à 32 caractères, lettres, chiffres ou tirets.'),
+    code: str('Code : 3 à 32 caractères, lettres, chiffres ou tirets.').toUpperCase().regex(/^[A-Z0-9-]{3,32}$/, 'Code : 3 à 32 caractères, lettres, chiffres ou tirets.')
+      // Préfixe réservé : à la réservation, un code de la forme CADEAU-XXXX-XXXX est lu comme un bon cadeau
+      .refine((v) => !v.startsWith('CADEAU-'), 'Les codes qui commencent par CADEAU- sont réservés aux bons cadeaux.'),
     kind: z.enum(['percent', 'amount'], { error: 'Type de remise invalide.' }),
     value: str('Valeur de la remise manquante.'),
     starts_on: optDay('Début : date invalide.'),
