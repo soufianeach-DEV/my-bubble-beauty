@@ -54,9 +54,9 @@ export async function optOutReviews(userId: number): Promise<void> {
 // Pas de relance si la cliente a cliqué sur le lien du mail, ou si un avis à son nom a été trouvé (matchReviews).
 export async function sendReviewRequests(reviewUrl: string | undefined, send: Sender = sendMailNow): Promise<number> {
   if (!reviewUrl) return 0;
-  type Row = { id: number; user_id: number; email: string; locale: Lang };
+  type Row = { id: number; user_id: number; email: string; locale: Lang; name: string | null };
   const first = await sql<Row[]>`
-    SELECT DISTINCT ON (b.user_id) b.id, b.user_id, u.email, u.locale
+    SELECT DISTINCT ON (b.user_id) b.id, b.user_id, u.email, u.locale, u.name
     FROM bookings b JOIN users u ON u.id = b.user_id
     WHERE b.status = 'confirmed' AND NOT b.no_show AND b.review_request_sent_at IS NULL
       AND u.blocked_at IS NULL AND u.removed_at IS NULL AND u.deleted_at IS NULL AND u.review_mail_optout_at IS NULL
@@ -65,14 +65,14 @@ export async function sendReviewRequests(reviewUrl: string | undefined, send: Se
         AND o.ends_at > b.ends_at - interval '24 hours' AND o.ends_at < b.ends_at + interval '24 hours')
     ORDER BY b.user_id, b.ends_at DESC`;
   const again = await sql<Row[]>`
-    SELECT b.id, b.user_id, u.email, u.locale
+    SELECT b.id, b.user_id, u.email, u.locale, u.name
     FROM bookings b JOIN users u ON u.id = b.user_id
     WHERE b.status = 'confirmed' AND NOT b.no_show AND b.review_reminder_sent_at IS NULL
       AND b.review_request_sent_at <= now() - interval '20 hours' AND b.review_clicked_at IS NULL AND b.review_found_at IS NULL
       AND u.blocked_at IS NULL AND u.removed_at IS NULL AND u.deleted_at IS NULL AND u.review_mail_optout_at IS NULL
       AND b.ends_at <= now() - interval '48 hours' AND b.ends_at > now() - interval '5 days'`;
-  return (await deliver(first.map((r) => ({ id: r.id, email: r.email, mail: reviewRequestMail(r.locale, clickUrl(r.id), unsubscribeUrl(r.locale, r.user_id)) })), 'review_request_sent_at', send))
-    + (await deliver(again.map((r) => ({ id: r.id, email: r.email, mail: reviewReminderMail(r.locale, clickUrl(r.id), unsubscribeUrl(r.locale, r.user_id)) })), 'review_reminder_sent_at', send));
+  return (await deliver(first.map((r) => ({ id: r.id, email: r.email, mail: reviewRequestMail(r.locale, clickUrl(r.id), unsubscribeUrl(r.locale, r.user_id), r.name) })), 'review_request_sent_at', send))
+    + (await deliver(again.map((r) => ({ id: r.id, email: r.email, mail: reviewReminderMail(r.locale, clickUrl(r.id), unsubscribeUrl(r.locale, r.user_id), r.name) })), 'review_reminder_sent_at', send));
 }
 
 type GbpReview = { reviewId: string; reviewer?: { displayName?: string; isAnonymous?: boolean }; starRating?: string; comment?: string; createTime: string; updateTime: string };

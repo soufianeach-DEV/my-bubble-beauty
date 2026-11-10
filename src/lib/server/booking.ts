@@ -520,8 +520,8 @@ export async function sendAftercare(send: Sender = sendMailNow): Promise<number>
 // Rappel la veille (entre 26 h et 2 h avant), dans la langue de la cliente ; un rendez-vous déplacé repart à zéro (moveBooking),
 // un rendez-vous annulé n'est plus « confirmed ». Pris moins de 26 h avant : la confirmation suffit.
 export async function sendReminders(send: Sender = sendMailNow): Promise<number> {
-  const rows = await sql<({ id: number; email: string; locale: Lang } & BookingMail)[]>`
-    SELECT b.id, u.email, u.locale, CASE u.locale WHEN 'nl' THEN s.name_nl WHEN 'en' THEN s.name_en ELSE s.name_fr END AS service,
+  const rows = await sql<({ id: number; email: string; locale: Lang; name: string | null } & BookingMail)[]>`
+    SELECT b.id, u.email, u.locale, u.name, CASE u.locale WHEN 'nl' THEN s.name_nl WHEN 'en' THEN s.name_en ELSE s.name_fr END AS service,
       b.starts_at, b.price_cents, b.discount_cents, b.deposit_cents
     FROM bookings b JOIN users u ON u.id = b.user_id JOIN services s ON s.id = b.service_id
     WHERE b.status = 'confirmed' AND b.reminder_sent_at IS NULL
@@ -529,5 +529,5 @@ export async function sendReminders(send: Sender = sendMailNow): Promise<number>
       AND u.blocked_at IS NULL AND u.removed_at IS NULL
       AND b.starts_at > now() + interval '2 hours' AND b.starts_at <= now() + interval '26 hours'
       AND b.created_at < b.starts_at - interval '26 hours'`;
-  return deliver(rows.map((r) => ({ id: r.id, email: r.email, mail: bookingReminderMail(r.locale, r) })), 'reminder_sent_at', send);
+  return deliver(rows.map((r) => ({ id: r.id, email: r.email, mail: bookingReminderMail(r.locale, r, r.name) })), 'reminder_sent_at', send);
 }

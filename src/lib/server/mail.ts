@@ -15,18 +15,61 @@ const ADDRESS = `${CONTACT.street}, ${CONTACT.postal} ${CONTACT.city}`;
 const LOCALE: Record<Lang, string> = { fr: 'fr-BE', nl: 'nl-BE', en: 'en-GB' };
 const when = (d: Date, lang: Lang) => new Intl.DateTimeFormat(LOCALE[lang], { timeZone: 'Europe/Brussels', dateStyle: 'full', timeStyle: 'short' }).format(d);
 
-// pre : texte d'aperçu affiché par la messagerie après l'objet (caché dans le corps) ; sans lui, elle montre « Bonjour, »
-function build(kind: string, lang: Lang, subject: string, lines: (string | false)[], link: [label: string, url: string], unsub?: [label: string, url: string], pre?: string): Mail {
+// Gabarit commun : fond crème, carte blanche de 600 px, logo, titre Georgia, corps Arial, bouton en tableau (VML pour Outlook),
+// pied hors carte. Styles en ligne, aucune police web ni image de fond ; le mode sombre passe par les classes de la balise <style>.
+const C = { bg: '#FCF9F7', card: '#FFFFFF', ink: '#4A3732', soft: '#786A65', line: '#E8D9D2', recap: '#F8F3F0', brand: '#8A5A50' };
+const SERIF = "Georgia,'Times New Roman',serif";
+const SANS = 'Arial,Helvetica,sans-serif';
+const DARK = '.mb-bg{background:#1E1615!important}.mb-card{background:#2A201E!important}.mb-ink{color:#F3E6E1!important}.mb-soft{color:#D8C4BD!important}.mb-recap{background:#3A2C29!important}.mb-line{border-color:#4A3A36!important}.mb-link{color:#E8BFB5!important}';
+// Le numéro du salon devient un lien tel: partout où il apparaît
+const tel = (html: string) => html.split(esc(CONTACT.phoneLabel)).join(`<a href="tel:${CONTACT.phone}" class="mb-link" style="color:${C.brand};text-decoration:underline">${esc(CONTACT.phoneLabel)}</a>`);
+const para = (l: string) => `<p class="mb-ink" style="margin:0 0 16px;font-family:${SANS};font-size:16px;line-height:1.6;color:${C.ink}">${tel(esc(l))}</p>`;
+const button = ([label, url]: [string, string]) => `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 24px"><tr><td align="center" bgcolor="${C.brand}" style="border-radius:8px">
+<!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${esc(url)}" style="height:48px;v-text-anchor:middle;width:240px" arcsize="17%" stroke="f" fillcolor="${C.brand}"><w:anchorlock/><center style="color:#FFFFFF;font-family:Arial,sans-serif;font-size:16px;font-weight:bold">${esc(label)}</center></v:roundrect><![endif]-->
+<!--[if !mso]><!--><a href="${esc(url)}" style="display:inline-block;min-width:240px;box-sizing:border-box;padding:14px 24px;background:${C.brand};border-radius:8px;font-family:${SANS};font-size:16px;font-weight:bold;line-height:20px;color:#FFFFFF;text-align:center;text-decoration:none">${esc(label)}</a><!--<![endif]-->
+</td></tr></table>`;
+const recapBlock = (rows: [string, string][]) => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="mb-recap" style="background:${C.recap};border-radius:8px;margin:0 0 20px"><tr><td style="padding:20px 24px">${rows
+  .map(([k, v], i) => `<p class="mb-soft" style="margin:${i ? '14px' : '0'} 0 2px;font-family:${SANS};font-size:12px;letter-spacing:1px;color:${C.soft}">${esc(k.toUpperCase())}</p><p class="mb-ink" style="margin:0;font-family:${SANS};font-size:16px;line-height:1.5;font-weight:bold;color:${C.ink}">${esc(v)}</p>`)
+  .join('')}</td></tr></table>`;
+
+// pre : texte d'aperçu affiché par la messagerie après l'objet (caché dans le corps).
+// opts.title : titre de la carte (l'objet sinon) ; opts.recap : bloc récapitulatif, suivi des lignes opts.after
+type Opts = { title?: string; recap?: [label: string, value: string][]; after?: (string | false)[] };
+function build(kind: string, lang: Lang, subject: string, lines: (string | false)[], link: [label: string, url: string], unsub?: [label: string, url: string], pre?: string, opts: Opts = {}): Mail {
   const body = lines.filter((l): l is string => !!l);
+  const after = (opts.after ?? []).filter((l): l is string => !!l);
+  const title = opts.title ?? subject;
   const foot = `My Bubble Beauty - ${ADDRESS} - ${CONTACT.phoneLabel}`;
+  const small = `font-family:${SANS};font-size:12px;line-height:1.6;color:${C.soft}`;
   return {
     kind,
     subject,
-    text: [...body, `${link[0]}\n${link[1]}`, foot, ...(unsub ? [`${unsub[0]}\n${unsub[1]}`] : [])].join('\n\n'),
-    html: `<!doctype html><html lang="${lang}"><body style="font-family:Arial,sans-serif;color:#222;line-height:1.5">${pre ? `<div style="display:none;max-height:0;overflow:hidden">${esc(pre)}</div>` : ''}${body.map((l) => `<p>${esc(l)}</p>`).join('')}<p style="margin:24px 0"><a href="${esc(link[1])}" style="display:inline-block;background:#8A5A52;color:#FFFBF9;text-decoration:none;padding:12px 22px;border-radius:999px">${esc(link[0])}</a></p><p style="color:#777;font-size:13px">${esc(foot)}</p>${unsub ? `<p style="color:#777;font-size:13px"><a href="${esc(unsub[1])}" style="color:#777">${esc(unsub[0])}</a></p>` : ''}</body></html>`,
+    text: [title, ...body, ...(opts.recap ?? []).map(([k, v]) => `${k}${lang === 'fr' ? ' : ' : ': '}${v}`), ...after, `${link[0]}\n${link[1]}`, foot, ...(unsub ? [`${unsub[0]}\n${unsub[1]}`] : [])].join('\n\n'),
+    html: `<!doctype html><html lang="${lang}" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="x-apple-disable-message-reformatting"><meta name="color-scheme" content="light dark"><meta name="supported-color-schemes" content="light dark"><title>${esc(subject)}</title>
+<style>:root{color-scheme:light dark;supported-color-schemes:light dark}@media (max-width:620px){.mb-pad{padding:24px!important}}@media (prefers-color-scheme:dark){${DARK}}</style>
+<!--[if mso]><noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript><![endif]--></head>
+<body class="mb-bg" style="margin:0;padding:0;background:${C.bg};-webkit-text-size-adjust:100%">${pre ? `<div style="display:none;max-height:0;overflow:hidden;mso-hide:all">${esc(pre)}</div>` : ''}
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="mb-bg" style="background:${C.bg}"><tr><td align="center" style="padding:32px 12px">
+<!--[if mso]><table role="presentation" width="600" align="center" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="mb-card" style="max-width:600px;background:${C.card};border-radius:12px"><tr><td class="mb-pad" style="padding:40px">
+<img src="${SITE_URL}/assets/img/logo-mail.png" width="180" height="127" alt="My Bubble Beauty" style="display:block;margin:0 auto;border:0;width:180px;max-width:100%;height:auto;font-family:${SERIF};font-size:24px;color:${C.brand};text-align:center">
+<div class="mb-line" style="border-top:1px solid ${C.line};margin:24px 0 28px;line-height:0;font-size:0">&nbsp;</div>
+<h1 class="mb-ink" style="margin:0 0 20px;font-family:${SERIF};font-size:26px;line-height:1.3;font-weight:normal;color:${C.ink}">${esc(title)}</h1>
+${body.map(para).join('')}${opts.recap ? recapBlock(opts.recap) : ''}${after.map(para).join('')}${button(link)}
+</td></tr></table>
+<!--[if mso]></td></tr></table><![endif]-->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px"><tr><td class="mb-soft" style="padding:20px 24px 8px;text-align:center;${small}">My Bubble Beauty · ${esc(ADDRESS)}<br><a href="tel:${CONTACT.phone}" class="mb-soft" style="color:${C.soft};text-decoration:underline">${esc(CONTACT.phoneLabel)}</a>${unsub ? `<br><a href="${esc(unsub[1])}" class="mb-soft" style="color:${C.soft};text-decoration:underline">${esc(unsub[0])}</a>` : ''}</td></tr></table>
+</td></tr></table></body></html>`,
     ...(unsub ? { unsubscribe: unsub[1] } : {}),
   };
 }
+
+// « Bonjour Sophie, » avec le premier mot du nom du compte ; « Bonjour, » sans nom
+const HELLO: Record<Lang, string> = { fr: 'Bonjour', nl: 'Hallo', en: 'Hello' };
+const hi = (lang: Lang, name?: string | null) => {
+  const first = name?.trim().split(/\s+/)[0];
+  return first ? `${HELLO[lang]} ${first},` : `${HELLO[lang]},`;
+};
 
 const T = {
   fr: {
@@ -54,6 +97,10 @@ const T = {
     moved: "Votre rendez-vous est déplacé",
     movedIntro: "Votre rendez-vous chez My Bubble Beauty a été déplacé. Voici la nouvelle date.",
     reminder: "Rappel : votre rendez-vous de demain",
+    reminderTitle: 'À demain pour votre moment de douceur',
+    recap: ['Prestation', 'Date et heure', 'Adresse'],
+    reviewTitle: 'Merci pour votre visite',
+    reviewAgainTitle: 'Un petit mot de votre part ?',
     reminderIntro: "Nous vous rappelons votre rendez-vous chez My Bubble Beauty.",
     reminderLate: `Un empêchement ? Moins de 24 heures avant, appelez-nous au ${CONTACT.phoneLabel}.`,
     gift: ['Votre bon cadeau My Bubble Beauty', (to: string) => `Bonjour ${to},`, 'Un bon cadeau vous attend chez My Bubble Beauty.', 'Soin offert : ', 'Votre code : ', (d: string) => `Valable jusqu'au ${d} (12 mois).`, 'Message : ', 'Réservez en ligne et saisissez votre code dans le champ « Code promo ou bon cadeau ». Vous pouvez aussi nous appeler.', 'Réserver mon soin'],
@@ -92,6 +139,10 @@ const T = {
     moved: "Uw afspraak is verplaatst",
     movedIntro: "Uw afspraak bij My Bubble Beauty werd verplaatst. Dit is de nieuwe datum.",
     reminder: "Herinnering: uw afspraak van morgen",
+    reminderTitle: 'Tot morgen voor uw moment van ontspanning',
+    recap: ['Behandeling', 'Datum en uur', 'Adres'],
+    reviewTitle: 'Bedankt voor uw bezoek',
+    reviewAgainTitle: 'Een woordje van u?',
     reminderIntro: "We herinneren u aan uw afspraak bij My Bubble Beauty.",
     reminderLate: `Verhinderd? Minder dan 24 uur op voorhand belt u ons op ${CONTACT.phoneLabel}.`,
     gift: ['Uw cadeaubon van My Bubble Beauty', (to: string) => `Hallo ${to},`, 'Er wacht een cadeaubon op u bij My Bubble Beauty.', 'Aangeboden behandeling: ', 'Uw code: ', (d: string) => `Geldig tot ${d} (12 maanden).`, 'Bericht: ', 'Reserveer online en vul uw code in bij « Promocode of cadeaubon ». U kunt ons ook bellen.', 'Mijn behandeling reserveren'],
@@ -130,6 +181,10 @@ const T = {
     moved: "Your appointment has been moved",
     movedIntro: "Your appointment at My Bubble Beauty has been moved. Here is the new date.",
     reminder: "Reminder: your appointment tomorrow",
+    reminderTitle: 'See you tomorrow for your moment of calm',
+    recap: ['Treatment', 'Date and time', 'Address'],
+    reviewTitle: 'Thank you for your visit',
+    reviewAgainTitle: 'A few words from you?',
     reminderIntro: "This is a reminder of your appointment at My Bubble Beauty.",
     reminderLate: `Can't make it? Less than 24 hours before, please call us on ${CONTACT.phoneLabel}.`,
     gift: ['Your My Bubble Beauty gift voucher', (to: string) => `Hello ${to},`, 'A gift voucher is waiting for you at My Bubble Beauty.', 'Treatment: ', 'Your code: ', (d: string) => `Valid until ${d} (12 months).`, 'Message: ', 'Book online and enter your code in the « Promo code or gift voucher » field. You can also call us.', 'Book my treatment'],
@@ -209,9 +264,11 @@ export function bookingMovedMail(lang: Lang, b: BookingMail): Mail {
   return build('booking_moved', lang, t.moved, [t.hello, t.movedIntro, t.service + b.service, t.date + when(b.starts_at, lang), t.address + ADDRESS, t.rules], [t.account, accountUrl(lang)]);
 }
 
-export function bookingReminderMail(lang: Lang, b: BookingMail): Mail {
+export function bookingReminderMail(lang: Lang, b: BookingMail, name?: string | null): Mail {
   const t = T[lang];
-  return build('booking_reminder', lang, t.reminder, [t.hello, t.reminderIntro, t.service + b.service, t.date + when(b.starts_at, lang), t.address + ADDRESS, t.reminderLate], [t.account, accountUrl(lang)], undefined, `${b.service} · ${when(b.starts_at, lang)}`);
+  const [service, date, address] = t.recap;
+  return build('booking_reminder', lang, t.reminder, [hi(lang, name), t.reminderIntro], [t.account, accountUrl(lang)], undefined, `${b.service} · ${when(b.starts_at, lang)}`,
+    { title: t.reminderTitle, recap: [[service, b.service], [date, when(b.starts_at, lang)], [address, ADDRESS]], after: [t.reminderLate] });
 }
 
 // Après un rendez-vous de blanchiment dentaire : les recommandations de l'institut, sans rien de personnel
@@ -222,16 +279,17 @@ export function aftercareMail(lang: Lang): Mail {
 
 // Après tout rendez-vous honoré : la même demande à toutes les clientes, sans question préalable sur leur satisfaction
 // (Google interdit de ne solliciter que les avis positifs). reviewUrl : lien « Demander des avis » copié depuis la fiche.
-export function reviewRequestMail(lang: Lang, reviewUrl: string, unsubscribeUrl: string): Mail {
-  const [subject, thanks, ask, honest, label, unsub] = T[lang].review;
-  return build('review_request', lang, subject, [T[lang].hello, thanks, ask, honest], [label, reviewUrl], [unsub, unsubscribeUrl], T[lang].reviewPre);
+export function reviewRequestMail(lang: Lang, reviewUrl: string, unsubscribeUrl: string, name?: string | null): Mail {
+  // Le remerciement passe dans le titre de la carte
+  const [subject, , ask, honest, label, unsub] = T[lang].review;
+  return build('review_request', lang, subject, [hi(lang, name), ask, honest], [label, reviewUrl], [unsub, unsubscribeUrl], T[lang].reviewPre, { title: T[lang].reviewTitle });
 }
 
 // Relance un jour plus tard. Le site ne sait pas si la cliente a déjà laissé son avis (Google ne donne pas son e-mail) : le texte le dit
-export function reviewReminderMail(lang: Lang, reviewUrl: string, unsubscribeUrl: string): Mail {
+export function reviewReminderMail(lang: Lang, reviewUrl: string, unsubscribeUrl: string, name?: string | null): Mail {
   const [subject, recall, ask, done, pre] = T[lang].reviewAgain;
   const [, , , , label, unsub] = T[lang].review;
-  return build('review_reminder', lang, subject, [T[lang].hello, recall, ask, done], [label, reviewUrl], [unsub, unsubscribeUrl], pre);
+  return build('review_reminder', lang, subject, [hi(lang, name), recall, ask, done], [label, reviewUrl], [unsub, unsubscribeUrl], pre, { title: T[lang].reviewAgainTitle });
 }
 
 // Bon cadeau : soin, code CADEAU-, validité et message de l'institut (saisi par l'équipe, jamais par un tiers)

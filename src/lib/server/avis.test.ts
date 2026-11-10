@@ -25,6 +25,15 @@ test('mail d’avis : lien Google et lien de désinscription', async () => {
     assert.equal(m.unsubscribe, 'https://test.local/fr/compte/avis-desinscription?u=1&s=x');
     assert.ok(m.html.includes('avis-desinscription?u=1&#38;s=x'), 'lien échappé dans le HTML');
   }
+  // Prénom du compte dans le salut, échappé dans le HTML ; « Bonjour, » sans nom
+  const { bookingReminderMail } = await import('./mail.ts');
+  assert.ok(reviewRequestMail('fr', 'https://x.test', 'https://y.test', 'Sophie Martin').text.includes('Bonjour Sophie,'));
+  assert.ok(reviewRequestMail('fr', 'https://x.test', 'https://y.test', null).text.includes('Bonjour,'));
+  assert.ok(reviewRequestMail('fr', 'https://x.test', 'https://y.test', '<b>x</b> y').html.includes('Bonjour &#60;b&#62;x&#60;/b&#62;,'));
+  const r = bookingReminderMail('fr', { service: 'HydraPure', starts_at: new Date('2026-11-12T09:30:00Z'), price_cents: 0, discount_cents: 0, deposit_cents: 0 }, 'Sophie');
+  assert.ok(r.html.includes('PRESTATION') && r.html.includes('DATE ET HEURE') && r.html.includes('href="tel:'), 'récapitulatif et téléphone cliquable');
+  assert.ok(r.text.includes('Prestation : HydraPure'), 'version texte gardée');
+  assert.ok(!/★|☆/.test(reviewRequestMail('fr', 'https://x.test', 'https://y.test').html), 'pas d’étoiles dans le mail d’avis');
 });
 
 test('jeton du lien suivi : signé, propre au rendez-vous', async () => {
