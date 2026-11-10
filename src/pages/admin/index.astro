@@ -71,7 +71,7 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
 {/* 1. La journée */}
 {/* Les deux informations qui demandent une action ou orientent la journée, avant tout le reste */}
 <div class="priority">
-  {al.noDuration.length > 0 && <p class="prio prio--warn">{al.noDuration.length} prestation{al.noDuration.length > 1 ? 's' : ''} ne {al.noDuration.length > 1 ? 'peuvent' : 'peut'} pas être réservée{al.noDuration.length > 1 ? 's' : ''} en ligne : il leur manque une durée. <a href="/admin/prestations">Indiquer les durées</a></p>}
+  {al.noDuration.length > 0 && <p class="prio prio--warn">{al.noDuration.length} prestation{al.noDuration.length > 1 ? 's' : ''} ne {al.noDuration.length > 1 ? 'peuvent' : 'peut'} pas être réservée{al.noDuration.length > 1 ? 's' : ''} en ligne : il leur manque une durée. <a href="/admin/prestations?filtre=sans-duree">Indiquer les durées</a></p>}
   <p class="prio">Libre : <strong>{minutes(frame.freeMin)}</strong> aujourd'hui, <strong>{minutes(freeTomorrow)}</strong> demain. <a href={agenda(tomorrow)}>Voir demain</a></p>
 </div>
 <section class="today" aria-labelledby="h-today">

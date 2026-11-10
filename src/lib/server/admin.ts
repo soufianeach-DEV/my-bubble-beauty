@@ -45,6 +45,11 @@ export const fmtDay = (day: string) => dayFormat.format(new Date(`${day}T12:00:0
 export type Service = { id: number; category: string; name_fr: string; name_nl: string; name_en: string; duration_min: number | null; buffer_min: number; price_cents: number; deposit_cents: number; active: boolean; sort: number };
 export const listServices = () =>
   sql<Service[]>`SELECT id, category, name_fr, name_nl, name_en, duration_min, buffer_min, price_cents, deposit_cents, active, sort FROM services WHERE retired_at IS NULL ORDER BY sort, id`;
+// Page Prestations : avec le nombre de rendez-vous confirmés pris sur les 30 derniers jours (une seule requête)
+export const listServicesWithStats = () =>
+  sql<(Service & { booked_30d: number })[]>`SELECT s.id, s.category, s.name_fr, s.name_nl, s.name_en, s.duration_min, s.buffer_min, s.price_cents, s.deposit_cents, s.active, s.sort,
+      (SELECT count(*)::int FROM bookings b WHERE b.service_id = s.id AND b.status = 'confirmed' AND b.created_at > now() - interval '30 days') AS booked_30d
+    FROM services s WHERE s.retired_at IS NULL ORDER BY s.sort, s.id`;
 
 export async function saveService(userId: number, form: FormData): Promise<Result> {
   const p = serviceForm.safeParse(fields(form));

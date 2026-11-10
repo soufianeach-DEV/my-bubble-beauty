@@ -1,10 +1,13 @@
 ---
 export const prerender = false;
-// Prestations : durée, prix, ordre, noms et ouverture à la réservation en ligne ; une ligne = un formulaire, jamais de suppression
+// Prestations : tableau compact par catégorie (nom, durée, prix, en ligne, réservations sur 30 jours), recherche et filtres.
+// Une ligne se déplie pour modifier noms, durée, tampon, prix, ordre et ouverture en ligne (même formulaire et mêmes règles
+// qu'avant : saveService garde duration_manual et closed_by_admin) ; jamais de suppression.
 import Admin from './_layout.astro';
-import { staffId, bulkServices, byCategory, listServices, readForm, saveService } from '../../lib/server/admin.ts';
+import { staffId, bulkServices, byCategory, listServicesWithStats, readForm, saveService } from '../../lib/server/admin.ts';
 import { JS_VERSION } from '../../lib/site';
 import { centsInput } from '../../lib/server/admin-form.ts';
+import { euros } from '../../lib/server/pricing.ts';
 
 const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
@@ -13,16 +16,22 @@ let flash: { id: number; text: string; error?: boolean } | null = null;
 // Message de l'action en lot, affiché au-dessus de la liste
 let bulkMsg: { text: string; error?: boolean } | null = null;
 const q = Astro.url.searchParams;
+// Recherche et filtre gardés après un enregistrement (la ligne reste visible)
+const search = (q.get('q') ?? '').trim().slice(0, 100);
+const FILTERS = { tous: 'Toutes', 'sans-duree': 'Sans durée', 'en-ligne': 'En ligne', 'hors-ligne': 'Hors ligne' } as const;
+type Filter = keyof typeof FILTERS;
+const filter = (Object.hasOwn(FILTERS, q.get('filtre') ?? '') ? q.get('filtre') : 'tous') as Filter;
+const keep = (extra: Record<string, string>) => new URLSearchParams({ ...(search ? { q: search } : {}), ...(filter !== 'tous' ? { filtre: filter } : {}), ...extra });
 if (Astro.request.method === 'POST') {
   const form = await readForm(Astro.request);
   if (!form) return new Response(null, { status: 413 });
   if (form.get('lot') === '1') {
     const b = await bulkServices(me, form);
-    if (b.ok) return Astro.redirect(`/admin/prestations?lot=${form.get('bulk') === 'on' ? 'on' : 'off'}&n=${b.changed}&sans=${b.skipped}#lot`, 303);
+    if (b.ok) return Astro.redirect(`/admin/prestations?${keep({ lot: form.get('bulk') === 'on' ? 'on' : 'off', n: String(b.changed), sans: String(b.skipped) })}#lot`, 303);
     bulkMsg = { text: b.error, error: true };
   } else {
     const r = await saveService(me, form);
-    if (r.ok) return Astro.redirect(`/admin/prestations?ok=${r.id}#p-${r.id}`, 303);
+    if (r.ok) return Astro.redirect(`/admin/prestations?${keep({ ok: String(r.id) })}#p-${r.id}`, 303);
     flash = { id: Number(form.get('id')), text: r.error, error: true };
   }
   Astro.response.status = 400;
@@ -32,13 +41,32 @@ else if (q.has('lot')) {
   bulkMsg = { text: `${n} prestation${s} mise${s} ${q.get('lot') === 'on' ? 'en ligne' : 'hors ligne'}.`
     + (sans ? ` ${sans} sans durée ${sans > 1 ? 'restent' : 'reste'} hors ligne : indiquez une durée dans la barre de sélection.` : '') };
 }
-const groups = byCategory(await listServices());
+const all = await listServicesWithStats();
+// Recherche sans accents ni casse, sur les trois noms
+const norm = (t: string) => t.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+const needle = norm(search);
+const shown = all.filter((s) => (!needle || norm(`${s.name_fr} ${s.name_nl} ${s.name_en}`).includes(needle))
+  && (filter === 'tous' || (filter === 'sans-duree' ? s.duration_min === null : filter === 'en-ligne' ? s.active : !s.active)));
+const groups = byCategory(shown).filter((g) => g.items.length);
+const total = byCategory(all);
+const counts: Record<Filter, number> = { tous: all.length, 'sans-duree': all.filter((s) => s.duration_min === null).length, 'en-ligne': all.filter((s) => s.active).length, 'hors-ligne': all.filter((s) => !s.active).length };
+// Catégories ouvertes : pendant une recherche ou un filtre, ou celle de la ligne qu'on vient d'enregistrer
+const openAll = !!search || filter !== 'tous';
+const link = (f: Filter) => `/admin/prestations?${new URLSearchParams({ ...(search ? { q: search } : {}), ...(f !== 'tous' ? { filtre: f } : {}) })}`;
 ---
 <Admin title="Prestations">
 <script is:inline src={`/assets/js/admin-selection.js?v=${JS_VERSION}`} defer></script>
-<p>Une prestation n'est proposée en ligne qu'avec une durée. Prix en euros (35 ou 12,50). Aucun paiement en ligne : la cliente règle au salon. Enregistrez chaque ligne séparément, ou cochez plusieurs prestations et utilisez la barre de sélection.</p>
-{/* Barre de sélection : les cases des cartes s'y rattachent par form="lot" ; « tout sélectionner » ne s'affiche qu'avec admin-selection.js */}
-<form id="lot" class="lot" method="post" action="#lot" data-selection>
+<p class="lead">Une prestation n'est proposée en ligne qu'avec une durée. La cliente règle au salon. Cliquez sur une ligne pour la modifier, ou cochez plusieurs prestations pour la barre de sélection.</p>
+<form class="find" method="get" action="/admin/prestations" role="search">
+  <div class="field grow"><label for="q">Chercher une prestation</label><input id="q" name="q" type="search" value={search} maxlength="100" autocomplete="off"></div>
+  {filter !== 'tous' && <input type="hidden" name="filtre" value={filter}>}
+  <button class="btn btn--ghost" type="submit">Chercher</button>
+</form>
+<nav class="tabs" aria-label="Filtrer les prestations">{(Object.keys(FILTERS) as Filter[]).map((k) => (
+  <a href={link(k)} aria-current={k === filter ? 'page' : undefined}>{FILTERS[k]} <span class="count">{counts[k]}</span></a>
+))}</nav>
+{/* Barre de sélection : les cases des lignes s'y rattachent par form="lot" ; « tout sélectionner » ne s'affiche qu'avec admin-selection.js */}
+<form id="lot" class="lot" method="post" action={`/admin/prestations?${keep({})}#lot`} data-selection>
   <input type="hidden" name="lot" value="1">
   <div class="lot-pick" data-selection-tools hidden>
     <button class="btn btn--ghost" type="button" data-select="all">Tout sélectionner</button>
@@ -52,41 +80,64 @@ const groups = byCategory(await listServices());
   </div>
   {bulkMsg && <p class={bulkMsg.error ? 'notice notice--error' : 'notice'} role={bulkMsg.error ? 'alert' : 'status'}>{bulkMsg.text}</p>}
 </form>
-{flash?.error && !groups.some((g) => g.items.some((s) => s.id === flash!.id)) && <p class="notice notice--error" role="alert">{flash.text}</p>}
-{groups.map((g) => (
-  <section aria-labelledby={`c-${g.key}`}>
-    <h2 id={`c-${g.key}`}>{g.label} <small>({g.items.filter((s) => s.active).length} en ligne sur {g.items.length})</small></h2>
-    <div class="svc-list">{g.items.map((s) => (
-      <form id={`p-${s.id}`} class:list={['svc', { 'svc--off': !s.active }]} method="post" action={`#p-${s.id}`}>
-        <input type="hidden" name="id" value={s.id}>
-        <label class="pick"><input type="checkbox" name="ids" value={s.id} form="lot" data-select-item><span>Sélectionner<span class="visually-hidden"> {s.name_fr}</span></span>{s.duration_min === null && <span class="badge badge--wait">Sans durée</span>}</label>
-        <fieldset class="names"><legend class="visually-hidden">Noms de la prestation</legend>
-          <label><span>FR</span><input name="name_fr" value={s.name_fr} maxlength="200" required lang="fr"></label>
-          <label><span>NL</span><input name="name_nl" value={s.name_nl} maxlength="200" required lang="nl"></label>
-          <label><span>EN</span><input name="name_en" value={s.name_en} maxlength="200" required lang="en"></label>
-        </fieldset>
-        <div class="row"><div class="nums">
-          <label>Durée (min)<input name="duration" type="number" min="5" max="600" step="1" value={s.duration_min ?? ''}></label>
-          <label>Tampon (min)<input name="buffer" type="number" min="0" max="120" step="5" value={s.buffer_min}></label>
-          <label>Prix (€)<input name="price" inputmode="decimal" pattern="[0-9]{1,5}([.,][0-9]{1,2})?" value={centsInput(s.price_cents)} required></label>
-          <label>Ordre<input name="sort" type="number" min="0" max="9999" step="1" value={s.sort} required></label>
-        </div>
-        <div class="end">
-          <label class="check"><input name="active" type="checkbox" checked={s.active}><span>En ligne</span></label>
-          <button class="btn btn--ghost" type="submit">Enregistrer<span class="visually-hidden"> {s.name_fr}</span></button>
-        </div></div>
+{flash?.error && !shown.some((s) => s.id === flash!.id) && <p class="notice notice--error" role="alert">{flash.text}</p>}
+{groups.length === 0 && <p>Aucune prestation ne correspond.</p>}
+{groups.map((g) => {
+  const t = total.find((x) => x.key === g.key)!.items;
+  return (
+  <details class="cat" open={openAll || g.items.some((s) => s.id === flash?.id)}>
+    <summary><h2 id={`c-${g.key}`}>{g.label}</h2><small>{t.filter((s) => s.active).length} en ligne sur {t.length}{t.some((s) => s.duration_min === null) && ` · ${t.filter((s) => s.duration_min === null).length} sans durée`}</small></summary>
+    <div class="grid-head" aria-hidden="true"><span></span><span>Prestation</span><span>Durée</span><span>Prix</span><span>En ligne</span><span>30 jours</span></div>
+    <ul class="rows">{g.items.map((s) => (
+      <li id={`p-${s.id}`} class:list={['svc', { 'svc--off': !s.active }]}>
+        <label class="pick"><input type="checkbox" name="ids" value={s.id} form="lot" data-select-item><span class="visually-hidden">Sélectionner {s.name_fr}</span></label>
+        <details open={flash?.id === s.id && !!flash?.error}>
+          <summary class="line">
+            <span class="nm">{s.name_fr}</span>
+            <span>{s.duration_min === null ? <span class="badge badge--wait">Sans durée</span> : `${s.duration_min} min`}</span>
+            <span class="num">{euros(s.price_cents)}</span>
+            <span>{s.active ? <span class="badge badge--ok">En ligne</span> : <span class="badge badge--off">Hors ligne</span>}</span>
+            <span class="num">{s.booked_30d}<span class="visually-hidden"> rendez-vous sur 30 jours</span></span>
+          </summary>
+          <form class="edit" method="post" action={`/admin/prestations?${keep({})}#p-${s.id}`}>
+            <input type="hidden" name="id" value={s.id}>
+            <fieldset class="names"><legend class="visually-hidden">Noms de la prestation</legend>
+              <label><span>FR</span><input name="name_fr" value={s.name_fr} maxlength="200" required lang="fr"></label>
+              <label><span>NL</span><input name="name_nl" value={s.name_nl} maxlength="200" required lang="nl"></label>
+              <label><span>EN</span><input name="name_en" value={s.name_en} maxlength="200" required lang="en"></label>
+            </fieldset>
+            <div class="row"><div class="nums">
+              <label>Durée (min)<input name="duration" type="number" min="5" max="600" step="1" value={s.duration_min ?? ''}></label>
+              <label>Tampon (min)<input name="buffer" type="number" min="0" max="120" step="5" value={s.buffer_min}></label>
+              <label>Prix (€)<input name="price" inputmode="decimal" pattern="[0-9]{1,5}([.,][0-9]{1,2})?" value={centsInput(s.price_cents)} required></label>
+              <label>Ordre<input name="sort" type="number" min="0" max="9999" step="1" value={s.sort} required></label>
+            </div>
+            <div class="end">
+              <label class="check"><input name="active" type="checkbox" checked={s.active}><span>En ligne</span></label>
+              <button class="btn btn--solid" type="submit">Enregistrer<span class="visually-hidden"> {s.name_fr}</span></button>
+            </div></div>
+          </form>
+        </details>
         {flash?.id === s.id && <p class={flash.error ? 'notice notice--error' : 'notice'} role={flash.error ? 'alert' : 'status'}>{flash.text}</p>}
-      </form>
-    ))}</div>
-  </section>
-))}
+      </li>
+    ))}</ul>
+  </details>
+  );
+})}
 </Admin>
 
 <style>
-  .svc-list{display:grid;gap:.75rem;margin:0 0 2rem}
-  /* Barre de sélection : collée en haut sur ordinateur pendant le défilement des 150 cartes ; sur téléphone elle prendrait l'écran */
+  .lead{max-width:60rem}
+  .find{display:flex;flex-wrap:wrap;gap:.75rem;align-items:flex-end;margin:0 0 1rem;max-width:44rem}
+  .find .grow{flex:1 1 16rem;margin:0}
+  .find .btn{min-height:44px}
+  .tabs{display:flex;flex-wrap:wrap;gap:.4rem;margin:0 0 1.25rem}
+  .tabs a{display:inline-flex;align-items:center;gap:.5rem;min-height:44px;padding:.4rem 1rem;border:1px solid var(--line-soft);border-radius:999px;color:var(--text);text-decoration:none;font-size:.9375rem}
+  .tabs a[aria-current="page"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+  .count{min-width:1.5rem;padding:0 .4rem;border-radius:999px;background:rgb(0 0 0 / .1);font-size:.8125rem;text-align:center}
+  /* Barre de sélection : collée en haut sur ordinateur pendant le défilement ; sur téléphone elle prendrait l'écran */
   @media (min-width:1024px){.lot{position:sticky;top:0;z-index:4}}
-  .lot{display:grid;gap:.75rem;margin:0 0 1.5rem;padding:1rem 1.25rem;border:1px solid var(--line-soft);border-radius:16px;background:var(--surface);box-shadow:0 6px 18px rgb(0 0 0 / .06)}
+  .lot{display:grid;gap:.75rem;margin:0 0 1.25rem;padding:.75rem 1.25rem;border:1px solid var(--line-soft);border-radius:16px;background:var(--surface);box-shadow:0 6px 18px rgb(0 0 0 / .06)}
   .lot-pick,.lot-act{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:flex-end}
   .lot-pick[hidden]{display:none}
   .lot-act label{display:grid;gap:.25rem;font-size:.8125rem;color:var(--text-soft)}
@@ -94,15 +145,31 @@ const groups = byCategory(await listServices());
   .lot .btn{min-height:44px;padding:.55rem 1.1rem}
   .lot-count{align-self:center;font-size:.9375rem;color:var(--text-soft)}
   .lot .notice{margin:0}
-  .pick{display:flex !important;flex-direction:row;align-items:center;gap:.5rem;min-height:44px;font-size:.9375rem !important;color:var(--text) !important}
+  /* Catégorie repliable */
+  .cat{margin:0 0 .75rem;border:1px solid var(--line-soft);border-radius:14px;background:var(--bg)}
+  .cat > summary{display:flex;flex-wrap:wrap;align-items:baseline;gap:.25rem 1rem;min-height:52px;padding:.6rem 1.1rem;cursor:pointer;list-style:none}
+  .cat > summary::-webkit-details-marker{display:none}
+  .cat > summary::before{content:'▸';color:var(--text-soft);transition:transform .15s}
+  .cat[open] > summary::before{transform:rotate(90deg)}
+  .cat h2{margin:0;font-size:1.25rem}
+  .cat > summary small{color:var(--text-soft)}
+  /* Une ligne par prestation : case, puis nom, durée, prix, en ligne, 30 jours ; la ligne se déplie pour l'édition */
+  .grid-head,.line{display:grid;grid-template-columns:minmax(0,1fr) 7rem 6rem 7rem 5rem;gap:.75rem;align-items:center}
+  .grid-head{grid-template-columns:2.75rem minmax(0,1fr) 7rem 6rem 7rem 5rem;padding:.25rem 1.1rem;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text-soft);border-top:1px solid var(--line-soft)}
+  .rows{list-style:none;margin:0;padding:0}
+  .svc{display:grid;grid-template-columns:2.75rem minmax(0,1fr);align-items:start;padding:0 1.1rem;border-top:1px solid var(--line-soft);scroll-margin-top:6rem}
+  .svc > .notice{grid-column:2;margin:0 0 .6rem}
+  .svc--off .nm{color:var(--text-soft)}
+  .pick{display:flex;align-items:center;min-height:44px}
   .pick input{width:1.25rem;height:1.25rem;margin:0;accent-color:var(--accent)}
-  .svc:has(.pick input:checked){border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);opacity:1}
-  /* Une carte par prestation : les trois noms côte à côte, puis chiffres et enregistrement sur une ligne ; tout passe à la ligne au lieu de déborder */
-  .svc{display:grid;gap:.9rem;padding:1rem 1.25rem;border:1px solid var(--line-soft);border-radius:16px;background:var(--bg);scroll-margin-top:calc(var(--header-h) + 1rem)}
-  .svc--off{opacity:.72}
-  .svc--off:focus-within{opacity:1}
-  .svc input:not([type="checkbox"]){width:100%;min-width:0;min-height:44px;padding:.4rem .6rem;border:1px solid var(--line-soft);border-radius:8px;background:rgb(var(--card));color:var(--text);font:inherit}
-  .svc label{display:grid;gap:.25rem;font-size:.8125rem;color:var(--text-soft)}
+  .svc:has(.pick input:checked){background:rgb(var(--card))}
+  .line{min-height:44px;cursor:pointer;list-style:none}
+  .line::-webkit-details-marker{display:none}
+  .line:hover .nm,.line:focus-visible .nm{text-decoration:underline}
+  .num{text-align:right;font-variant-numeric:tabular-nums}
+  .edit{display:grid;gap:.75rem;padding:.25rem 0 1rem}
+  .edit input:not([type="checkbox"]){width:100%;min-width:0;min-height:44px;padding:.4rem .6rem;border:1px solid var(--line-soft);border-radius:8px;background:rgb(var(--card));color:var(--text);font:inherit}
+  .edit label{display:grid;gap:.25rem;font-size:.8125rem;color:var(--text-soft)}
   .names{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.6rem;margin:0;padding:0;border:0;min-width:0}
   .names span{font-weight:500;letter-spacing:.08em}
   .nums{display:flex;flex-wrap:wrap;gap:.6rem}
@@ -112,7 +179,11 @@ const groups = byCategory(await listServices());
   .end .check{display:flex;flex-direction:row;align-items:center;gap:.5rem;min-height:44px;font-size:.9375rem;color:var(--text)}
   .end input[type="checkbox"]{width:1.25rem;height:1.25rem;margin:0;accent-color:var(--accent)}
   .end .btn{min-height:44px;padding:.55rem 1.1rem}
-  .svc .notice{margin:0}
-  h2 small{font-size:1rem;color:var(--text-soft)}
-  @media (max-width:599px){.nums label{width:calc(50% - .3rem)}}
+  /* Téléphone : nom sur sa ligne, chiffres dessous ; pas d'en-tête de colonnes */
+  @media (max-width:699px){
+    .grid-head{display:none}
+    .line{grid-template-columns:repeat(3,auto) 1fr;gap:.25rem .75rem;padding:.4rem 0}
+    .line .nm{grid-column:1 / -1}
+    .nums label{width:calc(50% - .3rem)}
+  }
 </style>
