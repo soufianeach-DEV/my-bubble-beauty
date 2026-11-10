@@ -170,7 +170,12 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     const sent = await gifts.giftAction(other, f({ action: 'send', id: String(bc.id) }));
     assert.equal(sent.ok, false);
     assert.match((sent as { error: string }).error, /n'a pas pu partir/);
-    const logs = await sql`SELECT details FROM audit_log WHERE details->>'action' = 'gift_sent' AND (details->>'gift_id')::bigint = ${bc.id}`;
+    // audit() écrit le journal sans être attendu : on laisse jusqu'à 2 s à la seconde ligne (le test échouait une fois sur deux)
+    let logs = await sql`SELECT details FROM audit_log WHERE details->>'action' = 'gift_sent' AND (details->>'gift_id')::bigint = ${bc.id}`;
+    for (let i = 0; i < 20 && logs.length < 2; i++) {
+      await new Promise((r) => setTimeout(r, 100));
+      logs = await sql`SELECT details FROM audit_log WHERE details->>'action' = 'gift_sent' AND (details->>'gift_id')::bigint = ${bc.id}`;
+    }
     assert.equal(logs.length, 2);
     assert.ok(logs.every((l) => l.details.ok === false && !JSON.stringify(l.details).includes(bc.code)), 'journal sans le code');
     assert.equal((await gifts.giftAction(other, f({ action: 'create', client: 'inconnue@nulle.part', service: String(wh.id) }))).ok, false, 'cliente inconnue refusée');

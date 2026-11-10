@@ -24,9 +24,12 @@ const DARK = '.mb-bg{background:#1E1615!important}.mb-card{background:#2A201E!im
 // Le numéro du salon devient un lien tel: partout où il apparaît
 const tel = (html: string) => html.split(esc(CONTACT.phoneLabel)).join(`<a href="tel:${CONTACT.phone}" class="mb-link" style="color:${C.brand};text-decoration:underline">${esc(CONTACT.phoneLabel)}</a>`);
 const para = (l: string) => `<p class="mb-ink" style="margin:0 0 16px;font-family:${SANS};font-size:16px;line-height:1.6;color:${C.ink}">${tel(esc(l))}</p>`;
-const button = ([label, url]: [string, string]) => `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 24px"><tr><td align="center" bgcolor="${C.brand}" style="border-radius:8px">
+// Bouton principal toujours centré (règle de la gérante) : ligne pleine largeur centrée, puis tableau centré, VML compris
+const button = ([label, url]: [string, string]) => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="padding:8px 0 24px;text-align:center">
+<table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto"><tr><td align="center" bgcolor="${C.brand}" style="border-radius:8px">
 <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${esc(url)}" style="height:48px;v-text-anchor:middle;width:240px" arcsize="17%" stroke="f" fillcolor="${C.brand}"><w:anchorlock/><center style="color:#FFFFFF;font-family:Arial,sans-serif;font-size:16px;font-weight:bold">${esc(label)}</center></v:roundrect><![endif]-->
 <!--[if !mso]><!--><a href="${esc(url)}" style="display:inline-block;min-width:240px;box-sizing:border-box;padding:14px 24px;background:${C.brand};border-radius:8px;font-family:${SANS};font-size:16px;font-weight:bold;line-height:20px;color:#FFFFFF;text-align:center;text-decoration:none">${esc(label)}</a><!--<![endif]-->
+</td></tr></table>
 </td></tr></table>`;
 const recapBlock = (rows: [string, string][]) => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="mb-recap" style="background:${C.recap};border-radius:8px;margin:0 0 20px"><tr><td style="padding:20px 24px">${rows
   .map(([k, v], i) => `<p class="mb-soft" style="margin:${i ? '14px' : '0'} 0 2px;font-family:${SANS};font-size:12px;letter-spacing:1px;color:${C.soft}">${esc(k.toUpperCase())}</p><p class="mb-ink" style="margin:0;font-family:${SANS};font-size:16px;line-height:1.5;font-weight:bold;color:${C.ink}">${esc(v)}</p>`)
@@ -100,7 +103,8 @@ const T = {
     reminderTitle: 'À demain pour votre moment de douceur',
     recap: ['Prestation', 'Date et heure', 'Adresse'],
     reviewTitle: 'Merci pour votre visite',
-    reviewAgainTitle: 'Un petit mot de votre part ?',
+    // Espace insécable : le « ? » ne passe jamais seul à la ligne
+    reviewAgainTitle: 'Un petit mot de votre part ?',
     reminderIntro: "Nous vous rappelons votre rendez-vous chez My Bubble Beauty.",
     reminderLate: `Un empêchement ? Moins de 24 heures avant, appelez-nous au ${CONTACT.phoneLabel}.`,
     gift: ['Votre bon cadeau My Bubble Beauty', (to: string) => `Bonjour ${to},`, 'Un bon cadeau vous attend chez My Bubble Beauty.', 'Soin offert : ', 'Votre code : ', (d: string) => `Valable jusqu'au ${d} (12 mois).`, 'Message : ', 'Réservez en ligne et saisissez votre code dans le champ « Code promo ou bon cadeau ». Vous pouvez aussi nous appeler.', 'Réserver mon soin'],

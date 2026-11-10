@@ -33,6 +33,7 @@ test('mail d’avis : lien Google et lien de désinscription', async () => {
   const r = bookingReminderMail('fr', { service: 'HydraPure', starts_at: new Date('2026-11-12T09:30:00Z'), price_cents: 0, discount_cents: 0, deposit_cents: 0 }, 'Sophie');
   assert.ok(r.html.includes('PRESTATION') && r.html.includes('DATE ET HEURE') && r.html.includes('href="tel:'), 'récapitulatif et téléphone cliquable');
   assert.ok(r.text.includes('Prestation : HydraPure'), 'version texte gardée');
+  assert.match(r.html, /<td align="center" style="padding:8px 0 24px;text-align:center">\s*<table role="presentation" align="center"[^>]*margin:0 auto/, 'bouton centré');
   assert.ok(!/★|☆/.test(reviewRequestMail('fr', 'https://x.test', 'https://y.test').html), 'pas d’étoiles dans le mail d’avis');
 });
 
