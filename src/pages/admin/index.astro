@@ -10,7 +10,7 @@ import { alertsFor } from '../../lib/server/profil.ts';
 import { addDays, monday } from '../../lib/server/admin-form.ts';
 import { adminAgenda } from '../../lib/server/booking.ts';
 import { alerts, clientCards, dayFrame, freeMinutes, loadByDay } from '../../lib/server/accueil.ts';
-import { isDay, todayBrussels } from '../../lib/server/pricing.ts';
+import { euros, isDay, todayBrussels } from '../../lib/server/pricing.ts';
 import { JS_VERSION } from '../../lib/site';
 
 const me = staffId(Astro.locals);
@@ -109,7 +109,11 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
             <small>{r.service}{r.guest && ' · saisie par l\'institut'}</small>
           </span>
           <span class={`badge badge--${tone}`}>{label}</span>
-          {admin && <span class="tl-del"><Supprimer id={r.id} label={`le rendez-vous de ${fmtTime(r.starts_at)}`} action="/admin" /></span>}
+          {/* Rendez-vous commencé : on note la suite (absence, retard, encaissement) dans l'agenda, on ne le supprime plus d'ici */}
+          {r.status === 'confirmed' && r.past
+            ? <span class="tl-del">{r.paid_method && <small>Encaissé {euros(r.paid_cents ?? 0)}</small>}{r.late_minutes && <small>Retard {r.late_minutes} min</small>}
+                <a href={`${agenda(today)}#r-${r.id}`}>{r.no_show || r.paid_method ? 'Modifier' : 'Absente, retard, encaissé'}<span class="visually-hidden"> : rendez-vous de {fmtTime(r.starts_at)}</span></a></span>
+            : admin && <span class="tl-del"><Supprimer id={r.id} label={`le rendez-vous de ${fmtTime(r.starts_at)}`} action="/admin" /></span>}
         </li>
       ); })}</ol>
     )}
@@ -221,7 +225,7 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
   .quick{display:flex;flex-wrap:wrap;gap:.5rem}
 
   .timeline ol{display:grid;gap:.5rem;list-style:none;margin:0;padding:0}
-  .tl-del{grid-column:1 / -1}
+  .tl-del{grid-column:1 / -1;display:flex;flex-wrap:wrap;align-items:center;gap:.25rem .75rem;font-size:.875rem}
   .tl{display:grid;grid-template-columns:4.5rem minmax(0,1fr) auto;gap:.75rem;align-items:center;padding:.6rem .75rem;border-left:3px solid var(--line-soft);border-radius:10px;background:rgb(138 90 82 / .05)}
   .tl--ok{border-left-color:rgb(76 128 92)}
   .tl--wait{border-left-color:rgb(196 150 70)}

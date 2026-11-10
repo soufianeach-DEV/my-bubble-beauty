@@ -9,6 +9,8 @@ import Supprimer from '../_supprimer.astro';
 import { clientAction, clientDetail } from '../../../lib/server/admin-clientes.ts';
 import { ACTION_LABELS } from '../../../lib/server/journal.ts';
 import { euros, todayBrussels } from '../../../lib/server/pricing.ts';
+import { centsInput } from '../../../lib/server/admin-form.ts';
+import { PAY_METHODS, type PayMethod } from '../../../lib/server/booking.ts';
 import { GRACE_DAYS } from '../../../lib/server/rgpd.ts';
 import { FORMS, KINDS, listConsents } from '../../../lib/server/consentements.ts';
 import { suivi, suiviAction } from '../../../lib/server/suivi.ts';
@@ -77,7 +79,7 @@ const sheetRows = ([
 const DONE: Record<string, string> = {
   notes: 'Fiche de soin enregistrée.', supprime: 'Rendez-vous supprimé.', sante: 'Date de naissance et antécédents enregistrés.', 'fidelite-remise': 'Remise de fidélité appliquée au rendez-vous.', 'fidelite-offert': 'Soin offert appliqué au rendez-vous : la carte repart à zéro.', seance: 'Séance mise à jour.', block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte réactivé.',
   remove: "Compte supprimé : il n'apparaît plus dans les listes et ne peut plus se connecter. Ses rendez-vous restent.", unremove: 'Compte restauré : la cliente peut de nouveau se connecter.', restore: 'Suppression annulée : le compte est de nouveau actif. Les rendez-vous annulés le restent.',
-  absente: 'Rendez-vous marqué « absente ».', venue: 'Absence retirée.', retard: 'Retard noté.', aheure: 'Retard retiré.', rendu: 'Acompte noté comme remboursé hors du site.',
+  absente: 'Rendez-vous marqué « absente ».', venue: 'Absence retirée.', retard: 'Retard noté.', aheure: 'Retard retiré.', encaisse: 'Encaissement noté.', nonencaisse: 'Encaissement retiré.', rendu: 'Acompte noté comme remboursé hors du site.',
 };
 const done = !error && DONE[Astro.url.searchParams.get('ok') ?? ''];
 const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', dateStyle: 'long' }).format;
@@ -259,6 +261,22 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
             <button class="btn btn--ghost" type="submit" name="action" value={b.no_show ? 'show' : 'no_show'}>{b.no_show ? "Retirer l'absence" : 'Marquer absente'}</button>
           </form>
         )}
+{b.status === 'confirmed' && b.past && !b.no_show && (b.paid_method ? (
+          <form class="cell-form" method="post" action={self}>
+            <input type="hidden" name="scope" value="booking"><input type="hidden" name="id" value={b.id}>
+            <small>Encaissé {euros(b.paid_cents ?? 0)} · {PAY_METHODS[b.paid_method as PayMethod]}</small>
+            <button class="btn btn--ghost" type="submit" name="action" value="unpay">Retirer l'encaissement</button>
+          </form>
+        ) : (
+          <details class="cancel"><summary>Encaisser<span class="visually-hidden"> le rendez-vous du {fmtDateTime(b.starts_at)}</span></summary>
+            <form class="cell-form" method="post" action={self}>
+              <input type="hidden" name="scope" value="booking"><input type="hidden" name="action" value="pay"><input type="hidden" name="id" value={b.id}>
+              <label class="field">Mode<select name="method" required>{Object.entries(PAY_METHODS).map(([k, l]) => <option value={k}>{l}</option>)}</select></label>
+              <label class="field">Montant payé (€)<input name="amount" required inputmode="decimal" pattern="\d{1,5}([.,]\d{1,2})?" value={centsInput(b.price_cents - b.discount_cents)}></label>
+              <button class="btn btn--ghost" type="submit">Noter l'encaissement</button>
+            </form>
+          </details>
+        ))}
         {b.status === 'confirmed' && b.past && !b.no_show && (b.late_minutes ? (
           <form class="cell-form" method="post" action={self}>
             <input type="hidden" name="scope" value="booking"><input type="hidden" name="id" value={b.id}>

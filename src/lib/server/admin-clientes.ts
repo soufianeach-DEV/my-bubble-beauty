@@ -53,7 +53,7 @@ export async function listClients(q: string, filter: ClientFilter, page: number,
         count(*) FILTER (WHERE b.no_show)::int AS no_shows,
         count(*) FILTER (WHERE b.late_minutes IS NOT NULL)::int AS lates, coalesce(sum(b.late_minutes), 0)::int AS late_minutes,
         max(b.starts_at) FILTER (WHERE b.status = 'confirmed' AND b.starts_at < now() AND NOT b.no_show) AS last_at,
-        coalesce(sum(b.price_cents - b.discount_cents) FILTER (WHERE b.status = 'confirmed' AND b.starts_at < now() AND NOT b.no_show), 0)::int AS spent_cents
+        coalesce(sum(coalesce(b.paid_cents, b.price_cents - b.discount_cents)) FILTER (WHERE b.status = 'confirmed' AND b.starts_at < now() AND NOT b.no_show), 0)::int AS spent_cents
       FROM bookings b WHERE b.user_id = u.id) agg
     CROSS JOIN LATERAL (
       SELECT count(*)::int AS gifts FROM gift_cards g
@@ -62,7 +62,7 @@ export async function listClients(q: string, filter: ClientFilter, page: number,
     CROSS JOIN LATERAL (
       WITH start AS (SELECT coalesce(max(used_at), '-infinity'::timestamptz) AS at FROM loyalty_rewards WHERE user_id = u.id AND kind = 'free'),
       done AS (
-        SELECT b.price_cents - b.discount_cents - b.refunded_cents AS paid FROM bookings b, start
+        SELECT coalesce(b.paid_cents, b.price_cents - b.discount_cents - b.refunded_cents) AS paid FROM bookings b, start
         WHERE b.user_id = u.id AND b.status = 'confirmed' AND b.ends_at < now() AND NOT b.no_show AND b.ends_at > start.at
           AND b.gift_card_id IS NULL AND NOT EXISTS (SELECT 1 FROM loyalty_rewards r WHERE r.booking_id = b.id))
       SELECT (SELECT count(*)::int FROM done WHERE paid >= ${loyalty.min_euros * 100}) AS sessions,
@@ -84,7 +84,7 @@ export async function listClients(q: string, filter: ClientFilter, page: number,
   return { rows: rows.filter((r) => !isAdminEmail(r.email)).slice(0, PAGE).map((r) => ({ ...r, reward: reward(r) })), more: rows.length > PAGE, loyalty };
 }
 
-export type ClientBooking = { id: number; starts_at: Date; ends_at: Date; service: string; status: string; no_show: boolean; late_minutes: number | null; past: boolean; cancel_reason: string | null; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; moved: boolean };
+export type ClientBooking = { id: number; starts_at: Date; ends_at: Date; service: string; status: string; no_show: boolean; late_minutes: number | null; paid_method: string | null; paid_cents: number | null; past: boolean; cancel_reason: string | null; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; moved: boolean };
 
 export async function clientDetail(id: number) {
   const [u] = await sql<{ id: number; name: string | null; email: string; phone: string | null; locale: string; created_at: Date; email_verified_at: Date | null; deleted_at: Date | null; blocked_at: Date | null; removed_at: Date | null; health_consent_at: Date | null; notes: string; role: string | null }[]>`
@@ -92,7 +92,7 @@ export async function clientDetail(id: number) {
   if (!u || isAdminEmail(u.email) || u.role) return null;
   const [bookings, [stats], events] = await Promise.all([
     sql<ClientBooking[]>`
-      SELECT b.id, b.starts_at, b.ends_at, s.name_fr AS service, b.status, b.no_show, b.late_minutes, b.starts_at < now() AS past, b.cancel_reason,
+      SELECT b.id, b.starts_at, b.ends_at, s.name_fr AS service, b.status, b.no_show, b.late_minutes, b.paid_method, b.paid_cents, b.starts_at < now() AS past, b.cancel_reason,
         b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.stripe_payment_intent IS NOT NULL AS paid, b.moved_at IS NOT NULL AS moved
       FROM bookings b JOIN services s ON s.id = b.service_id
       WHERE b.user_id = ${id} AND (b.status <> 'expired' OR b.stripe_payment_intent IS NOT NULL)
@@ -102,7 +102,7 @@ export async function clientDetail(id: number) {
         count(*) FILTER (WHERE no_show)::int AS no_shows,
         count(*) FILTER (WHERE late_minutes IS NOT NULL)::int AS lates, coalesce(sum(late_minutes), 0)::int AS late_minutes,
         count(*) FILTER (WHERE status = 'cancelled')::int AS cancelled,
-        coalesce(sum(price_cents - discount_cents) FILTER (WHERE status = 'confirmed' AND starts_at < now() AND NOT no_show), 0)::int AS spent_cents
+        coalesce(sum(coalesce(paid_cents, price_cents - discount_cents)) FILTER (WHERE status = 'confirmed' AND starts_at < now() AND NOT no_show), 0)::int AS spent_cents
       FROM bookings WHERE user_id = ${id}`,
     sql<{ action: string; at: Date; ip: string | null; details: Record<string, unknown> }[]>`
       SELECT action, at, ip, details FROM audit_log WHERE client_id = ${id} ORDER BY at DESC LIMIT 30`,

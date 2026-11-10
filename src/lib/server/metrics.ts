@@ -13,7 +13,8 @@ export type Kpis = {
 };
 
 export async function metrics(days: Period) {
-  const net = sql`b.price_cents - b.discount_cents - b.refunded_cents`;
+  // Montant encaissé au salon s'il est noté, sinon prix moins remise et remboursement
+  const net = sql`coalesce(b.paid_cents, b.price_cents - b.discount_cents - b.refunded_cents)`;
   const admin = ADMIN_EMAIL.trim().toLowerCase();
   // Même calcul sur la période et sur la précédente (from et to en jours avant maintenant), pour afficher l'évolution
   const kpis = (fromDays: number, toDays: number) => {

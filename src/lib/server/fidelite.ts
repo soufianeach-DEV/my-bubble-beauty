@@ -21,7 +21,7 @@ export async function loyaltyCard(userId: number): Promise<LoyaltyCard> {
   const [c] = await sql<{ sessions: number; spent: number; discount_used: boolean; last_kind: 'discount' | 'free' | null; last_at: Date | null; life_spent: number; life_rewards: number }[]>`
     WITH start AS (SELECT coalesce(max(used_at), '-infinity'::timestamptz) AS at FROM loyalty_rewards WHERE user_id = ${userId} AND kind = 'free'),
     done AS (
-      SELECT b.ends_at, b.price_cents - b.discount_cents - b.refunded_cents AS paid FROM bookings b
+      SELECT b.ends_at, coalesce(b.paid_cents, b.price_cents - b.discount_cents - b.refunded_cents) AS paid FROM bookings b
       WHERE b.user_id = ${userId} AND b.status = 'confirmed' AND b.ends_at < now() AND NOT b.no_show
         AND b.gift_card_id IS NULL AND NOT EXISTS (SELECT 1 FROM loyalty_rewards r WHERE r.booking_id = b.id))
     SELECT

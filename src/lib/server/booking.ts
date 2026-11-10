@@ -336,10 +336,10 @@ export function clientBookings(userId: number, lang: Lang) {
 // sur une annulée = acompte gardé ou remboursement échoué, sur une expirée = paiement tardif non remboursé (à relancer par cancelByAdmin).
 export function adminAgenda(from: string, days = 7) {
   if (!isDay(from)) return Promise.resolve([]);
-  return sql<{ id: number; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled' | 'expired'; service: string; name: string | null; phone: string | null; email: string | null; user_id: number | null; guest: boolean; erased: boolean; deleting: boolean; past: boolean; no_show: boolean; late_minutes: number | null; cancel_reason: string | null; refunded_manually: boolean; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; promo: string | null }[]>`
+  return sql<{ id: number; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled' | 'expired'; service: string; name: string | null; phone: string | null; email: string | null; user_id: number | null; guest: boolean; erased: boolean; deleting: boolean; past: boolean; no_show: boolean; late_minutes: number | null; paid_method: string | null; paid_cents: number | null; cancel_reason: string | null; refunded_manually: boolean; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; promo: string | null }[]>`
     SELECT b.id, b.starts_at, b.ends_at, b.status, s.name_fr AS service, coalesce(u.name, b.guest_name) AS name, coalesce(u.phone, b.guest_phone) AS phone,
       u.email, b.user_id, b.user_id IS NULL AND NOT b.client_erased AS guest, b.client_erased AS erased, u.deleted_at IS NOT NULL AS deleting,
-      b.starts_at < now() AS past, b.no_show, b.late_minutes, b.cancel_reason, b.refunded_manually_at IS NOT NULL AS refunded_manually,
+      b.starts_at < now() AS past, b.no_show, b.late_minutes, b.paid_method, b.paid_cents, b.cancel_reason, b.refunded_manually_at IS NOT NULL AS refunded_manually,
       b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.stripe_payment_intent IS NOT NULL AS paid, p.code AS promo
     FROM bookings b JOIN services s ON s.id = b.service_id LEFT JOIN users u ON u.id = b.user_id LEFT JOIN promo_codes p ON p.id = b.promo_code_id
     WHERE b.starts_at >= ${from}::text::date::timestamp AT TIME ZONE 'Europe/Brussels'
@@ -411,7 +411,9 @@ export async function rescheduleByAdmin(bookingId: number, day: string, time: st
 // 'gift' : retirer l'absence rendrait actif un bon cadeau déjà repris par un autre rendez-vous (index unique bookings_gift_idx)
 export async function setNoShow(bookingId: number, noShow: boolean): Promise<{ user_id: number | null } | null | 'gift'> {
   try {
-    const [b] = await sql<{ user_id: number | null }[]>`UPDATE bookings SET no_show = ${noShow}, late_minutes = CASE WHEN ${noShow} THEN NULL ELSE late_minutes END
+    const [b] = await sql<{ user_id: number | null }[]>`UPDATE bookings SET no_show = ${noShow}, late_minutes = CASE WHEN ${noShow} THEN NULL ELSE late_minutes END,
+      paid_method = CASE WHEN ${noShow} THEN NULL ELSE paid_method END, paid_cents = CASE WHEN ${noShow} THEN NULL ELSE paid_cents END,
+      paid_at = CASE WHEN ${noShow} THEN NULL ELSE paid_at END
       WHERE id = ${bookingId} AND status = 'confirmed' AND starts_at < now() RETURNING user_id`;
     return b ?? null;
   } catch (e) {
@@ -423,6 +425,16 @@ export async function setNoShow(bookingId: number, noShow: boolean): Promise<{ u
 // Retard à un rendez-vous confirmé, passé et honoré (pas d'absence) ; minutes NULL = retard retiré. Renvoie la cliente concernée.
 export async function setLate(bookingId: number, minutes: number | null): Promise<{ user_id: number | null } | null> {
   const [b] = await sql<{ user_id: number | null }[]>`UPDATE bookings SET late_minutes = ${minutes}
+    WHERE id = ${bookingId} AND status = 'confirmed' AND starts_at < now() AND NOT no_show RETURNING user_id`;
+  return b ?? null;
+}
+
+// Encaissement au salon d'un rendez-vous confirmé, passé et honoré ; method NULL = encaissement retiré. Renvoie la cliente concernée.
+export const PAY_METHODS = { especes: 'Espèces', carte: 'Carte', payconiq: 'Payconiq', bon: 'Bon cadeau' } as const;
+export type PayMethod = keyof typeof PAY_METHODS;
+export async function setPayment(bookingId: number, method: PayMethod | null, cents: number | null): Promise<{ user_id: number | null } | null> {
+  const [b] = await sql<{ user_id: number | null }[]>`UPDATE bookings
+    SET paid_method = ${method}, paid_cents = ${method ? cents : null}, paid_at = ${method ? sql`now()` : null}
     WHERE id = ${bookingId} AND status = 'confirmed' AND starts_at < now() AND NOT no_show RETURNING user_id`;
   return b ?? null;
 }

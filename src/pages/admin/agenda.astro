@@ -2,11 +2,11 @@
 export const prerender = false;
 // Agenda : rendez-vous du jour ou de la semaine à l'heure de Bruxelles, annulation en deux temps et remboursement de l'acompte
 import Admin from './_layout.astro';
-import { adminId, staffId, agendaAction, deleteAction, fmtDay, fmtTime, readForm } from '../../lib/server/admin.ts';
+import { adminId, staffId, agendaAction, deleteAction, fmtDateTime, fmtDay, fmtTime, readForm } from '../../lib/server/admin.ts';
 import Supprimer from './_supprimer.astro';
 import { alertsFor } from '../../lib/server/profil.ts';
-import { addDays, monday } from '../../lib/server/admin-form.ts';
-import { adminAgenda } from '../../lib/server/booking.ts';
+import { addDays, centsInput, monday } from '../../lib/server/admin-form.ts';
+import { adminAgenda, PAY_METHODS, type PayMethod } from '../../lib/server/booking.ts';
 import { euros, isDay, todayBrussels } from '../../lib/server/pricing.ts';
 
 const me = staffId(Astro.locals);
@@ -40,6 +40,8 @@ const DONE: Record<string, string> = {
   absente: 'Rendez-vous marqué « absente ».',
   venue: 'Absence retirée.',
   retard: 'Retard noté.',
+  encaisse: 'Encaissement noté.',
+  nonencaisse: 'Encaissement retiré.',
   aheure: 'Retard retiré.',
   rendu: 'Acompte noté comme remboursé hors du site.',
 };
@@ -159,6 +161,22 @@ const due = (r: (typeof rows)[number]) => (r.paid ? r.deposit_cents - r.refunded
                   <button class="btn btn--ghost" type="submit" name="action" value={r.no_show ? 'show' : 'no_show'}>{r.no_show ? "Retirer l'absence" : 'Marquer absente'}</button>
                 </form>
               )}
+{r.status === 'confirmed' && r.past && !r.no_show && (r.paid_method ? (
+                <form class="cell-form" method="post">
+                  <input type="hidden" name="id" value={r.id}>
+                  <small>Encaissé {euros(r.paid_cents ?? 0)} · {PAY_METHODS[r.paid_method as PayMethod]}</small>
+                  <button class="btn btn--ghost" type="submit" name="action" value="unpay">Retirer l'encaissement</button>
+                </form>
+              ) : (
+                <details class="cancel"><summary>Encaisser<span class="visually-hidden"> le rendez-vous du {fmtDateTime(r.starts_at)}</span></summary>
+                  <form class="cell-form" method="post">
+                    <input type="hidden" name="action" value="pay"><input type="hidden" name="id" value={r.id}>
+                    <label class="field">Mode<select name="method" required>{Object.entries(PAY_METHODS).map(([k, l]) => <option value={k}>{l}</option>)}</select></label>
+                    <label class="field">Montant payé (€)<input name="amount" required inputmode="decimal" pattern="\d{1,5}([.,]\d{1,2})?" value={centsInput(r.price_cents - r.discount_cents)}></label>
+                    <button class="btn btn--ghost" type="submit">Noter l'encaissement</button>
+                  </form>
+                </details>
+              ))}
               {r.status === 'confirmed' && r.past && !r.no_show && (r.late_minutes ? (
                 <form class="cell-form" method="post">
                   <input type="hidden" name="id" value={r.id}>
