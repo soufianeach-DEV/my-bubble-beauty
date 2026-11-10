@@ -32,6 +32,7 @@ type Texts = {
   code: string;
   apply: string;
   applied: (code: string) => string;
+  package: (left: number) => string;
   cgv: [before: string, link: string, after: string];
   newTab: string;
   pay: (cents: number) => string;
@@ -75,6 +76,7 @@ export const RESERVER: Record<Lang, Texts> = {
     code: 'Code promo ou bon cadeau (facultatif)',
     apply: 'Appliquer',
     applied: (code) => `Le code ${code} est appliqué.`,
+    package: (n) => `Séance prise sur votre forfait (${n} restante${n > 1 ? 's' : ''} ensuite).`,
     cgv: ["J'accepte les ", 'conditions générales', '.'],
     newTab: '(nouvel onglet)',
     pay: (c) => `Réserver et payer l'acompte (${euros(c, 'fr')})`,
@@ -134,6 +136,7 @@ export const RESERVER: Record<Lang, Texts> = {
     code: 'Promotiecode of cadeaubon (optioneel)',
     apply: 'Toepassen',
     applied: (code) => `De code ${code} is toegepast.`,
+    package: (n) => `Sessie van uw pakket (daarna nog ${n} over).`,
     cgv: ['Ik ga akkoord met de ', 'algemene voorwaarden', '.'],
     newTab: '(nieuw tabblad)',
     pay: (c) => `Reserveren en voorschot betalen (${euros(c, 'nl')})`,
@@ -193,6 +196,7 @@ export const RESERVER: Record<Lang, Texts> = {
     code: 'Promo code or gift voucher (optional)',
     apply: 'Apply',
     applied: (code) => `Code ${code} applied.`,
+    package: (n) => `Session taken from your package (${n} left afterwards).`,
     cgv: ['I accept the ', 'terms and conditions', '.'],
     newTab: '(new tab)',
     // « €35 » sur ce bouton seulement, comme demandé ; le reste de la page garde l'écriture des tarifs du site

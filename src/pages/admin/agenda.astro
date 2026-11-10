@@ -38,6 +38,8 @@ const DONE: Record<string, string> = {
   rembourse: 'Acompte remboursé, rendez-vous annulé.',
   echec: "Le remboursement n'a pas abouti. S'il reste un acompte à rendre, le bouton « Rembourser l'acompte » reste sur la ligne : réessayez plus tard.",
   cree: 'Rendez-vous enregistré.',
+  forfait: 'Rendez-vous enregistré : la séance est prise sur le forfait de la cliente (0 €).',
+  horsforfait: 'Rendez-vous retiré du forfait : la séance est rendue, le prix de la carte s’applique.',
   deplace: 'Rendez-vous déplacé. La cliente reçoit un e-mail si elle a un compte.',
   absente: 'Rendez-vous marqué « absente ».',
   venue: 'Absence retirée.',
@@ -143,7 +145,7 @@ const alertsOf = (r: Row) => (r.user_id ? careAlerts.get(r.user_id) ?? [] : []);
       <p>{r.service}<br>
         <span class={`badge badge--${r.no_show ? 'alert' : TONE[r.status]}`}>{r.no_show ? 'Absente' : STATUS[r.status]}</span>
         {r.late_minutes && <> · Arrivée en retard : {r.late_minutes} min</>}
-        <br>Prix {euros(r.price_cents)}{r.discount_cents > 0 && <> · remise −{euros(r.discount_cents)}{r.promo && ` (${r.promo})`}</>}
+        <br>Prix {euros(r.price_cents)}{r.discount_cents > 0 && <> · remise −{euros(r.discount_cents)}{r.promo && ` (${r.promo})`}</>}{r.package && <> · <span class="badge">Forfait</span> {r.package}</>}
         {r.deposit_cents > 0 && <><br>Acompte {euros(r.deposit_cents)}{r.paid ? ' payé' : ' non payé'}</>}
         {r.refunded_cents > 0 && <><br>Remboursé {euros(r.refunded_cents)}</>}</p>
       <div class="rdv-acts"><RdvActions r={r} admin={admin} /></div>
@@ -177,6 +179,7 @@ const alertsOf = (r: Row) => (r.user_id ? careAlerts.get(r.user_id) ?? [] : []);
             </td>
             <td>
               Prix {euros(r.price_cents)}
+              {r.package && <><br><span class="badge">Forfait</span> <small>{r.package}</small></>}
               {r.discount_cents > 0 && <><br>Remise −{euros(r.discount_cents)}{r.promo && ` (${r.promo})`}</>}
               {r.deposit_cents > 0 && <><br>Acompte {euros(r.deposit_cents)}{r.paid ? ' payé' : ' non payé'}</>}
               {r.refunded_cents > 0 && <><br>Remboursé {euros(r.refunded_cents)}</>}

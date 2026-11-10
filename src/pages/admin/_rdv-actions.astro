@@ -39,6 +39,12 @@ const due = r.paid ? r.deposit_cents - r.refunded_cents : 0;
       </form>
     </details>
   )}
+  {r.status === 'confirmed' && r.package && (
+    <form class="cell-form" method="post">
+      <input type="hidden" name="id" value={r.id}>
+      <button class="btn btn--ghost" type="submit" name="action" value="unpackage">Retirer du forfait<span class="visually-hidden"> le rendez-vous de {fmtTime(r.starts_at)}</span></button>
+    </form>
+  )}
   {r.status === 'confirmed' && r.past && (
     <form class="cell-form" method="post">
       <input type="hidden" name="id" value={r.id}>

@@ -16,6 +16,7 @@ import { FORMS, KINDS, listConsents } from '../../../lib/server/consentements.ts
 import { suivi, suiviAction } from '../../../lib/server/suivi.ts';
 import { clientGifts, STATE_LABELS as GIFT_STATES } from '../../../lib/server/cadeaux.ts';
 import { applyReward, loyaltyCard, rewardableBookings } from '../../../lib/server/fidelite.ts';
+import { clientPackages, saleLines, sellPackage, stopPackage, STATE_LABELS as PACKAGE_STATES } from '../../../lib/server/forfaits.ts';
 import { ALLERGIES, AMBIENCE, alertsOf, COVER, HEAT, PRESSURE, readProfile, saveProfile, SKIN, TOUCH, ZONES } from '../../../lib/server/profil.ts';
 
 const me = staffId(Astro.locals);
@@ -34,7 +35,7 @@ if (Astro.request.method === 'POST') {
   if (!form) return new Response(null, { status: 413 });
   // Les actions sur un rendez-vous passent par l'agenda (mêmes règles et même journal)
   const scope = form.get('scope');
-  const r = form.get('action') === 'delete' ? (manage ? await deleteAction(form) : { ok: false as const, error: "Seule l'admin peut supprimer un rendez-vous." }) : scope === 'booking' ? await agendaAction(me, form) : scope === 'suivi' ? await suiviAction(me, form) : scope === 'fidelite' ? await applyReward(me, form) : scope === 'profil' ? await saveProfile(me, id, form) : await clientAction(me, form, manage);
+  const r = form.get('action') === 'delete' ? (manage ? await deleteAction(form) : { ok: false as const, error: "Seule l'admin peut supprimer un rendez-vous." }) : scope === 'booking' ? await agendaAction(me, form) : scope === 'suivi' ? await suiviAction(me, form) : scope === 'fidelite' ? await applyReward(me, form) : scope === 'profil' ? await saveProfile(me, id, form) : scope === 'forfait' ? await (form.get('action') === 'stop' ? stopPackage : sellPackage)(me, id, form) : await clientAction(me, form, manage);
   if (r.ok && r.key === 'efface') return Astro.redirect('/admin/clientes?ok=efface', 303);
   if (r.ok) return Astro.redirect(`${self}?ok=${r.key}${r.id !== id && r.key !== 'supprime' ? `#b-${r.id}` : ''}`, 303);
   error = r.error;
@@ -53,7 +54,7 @@ const { user: u, bookings, stats, events } = c;
 const upcoming = bookings.filter((b) => !b.past && b.status === 'confirmed');
 // Bons cadeaux rattachés à la cliente (pages des bons : admin seulement)
 const gifts = manage ? await clientGifts(u.id) : [];
-const [consents, sv, card, rewardable, prof] = await Promise.all([listConsents(u.id), suivi(u.id), loyaltyCard(u.id), rewardableBookings(u.id), readProfile(u.id)]);
+const [consents, sv, card, rewardable, prof, packages, lines] = await Promise.all([listConsents(u.id), suivi(u.id), loyaltyCard(u.id), rewardableBookings(u.id), readProfile(u.id), clientPackages(u.id), saleLines()]);
 // Badges d'alerte d'après la fiche enregistrée ; après un refus, le formulaire réaffiche toute la saisie, pas seulement les notes
 const careAlerts = alertsOf(prof.care, prof.health);
 if (profDraft) {
@@ -79,7 +80,7 @@ const sheetRows = ([
 const DONE: Record<string, string> = {
   notes: 'Fiche de soin enregistrée.', supprime: 'Rendez-vous supprimé.', sante: 'Date de naissance et antécédents enregistrés.', 'fidelite-remise': 'Remise de fidélité appliquée au rendez-vous.', 'fidelite-offert': 'Soin offert appliqué au rendez-vous : la carte repart à zéro.', seance: 'Séance mise à jour.', block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte réactivé.',
   remove: "Compte supprimé : il n'apparaît plus dans les listes et ne peut plus se connecter. Ses rendez-vous restent.", unremove: 'Compte restauré : la cliente peut de nouveau se connecter.', restore: 'Suppression annulée : le compte est de nouveau actif. Les rendez-vous annulés le restent.',
-  absente: 'Rendez-vous marqué « absente ».', venue: 'Absence retirée.', retard: 'Retard noté.', aheure: 'Retard retiré.', encaisse: 'Encaissement noté.', nonencaisse: 'Encaissement retiré.', rendu: 'Acompte noté comme remboursé hors du site.',
+  absente: 'Rendez-vous marqué « absente ».', venue: 'Absence retirée.', retard: 'Retard noté.', aheure: 'Retard retiré.', encaisse: 'Encaissement noté.', nonencaisse: 'Encaissement retiré.', 'forfait-vendu': 'Forfait vendu : les séances de ce soin seront prises dessus à la réservation.', 'forfait-arrete': 'Forfait arrêté : plus aucune séance ne sera prise dessus. Le remboursement éventuel se fait à l’institut.', horsforfait: 'Rendez-vous retiré du forfait : la séance est rendue, le prix de la carte s’applique.', rendu: 'Acompte noté comme remboursé hors du site.',
 };
 const done = !error && DONE[Astro.url.searchParams.get('ok') ?? ''];
 const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', dateStyle: 'long' }).format;
@@ -89,6 +90,9 @@ const due = (b: (typeof bookings)[number]) => (b.paid ? b.deposit_cents - b.refu
 const purgeOn = u.deleted_at && new Date(u.deleted_at.getTime() + GRACE_DAYS * 86_400_000);
 const LANGS: Record<string, string> = { fr: 'français', nl: 'néerlandais', en: 'anglais' };
 const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
+const dmy = (d: string) => d.split('-').reverse().join('/');
+const PACKAGE_TONE = { actif: 'ok', epuise: 'wait', expire: 'alert', arrete: 'alert' } as const;
+const canSell = !u.blocked_at && !u.removed_at && !u.deleted_at;
 ---
 <Admin title={u.name || u.email}>
 {done && <p class="notice" role="status">{done}</p>}
@@ -253,8 +257,14 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
         {b.cancel_reason && <><br><small>{REASON[b.cancel_reason]}</small></>}
         {due(b) > 0 && b.status !== 'confirmed' && <><br><small>Acompte à rendre</small></>}
       </td>
-      <td>Prix {euros(b.price_cents - b.discount_cents)}{b.deposit_cents > 0 && <><br>Acompte {euros(b.deposit_cents)}{b.paid ? ' payé' : ''}</>}{b.refunded_cents > 0 && <><br>Remboursé {euros(b.refunded_cents)}</>}</td>
+      <td>Prix {euros(b.price_cents - b.discount_cents)}{b.package && <><br><span class="badge">Forfait</span> <small>{b.package}</small></>}{b.deposit_cents > 0 && <><br>Acompte {euros(b.deposit_cents)}{b.paid ? ' payé' : ''}</>}{b.refunded_cents > 0 && <><br>Remboursé {euros(b.refunded_cents)}</>}</td>
       <td>
+        {b.status === 'confirmed' && b.package && (
+          <form class="cell-form" method="post" action={self}>
+            <input type="hidden" name="scope" value="booking"><input type="hidden" name="id" value={b.id}>
+            <button class="btn btn--ghost" type="submit" name="action" value="unpackage">Retirer du forfait<span class="visually-hidden"> le rendez-vous du {fmtDateTime(b.starts_at)}</span></button>
+          </form>
+        )}
         {b.status === 'confirmed' && b.past && (
           <form class="cell-form" method="post" action={self}>
             <input type="hidden" name="scope" value="booking"><input type="hidden" name="id" value={b.id}>
@@ -302,6 +312,44 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
     </tr>
   ))}</tbody>
 </table></div>
+)}
+</section>
+<section aria-labelledby="h-forfaits">
+<h2 id="h-forfaits">Forfaits</h2>
+{packages.length === 0 ? <p>Aucun forfait.</p> : (
+<ul class="pkgs">{packages.map((p) => (
+  <li id={`f-${p.id}`}>
+    <p><strong>{p.label}</strong> <span class={`badge badge--${PACKAGE_TONE[p.state]}`}>{PACKAGE_STATES[p.state]}</span></p>
+    <p><strong>{p.left} séance{p.left > 1 ? 's' : ''} restante{p.left > 1 ? 's' : ''}</strong> sur {p.total} · {p.done} faite{p.done > 1 ? 's' : ''} · {p.booked} réservée{p.booked > 1 ? 's' : ''}</p>
+    <p class="meter" aria-hidden="true"><span>{Array.from({ length: p.total }, (_, i) => <i class:list={{ on: i < p.done, mark: i >= p.done && i < p.done + p.booked }}></i>)}</span></p>
+    <p class="hint">{p.service} · vendu {euros(p.price_cents)} le {day(p.sold_at)} · valable jusqu'au {dmy(p.expires_on)}{p.cancelled_at && ` · arrêté le ${day(p.cancelled_at)}${p.cancel_reason ? ` : ${p.cancel_reason}` : ''}`}</p>
+    {!p.cancelled_at && p.state !== 'expire' && (
+      <details class="cancel"><summary>Arrêter le forfait<span class="visually-hidden"> {p.label}</span></summary>
+        <form class="cell-form" method="post" action={`${self}#f-${p.id}`}>
+          <input type="hidden" name="scope" value="forfait"><input type="hidden" name="action" value="stop"><input type="hidden" name="package" value={p.id}>
+          <p class="hint">Plus aucune séance ne sera prise dessus. Les rendez-vous déjà réservés restent. Le site ne rembourse rien : le remboursement éventuel se fait à l'institut.</p>
+          <label class="field">Motif (facultatif)<input name="reason" maxlength="300"></label>
+          <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme</span></label>
+          <button class="btn btn--ghost" type="submit">Arrêter le forfait</button>
+        </form>
+      </details>
+    )}
+  </li>
+))}</ul>
+)}
+{canSell && lines.length > 0 && (
+  <details class="cancel sell"><summary class="btn btn--ghost">Vendre un forfait</summary>
+    <form class="form" method="post" action={`${self}#h-forfaits`}>
+      <input type="hidden" name="scope" value="forfait"><input type="hidden" name="action" value="sell">
+      <div class="field"><label for="offer">Forfait de la carte et soin couvert</label>
+        <select id="offer" name="offer" required>{lines.map((l) => (
+          <optgroup label={`${l.name_fr} · ${l.sessions} séances · ${euros(l.price_cents)}`}>{l.covers.map((s) => <option value={`${l.id}-${s.id}`}>{l.covers.length > 1 ? `${l.name_fr} pour ${s.name_fr}` : l.name_fr}</option>)}</optgroup>
+        ))}</select></div>
+      <p class="hint">Prix de la carte, valable 24 mois. Chaque rendez-vous de ce soin, en ligne ou ici, prend une séance (0 €). Une absence ne décompte pas de séance.</p>
+      <label class="check"><input type="checkbox" name="confirm" required><span>Je confirme la vente</span></label>
+      <button class="btn btn--solid" type="submit">Enregistrer la vente</button>
+    </form>
+  </details>
 )}
 </section>
 <section aria-labelledby="h-fidelite">
@@ -403,6 +451,12 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
   .meter i{width:1.1rem;height:1.1rem;border-radius:50%;border:1px solid var(--line-soft)}
   .meter i.on{background:var(--accent);border-color:var(--accent)}
   .meter i.mark{outline:2px solid var(--accent);outline-offset:1px}
+  .pkgs{list-style:none;margin:0 0 1rem;padding:0;display:grid;gap:.6rem}
+  .pkgs li{padding:.75rem 1rem;border:1px solid var(--line-soft);border-radius:12px;scroll-margin-top:1rem}
+  .pkgs p{margin:0 0 .3rem}
+  .sell > summary{list-style:none;display:inline-flex;min-height:44px;cursor:pointer}
+  .sell > summary::-webkit-details-marker{display:none}
+  .sell[open] > summary{margin-bottom:1rem}
   .seances{list-style:none;margin:1rem 0 0;padding:0;display:grid;gap:.6rem}
   .seances li{padding:.75rem 1rem;border:1px solid var(--line-soft);border-radius:12px;scroll-margin-top:1rem}
   .seances p{margin:0 0 .2rem}

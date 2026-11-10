@@ -17,7 +17,7 @@ const like = (q: string) => `%${q.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
 // supprimees : comptes retirés par l'admin, absents de tous les autres onglets
 export type ClientFilter = 'actives' | 'suppression' | 'bloquees' | 'toutes' | 'supprimees';
 export type ClientRow = { id: number; name: string | null; email: string; phone: string | null; locale: string; created_at: Date; deleted_at: Date | null; blocked_at: Date | null; removed_at: Date | null;
-  done: number; upcoming: number; no_shows: number; lates: number; late_minutes: number; last_at: Date | null; spent_cents: number; gifts: number; loyalty_sessions: number; loyalty_spent_cents: number; loyalty_discount_used: boolean };
+  done: number; upcoming: number; no_shows: number; lates: number; late_minutes: number; last_at: Date | null; spent_cents: number; gifts: number; packages: { label: string; left: number; expires_on: string }[]; loyalty_sessions: number; loyalty_spent_cents: number; loyalty_discount_used: boolean };
 // Tri de la liste : clé d'URL -> expression SQL (liste fermée, jamais de texte saisi dans ORDER BY) ; sens par défaut
 export const CLIENT_SORTS = { nom: ['lower(coalesce(u.name, u.email))', 'asc'], visites: ['agg.done', 'desc'], avenir: ['agg.upcoming', 'desc'], derniere: ['agg.last_at', 'desc'],
   total: ['agg.spent_cents', 'desc'], absences: ['agg.no_shows', 'desc'], retards: ['agg.lates', 'desc'], depuis: ['u.created_at', 'desc'] } as const;
@@ -44,7 +44,7 @@ export async function listClients(q: string, filter: ClientFilter, page: number,
   const [expr, def] = CLIENT_SORTS[Object.hasOwn(CLIENT_SORTS, sort) ? sort : 'nom'];
   const order = sql.unsafe(`${expr} ${(dir ?? def) === 'asc' ? 'ASC' : 'DESC'} NULLS LAST, lower(coalesce(u.name, u.email)), u.id`);
   const rows = await sql<ClientRow[]>`
-    SELECT u.id, u.name, u.email, u.phone, u.locale, u.created_at, u.deleted_at, u.blocked_at, u.removed_at, agg.*, gift.gifts,
+    SELECT u.id, u.name, u.email, u.phone, u.locale, u.created_at, u.deleted_at, u.blocked_at, u.removed_at, agg.*, gift.gifts, pk.packages,
       loy.sessions AS loyalty_sessions, loy.spent AS loyalty_spent_cents, loy.discount_used AS loyalty_discount_used
     FROM users u
     CROSS JOIN LATERAL (
@@ -59,6 +59,13 @@ export async function listClients(q: string, filter: ClientFilter, page: number,
       SELECT count(*)::int AS gifts FROM gift_cards g
       WHERE g.user_id = u.id AND g.cancelled_at IS NULL AND g.used_at IS NULL AND g.expires_on >= current_date
         AND NOT EXISTS (SELECT 1 FROM bookings b WHERE b.gift_card_id = g.id AND b.status IN ('pending_payment', 'confirmed') AND NOT b.no_show)) gift
+    -- Forfaits actifs : solde (séances ni faites ni réservées) et échéance, mêmes règles que clientPackages
+    CROSS JOIN LATERAL (
+      SELECT coalesce(json_agg(json_build_object('label', f.label, 'left', f.left, 'expires_on', f.expires_on) ORDER BY f.expires_on), '[]') AS packages FROM (
+        SELECT p.label, p.expires_on::text, (p.sessions_total - count(b.id))::int AS left
+        FROM packages p LEFT JOIN bookings b ON b.package_id = p.id AND b.status = 'confirmed' AND NOT b.no_show
+        WHERE p.user_id = u.id AND p.cancelled_at IS NULL AND p.expires_on >= (now() AT TIME ZONE 'Europe/Brussels')::date
+        GROUP BY p.id HAVING p.sessions_total > count(b.id)) f) pk
     CROSS JOIN LATERAL (
       WITH start AS (SELECT coalesce(max(used_at), '-infinity'::timestamptz) AS at FROM loyalty_rewards WHERE user_id = u.id AND kind = 'free'),
       done AS (
@@ -84,7 +91,7 @@ export async function listClients(q: string, filter: ClientFilter, page: number,
   return { rows: rows.filter((r) => !isAdminEmail(r.email)).slice(0, PAGE).map((r) => ({ ...r, reward: reward(r) })), more: rows.length > PAGE, loyalty };
 }
 
-export type ClientBooking = { id: number; starts_at: Date; ends_at: Date; service: string; status: string; no_show: boolean; late_minutes: number | null; paid_method: string | null; paid_cents: number | null; past: boolean; cancel_reason: string | null; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; moved: boolean };
+export type ClientBooking = { id: number; starts_at: Date; ends_at: Date; service: string; status: string; no_show: boolean; late_minutes: number | null; paid_method: string | null; paid_cents: number | null; past: boolean; cancel_reason: string | null; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; moved: boolean; package: string | null };
 
 export async function clientDetail(id: number) {
   const [u] = await sql<{ id: number; name: string | null; email: string; phone: string | null; locale: string; created_at: Date; email_verified_at: Date | null; deleted_at: Date | null; blocked_at: Date | null; removed_at: Date | null; health_consent_at: Date | null; notes: string; role: string | null }[]>`
@@ -93,8 +100,8 @@ export async function clientDetail(id: number) {
   const [bookings, [stats], events] = await Promise.all([
     sql<ClientBooking[]>`
       SELECT b.id, b.starts_at, b.ends_at, s.name_fr AS service, b.status, b.no_show, b.late_minutes, b.paid_method, b.paid_cents, b.starts_at < now() AS past, b.cancel_reason,
-        b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.stripe_payment_intent IS NOT NULL AS paid, b.moved_at IS NOT NULL AS moved
-      FROM bookings b JOIN services s ON s.id = b.service_id
+        b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.stripe_payment_intent IS NOT NULL AS paid, b.moved_at IS NOT NULL AS moved, k.label AS package
+      FROM bookings b JOIN services s ON s.id = b.service_id LEFT JOIN packages k ON k.id = b.package_id
       WHERE b.user_id = ${id} AND (b.status <> 'expired' OR b.stripe_payment_intent IS NOT NULL)
       ORDER BY b.starts_at DESC`,
     sql<{ done: number; no_shows: number; lates: number; late_minutes: number; cancelled: number; spent_cents: number }[]>`

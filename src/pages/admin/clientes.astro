@@ -87,7 +87,7 @@ const done = !error && DONE[sp.get('ok') ?? ''];
       <td>{c.no_shows === 0 && c.lates === 0 ? '—' : <>
         {c.no_shows > 0 && <span class="badge badge--alert">{plural(c.no_shows, 'absence', 'absences')}</span>}
         {c.lates > 0 && <span class="badge badge--wait">{plural(c.lates, 'retard', 'retards')} · {c.late_minutes} min</span>}</>}</td>
-      <td><small>Abonnement : —</small>
+      <td>{c.packages.length === 0 ? <small>Forfait : —</small> : c.packages.map((p, i) => <>{i > 0 && <br>}<small>{p.label} : {plural(p.left, 'séance restante', 'séances restantes')}, jusqu'au {p.expires_on.split('-').reverse().join('/')}</small></>)}
         {c.gifts > 0 && <><br><small>{plural(c.gifts, 'bon cadeau valable', 'bons cadeaux valables')}</small></>}
         <br><small>Fidélité : {c.loyalty_sessions} / {loyalty.free_after} séances</small>
         {c.reward === 'free' && <><br><span class="badge badge--ok">Soin offert dû</span></>}

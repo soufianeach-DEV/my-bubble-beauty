@@ -116,7 +116,7 @@ export const promoForm = z
 // Agenda et fiche cliente : day et time ne servent qu'au déplacement
 export const agendaForm = z
   .object({
-    action: z.enum(['cancel', 'refund', 'manual_refund', 'no_show', 'show', 'move', 'late', 'on_time', 'pay', 'unpay'], { error: 'Action inconnue.' }),
+    action: z.enum(['cancel', 'refund', 'manual_refund', 'no_show', 'show', 'move', 'late', 'on_time', 'pay', 'unpay', 'unpackage'], { error: 'Action inconnue.' }),
     method: z.enum(['especes', 'carte', 'payconiq', 'bon'], { error: 'Choisissez le mode de paiement.' }).optional(),
     amount: z.union([z.literal(''), money('Montant payé : 35 ou 12,50.')]).optional(),
     id,

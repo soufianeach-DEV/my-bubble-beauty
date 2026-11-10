@@ -18,6 +18,7 @@ import { deleteAccount, eraseNow, exportData, GRACE_DAYS, setConsent } from '../
 import { FORMS, listConsents, pendingConsents } from '../../../lib/server/consentements.ts';
 import { loyaltyCard } from '../../../lib/server/fidelite.ts';
 import { clientGifts } from '../../../lib/server/cadeaux.ts';
+import { clientPackages } from '../../../lib/server/forfaits.ts';
 import { readProfile } from '../../../lib/server/profil.ts';
 import { FICHE } from '../../../data/i18n/fiche.ts';
 
@@ -124,7 +125,9 @@ if (Astro.request.method === 'POST') {
   else if (Astro.url.searchParams.get('fiche') === 'ok') notice = { text: FICHE[lang].saved };
 }
 
-const [bookings, sessions, toSign, consents, allGifts] = finished ? [[], [], [], [], []] : await Promise.all([clientBookings(user.id, lang), listSessions(user.id, session.hash), pendingConsents(user.id), listConsents(user.id), clientGifts(user.id)]);
+const [bookings, sessions, toSign, consents, allGifts, allPackages] = finished ? [[], [], [], [], [], []] : await Promise.all([clientBookings(user.id, lang), listSessions(user.id, session.hash), pendingConsents(user.id), listConsents(user.id), clientGifts(user.id), clientPackages(user.id, lang)]);
+// Forfaits en cours : ni arrêtés ni expirés (un forfait épuisé reste visible tant qu'une séance réservée l'attend)
+const packages = allPackages.filter((p) => p.state === 'actif' || (p.state === 'epuise' && p.booked > 0));
 const card = finished ? null : await loyaltyCard(user.id);
 // Bons encore utilisables : valables ou déjà posés sur un rendez-vous à venir
 const gifts = allGifts.flatMap((g) => (g.state === 'valide' || g.state === 'reserve' ? [{ ...g, state: g.state }] : []));
@@ -313,6 +316,14 @@ const gauges = card
 <div class="gauge"><dt>{g.label}</dt><dd><progress value={g.value} max={g.max} aria-label={g.label} aria-valuetext={g.text}>{g.text}</progress><span aria-hidden="true">{g.text}</span></dd></div>
 ))}</dl>
 <p class="hint">{tl.minNote(card.rules.min_euros)}</p>
+</section>}
+
+{packages.length > 0 && <section aria-labelledby="h-packages">
+<h2 id="h-packages">{ta.packages}</h2>
+<ul class="dense">{packages.map((p) => (
+<li><strong>{p.label}</strong><span>{ta.packageLeft(p.left, p.total)}{p.booked > 0 && ` · ${ta.packageBooked(p.booked)}`}</span><span class="h-state">{ta.packageUntil(dayOnly(new Date(`${p.expires_on}T12:00:00Z`)))}</span></li>
+))}</ul>
+<p class="hint">{ta.packageNote}</p>
 </section>}
 
 {gifts.length > 0 && <section aria-labelledby="h-gifts">

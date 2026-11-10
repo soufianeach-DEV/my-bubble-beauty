@@ -29,7 +29,7 @@ if (Astro.request.method === 'POST') {
   if (slot) form.set('time', slot);
   if (form.get('look') !== '1') {
     const r = await newBooking(me, form);
-    if (r.ok) return Astro.redirect(`/admin/agenda?jour=${r.day}&vue=jour&ok=cree#r-${r.id}`, 303);
+    if (r.ok) return Astro.redirect(`/admin/agenda?jour=${r.day}&vue=jour&ok=${r.key}#r-${r.id}`, 303);
     error = r.error;
     Astro.response.status = 400;
   }

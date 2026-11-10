@@ -7,8 +7,10 @@ import { amounts, promoProblem, type Promo, type PromoProblem } from './pricing.
 import { promoDone, promoTry } from './rate.ts';
 import { isFree } from './slots.ts';
 import { checkGift, GIFT_CODE } from './cadeaux.ts';
+import { packageFor } from './forfaits.ts';
 
-export type Quote = ReturnType<typeof amounts> & { name: string; duration_min: number; code: string | null };
+// packageLeft : séance prise sur un forfait, séances qui resteront ensuite ; null sans forfait
+export type Quote = ReturnType<typeof amounts> & { name: string; duration_min: number; code: string | null; packageLeft: number | null };
 export type QuoteResult = { ok: true; quote: Quote } | { ok: false; error: 'unavailable' | 'limit' | 'promo'; promo?: PromoProblem | 'blocked' };
 
 // Sans aucun horaire saisi, aucun créneau ne peut exister : la page annonce l'ouverture prochaine plutôt qu'un agenda vide
@@ -28,6 +30,9 @@ export async function quote(input: { userId: number; serviceId: number; startsAt
     SELECT price_cents, deposit_cents, duration_min, CASE ${lang} WHEN 'nl' THEN name_nl WHEN 'en' THEN name_en ELSE name_fr END AS name
     FROM services WHERE id = ${serviceId} AND active`;
   if (!s || !(await isFree(sql, serviceId, startsAt, userId))) return { ok: false, error: 'unavailable' };
+  // Même choix que createBooking : un forfait actif pour ce soin passe avant tout code (aucun essai compté)
+  const pkg = await packageFor(sql, userId, serviceId, startsAt);
+  if (pkg) return { ok: true, quote: { ...amounts(0, 0, null), name: s.name, duration_min: s.duration_min, code: null, packageLeft: pkg.left - 1 } };
   let promo: Promo | null = null;
   if (code) {
     // Le devis est aussi un moyen de deviner un code : mêmes compteurs que la réservation, lus et comptés sous le verrou de la cliente
@@ -54,5 +59,5 @@ export async function quote(input: { userId: number; serviceId: number; startsAt
     if ('problem' in r) return { ok: false, error: 'promo', promo: r.problem };
     promo = r.p;
   }
-  return { ok: true, quote: { ...amounts(s.price_cents, s.deposit_cents, promo), name: s.name, duration_min: s.duration_min, code: promo && code } };
+  return { ok: true, quote: { ...amounts(s.price_cents, s.deposit_cents, promo), name: s.name, duration_min: s.duration_min, code: promo && code, packageLeft: null } };
 }

@@ -4,6 +4,7 @@ import { t } from '../site.ts';
 import { agendaForm, bulkServiceForm, deleteBookingForm, closureForm, hoursForm, idForm, newBookingForm, promoForm, serviceForm, toggleForm } from './admin-form.ts';
 import { cancelByAdmin, createAdminBooking, deleteBooking, markRefundedManually, rescheduleByAdmin, setLate, setNoShow, setPayment } from './booking.ts';
 import { giftClients } from './cadeaux.ts';
+import { unlinkPackage } from './forfaits.ts';
 import { sql } from './db.ts';
 import { journal } from './journal.ts';
 
@@ -213,6 +214,12 @@ export async function agendaAction(userId: number, form: FormData): Promise<Resu
     audit(userId, action === 'pay' ? 'booking_paid' : 'booking_unpaid', { booking_id: id, client_id: b.user_id, ...(action === 'pay' ? { method: p.data.method, amount: p.data.amount } : {}) });
     return { ok: true, id, key: action === 'pay' ? 'encaisse' : 'nonencaisse' };
   }
+  if (action === 'unpackage') {
+    const b = await unlinkPackage(id);
+    if (!b) return { ok: false, error: "Ce rendez-vous n'est pas pris sur un forfait." };
+    audit(userId, 'booking_unpackaged', { booking_id: id, client_id: b.user_id, package_id: b.package_id });
+    return { ok: true, id, key: 'horsforfait' };
+  }
   if (action === 'manual_refund') {
     const b = await markRefundedManually(id);
     if (!b) return { ok: false, error: 'Aucun acompte à rendre sur ce rendez-vous.' };
@@ -268,6 +275,6 @@ export async function newBooking(userId: number, form: FormData): Promise<Result
         ? 'Ce créneau chevauche un rendez-vous déjà pris ou un paiement en cours : choisissez une autre heure.'
         : 'Prestation introuvable ou sans durée : complétez sa durée dans Prestations.',
     };
-  audit(userId, 'booking_created', { booking_id: r.id, client_id: clientId, exceptional: !open });
-  return { ok: true, id: r.id, day: b.day };
+  audit(userId, 'booking_created', { booking_id: r.id, client_id: clientId, exceptional: !open, ...(r.packageLeft !== null ? { package: true } : {}) });
+  return { ok: true, id: r.id, day: b.day, key: r.packageLeft !== null ? 'forfait' : 'cree' };
 }

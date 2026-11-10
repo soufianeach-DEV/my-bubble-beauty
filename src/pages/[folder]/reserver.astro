@@ -191,6 +191,7 @@ const summary = error ?? promoMsg;
 <p class="eyebrow">{L.step(3)}</p>
 <h2 id="h-step">{L.recap}</h2>
 {applied && <p class="notice" role="status">{L.applied(q.code!)}</p>}
+{q.packageLeft !== null && <p class="notice" role="status">{L.package(q.packageLeft)}</p>}
 <dl class="recap">
 <dt>{L.service}</dt><dd>{q.name}</dd>
 <dt>{L.date}</dt><dd>{fmt({ dateStyle: 'full' }).format(at)}</dd>
@@ -203,14 +204,14 @@ const summary = error ?? promoMsg;
 <form class="form" method="post" action={base}>
 <input type="hidden" name="service" value={svc.id}>
 <input type="hidden" name="debut" value={at.toISOString()}>
-<div class="field">
+{q.packageLeft === null && <div class="field">
 <label for="code">{L.code}</label>
 <div class="promo">
 <input id="code" name="code" value={code} maxlength="32" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-invalid={promoMsg ? 'true' : undefined} aria-describedby={promoMsg ? 'code-msg' : undefined}>
 <button class="btn btn--ghost" type="submit" name="etape" value="appliquer" formnovalidate>{L.apply}</button>
 </div>
 {promoMsg && <p class="hint" id="code-msg">{promoMsg}</p>}
-</div>
+</div>}
 <div class="check">
 <input type="checkbox" id="cgv" name="cgv" required checked={cgvChecked} aria-invalid={cgvMissing ? 'true' : undefined}>
 <label for="cgv">{L.cgv[0]}<a href={pagePath(lang, 'cgv')} target="_blank" rel="noopener">{L.cgv[1]}<span class="visually-hidden"> {L.newTab}</span></a>{L.cgv[2]}</label>

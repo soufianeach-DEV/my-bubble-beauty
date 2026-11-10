@@ -10,6 +10,7 @@ import { bookingCancelledMail, bookingConfirmedMail, bookingMovedMail, bookingRe
 import { amounts, isDay, promoProblem, type Promo, type PromoProblem } from './pricing.ts';
 import { blocked, hit, promoDone, promoTry } from './rate.ts';
 import { checkGift, GIFT_CODE } from './cadeaux.ts';
+import { packageFor } from './forfaits.ts';
 import { isFree } from './slots.ts';
 import { createCheckoutSession, expireSession, refund, retrieveSession, type CheckoutSession } from './stripe.ts';
 import { verifyWebhookSignature } from './stripe-signature.ts';
@@ -95,6 +96,15 @@ export async function createBooking(input: { userId: number; serviceId: number; 
         SELECT price_cents, deposit_cents, duration_min + buffer_min AS busy_min, CASE ${lang} WHEN 'nl' THEN name_nl WHEN 'en' THEN name_en ELSE name_fr END AS name
         FROM services WHERE id = ${serviceId} AND active`;
       if (!s || !(await isFree(tx, serviceId, startsAt))) return { ok: false, error: 'unavailable' } as const;
+      // Forfait actif pour ce soin : la séance est prise dessus, rendez-vous à 0 €, sans acompte ; un code saisi est ignoré (rien n'est consommé)
+      const pkg = await packageFor(tx, userId, serviceId, startsAt);
+      if (pkg) {
+        const [b] = await tx`
+          INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, package_id)
+          VALUES (${userId}, ${serviceId}, ${startsAt}, ${startsAt}::timestamptz + make_interval(mins => ${s.busy_min}::int), 'confirmed', 0, ${pkg.id})
+          RETURNING id`;
+        return { ok: true, id: b.id as number, deposit: 0, label: '', pkg: pkg.id } as const;
+      }
       let promo: (Promo & { id: number }) | null = null;
       let gift: number | null = null;
       if (code) {
@@ -140,7 +150,7 @@ export async function createBooking(input: { userId: number; serviceId: number; 
   expireAtStripe(stale);
   if (!r.ok) return r;
   if (ip) hit('booking', ip);
-  journal('booking_created', { actor: userId, client: userId, booking: r.id, details: { deposit: r.deposit } });
+  journal('booking_created', { actor: userId, client: userId, booking: r.id, details: { deposit: r.deposit, ...('pkg' in r ? { package: r.pkg } : {}) } });
   if (!r.deposit) {
     notify(r.id, 'confirmed');
     return { ok: true, id: r.id, checkoutUrl: null };
@@ -301,18 +311,25 @@ export async function cancelByAdmin(bookingId: number, refundDeposit: boolean): 
 
 // Saisie admin (téléphone, WhatsApp) : confirmée, sans acompte, hors horaires et délais, mais jamais sur un autre rendez-vous
 // userId : rendez-vous rattaché à la fiche d'une cliente (sans nom ni téléphone d'invitée) ; sinon personne sans compte
-export async function createAdminBooking(input: { serviceId: number; startsAt: Date; guestName: string; guestPhone?: string | null; userId?: number | null }): Promise<{ ok: true; id: number } | { ok: false; error: 'unavailable' | 'service' }> {
+export async function createAdminBooking(input: { serviceId: number; startsAt: Date; guestName: string; guestPhone?: string | null; userId?: number | null }): Promise<{ ok: true; id: number; packageLeft: number | null } | { ok: false; error: 'unavailable' | 'service' }> {
   if (Number.isNaN(input.startsAt.getTime())) return { ok: false, error: 'unavailable' };
   expireAtStripe(await expirePending(sql, null));
   try {
-    const [b] = await sql`
-      INSERT INTO bookings (user_id, guest_name, guest_phone, service_id, starts_at, ends_at, status, price_cents)
-      SELECT ${input.userId ?? null}, ${input.userId ? null : input.guestName}, ${input.userId ? null : input.guestPhone || null}, id, ${input.startsAt}, ${input.startsAt}::timestamptz + make_interval(mins => duration_min + buffer_min), 'confirmed', price_cents
-      FROM services WHERE id = ${input.serviceId} AND duration_min IS NOT NULL AND retired_at IS NULL
-      RETURNING id`;
+    const b = await sql.begin(async (tx) => {
+      // Cliente verrouillée (même ordre que createBooking) : sa séance libre de forfait ne sert qu'à une réservation
+      if (input.userId) await tx`SELECT id FROM users WHERE id = ${input.userId} FOR UPDATE`;
+      const pkg = input.userId ? await packageFor(tx, input.userId, input.serviceId, input.startsAt) : null;
+      const [row] = await tx<{ id: number; package_id: number | null }[]>`
+        INSERT INTO bookings (user_id, guest_name, guest_phone, service_id, starts_at, ends_at, status, price_cents, package_id)
+        SELECT ${input.userId ?? null}, ${input.userId ? null : input.guestName}, ${input.userId ? null : input.guestPhone || null}, id, ${input.startsAt}, ${input.startsAt}::timestamptz + make_interval(mins => duration_min + buffer_min), 'confirmed',
+          CASE WHEN ${pkg?.id ?? null}::bigint IS NULL THEN price_cents ELSE 0 END, ${pkg?.id ?? null}
+        FROM services WHERE id = ${input.serviceId} AND duration_min IS NOT NULL AND retired_at IS NULL
+        RETURNING id, package_id`;
+      return row ? { ...row, left: pkg ? pkg.left - 1 : null } : null;
+    });
     if (!b) return { ok: false, error: 'service' };
     log('admin_booking', { booking_id: b.id });
-    return { ok: true, id: b.id };
+    return { ok: true, id: b.id, packageLeft: b.left };
   } catch (e) {
     if (isTaken(e)) return { ok: false, error: 'unavailable' };
     throw e;
@@ -321,9 +338,9 @@ export async function createAdminBooking(input: { serviceId: number; startsAt: D
 
 // Compte de la cliente : toujours filtré par user_id (pas d'accès à la réservation d'une autre en changeant l'identifiant)
 export function clientBookings(userId: number, lang: Lang) {
-  return sql<{ id: number; service: string; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled'; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; upcoming: boolean; cancellable: boolean; no_show: boolean }[]>`
+  return sql<{ id: number; service: string; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled'; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; upcoming: boolean; cancellable: boolean; no_show: boolean; package: boolean }[]>`
     SELECT b.id, CASE ${lang} WHEN 'nl' THEN s.name_nl WHEN 'en' THEN s.name_en ELSE s.name_fr END AS service, b.starts_at, b.ends_at, b.status,
-      b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.starts_at > now() AS upcoming, b.no_show,
+      b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.starts_at > now() AS upcoming, b.no_show, b.package_id IS NOT NULL AS package,
       -- Même délai pour annuler et pour déplacer : 24 h avant au plus tard
       b.status = 'confirmed' AND b.starts_at >= now() + interval '24 hours' AS cancellable
     FROM bookings b JOIN services s ON s.id = b.service_id
@@ -336,12 +353,13 @@ export function clientBookings(userId: number, lang: Lang) {
 // sur une annulée = acompte gardé ou remboursement échoué, sur une expirée = paiement tardif non remboursé (à relancer par cancelByAdmin).
 export function adminAgenda(from: string, days = 7) {
   if (!isDay(from)) return Promise.resolve([]);
-  return sql<{ id: number; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled' | 'expired'; service: string; name: string | null; phone: string | null; email: string | null; user_id: number | null; guest: boolean; erased: boolean; deleting: boolean; past: boolean; no_show: boolean; late_minutes: number | null; paid_method: string | null; paid_cents: number | null; cancel_reason: string | null; refunded_manually: boolean; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; promo: string | null }[]>`
+  return sql<{ id: number; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled' | 'expired'; service: string; name: string | null; phone: string | null; email: string | null; user_id: number | null; guest: boolean; erased: boolean; deleting: boolean; past: boolean; no_show: boolean; late_minutes: number | null; paid_method: string | null; paid_cents: number | null; cancel_reason: string | null; refunded_manually: boolean; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; promo: string | null; package: string | null }[]>`
     SELECT b.id, b.starts_at, b.ends_at, b.status, s.name_fr AS service, coalesce(u.name, b.guest_name) AS name, coalesce(u.phone, b.guest_phone) AS phone,
       u.email, b.user_id, b.user_id IS NULL AND NOT b.client_erased AS guest, b.client_erased AS erased, u.deleted_at IS NOT NULL AS deleting,
       b.starts_at < now() AS past, b.no_show, b.late_minutes, b.paid_method, b.paid_cents, b.cancel_reason, b.refunded_manually_at IS NOT NULL AS refunded_manually,
-      b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.stripe_payment_intent IS NOT NULL AS paid, p.code AS promo
+      b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.stripe_payment_intent IS NOT NULL AS paid, p.code AS promo, k.label AS package
     FROM bookings b JOIN services s ON s.id = b.service_id LEFT JOIN users u ON u.id = b.user_id LEFT JOIN promo_codes p ON p.id = b.promo_code_id
+      LEFT JOIN packages k ON k.id = b.package_id
     WHERE b.starts_at >= ${from}::text::date::timestamp AT TIME ZONE 'Europe/Brussels'
       AND b.starts_at < (${from}::text::date + ${Math.min(Math.max(Math.trunc(days) || 1, 1), 62)}::int)::timestamp AT TIME ZONE 'Europe/Brussels'
       AND (b.status IN ('confirmed', 'cancelled') OR (b.status = 'pending_payment' AND b.created_at > now() - interval '35 minutes')
