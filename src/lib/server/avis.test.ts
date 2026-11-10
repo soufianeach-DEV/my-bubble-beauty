@@ -51,30 +51,46 @@ test('avis sur une vraie base', { skip: !url && 'TEST_DATABASE_URL absente' }, a
     const annulee = await mk('annulee');
     const partie = await mk('desinscrite');
     const tropTot = await mk('trop-tot');
-    const b1 = await book(ok, 60);
-    const b1bis = await book(ok, 150); // même journée : une seule demande
-    await book(absent, 75, { no_show: true });
-    await book(annulee, 90, { status: 'cancelled' });
-    await book(partie, 105);
-    await book(tropTot, 10);
+    const H = 60;
+    const b1 = await book(ok, 25 * H);
+    const b1bis = await book(ok, 27 * H); // même journée : une seule demande
+    await book(absent, 25.5 * H, { no_show: true });
+    await book(annulee, 26 * H, { status: 'cancelled' });
+    await book(partie, 26.5 * H);
+    await book(tropTot, 10 * H);
     await sql`UPDATE users SET review_mail_optout_at = now() WHERE id = ${partie}`;
 
     const mine = (to: string) => to.startsWith(tag);
+    const URL_AVIS = 'https://g.page/r/abc/review';
     assert.equal(await avis.sendReviewRequests(undefined, async () => true), 0, 'sans lien de la fiche : rien');
     const tried: string[] = [];
-    await avis.sendReviewRequests('https://g.page/r/abc/review', async (to) => (tried.push(to), false));
-    assert.deepEqual(tried.filter(mine), [`${tag}contente@test.local`], 'ni absente, ni annulée, ni désinscrite, ni rendez-vous à peine fini');
+    await avis.sendReviewRequests(URL_AVIS, async (to) => (tried.push(to), false));
+    assert.deepEqual(tried.filter(mine), [`${tag}contente@test.local`], 'ni absente, ni annulée, ni désinscrite, ni avant 24 h');
     assert.equal((await sql`SELECT count(*)::int AS n FROM bookings WHERE id IN (${b1}, ${b1bis}) AND review_request_sent_at IS NOT NULL`)[0].n, 0, 'refus de Resend : rien de marqué');
 
     const sent: { to: string; subject: string; text: string }[] = [];
-    await avis.sendReviewRequests('https://g.page/r/abc/review', async (to, m) => (sent.push({ to, ...m }), true));
+    await avis.sendReviewRequests(URL_AVIS, async (to, m) => (sent.push({ to, ...m }), true));
     const got = sent.filter((s) => mine(s.to));
     assert.equal(got.length, 1);
     assert.equal(got[0].subject, 'Hoe was uw behandeling?', 'langue de la cliente');
     assert.equal((await sql`SELECT count(*)::int AS n FROM bookings WHERE id IN (${b1}, ${b1bis}) AND review_request_sent_at IS NOT NULL`)[0].n, 1);
     const again: string[] = [];
-    await avis.sendReviewRequests('https://g.page/r/abc/review', async (to) => (again.push(to), true));
-    assert.deepEqual(again.filter(mine), [], 'une fois par rendez-vous, puis rien pendant 90 jours');
+    await avis.sendReviewRequests(URL_AVIS, async (to) => (again.push(to), true));
+    assert.deepEqual(again.filter(mine), [], 'une demande par rendez-vous, pas de relance avant 48 h');
+
+    // Relance à J+2 : seulement si la demande est partie ; la désinscription la coupe
+    await sql`UPDATE bookings SET starts_at = starts_at - interval '24 hours', ends_at = ends_at - interval '24 hours',
+      review_request_sent_at = now() - interval '21 hours' WHERE id = ${b1}`;
+    const coupee = await mk('relance-coupee');
+    const bc = await book(coupee, 50 * H);
+    await sql`UPDATE bookings SET review_request_sent_at = now() - interval '22 hours' WHERE id = ${bc}`;
+    await sql`UPDATE users SET review_mail_optout_at = now() WHERE id = ${coupee}`;
+    const relance: { to: string; subject: string }[] = [];
+    await avis.sendReviewRequests(URL_AVIS, async (to, m) => (relance.push({ to, subject: m.subject }), true));
+    assert.deepEqual(relance.filter((r) => mine(r.to)), [{ to: `${tag}contente@test.local`, subject: 'Twee minuten voor uw review?' }], 'relance une fois, pas pour une désinscrite ni sans première demande');
+    const encore: string[] = [];
+    await avis.sendReviewRequests(URL_AVIS, async (to) => (encore.push(to), true));
+    assert.deepEqual(encore.filter(mine), [], 'deux mails au plus par rendez-vous');
 
     // Lien de désinscription : signé, propre à la cliente
     const link = new URL(got[0].text.match(/https:\/\/test\.local\/nl\/compte\/avis-desinscription\S+/)![0]);

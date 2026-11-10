@@ -495,7 +495,7 @@ export type Sender = (to: string, mail: Mail) => Promise<boolean>;
 
 // Une ligne n'est marquée envoyée qu'une fois le mail accepté par Resend : un refus (domaine non vérifié, panne) la laisse
 // au passage suivant, dans la fenêtre de la requête. Appelé sous le verrou des tâches (jobs.ts) : pas de double envoi.
-export async function deliver(rows: { id: number; email: string; mail: Mail }[], column: 'reminder_sent_at' | 'aftercare_sent_at' | 'review_request_sent_at', send: Sender): Promise<number> {
+export async function deliver(rows: { id: number; email: string; mail: Mail }[], column: 'reminder_sent_at' | 'aftercare_sent_at' | 'review_request_sent_at' | 'review_reminder_sent_at', send: Sender): Promise<number> {
   let sent = 0;
   for (const r of rows) {
     if (!(await send(r.email, r.mail))) continue;

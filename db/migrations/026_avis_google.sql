@@ -1,6 +1,6 @@
--- Mail d'avis après la prestation (un seul par rendez-vous, désinscription possible) et avis Google repris sur l'Accueil.
+-- Demande d'avis après la prestation (J+1, relance J+2, désinscription possible) et avis Google repris sur l'Accueil.
 -- Retour arrière : db/migrations/annuler/026_avis_google.sql
-ALTER TABLE bookings ADD COLUMN review_request_sent_at timestamptz;
+ALTER TABLE bookings ADD COLUMN review_request_sent_at timestamptz, ADD COLUMN review_reminder_sent_at timestamptz;
 ALTER TABLE users ADD COLUMN review_mail_optout_at timestamptz;
 
 -- Copie des avis de la fiche, lue par l'API Business Profile (accès propriétaire) ; un avis retiré chez Google disparaît ici au rafraîchissement suivant.

@@ -7,7 +7,7 @@ import { FOLDER, type Lang } from '../site.ts';
 import { deliver, type Sender } from './booking.ts';
 import { sql } from './db.ts';
 import { log } from './log.ts';
-import { reviewRequestMail, sendMailNow } from './mail.ts';
+import { reviewReminderMail, reviewRequestMail, sendMailNow } from './mail.ts';
 
 // Lien de désinscription sans connexion : HMAC de l'identifiant (clé dérivée du poivre, propre à cet usage)
 const sign = (userId: number) => createHmac('sha256', PASSWORD_PEPPER).update(`avis-desinscription:${userId}`).digest('base64url').slice(0, 32);
@@ -26,19 +26,32 @@ export async function optOutReviews(userId: number): Promise<void> {
   log('review_mail_optout', { user_id: userId });
 }
 
-// Rendez-vous honoré, terminé depuis 30 min à 3 jours : une demande par rendez-vous, et au plus une par cliente tous les 90 jours
-// (une habituée n'en reçoit pas à chaque visite). Aucun filtre sur la satisfaction : même mail pour toutes.
+// Rendez-vous honoré (confirmé, non absente) : demande 24 h après la fin, relance 48 h après si la demande est partie.
+// Toutes les clientes reçoivent le même mail, sans filtre sur la satisfaction (Google interdit de ne solliciter que les avis positifs).
+// Désinscription : coupe la demande et la relance. Plusieurs rendez-vous à moins de 24 h d'écart : un seul mail (et une relance).
+// La relance ne peut pas être évitée pour une cliente qui a déjà laissé son avis : Google ne donne ni e-mail ni identifiant
+// de compte, seulement le nom affiché, trop peu fiable pour faire le lien.
 export async function sendReviewRequests(reviewUrl: string | undefined, send: Sender = sendMailNow): Promise<number> {
   if (!reviewUrl) return 0;
-  const rows = await sql<{ id: number; user_id: number; email: string; locale: Lang }[]>`
+  type Row = { id: number; user_id: number; email: string; locale: Lang };
+  const first = await sql<Row[]>`
     SELECT DISTINCT ON (b.user_id) b.id, b.user_id, u.email, u.locale
     FROM bookings b JOIN users u ON u.id = b.user_id
     WHERE b.status = 'confirmed' AND NOT b.no_show AND b.review_request_sent_at IS NULL
       AND u.blocked_at IS NULL AND u.removed_at IS NULL AND u.deleted_at IS NULL AND u.review_mail_optout_at IS NULL
-      AND b.ends_at <= now() - interval '30 minutes' AND b.ends_at > now() - interval '3 days'
-      AND NOT EXISTS (SELECT 1 FROM bookings o WHERE o.user_id = b.user_id AND o.review_request_sent_at > now() - interval '90 days')
+      AND b.ends_at <= now() - interval '24 hours' AND b.ends_at > now() - interval '48 hours'
+      AND NOT EXISTS (SELECT 1 FROM bookings o WHERE o.user_id = b.user_id AND o.id <> b.id AND o.review_request_sent_at IS NOT NULL
+        AND o.ends_at > b.ends_at - interval '24 hours' AND o.ends_at < b.ends_at + interval '24 hours')
     ORDER BY b.user_id, b.ends_at DESC`;
-  return deliver(rows.map((r) => ({ id: r.id, email: r.email, mail: reviewRequestMail(r.locale, reviewUrl, unsubscribeUrl(r.locale, r.user_id)) })), 'review_request_sent_at', send);
+  const again = await sql<Row[]>`
+    SELECT b.id, b.user_id, u.email, u.locale
+    FROM bookings b JOIN users u ON u.id = b.user_id
+    WHERE b.status = 'confirmed' AND NOT b.no_show AND b.review_reminder_sent_at IS NULL
+      AND b.review_request_sent_at <= now() - interval '20 hours'
+      AND u.blocked_at IS NULL AND u.removed_at IS NULL AND u.deleted_at IS NULL AND u.review_mail_optout_at IS NULL
+      AND b.ends_at <= now() - interval '48 hours' AND b.ends_at > now() - interval '5 days'`;
+  return (await deliver(first.map((r) => ({ id: r.id, email: r.email, mail: reviewRequestMail(r.locale, reviewUrl, unsubscribeUrl(r.locale, r.user_id)) })), 'review_request_sent_at', send))
+    + (await deliver(again.map((r) => ({ id: r.id, email: r.email, mail: reviewReminderMail(r.locale, reviewUrl, unsubscribeUrl(r.locale, r.user_id)) })), 'review_reminder_sent_at', send));
 }
 
 type GbpReview = { reviewId: string; reviewer?: { displayName?: string; isAnonymous?: boolean }; starRating?: string; comment?: string; createTime: string; updateTime: string };

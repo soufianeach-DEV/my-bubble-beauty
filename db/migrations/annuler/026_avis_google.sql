@@ -3,4 +3,4 @@
 DROP TABLE IF EXISTS google_reviews;
 DELETE FROM settings WHERE key = 'google_reviews';
 ALTER TABLE users DROP COLUMN IF EXISTS review_mail_optout_at;
-ALTER TABLE bookings DROP COLUMN IF EXISTS review_request_sent_at;
+ALTER TABLE bookings DROP COLUMN IF EXISTS review_request_sent_at, DROP COLUMN IF EXISTS review_reminder_sent_at;
