@@ -800,3 +800,20 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 .mnav__acct form{margin:0}
 .mnav__out{display:block;width:100%;padding:.75rem 1rem;border:0;border-radius:10px;background:none;color:var(--text);font:inherit;text-align:left;cursor:pointer}
 .mnav__out:hover{background:var(--bg)}
+
+/* Admin : menus déroulants aux couleurs du thème, liste ouverte comprise (sans cela, les options s'ouvrent sur le blanc du système) */
+.admin-shell select{color:var(--text);background-color:var(--bg);border:1px solid var(--line-soft);border-radius:12px;font:inherit;min-height:44px}
+.admin-shell select:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+.admin-shell option,.admin-shell optgroup{background-color:var(--bg);color:var(--text)}
+.admin-shell option:checked{background-color:var(--accent);color:var(--accent-ink)}
+/* Chrome et Edge récents : liste ouverte entièrement stylable (bordure, arrondi, ombre) ; ailleurs, les couleurs ci-dessus suffisent */
+@supports (appearance:base-select){
+  .admin-shell select,.admin-shell select::picker(select){appearance:base-select}
+  .admin-shell select::picker(select){margin-top:.25rem;padding:.3rem;border:1px solid var(--line-soft);border-radius:12px;background:var(--bg);color:var(--text);box-shadow:0 12px 32px rgb(30 22 21 / .18)}
+  .admin-shell select::picker-icon{color:var(--text-soft)}
+  .admin-shell select option{display:flex;align-items:center;gap:.5rem;min-height:44px;padding:.45rem .75rem;border-radius:8px;background-color:transparent}
+  .admin-shell select option:hover,.admin-shell select option:focus-visible{background-color:rgb(138 90 82 / .14);outline:none}
+  .admin-shell select option:checked{background-color:var(--accent);color:var(--accent-ink)}
+  .admin-shell select option::checkmark{color:currentColor}
+  .admin-shell select optgroup{background:none;font-weight:600}
+}

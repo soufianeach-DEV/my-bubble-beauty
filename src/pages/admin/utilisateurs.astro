@@ -208,7 +208,8 @@ const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', date
   section{margin-bottom:2rem}
   .add{display:flex;flex-wrap:wrap;gap:.75rem 1rem;align-items:flex-end}
   .add .grow{flex:1 1 16rem;min-width:0}
-  select{min-height:44px;padding:.4rem .6rem;border:1px solid var(--line-soft);border-radius:8px;background:rgb(var(--card));color:var(--text);font:inherit}
+  /* Couleurs, bordure et arrondi : règle commune de l'admin (global.css) */
+  select{padding:.4rem .6rem}
   .add-box{margin-bottom:2rem}
   .add-box > summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:500}
   .find,.assign{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:flex-end}
