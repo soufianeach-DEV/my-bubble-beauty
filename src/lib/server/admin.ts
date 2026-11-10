@@ -3,6 +3,7 @@
 import { t } from '../site.ts';
 import { agendaForm, bulkServiceForm, deleteBookingForm, closureForm, hoursForm, idForm, newBookingForm, promoForm, serviceForm, toggleForm } from './admin-form.ts';
 import { cancelByAdmin, createAdminBooking, deleteBooking, markRefundedManually, rescheduleByAdmin, setLate, setNoShow } from './booking.ts';
+import { giftClients } from './cadeaux.ts';
 import { sql } from './db.ts';
 import { journal } from './journal.ts';
 
@@ -234,7 +235,15 @@ export async function newBooking(userId: number, form: FormData): Promise<Result
       AND NOT EXISTS (SELECT 1 FROM closures c, len WHERE c.starts_at < t.at + len.l AND c.ends_at > t.at) AS open
     FROM t`;
   if (!open && !b.force) return { ok: false, error: "Ce créneau est en dehors des heures d'ouverture (jour fermé, hors plage ou fermeture). Cochez « Ouvrir exceptionnellement » pour l'enregistrer quand même." };
-  const r = await createAdminBooking({ serviceId: b.service, startsAt: at, guestName: b.name, guestPhone: b.phone || null });
+  // Cliente choisie dans la liste : même périmètre que les bons cadeaux (comptes actifs) ; une saisie inconnue est refusée
+  let clientId: number | null = null;
+  if (b.client) {
+    const email = (/<([^<>]+)>\s*$/.exec(b.client)?.[1] ?? b.client).trim().toLowerCase();
+    const c = (await giftClients()).find((x) => x.email === email);
+    if (!c) return { ok: false, error: 'Cliente introuvable : choisissez-la dans la liste, ou videz le champ et indiquez un nom pour une personne sans compte.' };
+    clientId = Number(c.id);
+  }
+  const r = await createAdminBooking({ serviceId: b.service, startsAt: at, guestName: b.name, guestPhone: b.phone || null, userId: clientId });
   if (!r.ok)
     return {
       ok: false,
@@ -242,6 +251,6 @@ export async function newBooking(userId: number, form: FormData): Promise<Result
         ? 'Ce créneau chevauche un rendez-vous déjà pris ou un paiement en cours : choisissez une autre heure.'
         : 'Prestation introuvable ou sans durée : complétez sa durée dans Prestations.',
     };
-  audit(userId, 'booking_created', { booking_id: r.id, exceptional: !open });
+  audit(userId, 'booking_created', { booking_id: r.id, client_id: clientId, exceptional: !open });
   return { ok: true, id: r.id, day: b.day };
 }

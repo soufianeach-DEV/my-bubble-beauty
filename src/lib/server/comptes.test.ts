@@ -68,6 +68,20 @@ test('comptes, réservations et sécurité sur une vraie base', { skip: !url && 
       assert.ok(labels.includes('11:15') && labels.includes('17:00') && !labels.includes('17:15'), labels.join(' '));
     });
 
+    await t.test('rendez-vous saisi par l’équipe : relié à la fiche si la cliente est choisie, sinon sans compte', async () => {
+      const { newBooking } = await import('./admin.ts');
+      const fd = (o: Record<string, string>) => Object.entries(o).reduce((f, [k, v]) => (f.append(k, v), f), new FormData());
+      const base = { service: String(svc.id), day, time: '16:00' };
+      const linked = await newBooking(a.id, fd({ ...base, client: `b <${b.email}>` }));
+      assert.ok(linked.ok);
+      assert.deepEqual({ ...(await sql`SELECT user_id, guest_name FROM bookings WHERE id = ${linked.ok && linked.id}`)[0] }, { user_id: b.id, guest_name: null });
+      assert.equal((await newBooking(a.id, fd({ ...base, time: '13:00', client: 'inconnue@test.local' }))).ok, false, 'cliente hors liste refusée');
+      const guest = await newBooking(a.id, fd({ ...base, time: '13:00', name: 'Invitée', phone: '0470 00 00 00' }));
+      assert.ok(guest.ok);
+      assert.deepEqual({ ...(await sql`SELECT user_id, guest_name FROM bookings WHERE id = ${guest.ok && guest.id}`)[0] }, { user_id: null, guest_name: 'Invitée' });
+      await sql`DELETE FROM bookings WHERE id IN (${linked.ok ? linked.id : 0}, ${guest.ok ? guest.id : 0})`;
+    });
+
     const [mine] = await sql`SELECT id, user_id FROM bookings WHERE service_id = ${svc.id} AND status = 'confirmed'`;
     const owner = mine.user_id === a.id ? a : b;
     const other = owner === a ? b : a;

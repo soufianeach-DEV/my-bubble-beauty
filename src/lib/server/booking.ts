@@ -300,13 +300,14 @@ export async function cancelByAdmin(bookingId: number, refundDeposit: boolean): 
 }
 
 // Saisie admin (téléphone, WhatsApp) : confirmée, sans acompte, hors horaires et délais, mais jamais sur un autre rendez-vous
-export async function createAdminBooking(input: { serviceId: number; startsAt: Date; guestName: string; guestPhone?: string | null }): Promise<{ ok: true; id: number } | { ok: false; error: 'unavailable' | 'service' }> {
+// userId : rendez-vous rattaché à la fiche d'une cliente (sans nom ni téléphone d'invitée) ; sinon personne sans compte
+export async function createAdminBooking(input: { serviceId: number; startsAt: Date; guestName: string; guestPhone?: string | null; userId?: number | null }): Promise<{ ok: true; id: number } | { ok: false; error: 'unavailable' | 'service' }> {
   if (Number.isNaN(input.startsAt.getTime())) return { ok: false, error: 'unavailable' };
   expireAtStripe(await expirePending(sql, null));
   try {
     const [b] = await sql`
-      INSERT INTO bookings (guest_name, guest_phone, service_id, starts_at, ends_at, status, price_cents)
-      SELECT ${input.guestName}, ${input.guestPhone || null}, id, ${input.startsAt}, ${input.startsAt}::timestamptz + make_interval(mins => duration_min + buffer_min), 'confirmed', price_cents
+      INSERT INTO bookings (user_id, guest_name, guest_phone, service_id, starts_at, ends_at, status, price_cents)
+      SELECT ${input.userId ?? null}, ${input.userId ? null : input.guestName}, ${input.userId ? null : input.guestPhone || null}, id, ${input.startsAt}, ${input.startsAt}::timestamptz + make_interval(mins => duration_min + buffer_min), 'confirmed', price_cents
       FROM services WHERE id = ${input.serviceId} AND duration_min IS NOT NULL AND retired_at IS NULL
       RETURNING id`;
     if (!b) return { ok: false, error: 'service' };

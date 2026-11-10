@@ -147,14 +147,16 @@ export const newBookingForm = z.object({
   service: int(1, 2_000_000_000, 'Choisissez une prestation.'),
   day: day('Date invalide.'),
   time: time('Heure au format HH:MM.'),
-  name: text(100, 'Nom : 1 à 100 caractères.'),
+  // Cliente existante (« Nom <e-mail> » de la liste) ou, à défaut, nom libre pour une personne sans compte
+  client: str('Cliente invalide.').max(400, 'Cliente invalide.').default(''),
+  name: str('Nom : 100 caractères au plus.').max(100, 'Nom : 100 caractères au plus.').regex(/^\P{Cc}*$/u, 'Nom invalide.').default(''),
   phone: str('Téléphone : chiffres, espaces et + ( ) . / - seulement, 30 caractères au plus.')
     .max(30, 'Téléphone : 30 caractères au plus.')
     .regex(/^[0-9+()./ -]*$/, 'Téléphone : chiffres, espaces et + ( ) . / - seulement.')
     .default(''),
   // « Ouvrir exceptionnellement » : enregistre un rendez-vous un jour fermé ou hors des plages d'ouverture
   force: box,
-});
+}).refine((b) => b.client || b.name, { message: 'Choisissez une cliente ou indiquez le nom de la personne.' });
 
 // Code de l'appli d'authentification ; les espaces affichés par certaines applis sont retirés
 export const totpForm = z.object({ code: z.string({ error: 'Code à 6 chiffres.' }).transform((v) => v.replace(/\s/g, '')).pipe(z.string().regex(/^\d{6}$/, 'Code à 6 chiffres.')) });

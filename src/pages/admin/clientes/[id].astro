@@ -91,7 +91,7 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 <Admin title={u.name || u.email}>
 {done && <p class="notice" role="status">{done}</p>}
 {error && <p class="notice notice--error" role="alert">{error}</p>}
-<p><a href="/admin/clientes">← Toutes les clientes</a></p>
+<p class="fiche-top"><a href="/admin/clientes">← Toutes les clientes</a>{!u.blocked_at && !u.removed_at && !u.deleted_at && <a class="btn btn--solid" href={`/admin/reservations/nouvelle?cliente=${u.id}`}>Nouveau rendez-vous pour elle</a>}</p>
 {careAlerts.length > 0 && <p class="care-alerts" role="note">{careAlerts.map((a) => <span class="badge badge--alert">{a}</span>)}</p>}
 {u.removed_at && <p class="notice notice--error">Compte supprimé par l'institut le {day(u.removed_at)}. Il reste restaurable.</p>}
 {u.blocked_at && <p class="notice notice--error">Compte désactivé depuis le {day(u.blocked_at)}.</p>}
@@ -349,6 +349,8 @@ const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
   /* Dès 1200 px : identité et fiche à gauche, rendez-vous et séances à droite */
   @media (min-width:1200px){.cl-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.3fr)}.cl-col:first-child{grid-row:1}.cl-col:nth-child(2){grid-column:1;grid-row:2}.cl-col:last-child{grid-column:2;grid-row:1 / span 2}}
   @media (min-width:1600px){.cl-grid{grid-template-columns:minmax(0,.85fr) minmax(0,1.1fr) minmax(0,1.35fr)}.cl-col:nth-child(n){grid-column:auto;grid-row:auto}}
+  .fiche-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.75rem}
+  .fiche-top .btn{min-height:44px}
   .sheet-read{grid-template-columns:auto 1fr;margin-bottom:1rem}
   .tags{display:flex;flex-wrap:wrap;gap:.35rem}
   .note-text{white-space:pre-line}

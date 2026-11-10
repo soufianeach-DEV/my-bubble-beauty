@@ -1,57 +1,121 @@
 ---
 export const prerender = false;
-// Rendez-vous pris par téléphone ou WhatsApp : confirmé tout de suite, hors horaires et délais, jamais sur un autre rendez-vous
+// Rendez-vous pris par téléphone ou WhatsApp : confirmé tout de suite, jamais sur un autre rendez-vous.
+// Cliente choisie dans la liste (le rendez-vous rejoint sa fiche) ou « Nouvelle personne » sans compte.
+// Créneaux libres : même calcul que la réservation en ligne (slots) ; une autre heure reste possible, hors horaires avec « Ouvrir exceptionnellement ».
+// Sans JS : « Voir les créneaux libres » renvoie la saisie en POST (jamais l'e-mail d'une cliente dans l'URL) ; un créneau est un bouton d'envoi.
 import Admin from '../_layout.astro';
-import { staffId, byCategory, listServices, newBooking, readForm } from '../../../lib/server/admin.ts';
-import { todayBrussels } from '../../../lib/server/pricing.ts';
+import { staffId, byCategory, fmtDay, listServices, newBooking, readForm } from '../../../lib/server/admin.ts';
+import { clientLabel, giftClients } from '../../../lib/server/cadeaux.ts';
+import { isDay, todayBrussels } from '../../../lib/server/pricing.ts';
+import { slots } from '../../../lib/server/slots.ts';
 
 const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
 let error = '';
-// Valeurs gardées après un refus : seule l'heure est souvent à changer
+const sp = Astro.url.searchParams;
+const KEYS = ['service', 'day', 'client', 'name', 'phone', 'time'] as const;
+// Saisie gardée après un refus ou « Voir les créneaux libres » ; en GET, seule la cliente (?cliente=id) est préremplie
 let v: Record<string, string> = { day: todayBrussels() };
+const clients = await giftClients();
+// Depuis la fiche : « Nouveau rendez-vous pour elle » (?cliente=id)
+const pre = sp.get('cliente') ? clients.find((c) => String(c.id) === sp.get('cliente')) : undefined;
+if (pre && !v.client) v.client = clientLabel(pre);
 if (Astro.request.method === 'POST') {
   const form = await readForm(Astro.request);
   if (!form) return new Response(null, { status: 413 });
-  const r = await newBooking(me, form);
-  if (r.ok) return Astro.redirect(`/admin/agenda?jour=${r.day}&vue=jour&ok=cree#r-${r.id}`, 303);
-  error = r.error;
-  v = Object.fromEntries([...form].map(([k, x]) => [k, String(x)]));
-  Astro.response.status = 400;
+  // Un créneau cliqué fixe l'heure ; sinon l'heure saisie à la main
+  const slot = String(form.get('slot') ?? '');
+  if (slot) form.set('time', slot);
+  if (form.get('look') !== '1') {
+    const r = await newBooking(me, form);
+    if (r.ok) return Astro.redirect(`/admin/agenda?jour=${r.day}&vue=jour&ok=cree#r-${r.id}`, 303);
+    error = r.error;
+    Astro.response.status = 400;
+  }
+  v = Object.fromEntries(KEYS.map((k) => [k, String(form.get(k) ?? '').slice(0, 400)]));
+  if (!isDay(v.day)) v.day = todayBrussels();
 }
-const groups = byCategory((await listServices()).filter((s) => s.duration_min !== null)).filter((g) => g.items.length);
+const services = (await listServices()).filter((s) => s.duration_min !== null);
+const groups = byCategory(services).filter((g) => g.items.length);
+const svc = services.find((s) => String(s.id) === v.service);
+const free = svc && svc.active && isDay(v.day) ? await slots(Number(svc.id), v.day) : [];
+const guestOpen = !v.client && !!(v.name || v.phone);
 ---
 <Admin title="Nouveau rendez-vous">
-<p>Pour un rendez-vous pris par téléphone ou WhatsApp. Il est confirmé tout de suite, même en dehors des horaires d'ouverture. Seul un chevauchement avec un autre rendez-vous est refusé.</p>
+<p class="lead">Pour un rendez-vous pris par téléphone ou WhatsApp. Il est confirmé tout de suite. Un chevauchement avec un autre rendez-vous est toujours refusé.</p>
 {error && <p class="notice notice--error" role="alert">{error}</p>}
 {groups.length === 0 ? (
   <p class="notice">Aucune prestation n'a encore de durée. Complétez d'abord les durées dans <a href="/admin/prestations">Prestations</a>.</p>
 ) : (
-  <form class="form" method="post">
-    <div class="field">
-      <label for="service">Prestation</label>
-      <select id="service" name="service" required>
-        <option value="">Choisir…</option>
-        {groups.map((g) => (
-          <optgroup label={g.label}>{g.items.map((s) => <option value={s.id} selected={String(s.id) === v.service}>{s.name_fr} ({s.duration_min} min){!s.active && ' — non proposée en ligne'}</option>)}</optgroup>
-        ))}
-      </select>
+  <form class="nb" method="post" action="/admin/reservations/nouvelle">
+    <div class="nb-col">
+      <fieldset>
+        <legend>Cliente</legend>
+        <div class="field"><label for="client">Chercher une cliente (nom ou e-mail)</label>
+          <input id="client" name="client" list="clientes" maxlength="400" value={v.client} autocomplete="off" aria-describedby="client-hint">
+          <datalist id="clientes">{clients.map((c) => <option value={clientLabel(c)} />)}</datalist>
+          <p class="hint" id="client-hint">Le rendez-vous rejoint sa fiche, sa carte de fidélité et son historique.</p></div>
+        <details class="guest" open={guestOpen}>
+          <summary>Nouvelle personne, sans compte</summary>
+          <div class="field"><label for="name">Nom</label><input id="name" name="name" maxlength="100" autocomplete="off" value={v.name}></div>
+          <div class="field"><label for="phone">Téléphone (facultatif)</label>
+            <input id="phone" name="phone" type="tel" maxlength="30" autocomplete="off" value={v.phone} aria-describedby="phone-hint">
+            <span class="hint" id="phone-hint">Effacé automatiquement 3 ans après le rendez-vous.</span></div>
+          <p class="hint">Laissez « Chercher une cliente » vide pour une personne sans compte.</p>
+        </details>
+      </fieldset>
+      <fieldset>
+        <legend>Soin et date</legend>
+        <div class="field"><label for="service">Prestation</label>
+          <select id="service" name="service" required>
+            <option value="">Choisir…</option>
+            {groups.map((g) => (
+              <optgroup label={g.label}>{g.items.map((s) => <option value={s.id} selected={String(s.id) === v.service}>{s.name_fr} ({s.duration_min} min){!s.active && ' — non proposée en ligne'}</option>)}</optgroup>
+            ))}
+          </select></div>
+        <div class="field"><label for="day">Date</label><input id="day" name="day" type="date" value={v.day} required></div>
+        <button class="btn btn--ghost" type="submit" name="look" value="1" formnovalidate>Voir les créneaux libres</button>
+      </fieldset>
     </div>
-    <div class="field"><label for="day">Date</label><input id="day" name="day" type="date" value={v.day} required></div>
-    <div class="field"><label for="time">Heure de début (Bruxelles)</label><input id="time" name="time" type="time" value={v.time} required></div>
-    <div class="field"><label for="name">Nom de la cliente</label><input id="name" name="name" maxlength="100" autocomplete="off" value={v.name} required></div>
-    <div class="field">
-      <label for="phone">Téléphone (facultatif)</label>
-      <input id="phone" name="phone" type="tel" maxlength="30" autocomplete="off" value={v.phone} aria-describedby="phone-hint">
-      <span class="hint" id="phone-hint">Effacé automatiquement 3 ans après le rendez-vous.</span>
+    <div class="nb-col">
+      <fieldset>
+        <legend>Heure</legend>
+        {!svc ? <p class="hint">Choisissez une prestation et une date, puis « Voir les créneaux libres ».</p>
+          : !svc.active ? <p class="hint">Cette prestation n'est pas proposée en ligne : pas de créneaux calculés. Indiquez l'heure ci-dessous.</p>
+          : free.length === 0 ? <p class="hint">Aucun créneau libre le {fmtDay(v.day)} (fermé, complet, ou moins de 2 h d'avance). Indiquez une autre heure ci-dessous si besoin.</p>
+          : <>
+            <p class="hint">Créneaux libres le {fmtDay(v.day)} pour {svc.name_fr} ({svc.duration_min} min). Un clic enregistre le rendez-vous.</p>
+            <div class="slots">{free.map((s) => <button class="btn btn--ghost" type="submit" name="slot" value={s.label}>{s.label}</button>)}</div>
+          </>}
+        <details class="other" open={!!v.time || (!!svc && free.length === 0)}>
+          <summary>Autre heure</summary>
+          <div class="field"><label for="time">Heure de début (Bruxelles)</label><input id="time" name="time" type="time" value={v.time}></div>
+          <label class="check"><input type="checkbox" name="force"><span>Ouvrir exceptionnellement (jour fermé ou hors des heures d'ouverture)</span></label>
+          <button class="btn btn--solid" type="submit">Enregistrer le rendez-vous</button>
+        </details>
+      </fieldset>
     </div>
-    <label class="check"><input type="checkbox" name="force"><span>Ouvrir exceptionnellement (jour fermé ou hors des heures d'ouverture)</span></label>
-    <button class="btn btn--solid" type="submit">Enregistrer le rendez-vous</button>
   </form>
 )}
 </Admin>
 
 <style>
+  .lead{max-width:60rem}
+  .nb{display:grid;gap:1.25rem;align-items:start;max-width:72rem}
+  @media (min-width:1100px){.nb{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+  .nb-col{display:grid;gap:1.25rem;min-width:0}
+  fieldset{display:grid;gap:.85rem;margin:0;padding:1rem 1.25rem;border:1px solid var(--line-soft);border-radius:14px;min-width:0}
+  legend{font-weight:600;padding:0 .3rem}
+  .field{margin:0}
+  .field :is(input,select){width:100%}
+  fieldset > .btn{justify-self:start;min-height:44px}
+  details summary{cursor:pointer;min-height:44px;display:flex;align-items:center;color:var(--link);text-decoration:underline;text-underline-offset:.2em}
+  details[open] summary{margin-bottom:.5rem}
+  details{display:grid;gap:.75rem}
+  details > .btn{justify-self:start;min-height:44px}
+  .slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(5.5rem,1fr));gap:.5rem}
+  .slots .btn{min-height:44px;padding:.4rem .5rem;justify-content:center}
   .check{display:flex;align-items:center;gap:.5rem;min-height:44px}
   .check input{width:1.25rem;height:1.25rem;margin:0;accent-color:var(--accent)}
 </style>
