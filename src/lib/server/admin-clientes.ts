@@ -91,7 +91,8 @@ export async function listClients(q: string, filter: ClientFilter, page: number,
   return { rows: rows.filter((r) => !isAdminEmail(r.email)).slice(0, PAGE).map((r) => ({ ...r, reward: reward(r) })), more: rows.length > PAGE, loyalty };
 }
 
-export type ClientBooking = { id: number; starts_at: Date; ends_at: Date; service: string; status: string; no_show: boolean; late_minutes: number | null; paid_method: string | null; paid_cents: number | null; past: boolean; cancel_reason: string | null; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; moved: boolean; package: string | null };
+export type ClientBooking = { id: number; starts_at: Date; ends_at: Date; service: string; status: string; no_show: boolean; late_minutes: number | null; paid_method: string | null; paid_cents: number | null; past: boolean; cancel_reason: string | null; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; moved: boolean; package: string | null;
+  review_request_sent_at: Date | null; review_clicked_at: Date | null; review_found_at: Date | null; review_reminder_sent_at: Date | null };
 
 export async function clientDetail(id: number) {
   const [u] = await sql<{ id: number; name: string | null; email: string; phone: string | null; locale: string; created_at: Date; email_verified_at: Date | null; deleted_at: Date | null; blocked_at: Date | null; removed_at: Date | null; health_consent_at: Date | null; notes: string; role: string | null }[]>`
@@ -100,7 +101,8 @@ export async function clientDetail(id: number) {
   const [bookings, [stats], events] = await Promise.all([
     sql<ClientBooking[]>`
       SELECT b.id, b.starts_at, b.ends_at, s.name_fr AS service, b.status, b.no_show, b.late_minutes, b.paid_method, b.paid_cents, b.starts_at < now() AS past, b.cancel_reason,
-        b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.stripe_payment_intent IS NOT NULL AS paid, b.moved_at IS NOT NULL AS moved, k.label AS package
+        b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.stripe_payment_intent IS NOT NULL AS paid, b.moved_at IS NOT NULL AS moved, k.label AS package,
+        b.review_request_sent_at, b.review_clicked_at, b.review_found_at, b.review_reminder_sent_at
       FROM bookings b JOIN services s ON s.id = b.service_id LEFT JOIN packages k ON k.id = b.package_id
       WHERE b.user_id = ${id} AND (b.status <> 'expired' OR b.stripe_payment_intent IS NOT NULL)
       ORDER BY b.starts_at DESC`,

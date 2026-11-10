@@ -72,7 +72,7 @@ const otherHost = (req, path) => {
 };
 
 // Pages privées : noindex aussi dans l'en-tête, pour toute réponse (redirection vers la connexion comprise). Jamais ailleurs.
-const NOINDEX = /^\/(admin|api|(fr|nl|eng)\/(compte|reserver))(\/|$)/;
+const NOINDEX = /^\/(admin|api|avis|(fr|nl|eng)\/(compte|reserver))(\/|$)/;
 
 const server = http.createServer((req, res) => {
   const path = (req.url ?? '/').split('?')[0];

@@ -255,6 +255,12 @@ const canSell = !u.blocked_at && !u.removed_at && !u.deleted_at;
         {b.no_show ? 'Absente' : b.status === 'confirmed' && b.past ? 'Honoré' : STATUS[b.status]}
         {b.late_minutes && <><br><small>En retard : {b.late_minutes} min</small></>}
         {b.cancel_reason && <><br><small>{REASON[b.cancel_reason]}</small></>}
+        {b.review_request_sent_at && <><br><small class="review-state">Avis : {[
+          `mail envoyé le ${fmtDateTime(b.review_request_sent_at)}`,
+          b.review_clicked_at && `cliqué le ${fmtDateTime(b.review_clicked_at)}`,
+          b.review_found_at && `avis trouvé (${fmtDateTime(b.review_found_at)})`,
+          b.review_reminder_sent_at ? `relancée le ${fmtDateTime(b.review_reminder_sent_at)}` : (b.review_clicked_at || b.review_found_at) && 'pas de relance',
+        ].filter(Boolean).join(' · ')}</small></>}
         {due(b) > 0 && b.status !== 'confirmed' && <><br><small>Acompte à rendre</small></>}
       </td>
       <td>Prix {euros(b.price_cents - b.discount_cents)}{b.package && <><br><span class="badge">Forfait</span> <small>{b.package}</small></>}{b.deposit_cents > 0 && <><br>Acompte {euros(b.deposit_cents)}{b.paid ? ' payé' : ''}</>}{b.refunded_cents > 0 && <><br>Remboursé {euros(b.refunded_cents)}</>}</td>

@@ -22,6 +22,8 @@ const PUBLIC = new Set([
   '/api/moi',
   // Avis Google de l'Accueil, et tâches planifiées (protégées par TASKS_SECRET)
   '/api/avis',
+  // Lien suivi « Laisser un avis » des mails (jeton signé)
+  '/avis/[jeton]',
   '/api/taches',
 ]);
 // Seules routes ouvertes à l'équipe (admin, gestionnaire) avant le code TOTP : le code lui-même, et la déconnexion pour en sortir

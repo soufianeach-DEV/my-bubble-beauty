@@ -6,7 +6,7 @@ import { registerHooks } from 'node:module';
 
 const url = process.env.TEST_DATABASE_URL;
 const ENV = { SITE_URL: 'https://test.local', ADMIN_EMAIL: 'gerante@test.local', ADMIN_TOTP_SECRET: 'JBSWY3DPEHPK3PXP', PASSWORD_PEPPER: 'poivre-de-test-32-caracteres-min!',
-  GBP_CLIENT_ID: 'id', GBP_CLIENT_SECRET: 'secret', GBP_REFRESH_TOKEN: 'rt', GBP_LOCATION: 'accounts/1/locations/2' };
+  GBP_CLIENT_ID: 'id', GBP_CLIENT_SECRET: 'secret', GBP_REFRESH_TOKEN: 'rt', GBP_LOCATION: 'accounts/1/locations/2', GOOGLE_REVIEW_URL: 'https://g.page/r/abc/review' };
 // Le module astro:env simulé lit process.env une seule fois : la base est connue avant le premier import
 Object.assign(process.env, ENV, { DATABASE_URL: url ?? 'postgres://inutilisee@127.0.0.1:1/x' });
 registerHooks({
@@ -25,6 +25,27 @@ test('mail d’avis : lien Google et lien de désinscription', async () => {
     assert.equal(m.unsubscribe, 'https://test.local/fr/compte/avis-desinscription?u=1&s=x');
     assert.ok(m.html.includes('avis-desinscription?u=1&#38;s=x'), 'lien échappé dans le HTML');
   }
+});
+
+test('jeton du lien suivi : signé, propre au rendez-vous', async () => {
+  const { reviewToken, clickUrl, checkReviewToken } = await import('./avis.ts');
+  const t = reviewToken(42);
+  assert.equal(checkReviewToken(t), 42);
+  assert.equal(clickUrl(42), `https://test.local/avis/${t}`);
+  assert.equal(checkReviewToken(`43.${t.split('.')[1]}`), null, 'signature d’un autre rendez-vous');
+  for (const bad of [undefined, '', '42', '42.', `42.${'A'.repeat(22)}`, `${t}x`, '-1.abc']) assert.equal(checkReviewToken(bad), null, String(bad));
+});
+
+test('correspondance de nom : sans accents ni casse, prénom et nom exigés', async () => {
+  const { sameName } = await import('./avis.ts');
+  assert.ok(sameName('Hélène Dubois', 'helene DUBOIS'));
+  assert.ok(sameName('Hélène Dubois', 'Dubois Hélène'), 'ordre libre');
+  assert.ok(sameName('Anne-Marie Van den Berg', 'Anne Marie van den Berg'));
+  assert.ok(!sameName('Hélène Dubois', 'Hélène'), 'prénom seul : ambigu');
+  assert.ok(!sameName('Hélène Dubois', 'Hélène D.'), 'initiale : ambigu');
+  assert.ok(!sameName('Hélène Dubois', 'Google'), 'anonyme');
+  assert.ok(!sameName(null, 'Hélène Dubois'));
+  assert.ok(!sameName('Hélène Dubois', 'Hélène Dupont'));
 });
 
 test('avis sur une vraie base', { skip: !url && 'TEST_DATABASE_URL absente' }, async () => {
@@ -91,6 +112,42 @@ test('avis sur une vraie base', { skip: !url && 'TEST_DATABASE_URL absente' }, a
     const encore: string[] = [];
     await avis.sendReviewRequests(URL_AVIS, async (to) => (encore.push(to), true));
     assert.deepEqual(encore.filter(mine), [], 'deux mails au plus par rendez-vous');
+
+    // Clic sur le lien suivi : redirection vers Google, clic noté une fois, pas de relance
+    const { GET } = await import('../../pages/avis/[jeton].ts');
+    const L = tag.replace(/\d/g, (d) => 'bcdfghjklm'[Number(d)]);
+    const sentDaysAgo = async (n: string, endedH: number, name?: string) => {
+      const u = await mk(n);
+      if (name) await sql`UPDATE users SET name = ${name} WHERE id = ${u}`;
+      const b = await book(u, endedH * H);
+      await sql`UPDATE bookings SET review_request_sent_at = now() - interval '22 hours' WHERE id = ${b}`;
+      return b;
+    };
+    const bClic = await sentDaysAgo('clic', 51);
+    const res = await GET({ params: { jeton: avis.reviewToken(bClic) } } as never);
+    assert.equal(res.status, 302);
+    assert.equal(res.headers.get('location'), 'https://g.page/r/abc/review');
+    const [{ review_clicked_at: firstClick }] = await sql`SELECT review_clicked_at FROM bookings WHERE id = ${bClic}`;
+    assert.ok(firstClick, 'clic noté');
+    await GET({ params: { jeton: avis.reviewToken(bClic) } } as never);
+    assert.deepEqual((await sql`SELECT review_clicked_at FROM bookings WHERE id = ${bClic}`)[0].review_clicked_at, firstClick, 'premier clic gardé');
+    const faux = await GET({ params: { jeton: `${bClic}.${'A'.repeat(22)}` } } as never);
+    assert.equal(faux.status, 302, 'jeton faux : la cliente arrive quand même sur Google');
+
+    // Avis Google au nom de la cliente, publié après le rendez-vous : marqué, pas de relance. Homonymes : rien
+    const bTrouvee = await sentDaysAgo('trouvee', 52, `Zoé Lettres${L}`);
+    const bHomo = await sentDaysAgo('homonyme', 53, `Inès Homonyme${L}`);
+    await mk('homonyme-bis').then((id) => sql`UPDATE users SET name = ${`Ines Homonyme${L}`} WHERE id = ${id}`);
+    await sql`INSERT INTO google_reviews (review_id, author, rating, comment, created_at, updated_at) VALUES
+      (${`t-${tag}`}, ${`zoe LETTRES${L}`}, 5, 'Bien', now() - interval '1 hour', now()),
+      (${`h-${tag}`}, ${`Inès Homonyme${L}`}, 4, 'Bien', now() - interval '1 hour', now()),
+      (${`v-${tag}`}, ${`Zoé Lettres${L}`}, 5, 'Avant le rendez-vous', now() - interval '20 days', now())`;
+    assert.equal(await avis.matchReviews(), 1);
+    assert.deepEqual((await sql`SELECT review_found_id FROM bookings WHERE id IN (${bTrouvee}, ${bHomo}) ORDER BY id`).map((r) => r.review_found_id), [`t-${tag}`, null]);
+    assert.equal(await avis.matchReviews(), 0, 'un avis ne sert qu’une fois');
+    const apres: string[] = [];
+    await avis.sendReviewRequests(URL_AVIS, async (to) => (apres.push(to), true));
+    assert.deepEqual(apres.filter(mine).sort(), [`${tag}homonyme@test.local`], 'relance seulement sans clic ni avis trouvé');
 
     // Lien de désinscription : signé, propre à la cliente
     const link = new URL(got[0].text.match(/https:\/\/test\.local\/nl\/compte\/avis-desinscription\S+/)![0]);

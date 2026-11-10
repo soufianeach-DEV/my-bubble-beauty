@@ -21,6 +21,28 @@ export function checkUnsubscribe(u: string | null, s: string | null): number | n
   return got.length === want.length && timingSafeEqual(got, want) ? id : null;
 }
 
+// Lien « Laisser un avis » du mail : passe par /avis/<jeton> (un jeton signé par rendez-vous) qui note le clic puis renvoie vers
+// Google. Un clic évite la relance. Limite : un antivirus de messagerie qui ouvre les liens compte comme un clic.
+const signClick = (bookingId: number) => createHmac('sha256', PASSWORD_PEPPER).update(`avis-clic:${bookingId}`).digest('base64url').slice(0, 22);
+export const reviewToken = (bookingId: number) => `${bookingId}.${signClick(bookingId)}`;
+export const clickUrl = (bookingId: number) => `${SITE_URL}/avis/${reviewToken(bookingId)}`;
+
+export function checkReviewToken(token: string | undefined): number | null {
+  const m = /^(\d{1,15})\.([A-Za-z0-9_-]{22})$/.exec(token ?? '');
+  if (!m) return null;
+  const id = Number(m[1]);
+  const want = Buffer.from(signClick(id));
+  return timingSafeEqual(Buffer.from(m[2]), want) ? id : null;
+}
+
+// Premier clic seulement ; true si le jeton est valable
+export async function recordClick(token: string | undefined): Promise<boolean> {
+  const id = checkReviewToken(token);
+  if (!id) return false;
+  await sql`UPDATE bookings SET review_clicked_at = now() WHERE id = ${id} AND review_clicked_at IS NULL`;
+  return true;
+}
+
 export async function optOutReviews(userId: number): Promise<void> {
   await sql`UPDATE users SET review_mail_optout_at = now() WHERE id = ${userId} AND review_mail_optout_at IS NULL`;
   log('review_mail_optout', { user_id: userId });
@@ -29,8 +51,7 @@ export async function optOutReviews(userId: number): Promise<void> {
 // Rendez-vous honoré (confirmé, non absente) : demande 24 h après la fin, relance 48 h après si la demande est partie.
 // Toutes les clientes reçoivent le même mail, sans filtre sur la satisfaction (Google interdit de ne solliciter que les avis positifs).
 // Désinscription : coupe la demande et la relance. Plusieurs rendez-vous à moins de 24 h d'écart : un seul mail (et une relance).
-// La relance ne peut pas être évitée pour une cliente qui a déjà laissé son avis : Google ne donne ni e-mail ni identifiant
-// de compte, seulement le nom affiché, trop peu fiable pour faire le lien.
+// Pas de relance si la cliente a cliqué sur le lien du mail, ou si un avis à son nom a été trouvé (matchReviews).
 export async function sendReviewRequests(reviewUrl: string | undefined, send: Sender = sendMailNow): Promise<number> {
   if (!reviewUrl) return 0;
   type Row = { id: number; user_id: number; email: string; locale: Lang };
@@ -47,11 +68,11 @@ export async function sendReviewRequests(reviewUrl: string | undefined, send: Se
     SELECT b.id, b.user_id, u.email, u.locale
     FROM bookings b JOIN users u ON u.id = b.user_id
     WHERE b.status = 'confirmed' AND NOT b.no_show AND b.review_reminder_sent_at IS NULL
-      AND b.review_request_sent_at <= now() - interval '20 hours'
+      AND b.review_request_sent_at <= now() - interval '20 hours' AND b.review_clicked_at IS NULL AND b.review_found_at IS NULL
       AND u.blocked_at IS NULL AND u.removed_at IS NULL AND u.deleted_at IS NULL AND u.review_mail_optout_at IS NULL
       AND b.ends_at <= now() - interval '48 hours' AND b.ends_at > now() - interval '5 days'`;
-  return (await deliver(first.map((r) => ({ id: r.id, email: r.email, mail: reviewRequestMail(r.locale, reviewUrl, unsubscribeUrl(r.locale, r.user_id)) })), 'review_request_sent_at', send))
-    + (await deliver(again.map((r) => ({ id: r.id, email: r.email, mail: reviewReminderMail(r.locale, reviewUrl, unsubscribeUrl(r.locale, r.user_id)) })), 'review_reminder_sent_at', send));
+  return (await deliver(first.map((r) => ({ id: r.id, email: r.email, mail: reviewRequestMail(r.locale, clickUrl(r.id), unsubscribeUrl(r.locale, r.user_id)) })), 'review_request_sent_at', send))
+    + (await deliver(again.map((r) => ({ id: r.id, email: r.email, mail: reviewReminderMail(r.locale, clickUrl(r.id), unsubscribeUrl(r.locale, r.user_id)) })), 'review_reminder_sent_at', send));
 }
 
 type GbpReview = { reviewId: string; reviewer?: { displayName?: string; isAnonymous?: boolean }; starRating?: string; comment?: string; createTime: string; updateTime: string };
@@ -103,12 +124,49 @@ export async function refreshGoogleReviews(fetchFn: typeof fetch = fetch): Promi
       const value = { average: meta.averageRating ?? null, total: meta.totalReviewCount ?? rows.length, synced_at: new Date().toISOString() };
       await tx`INSERT INTO settings (key, value) VALUES ('google_reviews', ${tx.json(value)}) ON CONFLICT (key) DO UPDATE SET value = excluded.value, updated_at = now()`;
     });
-    log('google_reviews_synced', { count: rows.length });
+    const found = await matchReviews();
+    log('google_reviews_synced', { count: rows.length, matched: found });
     return rows.length;
   } catch (e) {
     log('google_reviews_failed', { error: String(e) });
     return null;
   }
+}
+
+// Nom comparé sans accents, casse ni ponctuation, mots dans n'importe quel ordre. Prénom et nom exigés des deux côtés :
+// « Sarah », « Sarah B. » ou un avis anonyme ne correspondent à rien.
+const words = (s: string) => s.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().split(/[^\p{L}]+/u).filter(Boolean).sort();
+export function sameName(clientName: string | null, author: string): boolean {
+  const a = words(author);
+  const c = words(clientName ?? '');
+  return a.length >= 2 && a.every((w) => w.length >= 2) && a.join(' ') === c.join(' ');
+}
+
+// Avis publié après un rendez-vous dont la demande est partie (30 derniers jours) : rattaché au rendez-vous si le nom affiché
+// correspond à une seule cliente de toute la base. Homonymes ou plusieurs rendez-vous possibles : rien n'est marqué.
+export async function matchReviews(): Promise<number> {
+  const [reviews, users, bookings] = await Promise.all([
+    sql<{ review_id: string; author: string; created_at: Date }[]>`
+      SELECT review_id, author, created_at FROM google_reviews r WHERE created_at > now() - interval '35 days'
+        AND NOT EXISTS (SELECT 1 FROM bookings b WHERE b.review_found_id = r.review_id)`,
+    sql<{ id: number; name: string | null }[]>`SELECT id, name FROM users WHERE name IS NOT NULL`,
+    sql<{ id: number; user_id: number; ends_at: Date }[]>`
+      SELECT id, user_id, ends_at FROM bookings WHERE review_request_sent_at IS NOT NULL AND review_found_at IS NULL
+        AND ends_at > now() - interval '30 days' ORDER BY ends_at DESC`,
+  ]);
+  let found = 0;
+  for (const r of reviews) {
+    const who = users.filter((u) => sameName(u.name, r.author));
+    if (who.length !== 1) continue;
+    const b = bookings.find((x) => x.user_id === who[0].id && x.ends_at < r.created_at);
+    if (!b) continue;
+    const done = await sql`UPDATE bookings SET review_found_at = ${r.created_at}, review_found_id = ${r.review_id} WHERE id = ${b.id} AND review_found_at IS NULL`;
+    if (done.count) {
+      found++;
+      bookings.splice(bookings.indexOf(b), 1);
+    }
+  }
+  return found;
 }
 
 // Rafraîchi au plus toutes les 2 heures, quel que soit le nombre d'appels (minuterie interne et timer du VPS)

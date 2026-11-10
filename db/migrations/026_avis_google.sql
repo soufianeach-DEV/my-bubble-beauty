@@ -1,6 +1,8 @@
 -- Demande d'avis après la prestation (J+1, relance J+2, désinscription possible) et avis Google repris sur l'Accueil.
 -- Retour arrière : db/migrations/annuler/026_avis_google.sql
-ALTER TABLE bookings ADD COLUMN review_request_sent_at timestamptz, ADD COLUMN review_reminder_sent_at timestamptz;
+-- Signaux qui évitent la relance : clic sur le lien suivi du mail, avis Google au nom de la cliente publié après le rendez-vous
+ALTER TABLE bookings ADD COLUMN review_request_sent_at timestamptz, ADD COLUMN review_reminder_sent_at timestamptz,
+  ADD COLUMN review_clicked_at timestamptz, ADD COLUMN review_found_at timestamptz, ADD COLUMN review_found_id text;
 ALTER TABLE users ADD COLUMN review_mail_optout_at timestamptz;
 
 -- Copie des avis de la fiche, lue par l'API Business Profile (accès propriétaire) ; un avis retiré chez Google disparaît ici au rafraîchissement suivant.
