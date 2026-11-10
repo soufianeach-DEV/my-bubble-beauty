@@ -118,6 +118,17 @@ export async function alertsFor(ids: number[]): Promise<Map<number, string[]>> {
   return new Map(rows.map((r) => [r.id, alertsOf(r.care_profile ?? {}, r.consent ? openHealth(r.health_profile) : null)]));
 }
 
+// Feuille du jour imprimée : badges d'alerte et contre-indications ; données de santé seulement avec l'accord de la cliente
+export async function printNotesFor(ids: number[]): Promise<Map<number, { alerts: string[]; contra: string }>> {
+  if (!ids.length) return new Map();
+  const rows = await sql<{ id: number; care_profile: Care; health_profile: Buffer | null; consent: boolean }[]>`
+    SELECT id, care_profile, health_profile, health_consent_at IS NOT NULL AS consent FROM users WHERE id = ANY(${ids}::bigint[])`;
+  return new Map(rows.map((r) => {
+    const health = r.consent ? openHealth(r.health_profile) : null;
+    return [Number(r.id), { alerts: alertsOf(r.care_profile ?? {}, health), contra: health?.contra ?? '' }];
+  }));
+}
+
 // Export RGPD : libellés lisibles
 export function readableProfile(care: Care, health: Health | null) {
   const lbl = (o: Record<string, string>, v?: string) => (v ? o[v] ?? v : undefined);

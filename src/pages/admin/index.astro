@@ -65,7 +65,7 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
 <Admin title="Accueil">
 {delError && <p class="notice notice--error" role="alert">{delError}</p>}
 {!delError && Astro.url.searchParams.get('ok') === 'supprime' && <p class="notice" role="status">Rendez-vous supprimé.</p>}
-<Fragment slot="actions"><a class="btn btn--solid" href="/admin/reservations/nouvelle">Saisir un rendez-vous</a></Fragment>
+<span slot="actions" class="head-acts"><a class="btn btn--ghost" href={`/admin/imprimer?jour=${today}`}>Imprimer la journée</a><a class="btn btn--solid" href="/admin/reservations/nouvelle">Saisir un rendez-vous</a></span>
 <script is:inline src={`/assets/js/compte-a-rebours.js?v=${JS_VERSION}`} defer></script>
 
 {/* 1. La journée */}
@@ -193,6 +193,7 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
 </Admin>
 
 <style>
+  .head-acts{display:flex;flex-wrap:wrap;gap:.5rem}
   h2{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem;margin:0 0 1rem;font-size:1.35rem}
   .more{margin-left:auto;font:500 .875rem var(--f-text)}
   .none,.hint{margin:0;color:var(--text-soft);font-size:.9375rem}

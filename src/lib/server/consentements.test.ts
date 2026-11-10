@@ -287,6 +287,9 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     assert.ok(!Buffer.from(raw.health_profile).includes(Buffer.from('latex')));
     const alerts = (await prof.alertsFor([sheet])).get(sheet);
     assert.deepEqual(alerts, ['Ne pas toucher : Ventre, Pieds', 'Allergie : Latex, Cire au miel', 'Prévenir avant chaque contact']);
+    // Feuille du jour imprimée : mêmes alertes, contre-indications avec l'accord seulement (vérifié plus bas après retrait)
+    assert.ok((await prof.saveProfile(other, sheet, fd({ ...base, allergies: ['latex', 'autre'], allergies_other: 'Cire au miel', skin: ['sensible'], contra: 'Rétinoïdes' }))).ok);
+    assert.deepEqual((await prof.printNotesFor([sheet])).get(Number(sheet)), { alerts, contra: 'Rétinoïdes' });
     const ex = await rgpd.exportData(sheet, '127.0.0.1');
     assert.deepEqual(ex.account.care_sheet.sante.allergies, ['Latex', 'Autre']);
     assert.equal(ex.account.care_sheet.zones_et_toucher.toucher, 'Prévenir avant chaque contact');
@@ -296,6 +299,7 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     assert.equal(read.health, null);
     assert.equal((await sql`SELECT health_profile FROM users WHERE id = ${sheet}`)[0].health_profile, null);
     assert.equal(read.care.touch, 'prevenir');
+    assert.deepEqual((await prof.printNotesFor([sheet])).get(Number(sheet)), { alerts: ['Ne pas toucher : Ventre, Pieds', 'Prévenir avant chaque contact'], contra: '' }, 'sans accord : ni allergies ni contre-indications sur la feuille');
   } finally {
     await sql`DELETE FROM bookings WHERE service_id IN (SELECT id FROM services WHERE slug IN (${`laser-${tag}`}, ${`blanchiment-des-dents-${tag}`}))`;
     await sql`DELETE FROM services WHERE slug IN (${`laser-${tag}`}, ${`blanchiment-des-dents-${tag}`})`;

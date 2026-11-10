@@ -1,0 +1,81 @@
+---
+export const prerender = false;
+// Planning du jour à imprimer (A4) : heure, cliente, téléphone, soin, à savoir (zones, allergies, toucher, contre-indications), retard.
+// Données de santé seulement si la cliente a donné son accord (printNotesFor). Lecture seule ; l'impression passe par le navigateur.
+import Admin from './_layout.astro';
+import { staffId, fmtDay, fmtTime } from '../../lib/server/admin.ts';
+import { adminAgenda } from '../../lib/server/booking.ts';
+import { printNotesFor } from '../../lib/server/profil.ts';
+import { isDay, todayBrussels } from '../../lib/server/pricing.ts';
+import { JS_VERSION } from '../../lib/site';
+
+const me = staffId(Astro.locals);
+if (!me) return new Response(null, { status: 404 });
+const asked = Astro.url.searchParams.get('jour') ?? '';
+const day = isDay(asked) ? asked : todayBrussels();
+// Annulés et paiements expirés : hors de la feuille ; les absences restent, barrées
+const rows = (await adminAgenda(day, 1)).filter((r) => r.status === 'confirmed' || r.status === 'pending_payment');
+const notes = await printNotesFor([...new Set(rows.flatMap((r) => (r.user_id ? [Number(r.user_id)] : [])))]);
+const printedAt = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', dateStyle: 'short', timeStyle: 'short' }).format(new Date());
+---
+<Admin title={`Planning du ${fmtDay(day)}`}>
+<script is:inline src={`/assets/js/imprimer.js?v=${JS_VERSION}`} defer></script>
+<div class="noprint bar">
+  <a href={`/admin/agenda?jour=${day}&vue=jour`}>← Agenda du jour</a>
+  <button class="btn btn--solid" type="button" data-print>Imprimer</button>
+  <span class="hint">Ou Ctrl+P. Feuille A4, données de santé seulement avec l'accord de la cliente.</span>
+</div>
+<section class="sheet" aria-label={`Planning du ${fmtDay(day)}`}>
+  <p class="sheet-head"><strong>My Bubble Beauty</strong> · {fmtDay(day)} · {rows.length} rendez-vous <small>imprimé le {printedAt}</small></p>
+  {rows.length === 0 ? <p>Aucun rendez-vous ce jour-là.</p> : (
+  <table>
+    <thead><tr><th scope="col">Heure</th><th scope="col">Cliente</th><th scope="col">Soin</th><th scope="col">À savoir</th></tr></thead>
+    <tbody>{rows.map((r) => {
+      const n = r.user_id ? notes.get(Number(r.user_id)) : undefined;
+      return (
+        <tr class:list={{ off: r.no_show }}>
+          <td class="time">{fmtTime(r.starts_at)}<small>{fmtTime(r.ends_at)}</small></td>
+          <td><strong>{r.erased ? 'Compte supprimé' : r.name ?? '—'}</strong>{r.phone && <small>{r.phone}</small>}{r.guest && <small>sans compte</small>}</td>
+          <td>{r.service}{r.no_show && <small>Absente</small>}{r.late_minutes && <small>Arrivée en retard : {r.late_minutes} min</small>}{r.status === 'pending_payment' && <small>Paiement en cours</small>}</td>
+          <td>{n && (n.alerts.length || n.contra) ? <ul>{n.alerts.map((a) => <li>{a}</li>)}{n.contra && <li>Contre-indications : {n.contra}</li>}</ul> : '—'}</td>
+        </tr>
+      );
+    })}</tbody>
+  </table>)}
+</section>
+</Admin>
+
+<style>
+  .bar{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem 1rem;margin:0 0 1.25rem}
+  .bar .btn{min-height:44px}
+  /* Feuille claire même en thème sombre : on voit à l'écran ce qui sortira de l'imprimante */
+  .sheet{max-width:60rem;padding:1.25rem 1.5rem;border-radius:12px;background:#fff;color:#222;border:1px solid var(--line-soft)}
+  .sheet :is(p,td,th,strong,small,li){color:#222}
+  .sheet-head{margin:0 0 .75rem;font-size:1rem}
+  .sheet-head small{float:right;color:#666}
+  table{width:100%;border-collapse:collapse;font-size:.9375rem}
+  th{text-align:left;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:#555;border-bottom:2px solid #333;padding:.35rem .5rem}
+  td{vertical-align:top;padding:.5rem;border-bottom:1px solid #bbb;overflow-wrap:anywhere}
+  td small{display:block;color:#555}
+  .time{white-space:nowrap;font-weight:600}
+  td ul{margin:0;padding-left:1rem}
+  .off td{text-decoration:line-through;color:#777}
+  /* Téléphone : une carte par rendez-vous */
+  @media (max-width:599px){
+    .sheet{padding:1rem}
+    thead{display:none}
+    table,tbody,tr,td{display:block}
+    tr{padding:.5rem 0;border-bottom:1px solid #bbb}
+    td{border:0;padding:.15rem 0}
+  }
+  @media print{
+    @page{size:A4;margin:12mm}
+    :global(.admin-side),:global(.admin-top),:global(.admin-head),.noprint{display:none !important}
+    /* La grille du layout (barre latérale + contenu) doit tomber, sinon le contenu reste dans la colonne de 15rem */
+    :global(.admin-shell article.admin){display:block !important;background:#fff !important}
+    :global(body){background:#fff}
+    .sheet{max-width:none;padding:0;border:0;border-radius:0}
+    thead{display:table-header-group}
+    tr{break-inside:avoid}
+  }
+</style>

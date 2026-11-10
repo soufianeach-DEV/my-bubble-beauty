@@ -61,7 +61,7 @@ const TONE = { confirmed: 'ok', pending_payment: 'wait', cancelled: 'off', expir
 const due = (r: (typeof rows)[number]) => (r.paid ? r.deposit_cents - r.refunded_cents : 0);
 ---
 <Admin title="Agenda">
-<a slot="actions" class="btn btn--solid" href="/admin/reservations/nouvelle">Saisir un rendez-vous</a>
+<span slot="actions" class="head-acts">{vue === 'jour' && <a class="btn btn--ghost" href={`/admin/imprimer?jour=${jour}`}>Imprimer la journée</a>}<a class="btn btn--solid" href="/admin/reservations/nouvelle">Saisir un rendez-vous</a></span>
 {done && <p class="notice" role="status">{done}</p>}
 {error && <p class="notice notice--error" role="alert">{error}</p>}
 {(hidden > 0 || showCancelled) && <p class="hint">{showCancelled ? <a href={link(jour)}>Masquer les rendez-vous annulés</a> : <a href={`${link(jour)}&annules=1`}>Afficher les rendez-vous annulés ({hidden})</a>}</p>}
@@ -184,6 +184,7 @@ const due = (r: (typeof rows)[number]) => (r.paid ? r.deposit_cents - r.refunded
 </Admin>
 
 <style>
+  .head-acts{display:flex;flex-wrap:wrap;gap:.5rem}
   .toolbar{display:flex;flex-wrap:wrap;gap:1rem 1.5rem;align-items:flex-end;justify-content:space-between;margin:0 0 2rem;padding:1rem;border:1px solid var(--line-soft);border-radius:16px;background:var(--bg)}
   /* Trois liens collés en une seule pastille : se lit comme une navigation, pas comme trois actions */
   .pager{display:flex;flex-wrap:wrap;border:1px solid var(--line-soft);border-radius:999px;overflow:hidden}
