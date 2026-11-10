@@ -129,9 +129,33 @@ Persistent=true
 [Install]
 WantedBy=timers.target
 EOF
+# Tâches planifiées du site (rappels de la veille, demandes d'avis, copie des avis Google) toutes les 15 minutes.
+# Le secret passe par l'entrée standard de curl, jamais par la ligne de commande (visible dans ps). Sans TASKS_SECRET : rien.
+cat > /etc/systemd/system/mybubble-taches.service <<'EOF'
+[Unit]
+Description=Tâches planifiées de My Bubble (rappels, avis)
+After=mybubble.service
+[Service]
+Type=oneshot
+User=mybubble
+EnvironmentFile=/etc/mybubble/env
+# $$ : systemd n'y substitue rien, le shell lit la variable lui-même (sinon le secret figurerait dans la ligne de commande)
+ExecStart=/bin/sh -c '[ -n "$$TASKS_SECRET" ] || exit 0; printf "Authorization: Bearer %%s" "$$TASKS_SECRET" | curl -fsS --max-time 300 -X POST -H @- http://127.0.0.1:10000/api/taches'
+EOF
+cat > /etc/systemd/system/mybubble-taches.timer <<'EOF'
+[Unit]
+Description=Tâches de My Bubble toutes les 15 minutes
+[Timer]
+OnCalendar=*:0/15
+RandomizedDelaySec=60
+Persistent=true
+[Install]
+WantedBy=timers.target
+EOF
 systemctl daemon-reload
 systemctl enable mybubble.service
 systemctl enable --now mybubble-backup.timer
+systemctl enable --now mybubble-taches.timer
 systemctl reload caddy
 
 echo

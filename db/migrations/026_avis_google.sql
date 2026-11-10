@@ -1,0 +1,18 @@
+-- Mail d'avis après la prestation (un seul par rendez-vous, désinscription possible) et avis Google repris sur l'Accueil.
+-- Retour arrière : db/migrations/annuler/026_avis_google.sql
+ALTER TABLE bookings ADD COLUMN review_request_sent_at timestamptz;
+ALTER TABLE users ADD COLUMN review_mail_optout_at timestamptz;
+
+-- Copie des avis de la fiche, lue par l'API Business Profile (accès propriétaire) ; un avis retiré chez Google disparaît ici au rafraîchissement suivant.
+-- Ni photo ni lien de profil : le nom affiché chez Google, la note, le texte et la date.
+CREATE TABLE google_reviews (
+  review_id text PRIMARY KEY,
+  author text NOT NULL,
+  rating smallint NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  comment text NOT NULL DEFAULT '',
+  created_at timestamptz NOT NULL,
+  updated_at timestamptz NOT NULL,
+  fetched_at timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE google_reviews ENABLE ROW LEVEL SECURITY;
+CREATE INDEX google_reviews_recent_idx ON google_reviews (created_at DESC);

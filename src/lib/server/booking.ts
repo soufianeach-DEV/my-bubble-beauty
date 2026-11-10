@@ -6,7 +6,7 @@ import type { Lang } from '../site.ts';
 import { sql } from './db.ts';
 import { journal } from './journal.ts';
 import { log } from './log.ts';
-import { bookingCancelledMail, bookingConfirmedMail, bookingMovedMail, bookingReminderMail, aftercareMail, sendMail } from './mail.ts';
+import { bookingCancelledMail, bookingConfirmedMail, bookingMovedMail, bookingReminderMail, aftercareMail, sendMail, sendMailNow, type BookingMail, type Mail } from './mail.ts';
 import { amounts, isDay, promoProblem, type Promo, type PromoProblem } from './pricing.ts';
 import { blocked, hit, promoDone, promoTry } from './rate.ts';
 import { checkGift, GIFT_CODE } from './cadeaux.ts';
@@ -38,12 +38,12 @@ const expireAtStripe = (ids: string[]) => {
 };
 
 // E-mail dans la langue de la cliente (envoyé hors requête : webhook, annulation par l'admin) ; rien pour une invitée
-function notify(bookingId: number, kind: 'confirmed' | 'cancelled' | 'moved' | 'reminder', refundCents = 0) {
+function notify(bookingId: number, kind: 'confirmed' | 'cancelled' | 'moved', refundCents = 0) {
   sql<{ email: string; locale: Lang; service: string; starts_at: Date; price_cents: number; discount_cents: number; deposit_cents: number }[]>`
     SELECT u.email, u.locale, CASE u.locale WHEN 'nl' THEN s.name_nl WHEN 'en' THEN s.name_en ELSE s.name_fr END AS service,
       b.starts_at, b.price_cents, b.discount_cents, b.deposit_cents
     FROM bookings b JOIN users u ON u.id = b.user_id JOIN services s ON s.id = b.service_id WHERE b.id = ${bookingId}`
-    .then(([b]) => b && sendMail(b.email, kind === 'confirmed' ? bookingConfirmedMail(b.locale, b) : kind === 'moved' ? bookingMovedMail(b.locale, b) : kind === 'reminder' ? bookingReminderMail(b.locale, b) : bookingCancelledMail(b.locale, b, refundCents)))
+    .then(([b]) => b && sendMail(b.email, kind === 'confirmed' ? bookingConfirmedMail(b.locale, b) : kind === 'moved' ? bookingMovedMail(b.locale, b) : bookingCancelledMail(b.locale, b, refundCents)))
     .catch((e) => log('mail_failed', { kind, booking_id: bookingId, error: String(e) }));
 }
 
@@ -491,29 +491,43 @@ export async function deleteBooking(id: number, notifyClient: boolean): Promise<
   return !!row;
 }
 
-// Blanchiment dentaire terminé (et non marqué absente) : les recommandations de l'institut par e-mail, une seule fois.
-// Fenêtre d'un jour : un rendez-vous ancien, saisi après coup, ne déclenche rien.
-export async function sendAftercare(): Promise<number> {
-  const rows = await sql<{ email: string; locale: Lang }[]>`
-    UPDATE bookings b SET aftercare_sent_at = now() FROM users u, services s
-    WHERE u.id = b.user_id AND s.id = b.service_id AND s.slug LIKE 'blanchiment-des-dents%'
-      AND b.status = 'confirmed' AND NOT b.no_show AND b.aftercare_sent_at IS NULL
-      AND u.blocked_at IS NULL AND u.removed_at IS NULL
-      AND b.ends_at <= now() AND b.ends_at > now() - interval '1 day'
-    RETURNING u.email, u.locale`;
-  for (const r of rows) sendMail(r.email, aftercareMail(r.locale));
-  return rows.length;
+export type Sender = (to: string, mail: Mail) => Promise<boolean>;
+
+// Une ligne n'est marquée envoyée qu'une fois le mail accepté par Resend : un refus (domaine non vérifié, panne) la laisse
+// au passage suivant, dans la fenêtre de la requête. Appelé sous le verrou des tâches (jobs.ts) : pas de double envoi.
+export async function deliver(rows: { id: number; email: string; mail: Mail }[], column: 'reminder_sent_at' | 'aftercare_sent_at' | 'review_request_sent_at', send: Sender): Promise<number> {
+  let sent = 0;
+  for (const r of rows) {
+    if (!(await send(r.email, r.mail))) continue;
+    await sql`UPDATE bookings SET ${sql(column)} = now() WHERE id = ${r.id} AND ${sql(column)} IS NULL`;
+    sent++;
+  }
+  return sent;
 }
 
-export async function sendReminders(): Promise<number> {
-  const rows = await sql<{ id: number }[]>`
-    UPDATE bookings SET reminder_sent_at = now()
-    WHERE status = 'confirmed' AND user_id IS NOT NULL AND reminder_sent_at IS NULL
+// Blanchiment dentaire terminé (et non marqué absente) : les recommandations de l'institut par e-mail, une seule fois.
+// Fenêtre d'un jour : un rendez-vous ancien, saisi après coup, ne déclenche rien.
+export async function sendAftercare(send: Sender = sendMailNow): Promise<number> {
+  const rows = await sql<{ id: number; email: string; locale: Lang }[]>`
+    SELECT b.id, u.email, u.locale FROM bookings b JOIN users u ON u.id = b.user_id JOIN services s ON s.id = b.service_id
+    WHERE s.slug LIKE 'blanchiment-des-dents%'
+      AND b.status = 'confirmed' AND NOT b.no_show AND b.aftercare_sent_at IS NULL
+      AND u.blocked_at IS NULL AND u.removed_at IS NULL
+      AND b.ends_at <= now() AND b.ends_at > now() - interval '1 day'`;
+  return deliver(rows.map((r) => ({ ...r, mail: aftercareMail(r.locale) })), 'aftercare_sent_at', send);
+}
+
+// Rappel la veille (entre 26 h et 2 h avant), dans la langue de la cliente ; un rendez-vous déplacé repart à zéro (moveBooking),
+// un rendez-vous annulé n'est plus « confirmed ». Pris moins de 26 h avant : la confirmation suffit.
+export async function sendReminders(send: Sender = sendMailNow): Promise<number> {
+  const rows = await sql<({ id: number; email: string; locale: Lang } & BookingMail)[]>`
+    SELECT b.id, u.email, u.locale, CASE u.locale WHEN 'nl' THEN s.name_nl WHEN 'en' THEN s.name_en ELSE s.name_fr END AS service,
+      b.starts_at, b.price_cents, b.discount_cents, b.deposit_cents
+    FROM bookings b JOIN users u ON u.id = b.user_id JOIN services s ON s.id = b.service_id
+    WHERE b.status = 'confirmed' AND b.reminder_sent_at IS NULL
       -- Compte désactivé ou supprimé par l'institut : le rendez-vous reste à l'agenda, sans rappel
-      AND user_id IN (SELECT id FROM users WHERE blocked_at IS NULL AND removed_at IS NULL)
-      AND starts_at > now() + interval '2 hours' AND starts_at <= now() + interval '26 hours'
-      AND created_at < starts_at - interval '26 hours'
-    RETURNING id`;
-  for (const r of rows) notify(r.id, 'reminder');
-  return rows.length;
+      AND u.blocked_at IS NULL AND u.removed_at IS NULL
+      AND b.starts_at > now() + interval '2 hours' AND b.starts_at <= now() + interval '26 hours'
+      AND b.created_at < b.starts_at - interval '26 hours'`;
+  return deliver(rows.map((r) => ({ id: r.id, email: r.email, mail: bookingReminderMail(r.locale, r) })), 'reminder_sent_at', send);
 }

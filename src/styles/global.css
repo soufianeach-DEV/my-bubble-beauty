@@ -231,6 +231,18 @@ main{isolation:isolate;overflow-x:clip}
 
 /* ---------- Galerie ---------- */
 /* FAQ : <details> natif, sans JavaScript */
+/* Avis Google (section cachée tant que avis.js n'a rien reçu) */
+.avis__score{font-size:1.125rem;color:var(--text)}
+.avis__score b{font-family:var(--f-title,inherit);font-size:1.6em;font-weight:500;margin-right:.35rem}
+.avis__list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,19rem),1fr));gap:1.25rem;margin:0;padding:0;list-style:none}
+.avis__item{display:flex;flex-direction:column;gap:.6rem;background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);padding:1.4rem 1.5rem}
+.avis__stars{color:var(--line);letter-spacing:.12em;font-size:1.05rem;line-height:1}
+.avis__text{margin:0;color:var(--text);overflow-wrap:anywhere}
+.avis__who{margin:auto 0 0;display:flex;align-items:center;gap:.65rem;font-size:.9375rem;color:var(--text-soft)}
+.avis__who b{color:var(--text);font-weight:500}
+.avis__initial{flex:none;display:grid;place-items:center;width:2.25rem;height:2.25rem;border-radius:50%;background:var(--bg);border:1px solid var(--line-soft);color:var(--accent);font-weight:500}
+.avis__note{margin:1.5rem auto 0;max-width:52ch;text-align:center;font-size:.875rem;color:var(--text-soft)}
+.avis__links{display:flex;flex-wrap:wrap;justify-content:center;gap:.75rem;margin:1.25rem 0 0}
 .faq__list{max-width:52rem;margin-inline:auto;display:grid;gap:.75rem}
 .faq details{background:var(--surface);border:1px solid var(--line-soft);border-radius:calc(var(--radius) / 2)}
 .faq summary{list-style:none;cursor:pointer;min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.25rem;font-weight:500;color:var(--text)}

@@ -1310,6 +1310,16 @@
    "socialTitle": "Sociale media",
    "eyebrow": "Afspraak"
   },
+  "avis": {
+   "eyebrow": "Reviews van klanten",
+   "title": "Wat klanten over ons zeggen",
+   "rating": "{avg} op 5",
+   "count": "{n} Google-reviews",
+   "stars": "{n} sterren op 5",
+   "note": "De meest recente reviews op Google, zonder selectie.",
+   "more": "Alle reviews op Google bekijken",
+   "write": "Een review schrijven"
+  },
   "faq": {
    "eyebrow": "Veelgestelde vragen",
    "title": "Uw vragen, onze antwoorden",

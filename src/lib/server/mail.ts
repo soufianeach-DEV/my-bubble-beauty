@@ -5,7 +5,8 @@ import { CONTACT, FOLDER, type Lang } from '../site.ts';
 import { log } from './log.ts';
 import { euros } from './pricing.ts';
 
-export type Mail = { kind: string; subject: string; text: string; html: string };
+// unsubscribe : page de désinscription de ce type de mail (en pied de mail et dans l'en-tête List-Unsubscribe)
+export type Mail = { kind: string; subject: string; text: string; html: string; unsubscribe?: string };
 export type BookingMail = { service: string; starts_at: Date; price_cents: number; discount_cents: number; deposit_cents: number };
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
@@ -14,14 +15,15 @@ const ADDRESS = `${CONTACT.street}, ${CONTACT.postal} ${CONTACT.city}`;
 const LOCALE: Record<Lang, string> = { fr: 'fr-BE', nl: 'nl-BE', en: 'en-GB' };
 const when = (d: Date, lang: Lang) => new Intl.DateTimeFormat(LOCALE[lang], { timeZone: 'Europe/Brussels', dateStyle: 'full', timeStyle: 'short' }).format(d);
 
-function build(kind: string, lang: Lang, subject: string, lines: (string | false)[], link: [label: string, url: string]): Mail {
+function build(kind: string, lang: Lang, subject: string, lines: (string | false)[], link: [label: string, url: string], unsub?: [label: string, url: string]): Mail {
   const body = lines.filter((l): l is string => !!l);
   const foot = `My Bubble Beauty - ${ADDRESS} - ${CONTACT.phoneLabel}`;
   return {
     kind,
     subject,
-    text: [...body, `${link[0]}\n${link[1]}`, foot].join('\n\n'),
-    html: `<!doctype html><html lang="${lang}"><body style="font-family:Arial,sans-serif;color:#222;line-height:1.5">${body.map((l) => `<p>${esc(l)}</p>`).join('')}<p><a href="${esc(link[1])}">${esc(link[0])}</a></p><p style="color:#777;font-size:13px">${esc(foot)}</p></body></html>`,
+    text: [...body, `${link[0]}\n${link[1]}`, foot, ...(unsub ? [`${unsub[0]}\n${unsub[1]}`] : [])].join('\n\n'),
+    html: `<!doctype html><html lang="${lang}"><body style="font-family:Arial,sans-serif;color:#222;line-height:1.5">${body.map((l) => `<p>${esc(l)}</p>`).join('')}<p><a href="${esc(link[1])}">${esc(link[0])}</a></p><p style="color:#777;font-size:13px">${esc(foot)}</p>${unsub ? `<p style="color:#777;font-size:13px"><a href="${esc(unsub[1])}" style="color:#777">${esc(unsub[0])}</a></p>` : ''}</body></html>`,
+    ...(unsub ? { unsubscribe: unsub[1] } : {}),
   };
 }
 
@@ -60,6 +62,7 @@ const T = {
       ["l'eau et les boissons transparentes sont les seules boissons autorisées ;", 'le thé, le café, les tisanes, le sirop coloré, le vin, les sodas et les boissons acides sont déconseillés (ou à la paille) ;', 'évitez les aliments colorés comme les épices (curry, safran) ou les sauces (ketchup, andalouse…), mais aussi les fraises, betteraves, épinards ;', 'les pâtes à tartiner, la confiture et le chocolat sont également à éviter ;', "les fumeurs doivent effectuer un brossage de dents léger obligatoirement après chaque cigarette. Si vous êtes à l'extérieur, un bon rinçage suffira ;", 'pas de bains de bouche colorés ;', 'nous conseillons un dentifrice blanc (sans lignes de couleur), par exemple Sensodyne ou Elmex.'],
       'Revoir les recommandations'] as const,
     create: "Créer un compte",
+    review: ['Comment s’est passé votre soin ?', 'Merci pour votre visite chez My Bubble Beauty.', 'Votre avis aide d’autres personnes à nous découvrir et nous aide à progresser. Si vous avez deux minutes, vous pouvez noter votre soin sur Google.', 'Qu’il soit très bon ou moins bon, chaque avis sincère compte pour nous.', 'Laisser un avis Google', 'Ne plus recevoir de demande d’avis'],
   },
   nl: {
     hello: 'Hallo,',
@@ -95,6 +98,7 @@ const T = {
       ['water en kleurloze dranken zijn de enige toegestane dranken;', 'thee, koffie, kruidenthee, gekleurde siroop, wijn, frisdrank en zure dranken worden afgeraden (of drink ze met een rietje);', 'vermijd gekleurde voeding zoals kruiden (curry, saffraan) of sauzen (ketchup, andalouse…), maar ook aardbeien, rode biet en spinazie;', "vermijd ook smeerpasta's, confituur en chocolade;", 'rokers poetsen na elke sigaret verplicht licht hun tanden. Bent u buitenshuis, dan volstaat goed spoelen;', 'geen gekleurd mondwater;', 'wij raden een witte tandpasta aan (zonder gekleurde strepen), bijvoorbeeld Sensodyne of Elmex.'],
       'De aanbevelingen herlezen'] as const,
     create: "Een account aanmaken",
+    review: ['Hoe was uw behandeling?', 'Dank u voor uw bezoek aan My Bubble Beauty.', 'Uw review helpt anderen om ons te ontdekken en helpt ons om beter te worden. Hebt u twee minuten? Dan kunt u uw behandeling beoordelen op Google.', 'Of uw ervaring nu heel goed of minder goed was: elke eerlijke review telt voor ons.', 'Een Google-review schrijven', 'Geen vragen om een review meer ontvangen'],
   },
   en: {
     hello: 'Hello,',
@@ -130,6 +134,7 @@ const T = {
       ['water and clear drinks are the only drinks allowed;', 'tea, coffee, herbal tea, coloured syrup, wine, soft drinks and acidic drinks are not recommended (or drink them through a straw);', 'avoid coloured foods such as spices (curry, saffron) or sauces (ketchup, andalouse…), as well as strawberries, beetroot and spinach;', 'spreads, jam and chocolate should also be avoided;', 'smokers must brush their teeth gently after every cigarette. If you are outside, a good rinse will do;', 'no coloured mouthwash;', 'we recommend a white toothpaste (without coloured stripes), for example Sensodyne or Elmex.'],
       'Read the recommendations again'] as const,
     create: "Create an account",
+    review: ['How was your treatment?', 'Thank you for visiting My Bubble Beauty.', 'Your review helps other people discover us and helps us improve. If you have two minutes, you can rate your treatment on Google.', 'Whether your experience was great or less so, every honest review matters to us.', 'Leave a Google review', 'Stop receiving review requests'],
   },
 } as const;
 
@@ -208,6 +213,13 @@ export function aftercareMail(lang: Lang): Mail {
   return build('aftercare_whitening', lang, subject, [T[lang].hello, intro, hours, days, ...list.map((l) => `• ${l}`)], [label, `${SITE_URL}/${FOLDER[lang]}/subPages/dents.html`]);
 }
 
+// Après tout rendez-vous honoré : la même demande à toutes les clientes, sans question préalable sur leur satisfaction
+// (Google interdit de ne solliciter que les avis positifs). reviewUrl : lien « Demander des avis » copié depuis la fiche.
+export function reviewRequestMail(lang: Lang, reviewUrl: string, unsubscribeUrl: string): Mail {
+  const [subject, thanks, ask, honest, label, unsub] = T[lang].review;
+  return build('review_request', lang, subject, [T[lang].hello, thanks, ask, honest], [label, reviewUrl], [unsub, unsubscribeUrl]);
+}
+
 // Bon cadeau : soin, code CADEAU-, validité et message de l'institut (saisi par l'équipe, jamais par un tiers)
 export function giftMail(lang: Lang, g: { recipient: string; service: string; code: string; expires_on: string; message: string }): Mail {
   // Tuple mixte (textes et fonctions) : typé ici, le tableau T ne l'est pas élément par élément
@@ -226,7 +238,7 @@ export async function sendMailNow(to: string, mail: Mail): Promise<boolean> {
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from: MAIL_FROM, to: [to], subject: mail.subject, text: mail.text, html: mail.html }),
+      body: JSON.stringify({ from: MAIL_FROM, to: [to], subject: mail.subject, text: mail.text, html: mail.html, ...(mail.unsubscribe ? { headers: { 'List-Unsubscribe': `<${mail.unsubscribe}>` } } : {}) }),
       signal: AbortSignal.timeout(10_000),
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);

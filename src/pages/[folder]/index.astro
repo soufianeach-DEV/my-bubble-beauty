@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
-import { LANGS, FOLDER, CONTACT, SITE, SALON_ID, LANG_META, EXTRA, HOURS, hoursRows, openingHoursSchema, t, pagePath, langOfFolder } from '../../lib/site';
+import { LANGS, FOLDER, CONTACT, SITE, SALON_ID, LANG_META, EXTRA, HOURS, JS_VERSION, hoursRows, openingHoursSchema, t, pagePath, langOfFolder } from '../../lib/site';
 
 export function getStaticPaths() {
   return LANGS.map((l) => ({ params: { folder: FOLDER[l] } }));
@@ -157,6 +157,19 @@ const jsonld = {
 <figure><img src="/assets/img/galerie-1-800.webp" alt="" width="1600" height="1200" loading="lazy"><figcaption></figcaption></figure>
 <button class="lightbox__close" type="button" aria-label={h.gallery.close}>×</button>
 </dialog>
+</section>
+
+{/* Avis Google copiés par la tâche planifiée : la page est pré-rendue, avis.js les demande à /api/avis et laisse la section cachée s'il n'y en a pas */}
+<section class="section avis lit" id="avis" aria-labelledby="h-avis" hidden data-avis
+  data-rating={h.avis.rating} data-count={h.avis.count} data-stars={h.avis.stars} data-locale={LANG_META[lang].hreflang}>
+<div class="halo halo--rose" aria-hidden="true"></div>
+<div class="wrap">
+<div class="section__head"><p class="eyebrow">{h.avis.eyebrow}</p><h2 id="h-avis">{h.avis.title}</h2><p class="avis__score" data-avis-score></p></div>
+<ul class="avis__list" data-avis-list></ul>
+<p class="avis__note">{h.avis.note}</p>
+<p class="avis__links"><a class="btn btn--ghost" href={CONTACT.maps} rel="noopener">{h.avis.more}</a><a class="btn btn--solid sheen" data-avis-write hidden rel="noopener">{h.avis.write}</a></p>
+</div>
+<script is:inline src={`/assets/js/avis.js?v=${JS_VERSION}`} defer></script>
 </section>
 
 {faq.length > 0 && <section class="section faq lit" id="faq" aria-labelledby="h-faq">

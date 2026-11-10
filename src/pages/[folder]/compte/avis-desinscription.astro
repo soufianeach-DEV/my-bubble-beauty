@@ -1,0 +1,48 @@
+---
+// Désinscription des demandes d'avis, depuis le lien du mail, sans connexion. Le GET n'affiche qu'un bouton
+// (les scanners de liens ne désinscrivent personne), le POST vérifie la signature puis enregistre le choix.
+export const prerender = false;
+import Base from '../../../layouts/Base.astro';
+import '../../../styles/forms.css';
+import { FOLDER, langOfFolder } from '../../../lib/site';
+import { checkUnsubscribe, optOutReviews } from '../../../lib/server/avis.ts';
+
+const lang = langOfFolder(Astro.params.folder!);
+const d = FOLDER[lang];
+const T = {
+  fr: { title: 'Demandes d’avis', intro: 'Vous ne recevrez plus de mail vous proposant de laisser un avis après votre rendez-vous. Les confirmations et les rappels de rendez-vous continuent.', submit: 'Ne plus recevoir de demande d’avis', done: 'C’est noté : vous ne recevrez plus de demande d’avis.', bad: 'Ce lien n’est pas valable. Utilisez le lien complet reçu par mail.' },
+  nl: { title: 'Vragen om een review', intro: 'U ontvangt geen e-mail meer met de vraag om na uw afspraak een review te schrijven. Bevestigingen en herinneringen van afspraken blijven komen.', submit: 'Geen vragen om een review meer ontvangen', done: 'Genoteerd: u ontvangt geen vragen om een review meer.', bad: 'Deze link is niet geldig. Gebruik de volledige link uit de e-mail.' },
+  en: { title: 'Review requests', intro: 'You will no longer receive emails asking you to leave a review after your appointment. Appointment confirmations and reminders will continue.', submit: 'Stop receiving review requests', done: 'Done: you will no longer receive review requests.', bad: 'This link is not valid. Please use the full link from the email.' },
+}[lang];
+
+let u = Astro.url.searchParams.get('u');
+let s = Astro.url.searchParams.get('s');
+let done = false;
+if (Astro.request.method === 'POST') {
+  const f = await Astro.request.formData().catch(() => null);
+  u = String(f?.get('u') ?? '');
+  s = String(f?.get('s') ?? '');
+  const id = checkUnsubscribe(u, s);
+  if (id) {
+    await optOutReviews(id);
+    done = true;
+  }
+}
+const valid = !!checkUnsubscribe(u, s);
+---
+<Base lang={lang} pageKey="home" route="compte/avis-desinscription" title={`${T.title} - My Bubble Beauty`} description={T.intro} noindex mainClass="legal">
+<Fragment slot="head"><meta name="referrer" content="no-referrer"></Fragment>
+<div class="wrap"><article>
+<h1>{T.title}</h1>
+{done ? <p class="notice" role="status">{T.done}</p> : valid ? (
+<Fragment>
+<p>{T.intro}</p>
+<form class="form" method="post" action={`/${d}/compte/avis-desinscription`}>
+<input type="hidden" name="u" value={u}>
+<input type="hidden" name="s" value={s}>
+<button class="btn btn--solid" type="submit">{T.submit}</button>
+</form>
+</Fragment>
+) : <p class="notice notice--error" role="alert">{T.bad}</p>}
+</article></div>
+</Base>

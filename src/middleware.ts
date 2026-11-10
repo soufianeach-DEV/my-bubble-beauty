@@ -13,11 +13,16 @@ const PUBLIC = new Set([
   '/[folder]/compte/mot-de-passe-oublie',
   '/[folder]/compte/nouveau-mot-de-passe',
   '/[folder]/compte/lien',
+  // Lien de désinscription des demandes d'avis : signé, sans session
+  '/[folder]/compte/avis-desinscription',
   '/oauth/[provider]',
   '/oauth/[provider]/retour',
   '/api/stripe/webhook',
   // Qui est connecté, pour l'en-tête des pages pré-rendues : 204 sans session
   '/api/moi',
+  // Avis Google de l'Accueil, et tâches planifiées (protégées par TASKS_SECRET)
+  '/api/avis',
+  '/api/taches',
 ]);
 // Seules routes ouvertes à l'équipe (admin, gestionnaire) avant le code TOTP : le code lui-même, et la déconnexion pour en sortir
 const BEFORE_CODE = new Set(['/admin/code', '/admin/deconnexion']);

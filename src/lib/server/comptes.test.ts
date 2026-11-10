@@ -200,8 +200,14 @@ test('comptes, réservations et sécurité sur une vraie base', { skip: !url && 
       const soon = new Date(Date.now() + 20 * 3600_000);
       await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, created_at)
         VALUES (${other.id}, ${svc.id}, ${soon}, ${new Date(soon.getTime() + 3600_000)}, 'confirmed', 5000, now() - interval '3 days')`;
-      assert.ok((await booking.sendReminders()) >= 1);
-      assert.equal(await booking.sendReminders(), 0);
+      // Resend refuse (domaine non vérifié) : rien n'est marqué, le rappel repart au passage suivant
+      const refused: string[] = [];
+      assert.equal(await booking.sendReminders(async (to) => (refused.push(to), false)), 0);
+      assert.ok(refused.includes(other.email), 'rappel tenté');
+      const sent: { to: string; subject: string }[] = [];
+      assert.ok((await booking.sendReminders(async (to, m) => (sent.push({ to, subject: m.subject }), true))) >= 1);
+      assert.ok(sent.some((s) => s.to === other.email));
+      assert.equal(await booking.sendReminders(async () => true), 0, 'une seule fois par rendez-vous');
     });
 
     await t.test('compte supprimé : plus de réservation ; recherche par téléphone ; export sans IP de tiers', async () => {

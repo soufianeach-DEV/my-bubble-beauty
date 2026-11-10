@@ -43,6 +43,8 @@ nano /etc/mybubble/env
 - `PASSWORD_PEPPER` et `ADMIN_TOTP_SECRET` doivent être **exactement** ceux de Render. Avec un autre poivre, plus aucun mot de passe existant ne marche.
 - Une variable laissée vide est ignorée (Stripe, Google et Microsoft sont facultatifs).
 - Le site refuse de démarrer sans `ADMIN_EMAIL`, `ADMIN_TOTP_SECRET` et `PASSWORD_PEPPER`.
+- `TASKS_SECRET` (32 caractères au moins) : le timer `mybubble-taches` appelle `POST /api/taches` toutes les 15 minutes (rappels de la veille, demandes d'avis, copie des avis Google). Vide, le timer ne fait rien et seule la minuterie interne du site tourne.
+- `GOOGLE_REVIEW_URL` (lien « Demander des avis » de la fiche Google) et `GBP_*` (accès Business Profile) sont facultatifs : sans eux, pas de mail d'avis et pas de section Avis.
 
 ## 4. Reprendre les données de Supabase (si la base contient déjà des comptes)
 
@@ -96,6 +98,7 @@ Dès que le DNS répond, Caddy obtient le certificat HTTPS tout seul (`journalct
 | Redémarrer | `sudo systemctl restart mybubble` |
 | Revenir à une version | `ls /opt/mybubble/releases`, puis `ln -sfn /opt/mybubble/releases/<commit> /opt/mybubble/current && systemctl restart mybubble` |
 | Sauvegarde tout de suite | `sudo systemctl start mybubble-backup` |
+| Lancer les tâches tout de suite | `sudo systemctl start mybubble-taches && journalctl -u mybubble-taches -n 5` |
 | `mybubble.service` a changé dans le dépôt | le relire sur GitHub, puis `curl -fsSL https://raw.githubusercontent.com/soufianeach-DEV/my-bubble-beauty/main/deploy/vps/mybubble.service -o /etc/systemd/system/mybubble.service && systemctl daemon-reload && systemctl restart mybubble` (jamais copié depuis le serveur : le build y exécute du code de paquets npm) |
 
 ## Sauvegardes

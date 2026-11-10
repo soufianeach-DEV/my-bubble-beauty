@@ -1310,6 +1310,16 @@
    "socialTitle": "Réseaux sociaux",
    "eyebrow": "Rendez-vous"
   },
+  "avis": {
+   "eyebrow": "Avis des clientes",
+   "title": "Elles parlent de nous",
+   "rating": "{avg} sur 5",
+   "count": "{n} avis Google",
+   "stars": "{n} étoiles sur 5",
+   "note": "Les avis les plus récents publiés sur Google, sans sélection.",
+   "more": "Voir tous les avis sur Google",
+   "write": "Laisser un avis"
+  },
   "faq": {
    "eyebrow": "Questions fréquentes",
    "title": "Vos questions, nos réponses",

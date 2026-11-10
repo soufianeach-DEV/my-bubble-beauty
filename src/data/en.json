@@ -1310,6 +1310,16 @@
    "socialTitle": "Social media",
    "eyebrow": "Appointments"
   },
+  "avis": {
+   "eyebrow": "Client reviews",
+   "title": "What our clients say",
+   "rating": "{avg} out of 5",
+   "count": "{n} Google reviews",
+   "stars": "{n} stars out of 5",
+   "note": "The most recent reviews published on Google, unfiltered.",
+   "more": "See all reviews on Google",
+   "write": "Leave a review"
+  },
   "faq": {
    "eyebrow": "Frequently asked questions",
    "title": "Your questions, our answers",

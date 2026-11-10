@@ -50,4 +50,17 @@ services:
         sync: false
       - key: MICROSOFT_CLIENT_SECRET
         sync: false
+      # Avis Google (facultatif) : secret des tâches planifiées, lien « Demander des avis », accès Business Profile
+      - key: TASKS_SECRET
+        sync: false
+      - key: GOOGLE_REVIEW_URL
+        sync: false
+      - key: GBP_CLIENT_ID
+        sync: false
+      - key: GBP_CLIENT_SECRET
+        sync: false
+      - key: GBP_REFRESH_TOKEN
+        sync: false
+      - key: GBP_LOCATION
+        sync: false
 

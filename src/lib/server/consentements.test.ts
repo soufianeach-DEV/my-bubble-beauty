@@ -97,10 +97,11 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, no_show) VALUES
       (${other}, ${wh.id}, ${ended}, ${new Date(ended.getTime() + 3_600_000)}, 'confirmed', 9000, false),
       (${other}, ${wh.id}, ${new Date(ended.getTime() - 3 * 3_600_000)}, ${new Date(ended.getTime() - 2 * 3_600_000)}, 'confirmed', 9000, true)`;
-    const first = await sendAftercare();
+    assert.equal(await sendAftercare(async () => false), 0, 'refus de Resend : rien de marqué');
+    const first = await sendAftercare(async () => true);
     assert.ok(first >= 1);
     assert.equal((await sql`SELECT count(*)::int AS n FROM bookings WHERE service_id = ${wh.id} AND aftercare_sent_at IS NOT NULL`)[0].n, 1);
-    assert.equal(await sendAftercare(), 0);
+    assert.equal(await sendAftercare(async () => true), 0);
 
     // Compte désactivé ou supprimé par l'institut : son rendez-vous de demain reste, sans rappel
     const { sendReminders } = await import('./booking.ts');
@@ -109,7 +110,7 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     const [rb] = await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, created_at)
       VALUES (${gone}, ${wh.id}, ${tomorrow}, ${new Date(tomorrow.getTime() + 3_600_000)}, 'confirmed', 9000, now() - interval '5 days') RETURNING id`;
     await sql`UPDATE users SET removed_at = now() WHERE id = ${gone}`;
-    await sendReminders();
+    await sendReminders(async () => true);
     assert.equal((await sql`SELECT reminder_sent_at FROM bookings WHERE id = ${rb.id}`)[0].reminder_sent_at, null);
 
     // Bon cadeau : code unique, valable pour son soin seulement, réservé puis rendu par une annulation, annulé pour de bon

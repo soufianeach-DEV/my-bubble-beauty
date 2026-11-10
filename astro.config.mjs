@@ -42,6 +42,15 @@ export default defineConfig({
       GOOGLE_CLIENT_SECRET: secret({ optional: true }),
       MICROSOFT_CLIENT_ID: secret({ optional: true }),
       MICROSOFT_CLIENT_SECRET: secret({ optional: true }),
+      // Tâches planifiées (rappels, demandes d'avis, copie des avis) : POST /api/taches avec ce secret ; absent, la route répond 404
+      TASKS_SECRET: secret({ optional: true, min: 32 }),
+      // Lien « Demander des avis » copié depuis la fiche Google (Business Profile) : absent, aucun mail d'avis ne part
+      GOOGLE_REVIEW_URL: secret({ optional: true, url: true, startsWith: 'https://' }),
+      // API Business Profile (accès propriétaire de la fiche) : les quatre sont requis, sinon la section Avis reste cachée
+      GBP_CLIENT_ID: secret({ optional: true }),
+      GBP_CLIENT_SECRET: secret({ optional: true }),
+      GBP_REFRESH_TOKEN: secret({ optional: true }),
+      GBP_LOCATION: secret({ optional: true, startsWith: 'accounts/' }),
     },
   },
   build: {
