@@ -45,6 +45,12 @@ export const fmtDay = (day: string) => dayFormat.format(new Date(`${day}T12:00:0
 export type Service = { id: number; category: string; name_fr: string; name_nl: string; name_en: string; duration_min: number | null; buffer_min: number; price_cents: number; deposit_cents: number; active: boolean; sort: number };
 export const listServices = () =>
   sql<Service[]>`SELECT id, category, name_fr, name_nl, name_en, duration_min, buffer_min, price_cents, deposit_cents, active, sort FROM services WHERE retired_at IS NULL ORDER BY sort, id`;
+// Agenda, vue semaine : première ouverture et dernière fermeture de la semaine, en minutes depuis minuit (null si tout est fermé)
+export async function openingSpan(): Promise<{ from: number; to: number } | null> {
+  const [r] = await sql<{ from: number | null; to: number | null }[]>`
+    SELECT (extract(epoch FROM min(opens)) / 60)::int AS "from", (extract(epoch FROM max(closes)) / 60)::int AS "to" FROM opening_hours`;
+  return r.from === null || r.to === null ? null : { from: r.from, to: r.to };
+}
 // Page Prestations : avec le nombre de rendez-vous confirmés pris sur les 30 derniers jours (une seule requête)
 export const listServicesWithStats = () =>
   sql<(Service & { booked_30d: number })[]>`SELECT s.id, s.category, s.name_fr, s.name_nl, s.name_en, s.duration_min, s.buffer_min, s.price_cents, s.deposit_cents, s.active, s.sort,
