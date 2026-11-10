@@ -12,13 +12,16 @@ import { COMPTE } from '../../../data/i18n/compte.ts';
 import { FOLDER, JS_VERSION, langOfFolder } from '../../../lib/site';
 import { signIn } from '../../../lib/server/accounts.ts';
 import { PASSWORD, readForm } from '../../../lib/server/compte.ts';
-import { safeReturn } from '../../../lib/server/redirect.ts';
+import { safeReturn, staffReturn } from '../../../lib/server/redirect.ts';
 
 const lang = langOfFolder(Astro.params.folder!);
 const d = FOLDER[lang];
 const tx = COMPTE[lang];
 const back = safeReturn(Astro.url.searchParams.get('retour'), SITE_URL, `/${d}/compte`);
-if (Astro.locals.user && Astro.request.method === 'GET') return Astro.redirect(back);
+// Équipe : toujours l'Accueil de l'admin, ou la page admin demandée ; passage par le code avant si besoin
+const staffBack = staffReturn(back);
+const codePage = `/admin/code${staffBack === '/admin' ? '' : `?retour=${encodeURIComponent(staffBack)}`}`;
+if (Astro.locals.user && Astro.request.method === 'GET') return Astro.redirect(Astro.locals.user.role ? staffBack : back);
 
 let email = '';
 let failed = false;
@@ -28,7 +31,7 @@ if (Astro.request.method === 'POST') {
   // Format d'adresse non contrôlé ici : une adresse fausse reçoit le même échec et compte dans les mêmes limites
   const { data, raw } = await readForm(Astro.request, z.object({ email: z.string().max(254), password: PASSWORD, remember: z.string().max(8).optional() }));
   const u = data && (await signIn(Astro.cookies, data.email, data.password, Astro.locals.ip, Astro.request.headers.get('user-agent'), data.remember === 'on'));
-  if (u) return Astro.redirect(u.mfaRequired ? '/admin/code' : back, 303);
+  if (u) return Astro.redirect(u.mfaRequired ? codePage : u.staff ? staffBack : back, 303);
   email = (raw.email ?? '').slice(0, 254);
   failed = true;
 }

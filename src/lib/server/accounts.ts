@@ -80,7 +80,7 @@ export async function verifyEmail(cookies: AstroCookies, token: string, password
 // Connexion : message unique en cas d'échec (null). mfaRequired : rediriger vers /admin/code, la session n'ouvre pas /admin sans le code.
 // Lit puis pose le cookie d'appareil : la page de connexion n'a rien d'autre à faire.
 // remember (« Se souvenir de moi ») ignoré pour l'équipe : sa session reste courte et le code TOTP la remplace de toute façon.
-export async function signIn(cookies: AstroCookies, email: string, password: string, ip: string, userAgent: string | null, remember = false): Promise<(LoginUser & { mfaRequired: boolean }) | null> {
+export async function signIn(cookies: AstroCookies, email: string, password: string, ip: string, userAgent: string | null, remember = false): Promise<(LoginUser & { mfaRequired: boolean; staff: boolean }) | null> {
   const u = await login(email, password, ip, cookies.get(DEVICE_COOKIE)?.value);
   if (!u) return null;
   const [r] = await sql<{ role: string | null }[]>`SELECT role FROM users WHERE id = ${u.id}`;
@@ -90,7 +90,7 @@ export async function signIn(cookies: AstroCookies, email: string, password: str
   await openSession(cookies, u.id, userAgent, trusted, remember && !admin);
   cookies.set(DEVICE_COOKIE, deviceCookie(u.email), DEVICE);
   if (trusted) journal('totp_trusted', { actor: u.id, ip });
-  return { ...u, mfaRequired: admin && !trusted };
+  return { ...u, mfaRequired: admin && !trusted, staff: admin };
 }
 
 // Ce que signe le cookie d'appareil de confiance : changer de rôle ou réinitialiser le TOTP (role_at, totp_confirmed_at) l'invalide

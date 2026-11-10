@@ -1,6 +1,15 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { safeReturn } from './redirect.ts';
+import { safeReturn, staffReturn } from './redirect.ts';
+
+test("équipe après connexion : Accueil de l'admin, sauf retour vers une page admin", () => {
+  assert.equal(staffReturn('/fr/compte'), '/admin');
+  assert.equal(staffReturn('/fr/reserver?service=12'), '/admin');
+  assert.equal(staffReturn('/administration'), '/admin', 'préfixe seul refusé');
+  assert.equal(staffReturn('/admin/code'), '/admin');
+  assert.equal(staffReturn('/admin/clientes/11?ok=1'), '/admin/clientes/11?ok=1');
+  assert.equal(staffReturn('/admin'), '/admin');
+});
 
 const SITE = 'https://mybubble-beauty.com';
 

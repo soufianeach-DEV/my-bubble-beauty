@@ -10,3 +10,7 @@ export function safeReturn(raw: unknown, siteUrl: string, fallback = '/'): strin
     return fallback;
   }
 }
+
+// Équipe (admin, gestionnaire) après connexion : l'Accueil de l'admin, sauf un retour déjà sûr (safeReturn) vers une autre page admin.
+// La page du code n'est jamais une destination : on y est déjà passé.
+export const staffReturn = (back: string) => (/^\/admin(\/|\?|$)/.test(back) && !/^\/admin\/code(\/|\?|$)/.test(back) ? back : '/admin');
