@@ -5,6 +5,11 @@ import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypt
 export const SESSION_COOKIE = '__Host-mb_session';
 export const COOKIE = { httpOnly: true, secure: true, sameSite: 'lax', path: '/' } as const;
 
+// Témoin « connecté » lisible par main.js, sans aucune donnée : les pages pré-rendues ne demandent /api/moi que s'il existe.
+// Posé et retiré par le middleware selon la session réelle ; un témoin périmé est effacé par main.js (réponse 204).
+export const HINT_COOKIE = 'mb_in';
+export const HINT = { secure: true, sameSite: 'lax', path: '/', maxAge: 30 * 24 * 3600 } as const;
+
 // « Se souvenir de moi » : cookie persistant (Max-Age), même durée que la session en base ; sinon cookie de session
 export const sessionCookie = (remember: boolean, rememberSeconds: number) => (remember ? { ...COOKIE, maxAge: rememberSeconds } : COOKIE);
 

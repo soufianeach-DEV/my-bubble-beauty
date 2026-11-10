@@ -120,6 +120,18 @@ if(dlg&&dlg.showModal){
   dlg.addEventListener('click',e=>{e.target===dlg&&dlg.close()});
 }
 
+/* 6 bis. Compte dans l'en-tête des pages pré-rendues : sans témoin mb_in (aucune donnée), aucun appel.
+   Avec lui, /api/moi dit qui est connecté ; une réponse 204 efface le témoin périmé. */
+const hd=d.querySelector('.site-header');
+if(hd&&!hd.hasAttribute('data-acct-known')&&/(?:^|;\s*)mb_in=1(?:;|$)/.test(d.cookie)){
+  fetch('/api/moi',{credentials:'same-origin',cache:'no-store'}).then(r=>r.status===200?r.json():null).then(me=>{
+    if(!me){d.cookie='mb_in=; Path=/; Max-Age=0; SameSite=Lax'+(location.protocol==='https:'?'; Secure':'');return}
+    const k=me.staff?'staff':'client';
+    hd.querySelectorAll('[data-acct]').forEach(e=>{e.hidden=e.dataset.acct!==k});
+    hd.querySelectorAll('[data-initials]').forEach(e=>{e.textContent=me.initials});
+  }).catch(()=>{});
+}
+
 /* 7. Menu mobile, choix de langue et menu profil : se ferment sur un lien, un clic ailleurs ou Échap */
 const menus=[...d.querySelectorAll('details.mnav,details.langsel,details.pmenu')];
 menus.forEach(m=>{

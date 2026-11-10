@@ -1,7 +1,8 @@
 ---
 import '../styles/global.css';
 import Icon from '../components/Icon.astro';
-import { t, LANGS, LANG_META, CONTACT, SITE, JS_VERSION, GOATCOUNTER_ENDPOINT, EXTRA, FOLDER, pagePath, alternates, type Lang, type PageKey } from '../lib/site';
+import { t, LANGS, LANG_META, CONTACT, SITE, JS_VERSION, GOATCOUNTER_ENDPOINT, EXTRA, FOLDER, initialsOf, pagePath, alternates, type Lang, type PageKey } from '../lib/site';
+import { COMPTE } from '../data/i18n/compte.ts';
 
 interface Props {
   lang: Lang;
@@ -38,6 +39,20 @@ const anchor = (hash: string) => (isHome ? hash : home + hash);
 const nav = ui.nav.map((n) => ({ label: n.label, href: anchor(n.href) }));
 // Route à la demande : pagePath ajouterait « .html » (404)
 const account = `/${FOLDER[lang]}/compte`;
+// Compte dans l'en-tête : visiteur → Connexion, cliente → menu profil, équipe → Admin.
+// Page à la demande : le middleware a lu la session (locals.user vaut null ou la personne). Page pré-rendue : locals.user
+// n'existe pas, l'en-tête part en « visiteur » et main.js le corrige d'après /api/moi.
+const known = Astro.locals.user !== undefined;
+const me = Astro.locals.user ?? null;
+const acct = me ? (me.role ? 'staff' : 'client') : 'out';
+const ta = COMPTE[lang].account;
+const ACCOUNT_LINKS = [
+  [account, ta.title],
+  [`${account}/fiche`, ta.menu.care],
+  [`${account}?p=securite#h-password`, ta.menu.password],
+  [`${account}?p=securite#h-sessions`, ta.menu.devices],
+  [`${account}?p=donnees`, ta.menu.data],
+] as const;
 const langHref = (l: Lang) => (route ? `/${FOLDER[l]}/${route}` : pagePath(l, pageKey));
 const canonical = SITE + (canonicalPath ?? langHref(lang));
 const alts = canonicalPath || route ? [] : alternates(pageKey);
@@ -88,7 +103,7 @@ const year = new Date().getFullYear();
 </head>
 <body>
 <a class="skip" href="#main">{ui.skip}</a>
-{!bare && <header class="site-header">
+{!bare && <header class="site-header" data-acct-known={known ? '' : undefined}>
 <div class="wrap">
 <a class="brand" href={home}><img src="/assets/img/logo-my-bubble-200.webp?v=2" srcset="/assets/img/logo-my-bubble-200.webp?v=2 200w, /assets/img/logo-my-bubble-400.webp?v=2 400w" sizes="(max-width: 767px) 85px, 119px" width="955" height="673" alt={ui.brandAlt}></a>
 <nav class="nav" aria-label={ui.navLabel}><ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul></nav>
@@ -99,9 +114,23 @@ const year = new Date().getFullYear();
 ))}</ul>
 </details>
 <button class="theme-btn" type="button" data-dark={EXTRA[lang].toDark} data-light={EXTRA[lang].toLight} aria-label={EXTRA[lang].toDark} title={EXTRA[lang].toDark} hidden><Icon name="theme" /></button>
-<details class="mnav"><summary>{ui.menu}</summary><div class="mnav__panel"><ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}<li><a href={account}>{ui.ctaLong}</a></li></ul></div></details>
+<details class="mnav"><summary>{ui.menu}</summary><div class="mnav__panel"><ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+<li data-acct="out" hidden={acct !== 'out' || undefined}><a href={account}>{ui.ctaLong}</a></li>
+<li data-acct="staff" hidden={acct !== 'staff' || undefined}><a href="/admin">Admin</a></li>
+{/* Cliente connectée : ses liens de compte à la suite du menu, initiales en tête */}
+<li class="mnav__acct" data-acct="client" hidden={acct !== 'client' || undefined}><a class="mnav__who" href={account}><span class="pm-avatar" aria-hidden="true" data-initials>{me ? initialsOf(me.name, me.email) : ''}</span>{ta.title}</a>
+<ul>{ACCOUNT_LINKS.slice(1).map(([href, label]) => <li><a href={href}>{label}</a></li>)}
+<li><form method="post" action={account}><input type="hidden" name="action" value="logout"><button class="mnav__out" type="submit">{ta.logout}</button></form></li></ul></li>
+</ul></div></details>
 {/* Une seule action mise en avant : la réservation ; le compte passe en second */}
-<a class="btn btn--ghost header-account" href={account}>{ui.ctaShort}</a>
+<a class="btn btn--ghost header-account" data-acct="out" href={account} hidden={acct !== 'out' || undefined}>{ui.ctaShort}</a>
+<a class="btn btn--ghost header-account" data-acct="staff" href="/admin" hidden={acct !== 'staff' || undefined}>Admin</a>
+{/* Menu profil : details refermé par main.js (clic ailleurs, Échap, lien suivi) */}
+<details class="pmenu header-account" data-acct="client" hidden={acct !== 'client' || undefined}>
+<summary><span class="pm-avatar" aria-hidden="true" data-initials>{me ? initialsOf(me.name, me.email) : ''}</span><span class="visually-hidden">{ta.menu.label}</span><Icon name="chevron" /></summary>
+<ul class="pm-list">{ACCOUNT_LINKS.map(([href, label]) => <li><a href={href}>{label}</a></li>)}
+<li><form method="post" action={account}><input type="hidden" name="action" value="logout"><button class="pm-item" type="submit">{ta.logout}</button></form></li></ul>
+</details>
 <a class="btn btn--solid sheen" href={`/${FOLDER[lang]}/reserver`}><span class="lbl-long">{ui.book}</span><span class="lbl-short">{ui.bookShort}</span></a>
 </div>
 </header>}

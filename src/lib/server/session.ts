@@ -1,7 +1,7 @@
 // Sessions serveur (ASVS 3.3.2 niveau 2 pour toutes) : inactivité et durée maximale fixées dans session-limits.mjs, que la purge relit.
 import type { AstroCookies } from 'astro';
 import { ADMIN_EMAIL } from 'astro:env/server';
-import { COOKIE, SESSION_COOKIE, hashToken, newToken, sessionCookie } from './cookie.ts';
+import { COOKIE, HINT, HINT_COOKIE, SESSION_COOKIE, hashToken, newToken, sessionCookie } from './cookie.ts';
 import { sql } from './db.ts';
 import { SESSION_IDLE, SESSION_MAX, SESSION_REMEMBER, SESSION_REMEMBER_SECONDS } from './session-limits.mjs';
 
@@ -53,6 +53,7 @@ export async function closeSession(cookies: AstroCookies) {
   const token = cookies.get(SESSION_COOKIE)?.value;
   if (token) await sql`DELETE FROM sessions WHERE token_hash = ${hashToken(token)}`;
   cookies.delete(SESSION_COOKIE, COOKIE);
+  cookies.delete(HINT_COOKIE, HINT);
 }
 
 // « Déconnecter les autres appareils » (après mot de passe redemandé) et changement de mot de passe

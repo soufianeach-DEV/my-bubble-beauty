@@ -1,6 +1,6 @@
 // Garde des routes à la demande : refus par défaut, décidé sur le motif de route (/FR/compte ou /xx/compte ne contournent rien).
 import { defineMiddleware } from 'astro:middleware';
-import { COOKIE, SESSION_COOKIE } from './lib/server/cookie.ts';
+import { COOKIE, HINT, HINT_COOKIE, SESSION_COOKIE } from './lib/server/cookie.ts';
 import { log } from './lib/server/log.ts';
 import { clientIp } from './lib/server/rate.ts';
 
@@ -16,6 +16,8 @@ const PUBLIC = new Set([
   '/oauth/[provider]',
   '/oauth/[provider]/retour',
   '/api/stripe/webhook',
+  // Qui est connecté, pour l'en-tête des pages pré-rendues : 204 sans session
+  '/api/moi',
 ]);
 // Seules routes ouvertes à l'équipe (admin, gestionnaire) avant le code TOTP : le code lui-même, et la déconnexion pour en sortir
 const BEFORE_CODE = new Set(['/admin/code', '/admin/deconnexion']);
@@ -37,6 +39,10 @@ export const onRequest = defineMiddleware(async (ctx, next) => {
   const token = ctx.cookies.get(SESSION_COOKIE)?.value;
   const found = token ? await readSession(token) : null;
   if (token && !found) ctx.cookies.delete(SESSION_COOKIE, COOKIE);
+  // Témoin de l'en-tête aligné sur la session réelle à chaque page à la demande
+  const hinted = ctx.cookies.get(HINT_COOKIE)?.value === '1';
+  if (found && !hinted) ctx.cookies.set(HINT_COOKIE, '1', HINT);
+  else if (!found && hinted) ctx.cookies.delete(HINT_COOKIE, HINT);
   ctx.locals.user = found?.user ?? null;
   ctx.locals.session = found?.session ?? null;
 

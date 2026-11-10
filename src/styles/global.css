@@ -768,3 +768,35 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
   .hero{min-height:min(50vw,1100px)}
   .hero__img{object-position:30% 30%}
 }
+
+/* Menu profil en haut à droite (admin, espace client et en-tête public) : details refermé par main.js, liens et boutons de 44 px */
+.pmenu{position:relative}
+.pmenu summary{display:flex;align-items:center;gap:.65rem;min-height:48px;padding:.3rem .75rem .3rem .3rem;border:1px solid var(--line-soft);border-radius:999px;background:var(--bg);cursor:pointer;list-style:none}
+.pmenu summary::-webkit-details-marker{display:none}
+.pmenu summary:hover,.pmenu[open] summary{border-color:var(--accent)}
+.pmenu summary svg{width:16px;height:16px;transition:transform var(--dur-ui)}
+.pmenu[open] summary svg{transform:rotate(180deg)}
+.pm-avatar{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:#4E302C;color:#FFFBF9;font-weight:600;font-size:.9rem;letter-spacing:.04em}
+.pm-who{display:grid;line-height:1.2;text-align:left}
+.pm-who strong{font-weight:500;max-width:16rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pm-who small{font-size:.75rem;color:var(--text-soft)}
+.pm-list{position:absolute;right:0;top:calc(100% + .4rem);z-index:20;min-width:17rem;margin:0;padding:.4rem;list-style:none;border:1px solid var(--line-soft);border-radius:14px;background:var(--bg);box-shadow:0 12px 32px rgb(0 0 0 / .14)}
+.pm-list form{margin:0}
+.pm-list a,.pm-list .pm-item{display:flex;align-items:center;gap:.6rem;width:100%;min-height:44px;padding:.5rem .75rem;border:0;border-radius:10px;background:none;color:var(--text);font:inherit;text-align:left;text-decoration:none;cursor:pointer;justify-content:flex-start;height:auto}
+.pm-list .pm-item[hidden]{display:none}
+.pm-list a:hover,.pm-list a:focus-visible,.pm-list .pm-item:hover,.pm-list .pm-item:focus-visible{background:var(--surface)}
+.pm-list li:last-child{border-top:1px solid var(--line-soft);margin-top:.3rem;padding-top:.3rem}
+.pm-list .pm-item svg{width:20px;height:20px}
+/* En-tête public : visiteur, cliente ou équipe (data-acct) ; le bouton profil se fait plus compact */
+[data-acct][hidden]{display:none}
+.site-header .pmenu summary{min-height:44px;gap:.4rem;padding:.15rem .55rem .15rem .15rem}
+.site-header .pm-avatar{width:36px;height:36px;font-size:.8125rem}
+.site-header .pm-list{min-width:15rem}
+/* Téléphone : les liens du compte à la suite du menu du site */
+.mnav__acct{margin-top:.35rem;padding-top:.35rem;border-top:1px solid var(--line-soft)}
+.mnav__panel .mnav__acct a.mnav__who{display:flex;align-items:center;gap:.6rem;padding:.6rem 1rem;font-weight:500}
+.mnav__acct .mnav__who .pm-avatar{width:32px;height:32px;font-size:.75rem}
+.mnav__acct ul{list-style:none;margin:0;padding:0}
+.mnav__acct form{margin:0}
+.mnav__out{display:block;width:100%;padding:.75rem 1rem;border:0;border-radius:10px;background:none;color:var(--text);font:inherit;text-align:left;cursor:pointer}
+.mnav__out:hover{background:var(--bg)}

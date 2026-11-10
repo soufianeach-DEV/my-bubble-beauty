@@ -47,6 +47,9 @@ export const LANG_META: Record<Lang, { code: string; name: string; hreflang: str
 
 // Dossier d'URL par langue : « eng » est conservé tel quel depuis la v1.
 export const FOLDER: Record<Lang, string> = { fr: 'fr', nl: 'nl', en: 'eng' };
+// Initiales du bouton profil : deux premiers mots du nom, sinon première lettre de l'adresse
+export const initialsOf = (name: string | null | undefined, email: string) =>
+  (name?.trim() ? name.trim().split(/\s+/).slice(0, 2).map((w) => w[0]) : [email[0] ?? '?']).join('').toUpperCase();
 export const langOfFolder = (folder: string) => LANGS.find((l) => FOLDER[l] === folder)!;
 
 // Pages fixes : clé -> nom de fichier dans chaque langue.

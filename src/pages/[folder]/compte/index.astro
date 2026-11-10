@@ -4,7 +4,6 @@
 export const prerender = false;
 import { z } from 'astro/zod';
 import Base from '../../../layouts/Base.astro';
-import Icon from '../../../components/Icon.astro';
 import PasswordField from './_password-field.astro';
 import '../../../styles/forms.css';
 import { COMPTE } from '../../../data/i18n/compte.ts';
@@ -147,8 +146,6 @@ const invalid = (k: string) => (bad.has(k) ? 'true' : undefined);
 const price = (b: (typeof bookings)[number]) => euros(b.price_cents - b.discount_cents, lang);
 // Nom saisi en entier : le champ « Nom et prénom » ne dit pas dans quel ordre ; sans nom, l'en-tête garde le titre de la page
 const firstName = profile.name.trim().slice(0, 60);
-const initials = (firstName ? firstName.split(/\s+/).slice(0, 2).map((w) => w[0]) : [user.email[0]]).join('').toUpperCase();
-const tm = ta.menu;
 const histState = (b: (typeof bookings)[number]) =>
   [b.no_show ? ta.noShow : b.status === 'confirmed' ? ta.status.past : ta.status[b.status], b.refunded_cents > 0 ? `${ta.refundedAmount}${euros(b.refunded_cents, lang)}` : ''].filter(Boolean).join(' · ');
 // Jauges de la carte : plafonnées à l'objectif (la carte repart à zéro une fois le soin offert pris)
@@ -163,23 +160,11 @@ const gauges = card
 <Base lang={lang} pageKey="home" route="compte" title={`${ta.title} - My Bubble Beauty`} description={ta.description} noindex mainClass="legal compte-dash">
 <Fragment slot="head"><script is:inline src={`/assets/js/password.js?v=${JS_VERSION}`} defer></script></Fragment>
 <div class="wrap"><article class="dash">
-{/* En-tête sur une ligne : salutation à gauche ; réservation et menu profil à droite. « Mon compte » reste dans le h1 pour les lecteurs d'écran */}
+{/* En-tête sur une ligne : salutation à gauche, réservation à droite (le menu profil est dans l'en-tête du site). « Mon compte » reste dans le h1 pour les lecteurs d'écran */}
 <header class="dash-head">
 <h1><span class="visually-hidden">{ta.title} : </span>{firstName ? `${ta.hello} ${firstName}` : ta.title}</h1>
 {!finished && <div class="actions">
 <a class="btn btn--solid" href={`/${d}/reserver`}>{ta.book}</a>
-{/* Menu profil : details refermé par main.js (clic ailleurs, Échap, lien suivi) ; les blocs rares y vivent sur leur propre page */}
-<details class="pmenu">
-<summary><span class="pm-avatar" aria-hidden="true">{initials}</span><span class="pm-who"><strong>{ta.title}</strong></span><span class="visually-hidden"> : {tm.label}</span><Icon name="chevron" /></summary>
-<ul class="pm-list">
-<li><a href={`${self}#h-profile`}>{tm.profile}</a></li>
-{fiche && <li><a href={`${self}/fiche`}>{tm.care}</a></li>}
-<li><a href={`${self}?p=securite#h-password`}>{tm.password}</a></li>
-<li><a href={`${self}?p=securite#h-sessions`}>{tm.devices}</a></li>
-<li><a href={`${self}?p=donnees`}>{tm.data}</a></li>
-<li><form method="post" action={self}><input type="hidden" name="action" value="logout"><button class="pm-item" type="submit">{ta.logout}</button></form></li>
-</ul>
-</details>
 </div>}
 </header>
 {finished ? <p class="notice" role="status">{finished} <a href={`/${d}/index.html`}>{ta.home}</a></p> : <>
@@ -396,9 +381,6 @@ const gauges = card
 .back a{display:inline-flex;align-items:center;min-height:44px;font-weight:500}
 /* Liens du menu vers un titre : il ne passe pas sous l'en-tête collant du site */
 .dash h2{scroll-margin-top:7rem}
-.dash-head .pm-list{min-width:15rem}
-/* Téléphone : avatar seul, la réservation et le menu restent sur une ligne */
-@media (max-width:599px){.dash-head .pm-who{display:none}}
 /* Rendez-vous à venir : infos à gauche, Déplacer et Annuler alignés à droite */
 .bookings{list-style:none;margin:0 0 1rem;padding:0;display:grid;gap:.45rem}
 .bookings li{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem 1rem;border:1px solid var(--line-soft);border-radius:12px;padding:.5rem .9rem;background:var(--bg)}
