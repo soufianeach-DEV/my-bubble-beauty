@@ -96,7 +96,7 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
   </nav>
 </section>
 
-<div class="grid">
+<div class="grid grid--day">
   {/* 2. Ligne du temps */}
   <section class="panel timeline" aria-labelledby="h-line">
     <h2 id="h-line">Rendez-vous du jour <a class="more" href={agenda(today)}>Agenda du jour</a></h2>
@@ -119,9 +119,24 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
     )}
   </section>
 
-  {/* 5. Alertes */}
-  <section class="panel alerts" aria-labelledby="h-alerts">
-    <h2 id="h-alerts">Alertes {alertCount > 0 && <span class="badge badge--alert">{alertCount}</span>}</h2>
+  <div class="side">
+  {/* 4. Mini-calendrier du mois */}
+  <section class="panel cal" aria-labelledby="h-cal">
+    <h2 id="h-cal"><span class="cap">{monthName}</span>
+      <span class="cal-nav"><a href={`/admin?mois=${prevMonth}#h-cal`} aria-label="Mois précédent">‹</a><a href={`/admin?mois=${nextFirst.slice(0, 7)}#h-cal`} aria-label="Mois suivant">›</a></span></h2>
+    <ol class="cal-grid" aria-label={`Rendez-vous par jour, ${monthName}`}>
+      {['lun', 'mar', 'mer', 'jeu', 'ven', 'sam', 'dim'].map((d) => <li class="cal-dow" aria-hidden="true">{d}</li>)}
+      {cells.map((d) => (
+        <li class:list={['cal-day', `cal-l${level(load[d])}`, { 'cal-out': d.slice(0, 7) !== first.slice(0, 7), 'cal-today': d === today }]}>
+          <a href={agenda(d)} aria-label={`${fmtDay(d)} : ${load[d] ?? 0} rendez-vous`}><span>{Number(d.slice(8))}</span>{load[d] ? <small>{load[d]}</small> : null}</a>
+        </li>
+      ))}
+    </ol>
+    <p class="hint">Couleur : de 1–2 à 5 rendez-vous et plus. Un clic ouvre le jour dans l'Agenda.</p>
+  </section>
+  {/* 5. Alertes : repliées, le nombre reste visible */}
+  <details class="panel alerts" id="alertes">
+    <summary><h2 id="h-alerts">Alertes ({alertCount})</h2></summary>
     <ul>
       {mailOff && <li class="al al--alert">Envoi d'e-mails non configuré : confirmations et rappels ne partent pas.</li>}
       {al.pending.map((r) => <li class="al al--wait">Paiement en cours : {r.name ?? '—'}, {fmtDateTime(r.starts_at)}</li>)}
@@ -132,7 +147,17 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
       {/* La durée sert à calculer les créneaux : sans elle, une prestation ne peut pas être réservée en ligne */}
     </ul>
     <p class="hint">Non disponible : anniversaires (aucune date de naissance enregistrée).</p>
+  </details>
+
+  {/* 4 bis. Les 7 prochains jours */}
+  <section class="panel next7" aria-labelledby="h-week">
+    <h2 id="h-week">7 prochains jours <a class="more" href="/admin/agenda">Agenda</a></h2>
+    <ul>{Array.from({ length: 7 }, (_, i) => addDays(today, i)).map((d) => (
+      <li><a href={agenda(d)}><span class="cap">{d === today ? 'Aujourd\'hui' : d === tomorrow ? 'Demain' : weekDay(new Date(`${d}T12:00:00Z`))}</span>
+        <span class:list={['bar', `cal-l${level(week[d])}`]}>{week[d] ? `${week[d]} rendez-vous` : 'Libre'}</span></a></li>
+    ))}</ul>
   </section>
+  </div>
 </div>
 
 {/* 3. Fiches des clientes du jour */}
@@ -169,31 +194,6 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
   )}
 </section>
 
-<div class="grid">
-  {/* 4. Mini-calendrier du mois */}
-  <section class="panel cal" aria-labelledby="h-cal">
-    <h2 id="h-cal"><span class="cap">{monthName}</span>
-      <span class="cal-nav"><a href={`/admin?mois=${prevMonth}#h-cal`} aria-label="Mois précédent">‹</a><a href={`/admin?mois=${nextFirst.slice(0, 7)}#h-cal`} aria-label="Mois suivant">›</a></span></h2>
-    <ol class="cal-grid" aria-label={`Rendez-vous par jour, ${monthName}`}>
-      {['lun', 'mar', 'mer', 'jeu', 'ven', 'sam', 'dim'].map((d) => <li class="cal-dow" aria-hidden="true">{d}</li>)}
-      {cells.map((d) => (
-        <li class:list={['cal-day', `cal-l${level(load[d])}`, { 'cal-out': d.slice(0, 7) !== first.slice(0, 7), 'cal-today': d === today }]}>
-          <a href={agenda(d)} aria-label={`${fmtDay(d)} : ${load[d] ?? 0} rendez-vous`}><span>{Number(d.slice(8))}</span>{load[d] ? <small>{load[d]}</small> : null}</a>
-        </li>
-      ))}
-    </ol>
-    <p class="hint">Couleur : de 1–2 à 5 rendez-vous et plus. Un clic ouvre le jour dans l'Agenda.</p>
-  </section>
-
-  {/* 4 bis. Les 7 prochains jours */}
-  <section class="panel next7" aria-labelledby="h-week">
-    <h2 id="h-week">7 prochains jours <a class="more" href="/admin/agenda">Agenda</a></h2>
-    <ul>{Array.from({ length: 7 }, (_, i) => addDays(today, i)).map((d) => (
-      <li><a href={agenda(d)}><span class="cap">{d === today ? 'Aujourd\'hui' : d === tomorrow ? 'Demain' : weekDay(new Date(`${d}T12:00:00Z`))}</span>
-        <span class:list={['bar', `cal-l${level(week[d])}`]}>{week[d] ? `${week[d]} rendez-vous` : 'Libre'}</span></a></li>
-    ))}</ul>
-  </section>
-</div>
 </Admin>
 
 <style>
@@ -207,6 +207,9 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
   .panel{padding:1.25rem}
   .grid{display:grid;gap:1.25rem;margin:0 0 1.75rem}
   @media (min-width:1024px){.grid{grid-template-columns:minmax(0,3fr) minmax(0,2fr)}}
+  /* Rendez-vous du jour étroits (40 %), calendrier du mois à côté (60 %) */
+  @media (min-width:1024px){.grid--day{grid-template-columns:minmax(0,2fr) minmax(0,3fr);align-items:start}}
+  .side{display:grid;gap:1.25rem;min-width:0}
 
   .today{display:grid;gap:1rem 2rem;padding:1.25rem 1.5rem;margin:0 0 1.75rem}
   @media (min-width:1024px){.today{grid-template-columns:minmax(0,1fr) auto;align-items:center}.quick{grid-column:1 / -1}}
@@ -236,6 +239,12 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
   .tl-time small,.tl-who small{display:block;font-weight:400;font-size:.8125rem;color:var(--text-soft)}
   .tl-who{min-width:0}
 
+  .alerts summary{list-style:none;cursor:pointer;min-height:44px}
+  .alerts summary::-webkit-details-marker{display:none}
+  .alerts summary h2{margin:0}
+  .alerts summary h2::after{content:'▾';margin-left:auto;font-size:1rem;color:var(--text-soft)}
+  .alerts[open] summary{margin-bottom:1rem}
+  .alerts[open] summary h2::after{content:'▴'}
   .alerts ul{display:grid;gap:.4rem;list-style:none;margin:0;padding:0}
   .al{padding:.55rem .75rem;border-radius:10px;font-size:.9375rem;background:rgb(138 90 82 / .08)}
   .al--alert{background:rgb(176 70 60 / .16)}
