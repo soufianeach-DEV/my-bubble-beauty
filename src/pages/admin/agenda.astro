@@ -6,6 +6,7 @@ import { addClosure, adminId, closuresBetween, deleteClosure, staffId, agendaAct
 import '../../styles/agenda-grille.css';
 import { gridBounds, placeSpans } from '../../lib/server/agenda-grille.ts';
 import RdvActions from './_rdv-actions.astro';
+import DayPicker from '../../components/DayPicker.astro';
 import { alertsFor } from '../../lib/server/profil.ts';
 import { addDays, monday } from '../../lib/server/admin-form.ts';
 import { adminAgenda } from '../../lib/server/booking.ts';
@@ -21,6 +22,9 @@ const vue = q.get('vue') === 'jour' ? 'jour' : 'semaine';
 const today = todayBrussels();
 const jour = isDay(q.get('jour')) ? q.get('jour')! : today;
 const link = (d: string, v = vue) => `/admin/agenda?jour=${d}&vue=${v}`;
+// Fermer un jour : premier et dernier jour choisis dans le calendrier (?du=&au=), par défaut le jour affiché
+const du = isDay(q.get('du')) ? q.get('du')! : jour;
+const au = isDay(q.get('au')) && q.get('au')! >= du ? q.get('au')! : du;
 let error = '';
 if (Astro.request.method === 'POST') {
   const form = await readForm(Astro.request);
@@ -108,18 +112,26 @@ const alertsOf = (r: Row) => (r.user_id ? careAlerts.get(r.user_id) ?? [] : []);
   <a href={link(addDays(from, count))}><span class="long">{vue === 'jour' ? 'Jour suivant' : 'Semaine suivante'}</span> <span aria-hidden="true">›</span></a>
 </nav>
 <form class="pick" method="get" action="/admin/agenda">
-  <div class="field"><label for="jour">Jour</label><input id="jour" name="jour" type="date" value={jour} required></div>
+  <input type="hidden" name="jour" value={jour}>
   <div class="field"><label for="vue">Affichage</label>
     <select id="vue" name="vue"><option value="semaine" selected={vue === 'semaine'}>Semaine</option><option value="jour" selected={vue === 'jour'}>Jour</option></select>
   </div>
   <button class="btn btn--ghost" type="submit">Afficher</button>
 </form>
-<details class="close-day">
+{/* Même calendrier que la réservation en ligne ; les jours passés ou fermés restent consultables */}
+<details class="tb-fold" open={q.has('cal')}>
+  <summary class="btn btn--ghost">Jour : {fmtDay(jour)}</summary>
+  <div class="tb-panel"><DayPicker lang="fr" day={jour} today={today} lastDay={addDays(today, 730)} label="Choisir le jour de l'agenda" soft href={(d) => `${link(d)}&cal=1`} /></div>
+</details>
+<details class="tb-fold" id="fermer" open={q.has('du')}>
   <summary class="btn btn--ghost">Fermer un jour</summary>
-  <form class="close-form" method="post">
+  <form class="tb-panel close-form" method="post">
     <input type="hidden" name="action" value="add-closure">
-    <div class="field"><label for="cl-start">Du</label><input id="cl-start" name="start_day" type="date" required value={jour}></div>
-    <div class="field"><label for="cl-end">Au <span class="hint">(même jour pour une seule journée)</span></label><input id="cl-end" name="end_day" type="date" required value={jour}></div>
+    <input type="hidden" name="start_day" value={du}><input type="hidden" name="end_day" value={au}>
+    <div class="cl-pick"><p class="cl-lbl">Du <strong>{fmtDay(du)}</strong></p>
+      <DayPicker lang="fr" day={du} today={today} lastDay={addDays(today, 730)} label="Premier jour fermé" soft href={(d) => `${link(jour)}&du=${d}&au=${d > au ? d : au}#fermer`} /></div>
+    <div class="cl-pick"><p class="cl-lbl">Au <strong>{fmtDay(au)}</strong> <span class="hint">(même jour pour une seule journée)</span></p>
+      <DayPicker lang="fr" day={au} today={today} min={du} lastDay={addDays(today, 730)} label="Dernier jour fermé" href={(d) => `${link(jour)}&du=${du}&au=${d}#fermer`} soft /></div>
     <div class="field cl-reason"><label for="cl-reason">Motif <span class="hint">(facultatif, visible par l'équipe seulement)</span></label><input id="cl-reason" name="reason" maxlength="200" placeholder="Congé, formation…"></div>
     <p class="hint cl-note">Journées entières. Plus aucun créneau en ligne ; « Nouveau rendez-vous » demande alors « Ouvrir exceptionnellement ». Pour fermer quelques heures : <a href="/admin/horaires#fermetures">Horaires</a>.</p>
     <button class="btn btn--solid" type="submit">Fermer ces jours</button>
@@ -245,10 +257,14 @@ const alertsOf = (r: Row) => (r.user_id ? careAlerts.get(r.user_id) ?? [] : []);
   }
   .pick{display:flex;flex-wrap:wrap;gap:.75rem;align-items:flex-end}
   /* Fermer un jour : replié dans la barre, le formulaire s'ouvre sur toute la largeur */
-  .close-day{display:contents}
-  .close-day>summary{list-style:none;cursor:pointer}
-  .close-day>summary::-webkit-details-marker{display:none}
-  .close-form{flex-basis:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:.75rem 1rem;align-items:end;padding-top:1rem;border-top:1px solid var(--line-soft)}
+  .tb-fold{display:contents}
+  .tb-fold>summary{list-style:none;cursor:pointer}
+  .tb-fold>summary::-webkit-details-marker{display:none}
+  .tb-fold[open]>summary{background:var(--accent);color:var(--accent-ink)}
+  .tb-panel{flex-basis:100%;padding-top:1rem;border-top:1px solid var(--line-soft)}
+  .tb-panel :global(.daypick){margin:0}
+  .close-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr));gap:.75rem 1.5rem;align-items:start}
+  .cl-lbl{margin:0 0 .5rem}
   .close-form .cl-reason,.close-form .cl-note{grid-column:1 / -1}
   .close-form .cl-note{margin:0}
   .close-form .btn{justify-self:start}

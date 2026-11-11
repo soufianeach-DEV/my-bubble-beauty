@@ -8,6 +8,9 @@ import Admin from '../_layout.astro';
 import { staffId, byCategory, fmtDay, listServices, newBooking, readForm } from '../../../lib/server/admin.ts';
 import { clientLabel, giftClients } from '../../../lib/server/cadeaux.ts';
 import { isDay, todayBrussels } from '../../../lib/server/pricing.ts';
+import { addDays } from '../../../lib/server/admin-form.ts';
+import DayPicker from '../../../components/DayPicker.astro';
+const today = todayBrussels();
 import { slots } from '../../../lib/server/slots.ts';
 
 const me = staffId(Astro.locals);
@@ -27,6 +30,9 @@ if (Astro.request.method === 'POST') {
   // Un créneau cliqué fixe l'heure ; sinon l'heure saisie à la main
   const slot = String(form.get('slot') ?? '');
   if (slot) form.set('time', slot);
+  // Un jour cliqué dans le calendrier : on garde la saisie et on montre les créneaux de ce jour, sans enregistrer
+  const pick = String(form.get('pick') ?? '');
+  if (isDay(pick)) { form.set('day', pick); form.set('look', '1'); }
   if (form.get('look') !== '1') {
     const r = await newBooking(me, form);
     if (r.ok) return Astro.redirect(`/admin/agenda?jour=${r.day}&vue=jour&ok=${r.key}#r-${r.id}`, 303);
@@ -74,7 +80,10 @@ const guestOpen = !v.client && !!(v.name || v.phone);
               <optgroup label={g.label}>{g.items.map((s) => <option value={s.id} selected={String(s.id) === v.service}>{s.name_fr} ({s.duration_min} min){!s.active && ' — non proposée en ligne'}</option>)}</optgroup>
             ))}
           </select></div>
-        <div class="field"><label for="day">Date</label><input id="day" name="day" type="date" value={v.day} required></div>
+        {/* Même calendrier que la réservation en ligne ; un jour fermé reste choisissable (« Ouvrir exceptionnellement ») */}
+        <p class="dp-label" id="day-label">Date : <strong>{fmtDay(v.day)}</strong></p>
+        <input type="hidden" name="day" value={v.day}>
+        <DayPicker lang="fr" day={v.day} today={today} lastDay={addDays(today, 365)} label="Date du rendez-vous" soft name="pick" />
         <button class="btn btn--ghost" type="submit" name="look" value="1" formnovalidate>Voir les créneaux libres</button>
       </fieldset>
     </div>
@@ -105,7 +114,9 @@ const guestOpen = !v.client && !!(v.name || v.phone);
   .nb{display:grid;gap:1.25rem;align-items:start;max-width:72rem}
   @media (min-width:1100px){.nb{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
   .nb-col{display:grid;gap:1.25rem;min-width:0}
-  fieldset{display:grid;gap:.85rem;margin:0;padding:1rem 1.25rem;border:1px solid var(--line-soft);border-radius:14px;min-width:0}
+  /* Colonne bornée : une prestation au nom long ou le calendrier ne poussent plus le cadre hors de l'écran (375 px) */
+  fieldset{display:grid;grid-template-columns:minmax(0,1fr);gap:.85rem;margin:0;padding:1rem 1.25rem;border:1px solid var(--line-soft);border-radius:14px;min-width:0}
+  .dp-label{margin:0}
   legend{font-weight:600;padding:0 .3rem}
   .field{margin:0}
   .field :is(input,select){width:100%}
