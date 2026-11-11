@@ -9,6 +9,7 @@ import RdvActions from './_rdv-actions.astro';
 import { alertsFor } from '../../lib/server/profil.ts';
 import { addDays, monday } from '../../lib/server/admin-form.ts';
 import { adminAgenda } from '../../lib/server/booking.ts';
+import { rdvStatus } from '../../lib/server/statut.ts';
 import { euros, isDay, todayBrussels } from '../../lib/server/pricing.ts';
 
 const me = staffId(Astro.locals);
@@ -47,6 +48,8 @@ const DONE: Record<string, string> = {
   encaisse: 'Encaissement noté.',
   nonencaisse: 'Encaissement retiré.',
   aheure: 'Retard retiré.',
+  arrivee: 'Arrivée notée.',
+  nonarrivee: 'Arrivée annulée.',
   rendu: 'Acompte noté comme remboursé hors du site.',
 };
 // Le formulaire repart vers l'URL courante : après un refus, le ?ok= du succès précédent ne doit plus s'afficher
@@ -61,8 +64,8 @@ const showCancelled = q.get('annules') === '1';
 const gone = (r: (typeof rows)[number]) => (r.status === 'cancelled' || r.status === 'expired') && !(r.paid && r.deposit_cents - r.refunded_cents > 0);
 const hidden = rows.filter(gone).length;
 const days = Array.from({ length: count }, (_, i) => addDays(from, i)).map((d) => ({ d, rows: rows.filter((r) => todayBrussels(r.starts_at) === d && (showCancelled || !gone(r))) }));
-const STATUS = { confirmed: 'Confirmé', pending_payment: 'Paiement en cours', cancelled: 'Annulé', expired: 'Payé après expiration' };
-const TONE = { confirmed: 'ok', pending_payment: 'wait', cancelled: 'off', expired: 'alert' };
+// Même statut qu'à l'Accueil (« Honoré · Payé », « À encaisser »…) ; une expirée de l'Agenda est un paiement arrivé trop tard
+const st = (r: (typeof rows)[number]) => (r.status === 'expired' ? { label: 'Payé après expiration', tone: 'alert' } : rdvStatus(r));
 // Acompte encaissé et pas encore rendu
 const due = (r: (typeof rows)[number]) => (r.paid ? r.deposit_cents - r.refunded_cents : 0);
 // Vue semaine : grille 7 jours × heures. Bornes = ouverture la plus tôt et fermeture la plus tard, élargies aux rendez-vous
@@ -143,7 +146,7 @@ const alertsOf = (r: Row) => (r.user_id ? careAlerts.get(r.user_id) ?? [] : []);
         {r.email && <><br><small>{r.email}</small></>}</p>
       {alertsOf(r).length > 0 && <p class="rdv-alerts">{alertsOf(r).map((a) => <span class="badge badge--alert">{a}</span>)}</p>}
       <p>{r.service}<br>
-        <span class={`badge badge--${r.no_show ? 'alert' : TONE[r.status]}`}>{r.no_show ? 'Absente' : STATUS[r.status]}</span>
+        <span class={`badge badge--${st(r).tone}`}>{st(r).label}</span>
         {r.late_minutes && <> · Arrivée en retard : {r.late_minutes} min</>}
         <br>Prix {euros(r.price_cents)}{r.discount_cents > 0 && <> · remise −{euros(r.discount_cents)}{r.promo && ` (${r.promo})`}</>}{r.package && <> · <span class="badge">Forfait</span> {r.package}</>}
         {r.deposit_cents > 0 && <><br>Acompte {euros(r.deposit_cents)}{r.paid ? ' payé' : ' non payé'}</>}
@@ -171,7 +174,7 @@ const alertsOf = (r: Row) => (r.user_id ? careAlerts.get(r.user_id) ?? [] : []);
               {r.email && <><br><small>{r.email}</small></>}
             </td>
             <td>
-              <span class={`badge badge--${r.no_show ? 'alert' : TONE[r.status]}`}>{r.no_show ? 'Absente' : STATUS[r.status]}</span>
+              <span class={`badge badge--${st(r).tone}`}>{st(r).label}</span>
               {r.late_minutes && <><br><small>Arrivée en retard : {r.late_minutes} min</small></>}
               {r.cancel_reason === 'account_deleted' && <><br><small>Compte supprimé par la cliente</small></>}
               {r.status === 'cancelled' && due(r) > 0 && <><br><small>Acompte gardé ou remboursement à relancer</small></>}
