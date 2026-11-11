@@ -1,34 +1,48 @@
 ---
 export const prerender = false;
-// Accueil de l'admin : la journée en un coup d'œil pour la gérante (le matin, entre deux soins), avant l'Agenda détaillé.
+// Accueil de l'admin = « Aujourd'hui » : une carte par rendez-vous du jour, un seul bouton visible selon le moment
+// (Arrivée, puis Terminer et encaisser), le reste derrière « ··· » avec la conséquence écrite ; la clôture du soir en bas.
 // N'affiche que ce que la base contient ; ce qui manque est signalé, jamais déduit.
 import { ADMIN_EMAIL, MAIL_FROM, RESEND_API_KEY } from 'astro:env/server';
 import Admin from './_layout.astro';
-import { adminId, deleteAction, readForm, staffId, fmtDateTime, fmtDay, fmtTime } from '../../lib/server/admin.ts';
+import Encaisser from './_encaisser.astro';
 import Supprimer from './_supprimer.astro';
+import { adminId, agendaAction, deleteAction, readForm, staffId, fmtDateTime, fmtDay, fmtTime } from '../../lib/server/admin.ts';
 import { alertsFor } from '../../lib/server/profil.ts';
 import { addDays, monday } from '../../lib/server/admin-form.ts';
-import { adminAgenda } from '../../lib/server/booking.ts';
-import { alerts, clientCards, dayFrame, freeMinutes, loadByDay } from '../../lib/server/accueil.ts';
+import { PAY_METHODS, type PayMethod } from '../../lib/server/booking.ts';
+import { alerts, clientCards, dayBookings, dayFrame, freeMinutes, loadByDay, type DayBooking } from '../../lib/server/accueil.ts';
+import { consentFor, FORMS } from '../../lib/server/consentements.ts';
+import { rdvStatus } from '../../lib/server/statut.ts';
 import { euros, isDay, todayBrussels } from '../../lib/server/pricing.ts';
-import { JS_VERSION } from '../../lib/site';
 
 const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
-// Seule action de la page : supprimer un rendez-vous de la ligne du temps (admin seulement)
+// Supprimer : admin seulement ; toutes les autres actions d'un rendez-vous passent par agendaAction (mêmes gardes que l'Agenda)
 const admin = adminId(Astro.locals) !== null;
-let delError = '';
+let error = '';
 if (Astro.request.method === 'POST') {
-  const form = admin ? await readForm(Astro.request) : null;
-  const r = form ? await deleteAction(form) : { ok: false as const, error: "Seule l'admin peut supprimer un rendez-vous." };
-  if (r.ok) return Astro.redirect('/admin?ok=supprime#h-line', 303);
-  delError = r.error;
+  const form = await readForm(Astro.request);
+  if (!form) return new Response(null, { status: 413 });
+  const r = form.get('action') === 'delete'
+    ? admin ? await deleteAction(form) : { ok: false as const, error: "Seule l'admin peut supprimer un rendez-vous." }
+    : await agendaAction(me, form);
+  if (r.ok) return Astro.redirect(`/admin?ok=${r.key}#${r.key === 'supprime' ? 'h-day' : `c-${r.id}`}`, 303);
+  error = r.error;
   Astro.response.status = 400;
 }
+const DONE: Record<string, string> = {
+  arrivee: 'Arrivée notée.', nonarrivee: 'Arrivée annulée.', encaisse: 'Honoré et payé : encaissement noté.', nonencaisse: 'Encaissement retiré.',
+  absente: 'Rendez-vous marqué « absente ».', venue: 'Absence retirée.', retard: 'Retard noté.', aheure: 'Retard retiré.',
+  annule: 'Rendez-vous annulé.', rembourse: 'Acompte remboursé, rendez-vous annulé.', supprime: 'Rendez-vous supprimé.',
+  echec: "Le remboursement n'a pas abouti : réessayez depuis l'Agenda.",
+};
+const done = !error && DONE[Astro.url.searchParams.get('ok') ?? ''];
 
 const now = new Date();
 const today = todayBrussels();
 const tomorrow = addDays(today, 1);
+const hourNow = Number(new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', hour: '2-digit', hourCycle: 'h23' }).format(now));
 // Mini-calendrier : mois demandé (?mois=AAAA-MM) ou mois en cours, grille du lundi au dimanche
 const asked = Astro.url.searchParams.get('mois') ?? '';
 const first = isDay(`${asked}-01`) ? `${asked}-01` : `${today.slice(0, 7)}-01`;
@@ -38,19 +52,15 @@ const gridFrom = monday(first);
 const gridTo = addDays(monday(addDays(nextFirst, -1)), 7);
 
 const [rows, frame, cards, freeTomorrow, load, week, al] = await Promise.all([
-  adminAgenda(today, 1), dayFrame(today), clientCards(today), freeMinutes(tomorrow),
+  dayBookings(today), dayFrame(today), clientCards(today), freeMinutes(tomorrow),
   loadByDay(gridFrom, gridTo), loadByDay(today, addDays(today, 7)), alerts(ADMIN_EMAIL),
 ]);
-// Badges d'alerte (zones à ne pas toucher, allergies, toucher limité) des clientes du jour
+// Badges d'alerte de la fiche de soin (zones, allergies, toucher) : repliés sous une icône, jamais affichés au comptoir
 const careAlerts = await alertsFor(cards.map((c) => c.id));
+const card = new Map(cards.map((c) => [c.id, c]));
 
-const live = rows.filter((r) => r.status === 'confirmed' || r.status === 'pending_payment');
-const next = live.find((r) => r.starts_at > now && !r.no_show);
-const state = (r: (typeof rows)[number]) =>
-  r.status === 'cancelled' ? ['Annulé', 'off'] : r.no_show ? ['Absente', 'alert'] : r.status === 'pending_payment' ? ['Paiement en cours', 'wait']
-  : r.status === 'expired' ? ['Expiré', 'off'] : now < r.starts_at ? ['À venir', 'wait'] : now < r.ends_at ? ['En cours', 'ok'] : ['Terminé', 'off'];
 const minutes = (n: number) => (n < 60 ? `${n} min` : `${Math.floor(n / 60)} h${n % 60 ? ` ${String(n % 60).padStart(2, '0')}` : ''}`);
-const until = (d: Date) => { const m = Math.max(0, Math.round((d.getTime() - now.getTime()) / 60000)); return m === 0 ? 'maintenant' : `dans ${minutes(m)}`; };
+const length = (r: DayBooking) => minutes(Math.round((r.ends_at.getTime() - r.starts_at.getTime()) / 60000));
 const digits = (p: string) => p.replace(/[^0-9+]/g, '');
 const agenda = (d: string) => `/admin/agenda?jour=${d}&vue=jour`;
 const shortDate = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', day: 'numeric', month: 'short', year: 'numeric' }).format;
@@ -58,69 +68,145 @@ const monthName = new Intl.DateTimeFormat('fr-BE', { timeZone: 'UTC', month: 'lo
 const weekDay = new Intl.DateTimeFormat('fr-BE', { timeZone: 'UTC', weekday: 'short', day: 'numeric' }).format;
 const cells = Array.from({ length: (Date.parse(gridTo) - Date.parse(gridFrom)) / 86400000 }, (_, i) => addDays(gridFrom, i));
 const level = (n = 0) => (n === 0 ? 0 : n <= 2 ? 1 : n <= 4 ? 2 : 3);
-const guests = live.filter((r) => r.guest);
 const mailOff = !RESEND_API_KEY || !MAIL_FROM;
-const alertCount = al.pending.length + al.moved.length + al.cancelled.length + al.newClients.length + al.closures.length + (mailOff ? 1 : 0);
+
+// Ce que chaque carte montre et propose
+const view = rows.map((r) => {
+  const st = rdvStatus(r);
+  const live = r.status === 'confirmed' && !r.no_show;
+  const begun = r.past || !!r.arrived_at;
+  const kind = r.user_id ? consentFor(r.slug) : null;
+  const consent = kind && !r.signed.includes(kind) ? kind : null;
+  const primary = !live ? null : !begun ? (consent ? 'consent' : 'arrive') : r.paid_method || r.package ? null : 'pay';
+  const absence = [
+    r.package && "La séance n'est pas décomptée du forfait : elle reste à prendre.",
+    r.gift && 'Le bon cadeau redevient utilisable.',
+    r.paid_method && "L'encaissement noté est retiré.",
+    r.late_minutes && 'Le retard noté est effacé.',
+    r.user_id && 'Cette séance ne compte pas sur la carte de fidélité.',
+  ].filter((x): x is string => !!x);
+  return { r, st, live, begun, consent, primary, absence, due: r.paid ? r.deposit_cents - r.refunded_cents : 0 };
+});
+const next = view.find((v) => v.live && !v.begun)?.r;
+const liveCount = view.filter((v) => v.r.status === 'confirmed' && !v.r.no_show).length;
+
+// Alertes du jour qui demandent un geste ; le reste (déplacés, annulés, inscrites…) se replie dans « Infos »
+const consentTodo = view.filter((v) => v.consent && !v.begun);
+const toCash = view.filter((v) => v.live && v.r.ended && !v.r.paid_method && !v.r.package);
+const infoCount = al.pending.length + al.moved.length + al.cancelled.length + al.newClients.length + al.closures.length;
+
+// Clôture du soir : rendez-vous terminés non encaissés, caisse par mode de paiement (modes existants), séances de forfait
+const stillOpen = view.filter((v) => v.live && !v.r.ended && !v.r.paid_method && !v.r.package).length;
+const tills = (Object.keys(PAY_METHODS) as PayMethod[]).map((k) => {
+  const paid = rows.filter((r) => r.paid_method === k && !r.no_show);
+  return { k, n: paid.length, cents: paid.reduce((s, r) => s + (r.paid_cents ?? 0), 0) };
+}).filter((t) => t.n > 0);
+const packageDone = view.filter((v) => v.live && v.r.package && v.begun).length;
+const tillTotal = tills.reduce((s, t) => s + t.cents, 0);
 ---
-<Admin title="Accueil">
-{delError && <p class="notice notice--error" role="alert">{delError}</p>}
-{!delError && Astro.url.searchParams.get('ok') === 'supprime' && <p class="notice" role="status">Rendez-vous supprimé.</p>}
+<Admin title="Aujourd'hui">
 <span slot="actions" class="head-acts"><a class="btn btn--ghost" href={`/admin/imprimer?jour=${today}`}>Imprimer la journée</a><a class="btn btn--solid" href="/admin/reservations/nouvelle">Saisir un rendez-vous</a></span>
-<script is:inline src={`/assets/js/compte-a-rebours.js?v=${JS_VERSION}`} defer></script>
+{error && <p class="notice notice--error" role="alert">{error}</p>}
+{done && <p class="notice" role="status">{done}</p>}
 
-{/* 1. La journée */}
-{/* Les deux informations qui demandent une action ou orientent la journée, avant tout le reste */}
-<div class="priority">
-  {al.noDuration.length > 0 && <p class="prio prio--warn">{al.noDuration.length} prestation{al.noDuration.length > 1 ? 's' : ''} ne {al.noDuration.length > 1 ? 'peuvent' : 'peut'} pas être réservée{al.noDuration.length > 1 ? 's' : ''} en ligne : il leur manque une durée. <a href="/admin/prestations?filtre=sans-duree">Indiquer les durées</a></p>}
-  <p class="prio">Libre : <strong>{minutes(frame.freeMin)}</strong> aujourd'hui, <strong>{minutes(freeTomorrow)}</strong> demain. <a href={agenda(tomorrow)}>Voir demain</a></p>
-</div>
-<section class="today" aria-labelledby="h-today">
-  <div>
-    <h2 id="h-today">{fmtDay(today)}</h2>
-    <p class="day-open">{frame.hours.length ? <>Ouvert {frame.hours.map((h) => `${h.opens}–${h.closes}`).join(' et ')}</> : 'Fermé aujourd\'hui (aucune plage d\'ouverture)'}
-      {frame.closures.map((c) => <span class="badge badge--alert">Fermeture {fmtTime(c.starts_at)}–{fmtTime(c.ends_at)}{c.reason && ` · ${c.reason}`}</span>)}</p>
-  </div>
-  <dl class="kpis">
-    <div><dt>Rendez-vous</dt><dd>{live.length}</dd></div>
-    <div><dt>Temps libre restant</dt><dd>{minutes(frame.freeMin)}</dd></div>
-    <div class="kpi-next"><dt>Prochain rendez-vous</dt>
-      <dd>{next ? <><time data-countdown datetime={next.starts_at.toISOString()}>{until(next.starts_at)}</time><small>{fmtTime(next.starts_at)} · {next.name ?? '—'} · {next.service}</small></> : <small>Plus rien aujourd'hui</small>}</dd>
-    </div>
-  </dl>
-  <nav class="quick" aria-label="Actions rapides">
-    <a class="btn btn--ghost" href="/admin/horaires#fermetures">Bloquer un créneau</a>
-    {next?.phone && <>
-      <a class="btn btn--ghost" href={`tel:${digits(next.phone)}`}>Appeler {next.name ?? 'la cliente'}</a>
-      <a class="btn btn--ghost" href={`https://wa.me/${digits(next.phone).replace(/^\+/, '')}`}>WhatsApp</a>
-    </>}
-  </nav>
-</section>
+<header class="day-head">
+  <h2 id="h-day">{fmtDay(today)}</h2>
+  <p class="day-open">{frame.hours.length ? <>Ouvert {frame.hours.map((h) => `${h.opens}–${h.closes}`).join(' et ')}</> : "Fermé aujourd'hui (aucune plage d'ouverture)"}
+    <span>· {liveCount} rendez-vous · libre {minutes(frame.freeMin)} (demain {minutes(freeTomorrow)})</span>
+    {frame.closures.map((c) => <span class="badge badge--alert">Fermeture {fmtTime(c.starts_at)}–{fmtTime(c.ends_at)}{c.reason && ` · ${c.reason}`}</span>)}
+    {al.noDuration.length > 0 && <a class="todo" href="/admin/prestations?filtre=sans-duree">Réglages à faire : {al.noDuration.length}<span class="visually-hidden"> prestation{al.noDuration.length > 1 ? 's' : ''} sans durée</span></a>}</p>
+</header>
 
-<div class="grid grid--day">
-  {/* 2. Ligne du temps */}
-  <section class="panel timeline" aria-labelledby="h-line">
-    <h2 id="h-line">Rendez-vous du jour <a class="more" href={agenda(today)}>Agenda du jour</a></h2>
-    {rows.length === 0 ? <p class="none">Aucun rendez-vous aujourd'hui.</p> : (
-      <ol>{rows.filter((r) => r.status !== 'cancelled' && r.status !== 'expired').map((r) => { const [label, tone] = state(r); return (
-        <li class:list={[`tl tl--${tone}`, { 'tl--next': r.id === next?.id }]}>
-          <span class="tl-time">{fmtTime(r.starts_at)}<small>{minutes(Math.round((r.ends_at.getTime() - r.starts_at.getTime()) / 60000))}</small></span>
-          <span class="tl-who">
-            {r.user_id ? <a href={`/admin/clientes/${r.user_id}`}>{r.name ?? r.email}</a> : <span>{r.name ?? (r.erased ? 'Compte supprimé' : '—')}</span>}
-            <small>{r.service}{r.guest && ' · saisie par l\'institut'}</small>
-          </span>
-          <span class={`badge badge--${tone}`}>{label}</span>
-          {/* Rendez-vous commencé : on note la suite (absence, retard, encaissement) dans l'agenda, on ne le supprime plus d'ici */}
-          {r.status === 'confirmed' && r.past
-            ? <span class="tl-del">{r.paid_method && <small>Encaissé {euros(r.paid_cents ?? 0)}</small>}{r.late_minutes && <small>Retard {r.late_minutes} min</small>}
-                <a href={`${agenda(today)}#r-${r.id}`}>{r.no_show || r.paid_method ? 'Modifier' : 'Absente, retard, encaissé'}<span class="visually-hidden"> : rendez-vous de {fmtTime(r.starts_at)}</span></a></span>
-            : admin && <span class="tl-del"><Supprimer id={r.id} label={`le rendez-vous de ${fmtTime(r.starts_at)}`} action="/admin" /></span>}
+{(consentTodo.length > 0 || toCash.length > 0 || mailOff) && (
+  <ul class="gestures" aria-label="À faire aujourd'hui">
+    {consentTodo.map(({ r, consent }) => <li><a href={`/admin/clientes/${r.user_id}/consentement?type=${consent}`}><strong>{r.name ?? 'Cliente'}</strong>&nbsp;: {FORMS[consent!].title} à signer avant le soin de {fmtTime(r.starts_at)}</a></li>)}
+    {toCash.length > 0 && <li><a href="#cloture">{toCash.length} rendez-vous terminé{toCash.length > 1 ? 's' : ''} à encaisser</a></li>}
+    {mailOff && <li class="g-alert">Envoi d'e-mails non configuré : confirmations et rappels ne partent pas.</li>}
+  </ul>
+)}
+
+<div class="day">
+  <section class="rdvs" aria-labelledby="h-rdvs">
+    <h2 id="h-rdvs" class="visually-hidden">Rendez-vous du jour</h2>
+    {view.length === 0 ? <p class="none">Aucun rendez-vous aujourd'hui.</p> : (
+      <ol class="cards">{view.map(({ r, st, live, begun, consent, primary, absence, due }) => { const c = r.user_id ? card.get(r.user_id) : undefined; const care = r.user_id ? careAlerts.get(r.user_id) ?? [] : []; return (
+        <li class:list={['rc', `rc--${st.tone}`, { 'rc--next': r.id === next?.id }]} id={`c-${r.id}`}>
+          <p class="rc-time"><time datetime={r.starts_at.toISOString()}>{fmtTime(r.starts_at)}</time> <small>{length(r)}</small>
+            <span class={`badge badge--${st.tone}`}>{st.label}</span></p>
+          <h3>{r.user_id ? <a href={`/admin/clientes/${r.user_id}`}>{r.name ?? 'Cliente'}</a> : <span>{r.name ?? 'Sans nom'}</span>}
+            {c && c.visits === 0 && <span class="badge badge--wait">Première visite</span>}{r.guest && <span class="badge badge--off">Sans compte</span>}</h3>
+          <p class="rc-svc">{r.service}</p>
+          <ul class="prep">
+            {r.package && <li>Séance {r.package_n} sur {r.package_total} du forfait{begun && live && ' · déduite, rien à encaisser'}</li>}
+            {consent && <li class="p-warn">{FORMS[consent].title} à signer</li>}
+            {r.gift && !r.paid_method && <li>Bon cadeau : soin offert</li>}
+            {r.late_minutes && <li>Retard {r.late_minutes} min</li>}
+            {r.arrived_at && !r.paid_method && <li>Arrivée à {fmtTime(r.arrived_at)}</li>}
+            {r.paid_method && <li>Encaissé {euros(r.paid_cents ?? 0)} · {PAY_METHODS[r.paid_method as PayMethod]}</li>}
+            {care.length > 0 && <li><details class="care"><summary><span aria-hidden="true">⚠</span> À lire avant le soin ({care.length})</summary><p>{care.map((a) => <span class="badge badge--alert">{a}</span>)}</p></details></li>}
+            {c?.notes && <li><details class="care"><summary>Note de la fiche</summary><p class="note">{c.notes}</p></details></li>}
+          </ul>
+          <div class="rc-acts">
+            {primary === 'arrive' && <form method="post" action={`/admin#c-${r.id}`}><input type="hidden" name="action" value="arrive"><input type="hidden" name="id" value={r.id}>
+              <button class="btn btn--solid big" type="submit">Arrivée<span class="visually-hidden"> de {r.name ?? 'la cliente'}</span></button></form>}
+            {primary === 'consent' && <a class="btn btn--solid big" href={`/admin/clientes/${r.user_id}/consentement?type=${consent}`}>Faire signer sur la tablette</a>}
+            {primary === 'pay' && <Encaisser r={r} />}
+            <details class="more">
+              <summary aria-label={`Plus d'actions : ${r.name ?? 'rendez-vous'} à ${fmtTime(r.starts_at)}`}><span aria-hidden="true">···</span></summary>
+              <div class="menu">
+                {live && !r.arrived_at && primary !== 'arrive' && <form method="post" action={`/admin#c-${r.id}`}><input type="hidden" name="action" value="arrive"><input type="hidden" name="id" value={r.id}>
+                  <button class="btn btn--ghost" type="submit">Noter l'arrivée{r.past && ' (retard calculé)'}</button></form>}
+                {live && r.arrived_at && !r.paid_method && <form method="post" action={`/admin#c-${r.id}`}><input type="hidden" name="action" value="unarrive"><input type="hidden" name="id" value={r.id}>
+                  <button class="btn btn--ghost" type="submit">Annuler l'arrivée</button><small>Le retard calculé à l'arrivée est retiré, pas un retard saisi à la main.</small></form>}
+                {live && r.past && (r.late_minutes
+                  ? <form method="post" action={`/admin#c-${r.id}`}><input type="hidden" name="action" value="on_time"><input type="hidden" name="id" value={r.id}><button class="btn btn--ghost" type="submit">Retirer le retard</button></form>
+                  : <details><summary>Retard</summary><form method="post" action={`/admin#c-${r.id}`}><input type="hidden" name="action" value="late"><input type="hidden" name="id" value={r.id}>
+                      <label class="field">Minutes de retard<input type="number" name="late" required min="1" max="240" step="1" inputmode="numeric"></label><button class="btn btn--ghost" type="submit">Noter le retard</button></form></details>)}
+                {r.status === 'confirmed' && r.past && (r.no_show
+                  ? <form method="post" action={`/admin#c-${r.id}`}><input type="hidden" name="action" value="show"><input type="hidden" name="id" value={r.id}><button class="btn btn--ghost" type="submit">Retirer l'absence</button></form>
+                  : <details><summary>Absente</summary><form method="post" action={`/admin#c-${r.id}`}><input type="hidden" name="action" value="no_show"><input type="hidden" name="id" value={r.id}>
+                      <ul class="cons">{absence.map((t) => <li>{t}</li>)}</ul><button class="btn btn--ghost" type="submit">Confirmer l'absence</button></form></details>)}
+                {live && r.paid_method && <details><summary>Retirer l'encaissement</summary><form method="post" action={`/admin#c-${r.id}`}><input type="hidden" name="action" value="unpay"><input type="hidden" name="id" value={r.id}>
+                  <ul class="cons"><li>Le rendez-vous repasse « à encaisser ». Le montant sort de la caisse du jour.</li></ul><button class="btn btn--ghost" type="submit">Confirmer le retrait</button></form></details>}
+                {(r.status === 'pending_payment' || (live && !r.past)) && <details><summary>Annuler le rendez-vous</summary><form method="post" action={`/admin#c-${r.id}`}><input type="hidden" name="action" value="cancel"><input type="hidden" name="id" value={r.id}>
+                  <ul class="cons"><li>Le créneau est libéré.</li>{r.user_id && <li>La cliente reçoit un e-mail d'annulation.</li>}{r.package && <li>La séance est rendue au forfait.</li>}</ul>
+                  {due > 0 && <label class="check"><input type="checkbox" name="refund"><span>Rembourser l'acompte ({euros(due)})</span></label>}
+                  <button class="btn btn--ghost" type="submit">Confirmer l'annulation</button></form></details>}
+                {admin && !r.past && <Supprimer id={r.id} label={`le rendez-vous de ${fmtTime(r.starts_at)}`} action="/admin" />}
+                <p class="links">{r.user_id && <a href={`/admin/clientes/${r.user_id}`}>Fiche</a>}{r.phone && <a href={`tel:${digits(r.phone)}`}>Appeler</a>}<a href={`${agenda(today)}#r-${r.id}`}>Agenda</a></p>
+              </div>
+            </details>
+          </div>
         </li>
       ); })}</ol>
     )}
+
+    {/* Le soir : ce qui reste à encaisser, puis la caisse du jour par mode */}
+    <details class="close" id="cloture" open={hourNow >= 17}>
+      <summary><h2>Clôturer la journée</h2></summary>
+      {toCash.length > 0 && <>
+        <h3>À encaisser ({toCash.length})</h3>
+        <ul class="cash">{toCash.map(({ r }) => (
+          <li><p><strong>{fmtTime(r.starts_at)}</strong> {r.name ?? 'Sans nom'}<br><small>{r.service}</small></p><Encaisser r={r} label="Encaisser" /></li>
+        ))}</ul>
+      </>}
+      <h3>Caisse du jour</h3>
+      {tills.length === 0 && packageDone === 0 ? <p class="none">Aucun encaissement noté aujourd'hui.</p> : (
+        <table class="till">
+          <tbody>
+            {tills.map((t) => <tr><th scope="row">{PAY_METHODS[t.k]}</th><td>{t.n} rendez-vous</td><td>{euros(t.cents)}</td></tr>)}
+            {packageDone > 0 && <tr><th scope="row">Forfait</th><td>{packageDone} séance{packageDone > 1 ? 's' : ''}</td><td>rien à encaisser</td></tr>}
+          </tbody>
+          <tfoot><tr><th scope="row">Total encaissé</th><td></td><td>{euros(tillTotal)}</td></tr></tfoot>
+        </table>
+      )}
+      {toCash.length === 0 && (stillOpen === 0
+        ? <p class="closed" role="status">Journée close. Rien d'autre à faire.</p>
+        : <p class="none">Encore {stillOpen} rendez-vous en cours ou à venir : la journée se clôture quand tout est encaissé.</p>)}
+    </details>
   </section>
 
   <div class="side">
-  {/* 4. Mini-calendrier du mois */}
   <section class="panel cal" aria-labelledby="h-cal">
     <h2 id="h-cal"><span class="cap">{monthName}</span>
       <span class="cal-nav"><a href={`/admin?mois=${prevMonth}#h-cal`} aria-label="Mois précédent">‹</a><a href={`/admin?mois=${nextFirst.slice(0, 7)}#h-cal`} aria-label="Mois suivant">›</a></span></h2>
@@ -132,143 +218,110 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
         </li>
       ))}
     </ol>
-    <p class="hint">Couleur : de 1–2 à 5 rendez-vous et plus. Un clic ouvre le jour dans l'Agenda.</p>
   </section>
-  {/* 5. Alertes : repliées, le nombre reste visible */}
-  <details class="panel alerts" id="alertes">
-    <summary><h2 id="h-alerts">Alertes ({alertCount})</h2></summary>
-    <ul>
-      {mailOff && <li class="al al--alert">Envoi d'e-mails non configuré : confirmations et rappels ne partent pas.</li>}
+  <section class="panel next7" aria-labelledby="h-week">
+    <h2 id="h-week">7 prochains jours <a class="more-link" href="/admin/agenda">Agenda</a></h2>
+    <ul>{Array.from({ length: 7 }, (_, i) => addDays(today, i)).map((d) => (
+      <li><a href={agenda(d)}><span class="cap">{d === today ? "Aujourd'hui" : d === tomorrow ? 'Demain' : weekDay(new Date(`${d}T12:00:00Z`))}</span>
+        <span class:list={['bar', `cal-l${level(week[d])}`]}>{week[d] ? `${week[d]} rendez-vous` : 'Libre'}</span></a></li>
+    ))}</ul>
+  </section>
+  {/* Informations sans geste à faire : repliées, le nombre reste visible */}
+  <details class="panel infos">
+    <summary><h2>Infos ({infoCount})</h2></summary>
+    {infoCount === 0 ? <p class="none">Rien de neuf.</p> : <ul>
       {al.pending.map((r) => <li class="al al--wait">Paiement en cours : {r.name ?? '—'}, {fmtDateTime(r.starts_at)}</li>)}
       {al.moved.map((r) => <li class="al"><a href={agenda(todayBrussels(r.starts_at))}>Déplacé</a> : {r.name ?? '—'}, {r.service}, maintenant le {fmtDateTime(r.starts_at)}</li>)}
       {al.cancelled.map((r) => <li class="al al--off">Annulé : {r.name ?? '—'}, {r.service}, {fmtDateTime(r.starts_at)}{r.cancel_reason === 'account_deleted' && ' (compte supprimé)'}</li>)}
       {al.newClients.map((c) => <li class="al al--ok">Nouvelle inscrite : <a href={`/admin/clientes/${c.id}`}>{c.name ?? c.email}</a>, le {shortDate(c.created_at)}</li>)}
       {al.closures.map((c) => <li class="al">Fermeture : {fmtDateTime(c.starts_at)} → {fmtDateTime(c.ends_at)}{c.reason && ` (${c.reason})`}</li>)}
-      {/* La durée sert à calculer les créneaux : sans elle, une prestation ne peut pas être réservée en ligne */}
-    </ul>
-    <p class="hint">Non disponible : anniversaires (aucune date de naissance enregistrée).</p>
+    </ul>}
   </details>
-
-  {/* 4 bis. Les 7 prochains jours */}
-  <section class="panel next7" aria-labelledby="h-week">
-    <h2 id="h-week">7 prochains jours <a class="more" href="/admin/agenda">Agenda</a></h2>
-    <ul>{Array.from({ length: 7 }, (_, i) => addDays(today, i)).map((d) => (
-      <li><a href={agenda(d)}><span class="cap">{d === today ? 'Aujourd\'hui' : d === tomorrow ? 'Demain' : weekDay(new Date(`${d}T12:00:00Z`))}</span>
-        <span class:list={['bar', `cal-l${level(week[d])}`]}>{week[d] ? `${week[d]} rendez-vous` : 'Libre'}</span></a></li>
-    ))}</ul>
-  </section>
   </div>
 </div>
-
-{/* 3. Fiches des clientes du jour */}
-<section class="cards-wrap" aria-labelledby="h-cards">
-  <h2 id="h-cards">Fiches des clientes du jour</h2>
-  {cards.length === 0 && guests.length === 0 ? <p class="none">Aucune cliente attendue aujourd'hui.</p> : (
-    <div class="cards">
-      {cards.map((c) => (
-        <article class="card">
-          <h3><a href={`/admin/clientes/${c.id}`}>{c.name ?? c.email}</a>{c.visits === 0 && <span class="badge badge--wait">Première visite</span>}</h3>
-          <p class="contact">{c.phone ? <a href={`tel:${digits(c.phone)}`}>{c.phone}</a> : 'Pas de téléphone'} · <span>{c.email}</span></p>
-          <dl>
-            <div><dt>Visites</dt><dd>{c.visits}{c.no_shows > 0 && ` (+ ${c.no_shows} absence${c.no_shows > 1 ? 's' : ''})`}</dd></div>
-            <div><dt>Dernière visite</dt><dd>{c.last_visit ? shortDate(c.last_visit) : '—'}</dd></div>
-            <div><dt>Cliente depuis</dt><dd>{shortDate(c.created_at)}</dd></div>
-          </dl>
-          {(careAlerts.get(c.id) ?? []).length > 0 && <p class="care-alerts">{careAlerts.get(c.id)!.map((a) => <span class="badge badge--alert">{a}</span>)}</p>}
-          {c.services.length > 0 && <p class="past"><b>Déjà faits :</b> {c.services.join(', ')}</p>}
-          {/* RGPD : seulement ce qui est déjà en base. Sans accord, les notes ne doivent rien contenir de médical. */}
-          <p class:list={['consent', { 'consent--no': !c.health_consent_at }]}>{c.health_consent_at
-            ? `Accord santé donné le ${shortDate(c.health_consent_at)}. Allergies et contre-indications : voir la fiche de soin.`
-            : 'Pas d\'accord pour les données de santé : rien de médical dans les notes.'}</p>
-          {c.notes ? <p class="notes">{c.notes}</p> : <p class="notes notes--empty">Aucune note.</p>}
-        </article>
-      ))}
-      {guests.map((r) => (
-        <article class="card card--guest">
-          <h3>{r.name ?? '—'}<span class="badge badge--off">Sans compte</span></h3>
-          <p class="contact">{r.phone ? <a href={`tel:${digits(r.phone)}`}>{r.phone}</a> : 'Pas de téléphone'}</p>
-          <p class="notes notes--empty">Rendez-vous saisi par l'institut : seuls le nom et le téléphone sont enregistrés.</p>
-        </article>
-      ))}
-    </div>
-  )}
-</section>
-
 </Admin>
 
 <style>
   .head-acts{display:flex;flex-wrap:wrap;gap:.5rem}
   h2{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem;margin:0 0 1rem;font-size:1.35rem}
-  .more{margin-left:auto;font:500 .875rem var(--f-text)}
-  .none,.hint{margin:0;color:var(--text-soft);font-size:.9375rem}
-  .hint{margin-top:.75rem;font-size:.8125rem}
-  .cap::first-letter{text-transform:uppercase}
-  .panel,.today,.card{border:1px solid var(--line-soft);border-radius:16px;background:var(--bg)}
-  .panel{padding:1.25rem}
-  .grid{display:grid;gap:1.25rem;margin:0 0 1.75rem}
-  @media (min-width:1024px){.grid{grid-template-columns:minmax(0,3fr) minmax(0,2fr)}}
-  /* Rendez-vous du jour étroits (40 %), calendrier du mois à côté (60 %) */
-  @media (min-width:1024px){.grid--day{grid-template-columns:minmax(0,2fr) minmax(0,3fr);align-items:start}}
-  .side{display:grid;gap:1.25rem;min-width:0}
+  .none{margin:0;color:var(--text-soft);font-size:.9375rem}
+  .cap::first-letter,.day-head h2::first-letter{text-transform:uppercase}
+  .panel{border:1px solid var(--line-soft);border-radius:16px;background:var(--bg);padding:1.25rem;min-width:0}
 
-  .today{display:grid;gap:1rem 2rem;padding:1.25rem 1.5rem;margin:0 0 1.75rem}
-  @media (min-width:1024px){.today{grid-template-columns:minmax(0,1fr) auto;align-items:center}.quick{grid-column:1 / -1}}
-  .today h2{margin:0 0 .35rem;font-size:1.6rem}
-  .today h2::first-letter{text-transform:uppercase}
-  .day-open{display:flex;flex-wrap:wrap;gap:.4rem .75rem;align-items:center;margin:0;color:var(--text-soft)}
-  .priority{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr));gap:.75rem;margin:0 0 1rem}
-  .prio{margin:0;padding:.9rem 1.1rem;border:1px solid var(--line-soft);border-radius:14px;background:var(--bg)}
-  .prio--warn{border-color:var(--accent);background:rgb(138 90 82 / .1)}
-  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.75rem;margin:0}
-  @media (min-width:1024px){.kpis{grid-template-columns:auto auto minmax(14rem,auto)}}
-  .kpis div{padding:.75rem 1rem;border-radius:12px;background:rgb(138 90 82 / .08)}
-  .kpis dt{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-soft)}
-  .kpis dd{margin:.2rem 0 0;font:400 1.6rem/1.2 var(--f-title)}
-  .kpis small{display:block;font:400 .875rem/1.4 var(--f-text);color:var(--text-soft)}
-  .quick{display:flex;flex-wrap:wrap;gap:.5rem}
+  .day-head{margin:0 0 1rem}
+  .day-head h2{margin:0 0 .3rem;font-size:1.6rem}
+  .day-open{display:flex;flex-wrap:wrap;gap:.35rem .6rem;align-items:center;margin:0;color:var(--text-soft)}
+  .todo{display:inline-flex;align-items:center;min-height:44px;padding:0 .75rem;border:1px dashed var(--line-soft);border-radius:999px;font-size:.875rem;color:var(--text-soft)}
 
-  .timeline ol{display:grid;gap:.5rem;list-style:none;margin:0;padding:0}
-  .tl-del{grid-column:1 / -1;display:flex;flex-wrap:wrap;align-items:center;gap:.25rem .75rem;font-size:.875rem}
-  .tl{display:grid;grid-template-columns:4.5rem minmax(0,1fr) auto;gap:.75rem;align-items:center;padding:.6rem .75rem;border-left:3px solid var(--line-soft);border-radius:10px;background:rgb(138 90 82 / .05)}
-  .tl--ok{border-left-color:rgb(76 128 92)}
-  .tl--wait{border-left-color:rgb(196 150 70)}
-  .tl--alert{border-left-color:rgb(176 70 60)}
-  .tl--off{opacity:.65}
-  .tl--next{box-shadow:0 0 0 2px var(--accent)}
-  .tl-time{font-weight:500;font-variant-numeric:tabular-nums}
-  .tl-time small,.tl-who small{display:block;font-weight:400;font-size:.8125rem;color:var(--text-soft)}
-  .tl-who{min-width:0}
+  .gestures{display:grid;gap:.5rem;list-style:none;margin:0 0 1.25rem;padding:0}
+  .gestures li>a{display:block;min-height:48px;padding:.75rem 1rem;border:1px solid var(--accent);border-radius:14px;background:rgb(138 90 82 / .1);color:var(--text);text-decoration:none}
+  .gestures .g-alert{padding:.75rem 1rem;border:1px solid rgb(176 70 60 / .5);border-radius:14px;background:rgb(176 70 60 / .12)}
 
-  .alerts summary{list-style:none;cursor:pointer;min-height:44px}
-  .alerts summary::-webkit-details-marker{display:none}
-  .alerts summary h2{margin:0}
-  .alerts summary h2::after{content:'▾';margin-left:auto;font-size:1rem;color:var(--text-soft)}
-  .alerts[open] summary{margin-bottom:1rem}
-  .alerts[open] summary h2::after{content:'▴'}
-  .alerts ul{display:grid;gap:.4rem;list-style:none;margin:0;padding:0}
-  .al{padding:.55rem .75rem;border-radius:10px;font-size:.9375rem;background:rgb(138 90 82 / .08)}
-  .al--alert{background:rgb(176 70 60 / .16)}
-  .al--wait{background:rgb(196 150 70 / .2)}
-  .al--ok{background:rgb(76 128 92 / .16)}
-  .al--off{background:rgb(120 110 108 / .14)}
-  .al--info{background:none;border:1px dashed var(--line-soft)}
+  .day{display:grid;gap:1.5rem}
+  @media (min-width:1024px){.day{grid-template-columns:minmax(0,3fr) minmax(0,2fr);align-items:start}}
+  .rdvs,.side{display:grid;gap:1.25rem;min-width:0}
 
-  .cards-wrap{margin:0 0 1.75rem}
-  .cards{display:grid;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(min(100%,19rem),1fr))}
-  .card{display:grid;gap:.6rem;align-content:start;padding:1rem 1.15rem}
-  .card h3{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin:0;font-size:1.15rem}
-  .card p{margin:0}
-  .contact{font-size:.9375rem;overflow-wrap:anywhere}
-  .card dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem;margin:0}
-  .card dt{font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text-soft)}
-  .card dd{margin:0;font-weight:500}
-  .past{font-size:.875rem}
-  .consent{padding:.45rem .65rem;border-radius:8px;font-size:.8125rem;background:rgb(76 128 92 / .14)}
-  .consent--no{background:rgb(196 150 70 / .18)}
-  .care-alerts{display:flex;flex-wrap:wrap;gap:.35rem;margin:0}
-  .notes{white-space:pre-line;font-size:.9375rem;padding:.6rem .75rem;border-radius:8px;background:rgb(138 90 82 / .06)}
-  .notes--empty{color:var(--text-soft);background:none;padding:0}
+  .cards{display:grid;gap:.85rem;list-style:none;margin:0;padding:0}
+  .rc{display:grid;gap:.45rem;padding:1rem 1.1rem;border:1px solid var(--line-soft);border-left:4px solid var(--line-soft);border-radius:16px;background:var(--bg);min-width:0}
+  .rc--ok{border-left-color:rgb(76 128 92)}
+  .rc--due{border-left-color:var(--accent)}
+  .rc--wait{border-left-color:rgb(196 150 70)}
+  .rc--alert{border-left-color:rgb(176 70 60)}
+  .rc--off{opacity:.7}
+  .rc--next{box-shadow:0 0 0 2px var(--accent)}
+  .rc p,.rc h3{margin:0}
+  .rc-time{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .6rem;font-variant-numeric:tabular-nums}
+  .rc-time time{font:500 1.35rem/1 var(--f-title)}
+  .rc-time small{color:var(--text-soft)}
+  .rc-time .badge{margin-left:auto}
+  .badge--due{background:var(--accent);color:var(--bg)}
+  .rc h3{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .6rem;font-size:1.15rem;overflow-wrap:anywhere}
+  .rc-svc{color:var(--text-soft);overflow-wrap:anywhere}
+  .prep{display:flex;flex-wrap:wrap;gap:.35rem;list-style:none;margin:0;padding:0;font-size:.875rem}
+  .prep>li{padding:.25rem .6rem;border-radius:8px;background:rgb(138 90 82 / .08);max-width:100%}
+  .prep .p-warn{background:rgb(196 150 70 / .24)}
+  .care summary{cursor:pointer;min-height:44px;display:flex;align-items:center}
+  .care p{display:flex;flex-wrap:wrap;gap:.3rem;margin:.4rem 0 0}
+  .care .note{white-space:pre-line;display:block}
 
+  /* Bouton principal à gauche, « ··· » à droite ; un panneau ouvert (encaisser, menu) prend toute la largeur de la carte */
+  .rc-acts{display:flex;flex-wrap:wrap;gap:.5rem;align-items:flex-start;margin-top:.25rem}
+  .rc-acts>form,.rc-acts>a,.rc-acts>:global(.pay){flex:1 1 0;min-width:0}
+  .rc-acts>:global(.pay[open]){flex-basis:100%}
+  .rc-acts .big{display:flex;width:100%;min-height:48px;justify-content:center;align-items:center}
+  .more{flex:0 0 auto;margin-left:auto}
+  .more>summary{list-style:none;display:grid;place-items:center;width:48px;height:48px;border:1px solid var(--line-soft);border-radius:12px;cursor:pointer;font-size:1.25rem;letter-spacing:.05em}
+  .more>summary::-webkit-details-marker{display:none}
+  .more[open]{flex-basis:100%}
+  .more[open]>summary{margin-left:auto}
+  .menu{display:grid;gap:.5rem;margin-top:.5rem;padding:.75rem;border:1px solid var(--line-soft);border-radius:12px;background:rgb(138 90 82 / .04)}
+  .menu form{display:grid;gap:.4rem;justify-items:start}
+  .menu small{color:var(--text-soft);font-size:.8125rem}
+  .menu .btn{min-height:44px;white-space:normal;text-align:left}
+  .menu details>summary{display:flex;align-items:center;min-height:44px;cursor:pointer;color:var(--accent)}
+  .menu .field{display:grid;gap:.25rem;font-size:.9375rem}
+  .menu .check{display:flex;align-items:center;gap:.5rem;min-height:44px}
+  .cons{margin:0;padding-left:1.1rem;font-size:.875rem}
+  .links{display:flex;flex-wrap:wrap;gap:.25rem 1rem;margin:0}
+  .links a{display:inline-flex;align-items:center;min-height:44px}
+
+  .close{border:1px solid var(--line-soft);border-radius:16px;padding:1rem 1.25rem;background:var(--bg);min-width:0}
+  .close>summary{list-style:none;cursor:pointer;min-height:44px;display:flex;align-items:center}
+  .close>summary::-webkit-details-marker{display:none}
+  .close>summary h2{margin:0}
+  .close>summary h2::after{content:'▾';margin-left:.5rem;font-size:1rem;color:var(--text-soft)}
+  .close[open]>summary h2::after{content:'▴'}
+  .close h3{margin:1.25rem 0 .6rem;font-size:1.05rem}
+  .cash{display:grid;gap:.75rem;list-style:none;margin:0;padding:0}
+  .cash li{display:grid;gap:.5rem;padding:.75rem;border-radius:12px;background:rgb(138 90 82 / .06)}
+  .cash p{margin:0}
+  .till{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+  .till th,.till td{padding:.55rem .25rem;border-bottom:1px solid var(--line-soft);text-align:left}
+  .till td:last-child{text-align:right}
+  .till tfoot th,.till tfoot td{font-weight:600;border-bottom:0}
+  .closed{margin:1rem 0 0;padding:.75rem 1rem;border-radius:12px;background:rgb(76 128 92 / .16);font-weight:500}
+
+  .more-link{margin-left:auto;font:500 .875rem var(--f-text)}
   .cal h2{justify-content:space-between}
   .cal-nav{display:flex;gap:.25rem}
   .cal-nav a{display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--line-soft);border-radius:999px;color:var(--text);text-decoration:none;font-size:1.3rem}
@@ -283,9 +336,17 @@ const alertCount = al.pending.length + al.moved.length + al.cancelled.length + a
   .cal-l1{background:rgb(138 90 82 / .14)}
   .cal-l2{background:rgb(138 90 82 / .3)}
   .cal-l3{background:rgb(138 90 82 / .5)}
-
   .next7 ul{display:grid;gap:.35rem;list-style:none;margin:0;padding:0}
   .next7 a{display:grid;grid-template-columns:7rem minmax(0,1fr);gap:.75rem;align-items:center;min-height:44px;color:var(--text);text-decoration:none}
   .next7 .bar{padding:.45rem .7rem;border-radius:8px;font-size:.875rem;border:1px dashed var(--line-soft)}
   .next7 .bar:not(.cal-l0){border-style:solid;border-color:transparent}
+  .infos summary{list-style:none;cursor:pointer;min-height:44px}
+  .infos summary::-webkit-details-marker{display:none}
+  .infos summary h2{margin:0}
+  .infos[open] summary{margin-bottom:1rem}
+  .infos ul{display:grid;gap:.4rem;list-style:none;margin:0;padding:0}
+  .al{padding:.55rem .75rem;border-radius:10px;font-size:.9375rem;background:rgb(138 90 82 / .08)}
+  .al--wait{background:rgb(196 150 70 / .2)}
+  .al--ok{background:rgb(76 128 92 / .16)}
+  .al--off{background:rgb(120 110 108 / .14)}
 </style>

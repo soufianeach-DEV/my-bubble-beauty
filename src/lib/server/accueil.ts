@@ -72,6 +72,36 @@ export function clientCards(day: string) {
     FROM users u WHERE u.id IN (SELECT id FROM ids) ORDER BY u.name`;
 }
 
+export type DayBooking = {
+  id: number; starts_at: Date; ends_at: Date; status: 'confirmed' | 'pending_payment'; service: string; slug: string;
+  name: string | null; phone: string | null; user_id: number | null; guest: boolean; no_show: boolean; late_minutes: number | null;
+  paid_method: string | null; paid_cents: number | null; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number;
+  paid: boolean; gift: boolean; promo: string | null; package: string | null; package_total: number | null; package_n: number | null;
+  arrived_at: Date | null; past: boolean; ended: boolean; last_method: string | null; signed: string[];
+};
+
+// Écran « Aujourd'hui » : rendez-vous actifs du jour, avec ce qu'il faut préparer (séance n/N du forfait, consentements déjà signés)
+// et le dernier mode de paiement de la cliente, pour préremplir l'encaissement. Absences comprises (statut « Absente »).
+export function dayBookings(day: string) {
+  if (!isDay(day)) return Promise.resolve([] as DayBooking[]);
+  return sql<DayBooking[]>`
+    WITH d AS (${bounds(day)})
+    SELECT b.id, b.starts_at, b.ends_at, b.status, s.name_fr AS service, s.slug, coalesce(u.name, b.guest_name) AS name,
+      coalesce(u.phone, b.guest_phone) AS phone, b.user_id, b.user_id IS NULL AND NOT b.client_erased AS guest, b.no_show, b.late_minutes,
+      b.paid_method, b.paid_cents, b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.stripe_payment_intent IS NOT NULL AS paid,
+      b.gift_card_id IS NOT NULL AS gift, p.code AS promo, k.label AS package, k.sessions_total AS package_total,
+      CASE WHEN b.package_id IS NOT NULL THEN (SELECT count(*) FROM bookings x WHERE x.package_id = b.package_id AND x.status = 'confirmed'
+        AND NOT x.no_show AND x.starts_at <= b.starts_at)::int END AS package_n,
+      b.arrived_at, b.starts_at < now() AS past, b.ends_at < now() AS ended,
+      (SELECT x.paid_method FROM bookings x WHERE x.user_id = b.user_id AND x.paid_method IS NOT NULL AND x.id <> b.id ORDER BY x.paid_at DESC LIMIT 1) AS last_method,
+      coalesce((SELECT array_agg(DISTINCT c.kind) FROM consents c WHERE c.user_id = b.user_id), '{}') AS signed
+    FROM bookings b JOIN services s ON s.id = b.service_id LEFT JOIN users u ON u.id = b.user_id
+      LEFT JOIN promo_codes p ON p.id = b.promo_code_id LEFT JOIN packages k ON k.id = b.package_id, d
+    WHERE b.starts_at >= d.lo AND b.starts_at < d.hi
+      AND (b.status = 'confirmed' OR (b.status = 'pending_payment' AND b.created_at > now() - interval '35 minutes'))
+    ORDER BY b.starts_at, b.id`;
+}
+
 // Rendez-vous actifs par jour de Bruxelles, de from (inclus) à to (exclu), 62 jours au plus
 export async function loadByDay(from: string, to: string): Promise<Record<string, number>> {
   if (!isDay(from) || !isDay(to)) return {};
