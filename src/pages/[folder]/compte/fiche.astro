@@ -36,12 +36,15 @@ const day = new Intl.DateTimeFormat({ fr: 'fr-BE', nl: 'nl-BE', en: 'en-GB' }[la
 const SEG = [['heat', HEAT, t.heat], ['cover', COVER, t.cover], ['pressure', PRESSURE, t.pressure], ['ambience', AMBIENCE, t.ambience]] as const;
 const keys = (o: Record<string, string>) => Object.keys(o);
 ---
-<Base lang={lang} pageKey="home" route="compte/fiche" title={`${t.title} - My Bubble Beauty`} description={t.description} noindex mainClass="legal">
+<Base lang={lang} pageKey="home" route="compte/fiche" title={`${t.title} - My Bubble Beauty`} description={t.description} noindex mainClass="legal fiche-page">
 <div class="wrap"><article class="fiche">
 <h1>{t.title}</h1>
 {error && <p class="notice notice--error" role="alert">{t.invalid}</p>}
-<p>{t.intro}</p>
+<p class="intro">{t.intro}</p>
 <form class="form sheet" method="post">
+<div class="cards">
+  {/* Confort : quatre choix uniques et les parfums */}
+  <section class="card" aria-labelledby="h-comfort"><h2 id="h-comfort">{t.comfort}</h2>
   {SEG.map(([name, o, labels]) => (
     <fieldset class="seg-group"><legend>{t.q[name]}</legend><div class="seg">
       {keys(o).map((k) => <label><input type="radio" name={name} value={k} checked={prof.care[name] === k}><span>{(labels as Record<string, string>)[k]}</span></label>)}
@@ -49,6 +52,9 @@ const keys = (o: Record<string, string>) => Object.keys(o);
     </div></fieldset>
   ))}
   <div class="field"><label for="scents">{t.scents}</label><input id="scents" name="scents" maxlength="200" value={prof.care.scents ?? ''}></div>
+  </section>
+
+  <section class="card" aria-labelledby="h-contact"><h2 id="h-contact">{t.contact}</h2>
   <fieldset class="seg-group"><legend>{t.zones} <span class="hint">{t.zonesHint}</span></legend><div class="seg">
     {keys(ZONES).map((k) => <label><input type="checkbox" name="zones" value={k} checked={prof.care.zones?.includes(k)}><span>{t.zone[k as keyof typeof t.zone]}</span></label>)}
   </div></fieldset>
@@ -57,8 +63,10 @@ const keys = (o: Record<string, string>) => Object.keys(o);
     {keys(TOUCH).map((k) => <label><input type="radio" name="touch" value={k} checked={prof.care.touch === k}><span>{t.touch[k as keyof typeof t.touch]}</span></label>)}
     <label><input type="radio" name="touch" value="" checked={!prof.care.touch}><span>{t.none}</span></label>
   </div></fieldset>
+  <div class="field"><label for="client_note">{t.note}</label><textarea id="client_note" name="client_note" rows="3" maxlength="500" aria-describedby="note-hint">{prof.clientNote}</textarea><p class="hint" id="note-hint">{t.noteHint}</p></div>
+  </section>
 
-  <fieldset class="health-box"><legend>{t.healthTitle}</legend>
+  <fieldset class="card health-box"><legend>{t.healthTitle}</legend>
     {prof.consent ? <p class="hint">{t.consentDone(day(prof.consentAt!))}</p> : (
       <div class="check consent"><input id="health_consent" name="health_consent" type="checkbox"><label for="health_consent">{t.consentLabel}</label></div>
     )}
@@ -68,15 +76,14 @@ const keys = (o: Record<string, string>) => Object.keys(o);
       <fieldset class="seg-group"><legend>{t.allergies}</legend><div class="seg">
         {keys(ALLERGIES).map((k) => <label><input type="checkbox" name="allergies" value={k} checked={prof.health?.allergies?.includes(k)}><span>{t.allergy[k as keyof typeof t.allergy]}</span></label>)}
       </div></fieldset>
-      <div class="field"><label for="allergies_other">{t.allergiesOther}</label><input id="allergies_other" name="allergies_other" maxlength="200" value={prof.health?.allergies_other ?? ''}></div>
       <fieldset class="seg-group"><legend>{t.skin}</legend><div class="seg">
         {keys(SKIN).map((k) => <label><input type="checkbox" name="skin" value={k} checked={prof.health?.skin?.includes(k)}><span>{t.skinType[k as keyof typeof t.skinType]}</span></label>)}
       </div></fieldset>
+      <div class="field"><label for="allergies_other">{t.allergiesOther}</label><input id="allergies_other" name="allergies_other" maxlength="200" value={prof.health?.allergies_other ?? ''}></div>
       <div class="field"><label for="contra">{t.contra}</label><textarea id="contra" name="contra" rows="3" maxlength="2000">{prof.health?.contra ?? ''}</textarea></div>
     </div>
   </fieldset>
-
-  <div class="field"><label for="client_note">{t.note}</label><textarea id="client_note" name="client_note" rows="3" maxlength="500" aria-describedby="note-hint">{prof.clientNote}</textarea><p class="hint" id="note-hint">{t.noteHint}</p></div>
+</div>
   <div class="acts">
     <button class="btn btn--solid" type="submit" name="action" value="save">{t.save}</button>
     <button class="btn btn--ghost" type="submit" name="action" value="later" formnovalidate>{t.later}</button>
@@ -86,22 +93,50 @@ const keys = (o: Record<string, string>) => Object.keys(o);
 </Base>
 
 <style>
-  .fiche{max-width:760px}
-  .sheet{display:grid;gap:1.1rem}
+  /* Téléphone : une colonne, cartes empilées. Ordinateur : toute la largeur (1440 px au plus), deux colonnes,
+     santé sur toute la largeur. Tailles harmonisées : mêmes titres, pastilles, champs et espacements partout. */
+  .sheet{display:grid;gap:1.25rem;max-width:none}
+  .cards{display:grid;gap:1.25rem;align-items:stretch}
+  .card{display:grid;gap:1.25rem;align-content:start;margin:0;padding:1.4rem 1.5rem;border:1px solid var(--line-soft);border-radius:16px;background:var(--bg);min-width:0}
+  .card p{margin:0}
+  /* Titre de carte : même taille pour h2 et la légende de la carte santé (légende sortie du cadre par float) */
+  .card h2,.card > legend{margin:0;font:400 1.45rem/1.2 var(--f-title)}
+  .health-box > legend{float:left;width:100%;padding:0}
+  .health-box > legend + *{clear:both}
+  /* Titre de question : même taille et même écart avant le contrôle, pastilles comme champs texte */
   .seg-group{border:0;margin:0;padding:0;min-width:0}
-  .seg-group legend{font-weight:600;padding:0 0 .5rem}
-  .seg{display:flex;flex-wrap:wrap;gap:.4rem}
-  .seg label{position:relative;display:inline-flex}
+  .seg-group legend,.field > label{display:block;margin:0;padding:0 0 .5rem;font-size:1rem;font-weight:600;line-height:1.4}
+  .seg-group legend .hint{font-weight:400}
+  .field{gap:0}
+  /* Pastilles : toutes de la même hauteur et du même padding, largeur selon le texte */
+  .seg{display:flex;flex-wrap:wrap;gap:.45rem}
+  .seg label{position:relative;display:flex;flex:0 0 auto;max-width:100%}
   .seg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
-  .seg span{display:inline-flex;align-items:center;min-height:44px;padding:.4rem .9rem;border:1px solid var(--line-soft);border-radius:999px;font-size:.9375rem}
+  .seg span{display:flex;align-items:center;height:44px;padding:0 1rem;border:1px solid var(--line-soft);border-radius:999px;font-size:.9375rem;line-height:1;white-space:nowrap}
   .seg input:checked + span{background:var(--accent);border-color:var(--accent);color:var(--bg)}
   .seg input:focus-visible + span{outline:2px solid var(--link);outline-offset:2px}
-  .health-box{display:grid;gap:.75rem;margin:0;padding:1rem 1.1rem;border:1px solid var(--line-soft);border-radius:14px;min-width:0}
-  .health-box > legend{font-weight:600;padding:0 .3rem}
+  /* Champs : une seule hauteur pour les lignes, une seule pour les zones de texte */
+  .field input{height:48px}
+  .field textarea{height:7.5rem;resize:vertical}
+  .field .hint{margin-top:.4rem}
   .consent{display:flex;gap:.6rem;align-items:flex-start}
   .consent input{width:1.25rem;height:1.25rem;margin:.15rem 0 0;flex:none;accent-color:var(--accent)}
   /* Section santé cachée tant que l'accord n'est pas coché : rien à remplir sans accord */
-  .health{display:none;gap:.9rem}
+  .health{display:none;gap:1.25rem}
   .health--on,.health-box:has(#health_consent:checked) .health{display:grid}
-  .acts{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:.5rem}
+  .acts{display:flex;flex-wrap:wrap;gap:.6rem}
+  @media (min-width:768px){
+    :global(main.legal.fiche-page){padding-block:clamp(1rem,2vw,2rem)}
+    :global(.fiche-page) > .wrap{width:min(100% - 2*var(--gutter),1440px)}
+    .fiche{max-width:none;padding:clamp(1.5rem,2.5vw,3rem)}
+    .intro{max-width:60ch}
+  }
+  @media (min-width:1024px){
+    .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .health-box{grid-column:1 / -1}
+    /* Santé en deux colonnes ; libellés et champs d'une même rangée alignés (sous-grille), même si un libellé passe à la ligne */
+    .health{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:2rem}
+    .health > .field{display:grid;grid-row:span 2;grid-template-rows:subgrid;row-gap:0}
+  }
 </style>
+
