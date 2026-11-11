@@ -1,53 +1,110 @@
 ---
 export const prerender = false;
-// Réglages (admin seulement) : nom du spécialiste cité dans les consentements, règles de la carte de fidélité
+// Réglages (admin seulement) : règles de la carte de fidélité et nom du spécialiste cité dans les consentements.
+// Sous-menu à gauche (?vue=), champs groupés au centre, aperçu de la carte à droite. Un seul formulaire : la section masquée
+// est envoyée aussi, avec ses valeurs actuelles.
 import Admin from './_layout.astro';
 import { adminId, readForm } from '../../lib/server/admin.ts';
 import { readSettings, saveSettings } from '../../lib/server/reglages.ts';
 
 const me = adminId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
+const vue = Astro.url.searchParams.get('vue') === 'consentements' ? 'consentements' : 'fidelite';
 let error = '';
 let draft: Record<string, string> | null = null;
 if (Astro.request.method === 'POST') {
   const form = await readForm(Astro.request);
   if (!form) return new Response(null, { status: 413 });
   const r = await saveSettings(me, form);
-  if (r.ok) return Astro.redirect('/admin/reglages?ok=1', 303);
+  if (r.ok) return Astro.redirect(`/admin/reglages?vue=${vue}&ok=1`, 303);
   error = r.error;
   draft = Object.fromEntries([...form].map(([k, v]) => [k, String(v).slice(0, 100)]));
   Astro.response.status = 400;
 }
 const s = await readSettings();
 const v = (k: string, fallback: string | number) => draft?.[k] ?? String(fallback);
+// Aperçu : toujours les réglages enregistrés, jamais des valeurs d'exemple
+const L = s.loyalty;
+const eur = (n: number) => `${new Intl.NumberFormat('fr-BE').format(n)} €`;
+const stamps = Array.from({ length: L.free_after }, (_, i) => i + 1);
+const MENU = [['fidelite', 'Carte de fidélité'], ['consentements', 'Consentements']] as const;
 ---
 <Admin title="Réglages">
 {Astro.url.searchParams.has('ok') && !error && <p class="notice" role="status">Réglages enregistrés.</p>}
 {error && <p class="notice notice--error" role="alert">{error}</p>}
-<form class="form" method="post">
-  <h2>Consentements</h2>
-  <div class="field">
-    <label for="specialist_name">Nom et prénom du spécialiste</label>
-    <input id="specialist_name" name="specialist_name" maxlength="100" value={v('specialist_name', s.specialist_name)} autocomplete="off">
-    <p class="hint">Cité dans « J'ai eu l'opportunité de poser toutes les questions à … ». Tant qu'il est vide, les consentements laser et photo-épilation ne peuvent pas être signés.</p>
-  </div>
-  <h2>Carte de fidélité</h2>
-  <p class="hint">Une séance compte quand la cliente est venue et que le soin payé atteint le montant minimum (montant réellement payé, après remise et code promo). Un soin offert ou réglé par bon cadeau ne compte pas, ni les annulations et absences.</p>
-  <div class="grid">
-    <div class="field"><label for="min_euros">Montant minimum par séance (€)</label><input id="min_euros" name="min_euros" type="number" min="0" max="1000" required value={v('min_euros', s.loyalty.min_euros)}></div>
-    <div class="field"><label for="discount_after">Remise après (séances)</label><input id="discount_after" name="discount_after" type="number" min="1" max="50" required value={v('discount_after', s.loyalty.discount_after)}></div>
-    <div class="field"><label for="discount_percent">Remise (%)</label><input id="discount_percent" name="discount_percent" type="number" min="1" max="100" required value={v('discount_percent', s.loyalty.discount_percent)}></div>
-    <div class="field"><label for="free_after">Soin offert après (séances)</label><input id="free_after" name="free_after" type="number" min="2" max="100" required value={v('free_after', s.loyalty.free_after)}></div>
-    <div class="field"><label for="free_min_total">Soin offert : total payé exigé (€)</label><input id="free_min_total" name="free_min_total" type="number" min="0" max="100000" required value={v('free_min_total', s.loyalty.free_min_total)}></div>
-    <div class="field"><label for="free_label">Soin offert</label><input id="free_label" name="free_label" maxlength="60" required value={v('free_label', s.loyalty.free_label)}></div>
-    <div class="field"><label for="free_value">Prix du soin offert (€)</label><input id="free_value" name="free_value" type="number" min="0" max="10000" required value={v('free_value', s.loyalty.free_value)}></div>
-  </div>
-  <p class="hint">La remise vaut une fois par carte. Le soin offert demande le nombre de séances et le total payé ; il remet la carte à zéro.</p>
-  <button class="btn btn--solid" type="submit">Enregistrer</button>
-</form>
+<div class="set">
+  <nav class="sub" aria-label="Rubriques des réglages">
+    {MENU.map(([k, l]) => <a href={`/admin/reglages?vue=${k}`} aria-current={vue === k ? 'page' : undefined}>{l}</a>)}
+  </nav>
+
+  <form class="set-form" method="post" action={`/admin/reglages?vue=${vue}`}>
+    <section class="panel" hidden={vue !== 'fidelite'} aria-labelledby="h-fid">
+      <h2 id="h-fid">Carte de fidélité</h2>
+      <p class="hint">Une séance compte quand la cliente est venue et que le soin payé atteint le montant minimum (montant réellement payé, après remise et code promo). Un soin offert ou réglé par bon cadeau ne compte pas, ni les annulations et absences.</p>
+      <h3>Ce qui compte</h3>
+      <div class="grid"><div class="field"><label for="min_euros">Montant minimum par séance (€)</label><input id="min_euros" name="min_euros" type="number" min="0" max="1000" required value={v('min_euros', L.min_euros)}></div></div>
+      <h3>Remise</h3>
+      <div class="grid">
+        <div class="field"><label for="discount_after">Après (séances)</label><input id="discount_after" name="discount_after" type="number" min="1" max="50" required value={v('discount_after', L.discount_after)}></div>
+        <div class="field"><label for="discount_percent">Remise (%)</label><input id="discount_percent" name="discount_percent" type="number" min="1" max="100" required value={v('discount_percent', L.discount_percent)}></div>
+      </div>
+      <p class="hint">La remise vaut une fois par carte.</p>
+      <h3>Soin offert</h3>
+      <div class="grid">
+        <div class="field"><label for="free_after">Après (séances)</label><input id="free_after" name="free_after" type="number" min="2" max="100" required value={v('free_after', L.free_after)}></div>
+        <div class="field"><label for="free_min_total">Total payé exigé (€)</label><input id="free_min_total" name="free_min_total" type="number" min="0" max="100000" required value={v('free_min_total', L.free_min_total)}></div>
+        <div class="field"><label for="free_label">Soin</label><input id="free_label" name="free_label" maxlength="60" required value={v('free_label', L.free_label)}></div>
+        <div class="field"><label for="free_value">Prix du soin offert (€)</label><input id="free_value" name="free_value" type="number" min="0" max="10000" required value={v('free_value', L.free_value)}></div>
+      </div>
+      <p class="hint">Le soin offert demande le nombre de séances et le total payé ; il remet la carte à zéro.</p>
+    </section>
+
+    <section class="panel" hidden={vue !== 'consentements'} aria-labelledby="h-cons">
+      <h2 id="h-cons">Consentements</h2>
+      <div class="field">
+        <label for="specialist_name">Nom et prénom du spécialiste</label>
+        <input id="specialist_name" name="specialist_name" maxlength="100" value={v('specialist_name', s.specialist_name)} autocomplete="off">
+        <p class="hint">Cité dans « J'ai eu l'opportunité de poser toutes les questions à … ». Tant qu'il est vide, les consentements laser et photo-épilation ne peuvent pas être signés.</p>
+      </div>
+      <p>{s.specialist_name.trim() ? <span class="badge badge--ok">Signature possible</span> : <span class="badge badge--alert">Signature bloquée : nom manquant</span>}</p>
+    </section>
+    <button class="btn btn--solid" type="submit">Enregistrer</button>
+  </form>
+
+  <aside class="panel preview" aria-labelledby="h-prev">
+    <h2 id="h-prev">Aperçu de la carte</h2>
+    <ol class="stamps" aria-label={`Carte de ${L.free_after} séances`}>
+      {stamps.map((n) => <li class:list={{ mark: n === L.discount_after || n === L.free_after }}>
+        {n === L.free_after ? 'offert' : n === L.discount_after ? `−${L.discount_percent} %` : n}</li>)}
+    </ol>
+    <ul class="rules">
+      <li>Chaque soin payé {eur(L.min_euros)} ou plus compte pour une séance.</li>
+      <li>À la {L.discount_after}<sup>e</sup> séance : −{L.discount_percent} %, une fois par carte.</li>
+      <li>À la {L.free_after}<sup>e</sup> séance, si {eur(L.free_min_total)} ont été payés : {L.free_label} offert ({eur(L.free_value)}), puis la carte repart à zéro.</li>
+    </ul>
+    <p class="hint">Réglages enregistrés. L'aperçu change après « Enregistrer ».</p>
+  </aside>
+</div>
 </Admin>
 
 <style>
+  /* PC : sous-menu, champs, aperçu ; tablette : aperçu sous les champs ; téléphone : tout en colonne, sous-menu en onglets */
+  .set{display:grid;gap:1.5rem;align-items:start}
+  @media (min-width:1200px){.set{grid-template-columns:13rem minmax(0,1fr) 20rem}.preview{position:sticky;top:1.5rem}}
+  @media (min-width:760px) and (max-width:1199px){.set{grid-template-columns:12rem minmax(0,1fr)}.preview{grid-column:2}}
+  .set>*{min-width:0}
+  .sub{display:grid;gap:.25rem}
+  @media (max-width:759px){.sub{grid-auto-flow:column;grid-auto-columns:1fr}}
+  .sub a{display:flex;align-items:center;min-height:44px;padding:.6rem 1rem;border:1px solid transparent;border-radius:12px;color:var(--text);text-decoration:none}
+  .sub a[aria-current="page"]{border-color:var(--line-soft);background:var(--bg);font-weight:500}
+  .panel{padding:1.4rem 1.5rem;border:1px solid var(--line-soft);border-radius:18px;background:var(--bg)}
+  .panel h2{margin:0 0 .75rem;font-size:1.35rem}
+  .panel h3{margin:1.4rem 0 .6rem;font:500 .8125rem var(--f-text);letter-spacing:.08em;text-transform:uppercase;color:var(--text-soft)}
+  .set-form{display:grid;gap:1rem;justify-items:start}
+  .set-form .panel{justify-self:stretch}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:.75rem 1rem}
-  h2{margin-top:1.5rem}
+  .stamps{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;list-style:none;margin:0 0 1rem;padding:0}
+  .stamps li{display:grid;place-items:center;aspect-ratio:1;border:1px dashed var(--accent);border-radius:999px;font-size:.75rem;color:var(--text-soft);text-align:center;line-height:1.1}
+  .stamps .mark{border-style:solid;background:var(--accent);color:var(--accent-ink);font-weight:600}
+  .rules{display:grid;gap:.5rem;margin:0 0 .75rem;padding-left:1.1rem;font-size:.9375rem}
 </style>
