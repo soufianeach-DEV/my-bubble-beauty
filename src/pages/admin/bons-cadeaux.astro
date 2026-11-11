@@ -1,9 +1,12 @@
 ---
 export const prerender = false;
-// Bons cadeaux (admin) : création (Pour, Soin, Durée, Message), liste avec l'état de chaque bon ; un clic ouvre le bon imprimable
+// Bons cadeaux (admin) : chiffres du moment, liste en cartes avec filtres par état et recherche, et le formulaire « Nouveau bon »
+// dans un panneau à droite (en tête de page sur téléphone). Un clic sur un bon ouvre le bon imprimable.
 import Admin from './_layout.astro';
 import { adminId, byCategory, listServices, readForm } from '../../lib/server/admin.ts';
-import { clientLabel, giftAction, giftClients, listGifts, STATE_LABELS } from '../../lib/server/cadeaux.ts';
+import { addDays } from '../../lib/server/admin-form.ts';
+import { clientLabel, giftAction, giftClients, listGifts, STATE_LABELS, type GiftState } from '../../lib/server/cadeaux.ts';
+import { todayBrussels } from '../../lib/server/pricing.ts';
 import { JS_VERSION } from '../../lib/site';
 
 const me = adminId(Astro.locals);
@@ -23,11 +26,63 @@ const [gifts, services, clients] = await Promise.all([listGifts(), listServices(
 // Soins ouverts à la réservation seulement : un bon sur un soin hors ligne ne pourrait pas être réservé en ligne
 const groups = byCategory(services.filter((s) => s.active));
 const day = (d: string) => new Intl.DateTimeFormat('fr-BE', { timeZone: 'UTC', dateStyle: 'medium' }).format(new Date(`${d}T12:00:00Z`));
+const when = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', dateStyle: 'medium' }).format;
+
+// Chiffres du moment, filtre par état (?etat=) et recherche (?q= : code, bénéficiaire, e-mail ou soin)
+const soon = addDays(todayBrussels(), 30);
+const count = (s: GiftState) => gifts.filter((g) => g.state === s).length;
+const kpis = [
+  [count('valide'), count('valide') > 1 ? 'valables' : 'valable'],
+  [count('reserve'), count('reserve') > 1 ? 'réservés' : 'réservé'],
+  [gifts.filter((g) => g.state === 'valide' && g.expires_on <= soon).length, 'expirent sous 30 jours'],
+  [count('expire'), count('expire') > 1 ? 'expirés' : 'expiré'],
+] as const;
+const sp = Astro.url.searchParams;
+const etat = (Object.keys(STATE_LABELS) as GiftState[]).find((s) => s === sp.get('etat')) ?? null;
+const q = (sp.get('q') ?? '').trim().slice(0, 100);
+const needle = q.toLocaleLowerCase('fr');
+const shown = gifts.filter((g) => (!etat || g.state === etat)
+  && (!needle || [g.code, g.recipient, g.recipient_email ?? '', g.service].some((x) => x.toLocaleLowerCase('fr').includes(needle))));
+const chip = (s: GiftState | null) => {
+  const p = new URLSearchParams({ ...(s ? { etat: s } : {}), ...(q ? { q } : {}) }).toString();
+  return `/admin/bons-cadeaux${p ? `?${p}` : ''}`;
+};
+const TONE: Record<GiftState, string> = { valide: 'ok', reserve: 'wait', utilise: 'off', expire: 'alert', annule: 'alert' };
 ---
 <Admin title="Bons cadeaux">
 <script is:inline src={`/assets/js/bon-cliente.js?v=${JS_VERSION}`} defer></script>
-<p>Un bon vaut pour un soin de la carte, pendant 12 mois. La cliente saisit son code dans le champ « Code promo ou bon cadeau » en réservant : le soin est alors offert. Le bon peut aussi être noté utilisé à la caisse.</p>
-<section aria-labelledby="h-new">
+<span slot="actions"><a class="btn btn--solid" href="#nouveau-bon">+ Nouveau bon</a></span>
+<div class="gc">
+<div class="gc-main">
+  <p class="lead">Un bon vaut pour un soin de la carte, pendant 12 mois. La cliente saisit son code dans « Code promo ou bon cadeau » en réservant : le soin est alors offert. Le bon peut aussi être noté utilisé à la caisse.</p>
+  <dl class="kpis">{kpis.map(([n, l]) => <div><dt>{l}</dt><dd>{n}</dd></div>)}</dl>
+  <section aria-labelledby="h-list">
+    <h2 id="h-list" class="visually-hidden">Bons émis</h2>
+    <div class="filters">
+      <nav class="chips" aria-label="Filtrer par état">
+        <a href={chip(null)} aria-current={!etat ? 'page' : undefined}>Tous ({gifts.length})</a>
+        {(Object.keys(STATE_LABELS) as GiftState[]).filter((s) => count(s) > 0).map((s) => <a href={chip(s)} aria-current={etat === s ? 'page' : undefined}>{STATE_LABELS[s]} ({count(s)})</a>)}
+      </nav>
+      <form class="search" method="get" role="search">
+        {etat && <input type="hidden" name="etat" value={etat}>}
+        <label class="visually-hidden" for="q">Rechercher un bon</label>
+        <input id="q" name="q" type="search" maxlength="100" value={q} placeholder="Code, nom, e-mail ou soin">
+        <button class="btn btn--ghost" type="submit">Rechercher</button>
+      </form>
+    </div>
+    {gifts.length === 0 ? <p class="none">Aucun bon pour l'instant.</p>
+      : shown.length === 0 ? <p class="none">Aucun bon ne correspond. <a href="/admin/bons-cadeaux">Tout afficher</a></p>
+      : <ul class="cards">{shown.map((g) => (
+        <li><a class="gcard" href={`/admin/bons-cadeaux/${g.id}`}>
+          <span class="gc-top"><strong class="gc-code">{g.code}</strong><span class={`badge badge--${TONE[g.state]}`}>{STATE_LABELS[g.state]}</span></span>
+          <span class="gc-who">{g.recipient}</span>
+          <span class="gc-meta">{g.service}<br>{g.state === 'reserve' && g.booking_at ? `réservé le ${when(g.booking_at)}` : `jusqu’au ${day(g.expires_on)}`}</span>
+        </a></li>
+      ))}</ul>}
+  </section>
+</div>
+
+<aside class="gc-new" id="nouveau-bon" aria-labelledby="h-new">
 <h2 id="h-new">Nouveau bon</h2>
 {error && <p class="notice notice--error" role="alert">{error}</p>}
 <form class="form" method="post">
@@ -53,24 +108,39 @@ const day = (d: string) => new Intl.DateTimeFormat('fr-BE', { timeZone: 'UTC', d
     <button class="btn btn--ghost" type="submit" name="send" value="on">Créer et envoyer par e-mail</button>
   </div>
 </form>
-</section>
-<section aria-labelledby="h-list">
-<h2 id="h-list">Bons émis</h2>
-{gifts.length === 0 ? <p>Aucun bon pour l'instant.</p> : (
-<ul class="gifts">{gifts.map((g) => (
-  <li><a href={`/admin/bons-cadeaux/${g.id}`}><strong>{g.code}</strong></a> · pour {g.recipient}{g.recipient_email && ` (${g.recipient_email})`}
-    <br><small>{g.service} · valable jusqu'au {day(g.expires_on)}</small>
-    <span class:list={['badge', { 'badge--ok': g.state === 'valide', 'badge--wait': g.state === 'reserve', 'badge--alert': g.state === 'expire' || g.state === 'annule' }]}>{STATE_LABELS[g.state]}</span></li>
-))}</ul>
-)}
-</section>
+</aside>
+</div>
 </Admin>
 
 <style>
-  section{margin-bottom:2rem}
   select,textarea{font:inherit}
-  .gifts{list-style:none;margin:0;padding:0;display:grid;gap:.6rem}
-  .gifts li{padding:.75rem 1rem;border:1px solid var(--line-soft);border-radius:12px;background:var(--bg);overflow-wrap:anywhere}
-  .gifts .badge{margin-left:.25rem}
+  .lead{margin:0 0 1.25rem;max-width:68ch;color:var(--text-soft)}
+  .none{color:var(--text-soft)}
+  /* PC : liste à gauche, panneau « Nouveau bon » à droite qui reste visible ; téléphone : le panneau passe en tête */
+  .gc{display:grid;gap:1.5rem;align-items:start}
+  @media (min-width:1100px){.gc{grid-template-columns:minmax(0,1fr) 24rem}.gc-new{position:sticky;top:1.5rem}}
+  @media (max-width:1099px){.gc-new{order:-1}}
+  .gc-main,.gc-new{min-width:0}
+  .gc-new{padding:1.25rem 1.4rem;border:1px solid var(--line-soft);border-radius:18px;background:var(--bg);box-shadow:0 12px 36px rgb(59 42 39 / .12)}
+  .gc-new h2{margin:0 0 1rem;font-size:1.35rem}
+  .gc-new .form{max-width:none}
+  .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem;margin:0 0 1.25rem}
+  @media (max-width:640px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .kpis div{display:flex;flex-direction:column-reverse;padding:.9rem 1rem;border:1px solid var(--line-soft);border-radius:14px;background:var(--bg)}
+  .kpis dd{margin:0;font:400 1.9rem/1.1 var(--f-title)}
+  .kpis dt{color:var(--text-soft);font-size:.9375rem}
+  .filters{display:flex;flex-wrap:wrap;gap:.75rem 1rem;align-items:center;justify-content:space-between;margin:0 0 1rem}
+  .chips{display:flex;flex-wrap:wrap;gap:.5rem}
+  .chips a{display:inline-flex;align-items:center;min-height:44px;padding:0 1rem;border:1px solid var(--line-soft);border-radius:999px;color:var(--text);text-decoration:none;font-size:.9375rem}
+  .chips a[aria-current="page"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+  .search{display:flex;gap:.5rem;flex:1 1 18rem;max-width:26rem}
+  .search input{flex:1;min-width:0;min-height:44px;padding:.6rem .9rem;border:1px solid var(--line-soft);border-radius:12px;background:var(--surface);color:var(--text);font:inherit}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,15rem),1fr));gap:1rem;list-style:none;margin:0;padding:0}
+  .gcard{display:grid;gap:.35rem;height:100%;padding:1.1rem 1.2rem;border:1px solid var(--line-soft);border-radius:16px;background:var(--bg);color:var(--text);text-decoration:none;overflow-wrap:anywhere}
+  .gcard:hover,.gcard:focus-visible{border-color:var(--accent)}
+  .gc-top{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+  .gc-code{letter-spacing:.06em;font-size:.9375rem}
+  .gc-who{font:400 1.2rem/1.25 var(--f-title)}
+  .gc-meta{color:var(--text-soft);font-size:.9375rem}
   .row-btns{display:flex;flex-wrap:wrap;gap:.5rem}
 </style>
