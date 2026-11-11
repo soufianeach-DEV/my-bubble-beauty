@@ -2,7 +2,7 @@
 // Toute saisie passe par un schéma de admin-form.ts, toute requête est paramétrée, toute modification est journalisée avec l'admin.
 import { t } from '../site.ts';
 import { agendaForm, bulkServiceForm, deleteBookingForm, closureForm, hoursForm, idForm, newBookingForm, promoForm, serviceForm, toggleForm } from './admin-form.ts';
-import { cancelByAdmin, createAdminBooking, deleteBooking, markRefundedManually, rescheduleByAdmin, setLate, setNoShow, setPayment } from './booking.ts';
+import { cancelByAdmin, createAdminBooking, deleteBooking, markRefundedManually, rescheduleByAdmin, setArrival, setLate, setNoShow, setPayment } from './booking.ts';
 import { giftClients } from './cadeaux.ts';
 import { unlinkPackage } from './forfaits.ts';
 import { sql } from './db.ts';
@@ -210,9 +210,15 @@ export async function agendaAction(userId: number, form: FormData): Promise<Resu
   }
   if (action === 'pay' || action === 'unpay') {
     const b = await setPayment(id, action === 'pay' ? p.data.method! : null, action === 'pay' ? (p.data.amount as number) : null);
-    if (!b) return { ok: false, error: 'Seul un rendez-vous confirmé, passé et honoré peut être encaissé.' };
+    if (!b) return { ok: false, error: action === 'pay' ? 'Encaissement impossible : rendez-vous déjà encaissé, pas encore commencé ou marqué absent.' : 'Seul un rendez-vous confirmé, passé et honoré peut être encaissé.' };
     audit(userId, action === 'pay' ? 'booking_paid' : 'booking_unpaid', { booking_id: id, client_id: b.user_id, ...(action === 'pay' ? { method: p.data.method, amount: p.data.amount } : {}) });
     return { ok: true, id, key: action === 'pay' ? 'encaisse' : 'nonencaisse' };
+  }
+  if (action === 'arrive' || action === 'unarrive') {
+    const b = await setArrival(id, action === 'arrive');
+    if (!b) return { ok: false, error: action === 'arrive' ? "Arrivée déjà notée, ou rendez-vous qui n'est pas aujourd'hui." : "Arrivée impossible à annuler : pas notée, ou rendez-vous déjà encaissé." };
+    audit(userId, action === 'arrive' ? 'booking_arrived' : 'booking_unarrived', { booking_id: id, client_id: b.user_id });
+    return { ok: true, id, key: action === 'arrive' ? 'arrivee' : 'nonarrivee' };
   }
   if (action === 'unpackage') {
     const b = await unlinkPackage(id);

@@ -353,10 +353,11 @@ export function clientBookings(userId: number, lang: Lang) {
 // sur une annulée = acompte gardé ou remboursement échoué, sur une expirée = paiement tardif non remboursé (à relancer par cancelByAdmin).
 export function adminAgenda(from: string, days = 7) {
   if (!isDay(from)) return Promise.resolve([]);
-  return sql<{ id: number; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled' | 'expired'; service: string; name: string | null; phone: string | null; email: string | null; user_id: number | null; guest: boolean; erased: boolean; deleting: boolean; past: boolean; no_show: boolean; late_minutes: number | null; paid_method: string | null; paid_cents: number | null; cancel_reason: string | null; refunded_manually: boolean; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; promo: string | null; package: string | null }[]>`
+  return sql<{ id: number; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled' | 'expired'; service: string; name: string | null; phone: string | null; email: string | null; user_id: number | null; guest: boolean; erased: boolean; deleting: boolean; past: boolean; no_show: boolean; late_minutes: number | null; paid_method: string | null; paid_cents: number | null; cancel_reason: string | null; refunded_manually: boolean; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; promo: string | null; package: string | null; arrived_at: Date | null; ended: boolean }[]>`
     SELECT b.id, b.starts_at, b.ends_at, b.status, s.name_fr AS service, coalesce(u.name, b.guest_name) AS name, coalesce(u.phone, b.guest_phone) AS phone,
       u.email, b.user_id, b.user_id IS NULL AND NOT b.client_erased AS guest, b.client_erased AS erased, u.deleted_at IS NOT NULL AS deleting,
       b.starts_at < now() AS past, b.no_show, b.late_minutes, b.paid_method, b.paid_cents, b.cancel_reason, b.refunded_manually_at IS NOT NULL AS refunded_manually,
+      b.arrived_at, b.ends_at < now() AS ended,
       b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.stripe_payment_intent IS NOT NULL AS paid, p.code AS promo, k.label AS package
     FROM bookings b JOIN services s ON s.id = b.service_id LEFT JOIN users u ON u.id = b.user_id LEFT JOIN promo_codes p ON p.id = b.promo_code_id
       LEFT JOIN packages k ON k.id = b.package_id
@@ -431,7 +432,7 @@ export async function setNoShow(bookingId: number, noShow: boolean): Promise<{ u
   try {
     const [b] = await sql<{ user_id: number | null }[]>`UPDATE bookings SET no_show = ${noShow}, late_minutes = CASE WHEN ${noShow} THEN NULL ELSE late_minutes END,
       paid_method = CASE WHEN ${noShow} THEN NULL ELSE paid_method END, paid_cents = CASE WHEN ${noShow} THEN NULL ELSE paid_cents END,
-      paid_at = CASE WHEN ${noShow} THEN NULL ELSE paid_at END
+      paid_at = CASE WHEN ${noShow} THEN NULL ELSE paid_at END, arrived_at = CASE WHEN ${noShow} THEN NULL ELSE arrived_at END
       WHERE id = ${bookingId} AND status = 'confirmed' AND starts_at < now() RETURNING user_id`;
     return b ?? null;
   } catch (e) {
@@ -447,13 +448,30 @@ export async function setLate(bookingId: number, minutes: number | null): Promis
   return b ?? null;
 }
 
-// Encaissement au salon d'un rendez-vous confirmé, passé et honoré ; method NULL = encaissement retiré. Renvoie la cliente concernée.
+// Encaissement au salon d'un rendez-vous confirmé, commencé (ou cliente arrivée) et honoré ; method NULL = encaissement retiré.
+// Un encaissement déjà noté n'est jamais écrasé : deux validations (double clic, deux onglets) n'en font qu'une. Renvoie la cliente concernée.
 export const PAY_METHODS = { especes: 'Espèces', carte: 'Carte', payconiq: 'Payconiq', bon: 'Bon cadeau' } as const;
 export type PayMethod = keyof typeof PAY_METHODS;
 export async function setPayment(bookingId: number, method: PayMethod | null, cents: number | null): Promise<{ user_id: number | null } | null> {
   const [b] = await sql<{ user_id: number | null }[]>`UPDATE bookings
     SET paid_method = ${method}, paid_cents = ${method ? cents : null}, paid_at = ${method ? sql`now()` : null}
-    WHERE id = ${bookingId} AND status = 'confirmed' AND starts_at < now() AND NOT no_show RETURNING user_id`;
+    WHERE id = ${bookingId} AND status = 'confirmed' AND (starts_at < now() OR arrived_at IS NOT NULL) AND NOT no_show
+      ${method ? sql`AND paid_method IS NULL` : sql``} RETURNING user_id`;
+  return b ?? null;
+}
+
+// Arrivée de la cliente, le jour du rendez-vous (confirmé, sans absence), une seule fois. Après l'heure prévue, le retard en minutes
+// est noté, sauf retard déjà saisi à la main. Annuler l'arrivée (avant l'encaissement) retire seulement le retard qu'elle avait calculé.
+export async function setArrival(bookingId: number, arrived: boolean): Promise<{ user_id: number | null } | null> {
+  const late = sql`least(240, floor(extract(epoch FROM now() - starts_at) / 60))::int`;
+  const [b] = arrived
+    ? await sql<{ user_id: number | null }[]>`UPDATE bookings SET arrived_at = now(),
+        late_minutes = CASE WHEN late_minutes IS NULL AND ${late} >= 1 THEN ${late} ELSE late_minutes END
+      WHERE id = ${bookingId} AND status = 'confirmed' AND NOT no_show AND arrived_at IS NULL
+        AND (starts_at AT TIME ZONE 'Europe/Brussels')::date = (now() AT TIME ZONE 'Europe/Brussels')::date RETURNING user_id`
+    : await sql<{ user_id: number | null }[]>`UPDATE bookings SET arrived_at = NULL,
+        late_minutes = CASE WHEN late_minutes = least(240, floor(extract(epoch FROM arrived_at - starts_at) / 60))::int THEN NULL ELSE late_minutes END
+      WHERE id = ${bookingId} AND status = 'confirmed' AND arrived_at IS NOT NULL AND paid_method IS NULL RETURNING user_id`;
   return b ?? null;
 }
 

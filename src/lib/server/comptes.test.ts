@@ -210,6 +210,46 @@ test('comptes, réservations et sécurité sur une vraie base', { skip: !url && 
       assert.equal(await booking.sendReminders(async () => true), 0, 'une seule fois par rendez-vous');
     });
 
+    await t.test('arrivée, retard calculé, annulation de l’arrivée, double encaissement refusé', async () => {
+      // Commencé il y a 20 min au plus, mais toujours aujourd'hui à Bruxelles (l'arrivée ne se note que le jour même)
+      const [{ s }] = await sql`SELECT greatest(now() - interval '20 minutes',
+        ((now() AT TIME ZONE 'Europe/Brussels')::date::timestamp AT TIME ZONE 'Europe/Brussels') + interval '1 second') AS s`;
+      const [a] = await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents)
+        VALUES (${other.id}, ${svc.id}, ${s}, ${new Date(s.getTime() + 3600_000)}, 'confirmed', 5000) RETURNING id`;
+      const row = async () => (await sql`SELECT arrived_at, late_minutes, paid_method, paid_cents,
+        floor(extract(epoch FROM arrived_at - starts_at) / 60)::int AS computed FROM bookings WHERE id = ${a.id}`)[0];
+      assert.deepEqual(await booking.setArrival(a.id, true), { user_id: other.id });
+      let r = await row();
+      assert.ok(r.arrived_at, 'arrivée notée');
+      assert.equal(r.late_minutes, r.computed >= 1 ? r.computed : null, 'retard calculé depuis l’heure prévue');
+      assert.equal(await booking.setArrival(a.id, true), null, 'une seule arrivée');
+      assert.deepEqual(await booking.setArrival(a.id, false), { user_id: other.id });
+      r = await row();
+      assert.deepEqual([r.arrived_at, r.late_minutes], [null, null], 'annuler l’arrivée retire le retard calculé');
+      // Retard saisi à la main : ni l'arrivée ni son annulation n'y touchent
+      assert.deepEqual(await booking.setLate(a.id, 7), { user_id: other.id });
+      await booking.setArrival(a.id, true);
+      assert.equal((await row()).late_minutes, 7, 'retard manuel gardé');
+      await booking.setArrival(a.id, false);
+      assert.equal((await row()).late_minutes, 7, 'retard manuel gardé après annulation');
+      // Encaissement : une seule fois ; l'arrivée encaissée ne s'annule plus
+      await booking.setArrival(a.id, true);
+      assert.deepEqual(await booking.setPayment(a.id, 'carte', 3000), { user_id: other.id });
+      assert.equal(await booking.setPayment(a.id, 'especes', 1000), null, 'double encaissement refusé');
+      r = await row();
+      assert.deepEqual([r.paid_method, r.paid_cents], ['carte', 3000]);
+      assert.equal(await booking.setArrival(a.id, false), null, 'arrivée d’un rendez-vous encaissé : gardée');
+      // Rendez-vous d'un autre jour : pas d'arrivée ; absence : l'arrivée est effacée
+      const later = new Date(Date.now() + 3 * 86_400_000);
+      const [f] = await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents)
+        VALUES (${other.id}, ${svc.id}, ${later}, ${new Date(later.getTime() + 3600_000)}, 'confirmed', 5000) RETURNING id`;
+      assert.equal(await booking.setArrival(f.id, true), null, 'pas d’arrivée un autre jour');
+      assert.equal(await booking.setPayment(f.id, 'carte', 1000), null, 'pas d’encaissement avant le soin sans arrivée');
+      assert.deepEqual(await booking.setNoShow(a.id, true), { user_id: other.id });
+      assert.equal((await row()).arrived_at, null, 'l’absence efface l’arrivée');
+      await sql`DELETE FROM bookings WHERE id IN (${a.id}, ${f.id})`;
+    });
+
     await t.test('compte supprimé : plus de réservation ; recherche par téléphone ; export sans IP de tiers', async () => {
       await sql`UPDATE users SET deleted_at = now(), phone = '0470 12 34 56' WHERE id = ${other.id}`;
       const r = await booking.createBooking({ userId: other.id, serviceId: svc.id, startsAt: await at('13:30'), lang: 'fr' });
