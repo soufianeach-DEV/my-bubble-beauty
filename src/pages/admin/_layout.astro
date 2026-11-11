@@ -3,7 +3,7 @@
 export const prerender = false;
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
-import { EXTRA, JS_VERSION } from '../../lib/site';
+import { EXTRA } from '../../lib/site';
 import { ROLE_LABELS } from '../../lib/server/staff.ts';
 import '../../styles/forms.css';
 
@@ -74,8 +74,6 @@ const PROFILE = [
   <slot />
 </div>
 </article>
-{/* Champs date de l'admin : calendrier du site à la place du sélecteur natif (sans JS, le champ natif reste) */}
-<script is:inline src={`/assets/js/admin-date.js?v=${JS_VERSION}`} defer></script>
 </Base>
 
 <style>
@@ -131,34 +129,4 @@ const PROFILE = [
     .pm-who{display:none}
     .pmenu summary{padding-right:.5rem}
   }
-
-  /* Calendrier des champs date (admin-date.js) : couleurs du thème, clair et sombre par les variables, cibles de 44 px */
-  .admin :global(.dpk){position:relative;display:block}
-  .admin :global(.dpk-native){position:absolute;inset:auto 0 0 0;width:1px;height:1px;opacity:0;pointer-events:none}
-  .admin :global(.dpk-btn){display:flex;align-items:center;justify-content:space-between;gap:.75rem;width:100%;min-height:48px;padding:.7rem 1rem;border:1px solid var(--line-soft);border-radius:12px;background:var(--surface);color:var(--text);font:inherit;text-align:left;cursor:pointer}
-  .admin :global(.dpk-btn)::after{content:'';flex:none;width:18px;height:18px;background:currentColor;opacity:.7;-webkit-mask:var(--dpk-ico) center/contain no-repeat;mask:var(--dpk-ico) center/contain no-repeat;
-    --dpk-ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round'%3E%3Cpath d='M7 3v3M17 3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z'/%3E%3C/svg%3E")}
-  .admin :global(.dpk-btn:hover),.admin :global(.dpk-btn[aria-expanded="true"]){border-color:var(--accent)}
-  .admin :global(.dpk-btn:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
-  .admin :global(.dpk-empty){color:var(--text-soft)}
-  .admin :global(.dpk-invalid){border-color:rgb(176 70 60)}
-  .admin :global(.dpk-pop){position:absolute;z-index:30;top:calc(100% + .4rem);left:0;width:min(21rem,calc(100vw - 2rem));padding:.9rem;border:1px solid var(--line-soft);border-radius:16px;background:var(--bg);box-shadow:0 14px 36px rgb(0 0 0 / .2)}
-  .admin :global(.dpk-right .dpk-pop){left:auto;right:0}
-  /* Téléphone : panneau en bas de l'écran, à la largeur de l'écran (un champ étroit ne le fait plus déborder) */
-  @media (max-width:639px){.admin :global(.dpk-pop),.admin :global(.dpk-right .dpk-pop){position:fixed;top:auto;left:1rem;right:1rem;bottom:1rem;width:auto}}
-  .admin :global(.dpk-head){display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.4rem}
-  .admin :global(.dpk-month){margin:0;font:500 1.05rem/1.2 var(--f-title);text-transform:capitalize}
-  .admin :global(.dpk-nav){display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--line-soft);border-radius:999px;background:none;color:var(--text);font-size:1.3rem;cursor:pointer}
-  .admin :global(.dpk-grid){width:100%;border-collapse:collapse;table-layout:fixed}
-  .admin :global(.dpk-grid th){padding:.25rem 0;font:500 .7rem/1 var(--f-text);letter-spacing:.06em;text-transform:uppercase;color:var(--text-soft)}
-  .admin :global(.dpk-grid td){padding:1px;text-align:center}
-  .admin :global(.dpk-day){display:grid;place-items:center;width:100%;height:44px;border:0;border-radius:12px;background:none;color:var(--text);font:inherit;font-variant-numeric:tabular-nums;cursor:pointer}
-  .admin :global(.dpk-day:hover){background:var(--line-soft)}
-  .admin :global(.dpk-day:focus-visible){outline:2px solid var(--accent);outline-offset:-2px}
-  .admin :global(.dpk-day[aria-current="date"]){box-shadow:inset 0 0 0 2px var(--accent)}
-  .admin :global(.dpk-day[aria-pressed="true"]){background:var(--accent);color:var(--accent-ink);font-weight:600}
-  .admin :global(.dpk-day:disabled){opacity:.35;cursor:not-allowed;background:none}
-  .admin :global(.dpk-foot){display:flex;justify-content:space-between;gap:.5rem;margin-top:.4rem}
-  .admin :global(.dpk-link){min-height:44px;padding:0 .5rem;border:0;background:none;color:var(--link);font:inherit;cursor:pointer}
-  .admin :global(.dpk-link:disabled){opacity:.4;cursor:not-allowed}
 </style>
