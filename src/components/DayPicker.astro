@@ -44,7 +44,9 @@ const closed = new Set(closedDays.map((r) => r.d));
 const cells = Array.from({ length: count }, (_, i) => {
   const d = iso(new Date(Date.UTC(first.getUTCFullYear(), first.getUTCMonth(), i + 1, 12)));
   const wd = ((utc(d).getUTCDay() + 6) % 7) + 1;
-  return { d, n: i + 1, ok: d >= min && d <= lastDay && open.has(wd) && !closed.has(d), closed: closed.has(d) };
+  // shut : salon fermé ce jour (fermeture posée ou jour de semaine sans horaires), à distinguer d'un jour passé
+  const shut = closed.has(d) || !open.has(wd);
+  return { d, n: i + 1, ok: d >= min && d <= lastDay && !shut, shut };
 });
 const monthName = (d: Date) => new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(d);
 const fullDay = (d: string) => new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' }).format(utc(d));
@@ -75,8 +77,9 @@ const next = target(nextMonth);
   {heads.map((h) => <li class="dp-wd" aria-hidden="true">{h}</li>)}
   {Array.from({ length: lead }, () => <li aria-hidden="true"></li>)}
   {cells.map((c) => {
-    const cls = ['dp-day', { 'dp-today': c.d === today, 'dp-off': !c.ok }];
-    const aria = `${fullDay(c.d)}${c.closed ? ' (fermé)' : ''}`;
+    // Admin : un jour fermé est barré (et reste cliquable) ; un jour passé est seulement estompé
+    const cls = ['dp-day', { 'dp-today': c.d === today, 'dp-off': !c.ok && !(soft && c.shut), 'dp-shut': soft && c.shut }];
+    const aria = `${fullDay(c.d)}${c.shut ? ' (fermé)' : ''}`;
     const current = c.d === day ? 'date' : undefined;
     return <li>{c.ok || soft
       ? name
@@ -85,6 +88,7 @@ const next = target(nextMonth);
       : <span class="dp-day dp-off" aria-hidden="true">{c.n}</span>}</li>;
   })}
 </ol>
+{soft && <p class="dp-legend"><span class="dp-day dp-shut" aria-hidden="true">19</span> Barré : salon fermé ce jour-là. Le jour reste choisissable.</p>}
 </nav>
 
 <style>
@@ -101,4 +105,8 @@ a.dp-day:hover,a.dp-day:focus-visible,button.dp-day:hover,button.dp-day:focus-vi
 .dp-day[aria-current="date"]{background:var(--accent);color:var(--on-accent,#2a1d1a);font-weight:600;opacity:1}
 .dp-off{color:var(--text-soft);opacity:.45}
 span.dp-off{cursor:default}
+.dp-shut{color:var(--text-soft);text-decoration:line-through;text-decoration-thickness:2px;outline:1px dashed var(--text-soft);outline-offset:-4px}
+.dp-shut.dp-today{box-shadow:inset 0 0 0 1px var(--accent)}
+.dp-legend{display:flex;align-items:center;gap:.5rem;margin:.5rem 0 0;font-size:.8125rem;color:var(--text-soft)}
+.dp-legend .dp-day{width:2rem;min-height:2rem;flex:none;cursor:default}
 </style>
