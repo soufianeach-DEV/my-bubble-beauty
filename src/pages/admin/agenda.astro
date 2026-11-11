@@ -2,7 +2,7 @@
 export const prerender = false;
 // Agenda : rendez-vous du jour ou de la semaine à l'heure de Bruxelles, annulation en deux temps et remboursement de l'acompte
 import Admin from './_layout.astro';
-import { adminId, staffId, agendaAction, deleteAction, fmtDay, fmtTime, openingSpan, readForm } from '../../lib/server/admin.ts';
+import { addClosure, adminId, closuresBetween, deleteClosure, staffId, agendaAction, deleteAction, fmtDay, fmtTime, openingSpan, readForm } from '../../lib/server/admin.ts';
 import '../../styles/agenda-grille.css';
 import { gridBounds, placeSpans } from '../../lib/server/agenda-grille.ts';
 import RdvActions from './_rdv-actions.astro';
@@ -25,9 +25,14 @@ let error = '';
 if (Astro.request.method === 'POST') {
   const form = await readForm(Astro.request);
   if (!form) return new Response(null, { status: 413 });
-  const r = form.get('action') === 'delete'
-    ? admin ? await deleteAction(form) : { ok: false as const, error: "Seule l'admin peut supprimer un rendez-vous." }
+  const action = form.get('action');
+  // Jours de fermeture : même table et mêmes règles que Horaires > Fermetures (gestionnaire comprise)
+  const closing = action === 'add-closure' || action === 'del-closure';
+  const r = closing ? await (action === 'add-closure' ? addClosure : deleteClosure)(me, form)
+    : action === 'delete' ? admin ? await deleteAction(form) : { ok: false as const, error: "Seule l'admin peut supprimer un rendez-vous." }
     : await agendaAction(me, form);
+  const start = String(form.get('start_day') ?? '');
+  if (r.ok && closing) return Astro.redirect(`${link(action === 'add-closure' && isDay(start) ? start : jour)}&ok=${action === 'add-closure' ? 'ferme' : 'rouvert'}`, 303);
   // Déplacé : l'agenda suit le rendez-vous à sa nouvelle date
   if (r.ok) return Astro.redirect(`${link(r.day ?? jour)}&ok=${r.key}#r-${r.id}`, 303);
   error = r.error;
@@ -48,6 +53,8 @@ const DONE: Record<string, string> = {
   encaisse: 'Encaissement noté.',
   nonencaisse: 'Encaissement retiré.',
   aheure: 'Retard retiré.',
+  ferme: 'Jour fermé : plus de réservation en ligne. Les rendez-vous déjà pris restent, prévenez les clientes.',
+  rouvert: 'Fermeture retirée.',
   arrivee: 'Arrivée notée.',
   nonarrivee: 'Arrivée annulée.',
   rendu: 'Acompte noté comme remboursé hors du site.',
@@ -56,7 +63,13 @@ const DONE: Record<string, string> = {
 const done = !error && DONE[q.get('ok') ?? ''];
 const from = vue === 'jour' ? jour : monday(jour);
 const count = vue === 'jour' ? 1 : 7;
-const rows = await adminAgenda(from, count);
+const [rows, closures] = await Promise.all([adminAgenda(from, count), closuresBetween(from, count)]);
+const closedOn = (d: string) => closures.some((c) => c.first <= d && d <= c.last);
+// Fermeture lisible : « mar. 24 déc. » ou « mar. 24 déc. → jeu. 26 déc. », heures seulement si elle ne couvre pas des jours entiers
+const whole = (c: (typeof closures)[number]) => fmtTime(c.starts_at) === '00:00' && fmtTime(c.ends_at) === '00:00';
+const closureLabel = (c: (typeof closures)[number]) => whole(c)
+  ? (c.first === c.last ? fmtDay(c.first) : `${fmtDay(c.first)} → ${fmtDay(c.last)}`)
+  : `${fmtDay(c.first)} ${fmtTime(c.starts_at)} → ${c.first === c.last ? '' : `${fmtDay(c.last)} `}${fmtTime(c.ends_at)}`;
 // Badges d'alerte de la fiche de soin, à voir avant le soin
 const careAlerts = await alertsFor([...new Set(rows.map((r) => r.user_id).filter((x): x is number => !!x))]);
 // Annulés et expirés masqués par défaut (?annules=1 pour les voir) ; ceux qui ont encore un acompte à rendre restent visibles
@@ -101,13 +114,31 @@ const alertsOf = (r: Row) => (r.user_id ? careAlerts.get(r.user_id) ?? [] : []);
   </div>
   <button class="btn btn--ghost" type="submit">Afficher</button>
 </form>
+<details class="close-day">
+  <summary class="btn btn--ghost">Fermer un jour</summary>
+  <form class="close-form" method="post">
+    <input type="hidden" name="action" value="add-closure">
+    <div class="field"><label for="cl-start">Du</label><input id="cl-start" name="start_day" type="date" required value={jour}></div>
+    <div class="field"><label for="cl-end">Au <span class="hint">(même jour pour une seule journée)</span></label><input id="cl-end" name="end_day" type="date" required value={jour}></div>
+    <div class="field cl-reason"><label for="cl-reason">Motif <span class="hint">(facultatif, visible par l'équipe seulement)</span></label><input id="cl-reason" name="reason" maxlength="200" placeholder="Congé, formation…"></div>
+    <p class="hint cl-note">Journées entières. Plus aucun créneau en ligne ; « Nouveau rendez-vous » demande alors « Ouvrir exceptionnellement ». Pour fermer quelques heures : <a href="/admin/horaires#fermetures">Horaires</a>.</p>
+    <button class="btn btn--solid" type="submit">Fermer ces jours</button>
+  </form>
+</details>
 </div>
+{closures.length > 0 && (
+  <ul class="closures" aria-label="Fermetures de la période">{closures.map((c) => (
+    <li><span class="badge badge--alert">Fermé</span> {closureLabel(c)}{c.reason && <> · {c.reason}</>}
+      <form method="post"><input type="hidden" name="action" value="del-closure"><input type="hidden" name="id" value={c.id}>
+        <button class="btn btn--ghost" type="submit">Rouvrir<span class="visually-hidden"> : fermeture {closureLabel(c)}</span></button></form></li>
+  ))}</ul>
+)}
 {vue === 'semaine' && (<>
   {/* Ordinateur : 7 colonnes × heures, hauteur selon la durée, chevauchements côte à côte ; un clic ouvre le panneau du rendez-vous */}
   <div class="cal" id="cal" role="group" aria-label="Semaine en grille horaire">
     <div class="cal-head"><span></span>{days.map(({ d, rows }) => {
       const n = rows.filter((r) => r.status === 'confirmed' || r.status === 'pending_payment').length;
-      return <a class:list={['cal-day', { 'cal-day--today': d === today }]} href={link(d, 'jour')}>{fmtDay(d)}<small>{n ? `${n} rendez-vous` : 'Libre'}</small></a>;
+      return <a class:list={['cal-day', { 'cal-day--today': d === today, 'cal-day--closed': closedOn(d) }]} href={link(d, 'jour')}>{fmtDay(d)}<small>{closedOn(d) ? 'Fermé' : ''}{closedOn(d) && n ? ' · ' : ''}{n ? `${n} rendez-vous` : closedOn(d) ? '' : 'Libre'}</small></a>;
     })}</div>
     <div class="cal-body">
       <ol class="cal-hours" aria-hidden="true">{hours.map((h, i) => <li class={`gs-${i * 12 + 1} gn-12 ln-1-1`}>{h}</li>)}</ol>
@@ -129,7 +160,7 @@ const alertsOf = (r: Row) => (r.user_id ? careAlerts.get(r.user_id) ?? [] : []);
   {/* Téléphone et tablette : liste par jour, même panneau au clic */}
   <ol class="week" aria-label="La semaine jour par jour">{days.map(({ d, rows }) => (
     <li class:list={['wk', { 'wk--today': d === today }]}>
-      <a class="wk-head" href={link(d, 'jour')}>{fmtDay(d)}<small>{rows.length ? `${rows.length} rendez-vous` : 'Libre'}</small></a>
+      <a class="wk-head" href={link(d, 'jour')}>{fmtDay(d)}<small>{closedOn(d) && 'Fermé · '}{rows.length ? `${rows.length} rendez-vous` : closedOn(d) ? 'aucun rendez-vous' : 'Libre'}</small></a>
       {rows.length > 0 && <ul>{rows.map((r) => (
         <li><a href={`#r-${r.id}`} class={`ev ev--${tone(r)}`}><b>{fmtTime(r.starts_at)}</b> {r.name ?? (r.erased ? 'Compte supprimé' : '—')}<small>{r.service}</small></a></li>
       ))}</ul>}
@@ -157,7 +188,7 @@ const alertsOf = (r: Row) => (r.user_id ? careAlerts.get(r.user_id) ?? [] : []);
 </>)}
 {vue === 'jour' && days.map(({ d, rows }) => (
   <section class:list={['day', { 'day--today': d === today, 'day--empty': rows.length === 0 }]} aria-labelledby={`d-${d}`}>
-    <h2 id={`d-${d}`}><a href={link(d, 'jour')}>{fmtDay(d)}</a>{d === today && <span class="badge">Aujourd'hui</span>}
+    <h2 id={`d-${d}`}><a href={link(d, 'jour')}>{fmtDay(d)}</a>{d === today && <span class="badge">Aujourd'hui</span>}{closedOn(d) && <span class="badge badge--alert">Fermé</span>}
       {rows.length > 0 && <small>{rows.length} rendez-vous</small>}</h2>
     {rows.length === 0 ? <p class="none">Aucun rendez-vous.</p> : (
       <div class="table-wrap"><table class="data-table">
@@ -213,6 +244,18 @@ const alertsOf = (r: Row) => (r.user_id ? careAlerts.get(r.user_id) ?? [] : []);
     .pager span[aria-hidden]{font-size:1.4rem;line-height:1}
   }
   .pick{display:flex;flex-wrap:wrap;gap:.75rem;align-items:flex-end}
+  /* Fermer un jour : replié dans la barre, le formulaire s'ouvre sur toute la largeur */
+  .close-day{display:contents}
+  .close-day>summary{list-style:none;cursor:pointer}
+  .close-day>summary::-webkit-details-marker{display:none}
+  .close-form{flex-basis:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:.75rem 1rem;align-items:end;padding-top:1rem;border-top:1px solid var(--line-soft)}
+  .close-form .cl-reason,.close-form .cl-note{grid-column:1 / -1}
+  .close-form .cl-note{margin:0}
+  .close-form .btn{justify-self:start}
+  .closures{display:grid;gap:.5rem;list-style:none;margin:-1rem 0 2rem;padding:0}
+  .closures li{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem;padding:.5rem .5rem .5rem 1rem;border:1px solid rgb(176 70 60 / .35);border-radius:14px;background:rgb(176 70 60 / .08)}
+  .closures form{margin-left:auto}
+  .cal-day--closed{background:rgb(176 70 60 / .1)}
   .pick .field{min-width:9rem;margin:0}
   .day{margin:0 0 1.75rem}
   .day h2{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem;margin:0 0 .75rem;font-size:1.35rem}

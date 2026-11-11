@@ -250,6 +250,23 @@ test('comptes, réservations et sécurité sur une vraie base', { skip: !url && 
       await sql`DELETE FROM bookings WHERE id IN (${a.id}, ${f.id})`;
     });
 
+    await t.test('jour de fermeture : plus de créneau en ligne, saisie admin refusée sauf ouverture exceptionnelle', async () => {
+      const { addClosure, newBooking } = await import('./admin.ts');
+      const form = (o: Record<string, string>) => { const f = new FormData(); for (const [k, v] of Object.entries(o)) f.set(k, v); return f; };
+      const closed = addDays(day, 7); // même jour de semaine : les horaires du test valent aussi
+      assert.ok((await slots(svc.id, closed, null)).length > 0, 'jour ouvert avant la fermeture');
+      const c = await addClosure(other.id, form({ start_day: closed, end_day: closed, reason: 'Congé' }));
+      assert.ok(c.ok);
+      assert.equal((await slots(svc.id, closed, null)).length, 0, 'aucun créneau en ligne ce jour-là');
+      const nb = { service: String(svc.id), day: closed, time: '10:00', name: 'Mme Fermeture', phone: '' };
+      const refused = await newBooking(other.id, form(nb));
+      assert.equal(refused.ok, false, 'saisie admin refusée pendant la fermeture');
+      const forced = await newBooking(other.id, form({ ...nb, force: 'on' }));
+      assert.ok(forced.ok, 'ouverture exceptionnelle cochée : enregistré');
+      await sql`DELETE FROM bookings WHERE id = ${forced.ok ? forced.id : 0}`;
+      await sql`DELETE FROM closures WHERE id = ${c.ok ? c.id : 0}`;
+    });
+
     await t.test('compte supprimé : plus de réservation ; recherche par téléphone ; export sans IP de tiers', async () => {
       await sql`UPDATE users SET deleted_at = now(), phone = '0470 12 34 56' WHERE id = ${other.id}`;
       const r = await booking.createBooking({ userId: other.id, serviceId: svc.id, startsAt: await at('13:30'), lang: 'fr' });

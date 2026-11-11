@@ -121,6 +121,14 @@ export const closureConflicts = () =>
 export const listClosures = () =>
   sql<{ id: number; starts_at: Date; ends_at: Date; reason: string }[]>`SELECT id, starts_at, ends_at, reason FROM closures WHERE ends_at > now() ORDER BY starts_at`;
 
+// Fermetures qui touchent les `days` jours à partir de `from` (Agenda) ; `last` = dernier jour touché, à l'heure de Bruxelles
+export const closuresBetween = (from: string, days: number) =>
+  sql<{ id: number; starts_at: Date; ends_at: Date; reason: string; first: string; last: string }[]>`
+    SELECT id, starts_at, ends_at, reason, to_char((starts_at AT TIME ZONE 'Europe/Brussels')::date, 'YYYY-MM-DD') AS first,
+      to_char(((ends_at - interval '1 microsecond') AT TIME ZONE 'Europe/Brussels')::date, 'YYYY-MM-DD') AS last
+    FROM closures WHERE starts_at < (${from}::text::date + ${days}::int)::timestamp AT TIME ZONE 'Europe/Brussels'
+      AND ends_at > ${from}::text::date::timestamp AT TIME ZONE 'Europe/Brussels' ORDER BY starts_at`;
+
 export async function addClosure(userId: number, form: FormData): Promise<Result> {
   const p = closureForm.safeParse(fields(form));
   if (!p.success) return first(p.error);
