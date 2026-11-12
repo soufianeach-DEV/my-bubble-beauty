@@ -1,1 +1,3 @@
+/* Repère « JS actif », posé avant l'affichage : les étapes repliables ne se replient qu'avec lui */
+document.documentElement.dataset.js='1';
 try{const s=localStorage,r=document.documentElement,t=s.getItem('mb-theme');s.getItem('mb-motion')==='off'&&(r.dataset.motion='off');if(t==='light'||t==='dark'){r.dataset.theme=t;document.querySelectorAll('meta[name="theme-color"]').forEach(m=>m.content=t==='dark'?'#1E1615':'#F6ECE8')}}catch(e){}

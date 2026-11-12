@@ -24,6 +24,8 @@ const clients = await giftClients();
 // Depuis la fiche : « Nouveau rendez-vous pour elle » (?cliente=id)
 const pre = sp.get('cliente') ? clients.find((c) => String(c.id) === sp.get('cliente')) : undefined;
 if (pre && !v.client) v.client = clientLabel(pre);
+// Étape Heure ouverte une fois le jour choisi (clic dans le calendrier ou « Voir les créneaux de ce jour ») ; gardé d'un envoi à l'autre
+let dayPicked = false;
 if (Astro.request.method === 'POST') {
   const form = await readForm(Astro.request);
   if (!form) return new Response(null, { status: 413 });
@@ -32,8 +34,11 @@ if (Astro.request.method === 'POST') {
   if (slot) form.set('time', slot);
   // Un jour cliqué dans le calendrier : on garde la saisie et on montre les créneaux de ce jour, sans enregistrer
   const pick = String(form.get('pick') ?? '');
-  if (isDay(pick)) { form.set('day', pick); form.set('look', '1'); }
-  if (form.get('look') !== '1') {
+  if (isDay(pick)) { form.set('day', pick); form.set('look', 'jour'); }
+  // look=1 : prestation choisie (envoi automatique), look=jour : jour choisi ; sans look, on enregistre
+  const look = String(form.get('look') ?? '');
+  dayPicked = look === 'jour' || form.get('daypicked') === '1' || !look;
+  if (!look) {
     const r = await newBooking(me, form);
     if (r.ok) return Astro.redirect(`/admin/agenda?jour=${r.day}&vue=jour&ok=${r.key}#r-${r.id}`, 303);
     error = r.error;
@@ -47,6 +52,9 @@ const groups = byCategory(services).filter((g) => g.items.length);
 const svc = services.find((s) => String(s.id) === v.service);
 const free = svc && svc.active && isDay(v.day) ? await slots(Number(svc.id), v.day) : [];
 const guestOpen = !v.client && !!(v.name || v.phone);
+// Pas à pas : Cliente → Soin → Date → Heure. Une étape reste repliée tant que la précédente est vide ; une étape déjà remplie
+// reste ouverte (retour avec erreur, cliente préremplie depuis sa fiche). Sans JS, tout est visible (:root[data-js] dans le CSS).
+const locked = { soin: !(v.client || v.name) && !v.service, date: !v.service, heure: !(v.service && dayPicked) };
 // Heure à la main : liste déroulante par quart d'heure de 7 h à 21 h 45 ; une heure saisie autrement (ex. 10:05) reste proposée
 const TIMES = Array.from({ length: 60 }, (_, i) => `${String(7 + Math.floor(i / 4)).padStart(2, '0')}:${String((i % 4) * 15).padStart(2, '0')}`);
 if (/^\d{2}:\d{2}$/.test(v.time ?? '') && !TIMES.includes(v.time)) { TIMES.push(v.time); TIMES.sort(); }
@@ -59,8 +67,8 @@ if (/^\d{2}:\d{2}$/.test(v.time ?? '') && !TIMES.includes(v.time)) { TIMES.push(
 ) : (
   <form class="nb" method="post" action="/admin/reservations/nouvelle">
     <div class="nb-col">
-      <fieldset>
-        <legend>Cliente</legend>
+      <fieldset class="step">
+        <legend><span class="step-n" aria-hidden="true">1</span> Cliente</legend>
         <div class="field"><label for="client">Chercher une cliente (nom ou e-mail)</label>
           <input id="client" name="client" list="clientes" maxlength="400" value={v.client} autocomplete="off" aria-describedby="client-hint">
           <datalist id="clientes">{clients.map((c) => <option value={clientLabel(c)} />)}</datalist>
@@ -74,8 +82,9 @@ if (/^\d{2}:\d{2}$/.test(v.time ?? '') && !TIMES.includes(v.time)) { TIMES.push(
           <p class="hint">Laissez « Chercher une cliente » vide pour une personne sans compte.</p>
         </details>
       </fieldset>
-      <fieldset>
-        <legend>Soin</legend>
+      <fieldset class="step" data-step="soin" data-locked={locked.soin || undefined}>
+        <legend><span class="step-n" aria-hidden="true">2</span> Soin</legend>
+        <p class="step-wait">Choisissez d'abord la cliente.</p>
         <div class="field"><label for="service">Prestation</label>
           {/* Choisir la prestation affiche tout de suite les créneaux (main.js, data-autolook) ; sans JS, « Voir les créneaux libres » */}
           <select id="service" name="service" required data-autolook>
@@ -87,18 +96,21 @@ if (/^\d{2}:\d{2}$/.test(v.time ?? '') && !TIMES.includes(v.time)) { TIMES.push(
       </fieldset>
     </div>
     <div class="nb-col">
-      <fieldset>
-        <legend>Date</legend>
+      <fieldset class="step" data-step="date" data-locked={locked.date || undefined}>
+        <legend><span class="step-n" aria-hidden="true">3</span> Date</legend>
+        <p class="step-wait">Choisissez d'abord le soin.</p>
         {/* Même calendrier que la réservation en ligne ; un jour fermé reste choisissable (« Ouvrir exceptionnellement ») */}
         <p class="dp-label" id="day-label">Date : <strong>{fmtDay(v.day)}</strong></p>
         <input type="hidden" name="day" value={v.day}>
         <DayPicker lang="fr" day={v.day} today={today} lastDay={addDays(today, 365)} label="Date du rendez-vous" soft name="pick" />
-        <button class="btn btn--ghost" type="submit" name="look" value="1" formnovalidate>Voir les créneaux libres</button>
+        <button class="btn btn--ghost" type="submit" name="look" value="jour" formnovalidate>Voir les créneaux de ce jour</button>
+        {dayPicked && <input type="hidden" name="daypicked" value="1">}
       </fieldset>
     </div>
     <div class="nb-col">
-      <fieldset>
-        <legend>Heure</legend>
+      <fieldset class="step" data-step="heure" data-locked={locked.heure || undefined}>
+        <legend><span class="step-n" aria-hidden="true">4</span> Heure</legend>
+        <p class="step-wait">Choisissez d'abord le jour dans le calendrier.</p>
         {!svc ? <p class="hint">Choisissez une prestation et une date : les créneaux libres s'affichent ici.</p>
           : !svc.active ? <p class="hint">Cette prestation n'est pas proposée en ligne : pas de créneaux calculés. Choisissez l'heure dans la liste.</p>
           : free.length === 0 ? <p class="hint">Aucun créneau libre le {fmtDay(v.day)} (fermé, complet, ou moins de 2 h d'avance). Choisissez une autre heure dans la liste si besoin.</p>
@@ -125,6 +137,15 @@ if (/^\d{2}:\d{2}$/.test(v.time ?? '') && !TIMES.includes(v.time)) { TIMES.push(
   /* Une ligne : cliente et soin, calendrier au milieu, heures à droite */
   @media (min-width:1200px){.nb{grid-template-columns:repeat(3,minmax(0,1fr))}}
   .nb-col{display:grid;gap:1.25rem;min-width:0}
+  /* Étapes numérotées ; repliées (titre et consigne seuls) tant que la précédente est vide, seulement si le JS tourne */
+  .step-n{display:inline-grid;place-items:center;width:1.6rem;height:1.6rem;margin-right:.35rem;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-size:.8125rem;font-weight:600}
+  .step-wait{display:none;margin:0;color:var(--text-soft)}
+  :global(:root[data-js]) .step[data-locked]{opacity:.65}
+  /* :global sur l'enfant : le calendrier est un composant (autre portée de style) */
+  :global(:root[data-js]) .step[data-locked] > :global(:not(legend):not(.step-wait)){display:none}
+  :global(:root[data-js]) .step[data-locked] .step-wait{display:block}
+  :global(:root[data-js]) .step[data-locked] .step-n{background:var(--line-soft);color:var(--text)}
+  .step{transition:opacity var(--dur-ui)}
   /* Colonne bornée : une prestation au nom long ou le calendrier ne poussent plus le cadre hors de l'écran (375 px) */
   fieldset{display:grid;grid-template-columns:minmax(0,1fr);gap:.85rem;margin:0;padding:1rem 1.25rem;border:1px solid var(--line-soft);border-radius:14px;min-width:0}
   .dp-label{margin:0}

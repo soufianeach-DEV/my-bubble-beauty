@@ -133,7 +133,19 @@ if(hd&&!hd.hasAttribute('data-acct-known')&&/(?:^|;\s*)mb_in=1(?:;|$)/.test(d.co
 }
 
 /* 6 ter. Admin, nouveau rendez-vous : choisir la prestation montre tout de suite les créneaux (bouton « look » du formulaire) */
-d.querySelectorAll('select[data-autolook]').forEach(s=>s.addEventListener('change',()=>{const b=s.form&&s.form.querySelector('[name="look"]');b&&s.value&&s.form.requestSubmit(b)}));
+d.querySelectorAll('select[data-autolook]').forEach(s=>s.addEventListener('change',()=>{const f=s.form;if(!f||!s.value)return;
+  // look=1 : « prestation choisie », distinct du bouton du jour (look=jour) qui ouvre l'étape Heure
+  const h=Object.assign(d.createElement('input'),{type:'hidden',name:'look',value:'1'});f.append(h);f.requestSubmit()}));
+
+/* 6 quater. Nouveau rendez-vous pas à pas : l'étape Soin s'ouvre dès qu'une cliente (ou une personne sans compte) est saisie */
+const nb=d.querySelector('form.nb');
+if(nb){const soin=nb.querySelector('[data-step="soin"]');
+  nb.addEventListener('input',e=>{if(!soin||!['client','name'].includes(e.target.name))return;
+    const who=['client','name'].some(n=>(nb.elements[n]&&nb.elements[n].value||'').trim());
+    soin.toggleAttribute('data-locked',!who&&!nb.elements.service.value)});
+  // Prestation choisie : l'étape Date s'ouvre tout de suite, l'envoi automatique suit
+  nb.addEventListener('change',e=>{e.target.name==='service'&&e.target.value&&nb.querySelector('[data-step="date"]')?.removeAttribute('data-locked')});
+}
 
 /* 7. Menu mobile, choix de langue et menu profil : se ferment sur un lien, un clic ailleurs ou Échap */
 const menus=[...d.querySelectorAll('details.mnav,details.langsel,details.pmenu')];
