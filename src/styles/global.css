@@ -841,3 +841,16 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
   .admin-shell select optgroup option:checked{color:var(--accent-ink)}
   .admin-shell select optgroup + optgroup{margin-top:.25rem;border-top:1px solid var(--line-soft)}
 }
+/* Admin : liste de suggestions maison (main.js, combobox) ; même dessin que la liste ouverte des menus déroulants */
+.admin-shell .combo{position:relative}
+.admin-shell .combo input{padding-right:2.75rem}
+.admin-shell .combo__btn{position:absolute;top:0;right:0;width:2.75rem;height:100%;min-height:44px;border:0;background:none;cursor:pointer;
+  background-image:linear-gradient(45deg,transparent calc(50% - .75px),var(--text-soft) calc(50% - .75px),var(--text-soft) calc(50% + .75px),transparent calc(50% + .75px)),
+    linear-gradient(135deg,transparent calc(50% - .75px),var(--text-soft) calc(50% - .75px),var(--text-soft) calc(50% + .75px),transparent calc(50% + .75px));
+  background-position:calc(50% - .2rem) 50%,calc(50% + .2rem) 50%;background-size:.42rem .42rem;background-repeat:no-repeat}
+.admin-shell .combo__list{position:absolute;left:0;right:0;top:calc(100% + .3rem);z-index:30;max-height:min(20rem,50vh);overflow-y:auto;margin:0;padding:.35rem;list-style:none;
+  border:1px solid var(--line-soft);border-radius:14px;background:var(--bg);color:var(--text);box-shadow:0 16px 40px rgb(30 22 21 / .22)}
+.admin-shell .combo__list[hidden]{display:none}
+.admin-shell .combo__list li{min-height:42px;padding:.55rem .8rem;border-radius:9px;line-height:1.35;overflow-wrap:anywhere;cursor:pointer}
+.admin-shell .combo__list li:hover,.admin-shell .combo__list li[aria-selected="true"]{background-color:color-mix(in srgb,var(--accent) 16%,transparent)}
+.admin-shell .combo__list .combo__none{color:var(--text-soft);cursor:default}

@@ -158,6 +158,43 @@ d.querySelectorAll('dialog.modal').forEach(m=>{
 });
 d.querySelectorAll('[data-dialog]').forEach(a=>a.addEventListener('click',e=>{const m=d.getElementById(a.dataset.dialog);if(m&&m.showModal){e.preventDefault();m.showModal()}}));
 
+/* 6 sexies. Admin : champ + datalist remplacé par une liste maison accessible (combobox). Le datalist du navigateur filtre sur
+   la valeur entière : une fois une cliente choisie, un nouveau clic ne montrait plus rien. Ici, un clic sur un champ rempli
+   remontre toute la liste, la saisie filtre (sans accents), flèches / Entrée / Échap au clavier. Sans JS, le datalist reste. */
+d.querySelectorAll('.admin-shell input[list]').forEach((inp,n)=>{
+  const dl=d.getElementById(inp.getAttribute('list'));if(!dl)return;
+  const all=[...dl.options].map(o=>o.value);
+  inp.removeAttribute('list');
+  const wrap=d.createElement('div');wrap.className='combo';inp.before(wrap);wrap.append(inp);
+  const lb=d.createElement('ul');lb.id='combo-'+n;lb.className='combo__list';lb.setAttribute('role','listbox');lb.hidden=true;
+  const btn=d.createElement('button');btn.type='button';btn.className='combo__btn';btn.tabIndex=-1;btn.setAttribute('aria-label','Afficher toute la liste');
+  wrap.append(btn,lb);
+  [['role','combobox'],['aria-autocomplete','list'],['aria-expanded','false'],['aria-controls',lb.id]].forEach(([k,v])=>inp.setAttribute(k,v));
+  const norm=t=>t.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+  let items=[],act=-1;
+  const close=()=>{lb.hidden=true;inp.setAttribute('aria-expanded','false');inp.removeAttribute('aria-activedescendant');act=-1};
+  const mark=i=>{act=i;[...lb.children].forEach((li,j)=>li.setAttribute('aria-selected',j===i?'true':'false'));
+    if(i>=0){const li=lb.children[i];inp.setAttribute('aria-activedescendant',li.id);li.scrollIntoView({block:'nearest'})}};
+  const open=full=>{const q=norm(inp.value.trim());
+    items=full||!q||all.includes(inp.value)?all:all.filter(v=>norm(v).includes(q));
+    lb.replaceChildren(...items.map((v,j)=>Object.assign(d.createElement('li'),{id:lb.id+'-'+j,textContent:v})));
+    [...lb.children].forEach(li=>li.setAttribute('role','option'));
+    if(!items.length)lb.append(Object.assign(d.createElement('li'),{className:'combo__none',textContent:'Aucun résultat'}));
+    lb.hidden=false;inp.setAttribute('aria-expanded','true');mark(items.indexOf(inp.value))};
+  const choose=v=>{inp.value=v;close();['input','change'].forEach(t=>inp.dispatchEvent(new Event(t,{bubbles:true})))};
+  inp.addEventListener('focus',()=>open());
+  inp.addEventListener('click',()=>{lb.hidden&&open()});
+  inp.addEventListener('input',e=>{e.isTrusted&&open()});
+  inp.addEventListener('keydown',e=>{const max=items.length-1;
+    if(e.key==='ArrowDown'){e.preventDefault();lb.hidden?open():mark(Math.min(act+1,max))}
+    else if(e.key==='ArrowUp'){e.preventDefault();mark(Math.max(act-1,0))}
+    else if(e.key==='Enter'&&!lb.hidden&&act>=0){e.preventDefault();choose(items[act])}
+    else if(e.key==='Escape'&&!lb.hidden){e.preventDefault();e.stopPropagation();close()}});
+  lb.addEventListener('mousedown',e=>{e.preventDefault();const li=e.target.closest('[role="option"]');li&&choose(li.textContent)});
+  btn.addEventListener('mousedown',e=>{e.preventDefault();if(lb.hidden){inp.focus();open(true)}else close()});
+  inp.addEventListener('blur',close);
+});
+
 /* 7. Menu mobile, choix de langue et menu profil : se ferment sur un lien, un clic ailleurs ou Échap */
 const menus=[...d.querySelectorAll('details.mnav,details.langsel,details.pmenu')];
 menus.forEach(m=>{
