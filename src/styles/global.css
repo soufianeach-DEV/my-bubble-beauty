@@ -813,19 +813,31 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 .mnav__out{display:block;width:100%;padding:.75rem 1rem;border:0;border-radius:10px;background:none;color:var(--text);font:inherit;text-align:left;cursor:pointer}
 .mnav__out:hover{background:var(--bg)}
 
-/* Admin : menus déroulants aux couleurs du thème, liste ouverte comprise (sans cela, les options s'ouvrent sur le blanc du système) */
-.admin-shell select{color:var(--text);background-color:var(--bg);border:1px solid var(--line-soft);border-radius:12px;font:inherit;min-height:44px}
-.admin-shell select:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+/* Admin : listes déroulantes, un seul dessin partout (16 listes). Fermée : une ligne, texte trop long coupé par « … »,
+   chevron fin dessiné en CSS (couleur du thème, aucune image). Ouverte : couleurs du thème, liste ouverte comprise. */
+.admin-shell select:not([multiple]){appearance:none;-webkit-appearance:none;max-width:100%;min-height:48px;padding:.65rem 2.75rem .65rem .95rem;
+  border:1px solid var(--line-soft);border-radius:12px;font:inherit;line-height:1.4;color:var(--text);background-color:var(--bg);
+  background-image:linear-gradient(45deg,transparent calc(50% - .75px),var(--text-soft) calc(50% - .75px),var(--text-soft) calc(50% + .75px),transparent calc(50% + .75px)),
+    linear-gradient(135deg,transparent calc(50% - .75px),var(--text-soft) calc(50% - .75px),var(--text-soft) calc(50% + .75px),transparent calc(50% + .75px));
+  background-position:calc(100% - 1.4rem) 50%,calc(100% - 1rem) 50%;background-size:.42rem .42rem;background-repeat:no-repeat;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;transition:border-color var(--dur-ui),box-shadow var(--dur-ui)}
+.admin-shell select:not([multiple]):hover{border-color:var(--accent)}
+.admin-shell select:not([multiple]):focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 30%,transparent)}
+.admin-shell select:disabled{opacity:.55;cursor:not-allowed}
 .admin-shell option,.admin-shell optgroup{background-color:var(--bg);color:var(--text)}
 .admin-shell option:checked{background-color:var(--accent);color:var(--accent-ink)}
-/* Chrome et Edge récents : liste ouverte entièrement stylable (bordure, arrondi, ombre) ; ailleurs, les couleurs ci-dessus suffisent */
+/* Chrome et Edge récents : liste ouverte entièrement stylable ; le chevron CSS remplace l'icône du navigateur */
 @supports (appearance:base-select){
-  .admin-shell select,.admin-shell select::picker(select){appearance:base-select}
-  .admin-shell select::picker(select){margin-top:.25rem;padding:.3rem;border:1px solid var(--line-soft);border-radius:12px;background:var(--bg);color:var(--text);box-shadow:0 12px 32px rgb(30 22 21 / .18)}
-  .admin-shell select::picker-icon{color:var(--text-soft)}
-  .admin-shell select option{display:flex;align-items:center;gap:.5rem;min-height:44px;padding:.45rem .75rem;border-radius:8px;background-color:transparent}
-  .admin-shell select option:hover,.admin-shell select option:focus-visible{background-color:rgb(138 90 82 / .14);outline:none}
-  .admin-shell select option:checked{background-color:var(--accent);color:var(--accent-ink)}
-  .admin-shell select option::checkmark{color:currentColor}
-  .admin-shell select optgroup{background:none;font-weight:600}
+  .admin-shell select:not([multiple]),.admin-shell select::picker(select){appearance:base-select}
+  .admin-shell select::picker-icon{display:none}
+  .admin-shell select::picker(select){margin-top:.3rem;max-height:min(22rem,60vh);overflow-y:auto;padding:.35rem;border:1px solid var(--line-soft);border-radius:14px;background:var(--bg);color:var(--text);box-shadow:0 16px 40px rgb(30 22 21 / .22)}
+  .admin-shell select option{display:flex;align-items:center;gap:.6rem;min-height:42px;padding:.5rem .8rem;border-radius:9px;background-color:transparent;white-space:normal;line-height:1.35}
+  .admin-shell select option:hover,.admin-shell select option:focus-visible{background-color:color-mix(in srgb,var(--accent) 16%,transparent);outline:none}
+  .admin-shell select option:checked{background-color:var(--accent);color:var(--accent-ink);font-weight:500}
+  .admin-shell select option::checkmark{order:1;margin-left:auto;color:currentColor}
+  /* Titre de groupe (catégories de prestations) : petit, en capitales, discret ; ses options gardent la taille normale */
+  .admin-shell select optgroup{background:none;padding:.35rem 0 .15rem;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-soft)}
+  .admin-shell select optgroup option{font-size:1rem;font-weight:400;letter-spacing:normal;text-transform:none;color:var(--text)}
+  .admin-shell select optgroup option:checked{color:var(--accent-ink)}
+  .admin-shell select optgroup + optgroup{margin-top:.25rem;border-top:1px solid var(--line-soft)}
 }
