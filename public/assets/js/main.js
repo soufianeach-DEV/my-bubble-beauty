@@ -147,6 +147,17 @@ if(nb){const soin=nb.querySelector('[data-step="soin"]');
   nb.addEventListener('change',e=>{e.target.name==='service'&&e.target.value&&nb.querySelector('[data-step="date"]')?.removeAttribute('data-locked')});
 }
 
+/* 6 quinquies. Pop-ups de l'admin (<dialog class="modal">) : un lien [data-dialog] ouvre la boîte en modal (focus piégé, Échap) ;
+   × ou clic sur le voile la ferment. Boîte ouverte par l'URL (repli sans JS) : rouverte en modal, l'URL est nettoyée à la fermeture. */
+d.querySelectorAll('dialog.modal').forEach(m=>{
+  if(!m.showModal)return;
+  if(m.hasAttribute('open')){m.close();m.showModal()}
+  m.addEventListener('click',e=>{e.target===m&&m.close()});
+  m.querySelectorAll('[data-close]').forEach(x=>x.addEventListener('click',e=>{e.preventDefault();m.close()}));
+  m.addEventListener('close',()=>{const u=new URL(location.href);['cal','fermer','du','au'].forEach(k=>u.searchParams.delete(k));history.replaceState(null,'',u)});
+});
+d.querySelectorAll('[data-dialog]').forEach(a=>a.addEventListener('click',e=>{const m=d.getElementById(a.dataset.dialog);if(m&&m.showModal){e.preventDefault();m.showModal()}}));
+
 /* 7. Menu mobile, choix de langue et menu profil : se ferment sur un lien, un clic ailleurs ou Échap */
 const menus=[...d.querySelectorAll('details.mnav,details.langsel,details.pmenu')];
 menus.forEach(m=>{
