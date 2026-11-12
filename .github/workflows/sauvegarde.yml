@@ -1,0 +1,73 @@
+# Sauvegarde nocturne de la base (Supabase gratuit n'en fait aucune) : pg_dump chiffré pour une clé publique GPG,
+# déposé dans un stockage objet en UE (OVH Object Storage, compatible S3), 30 jours gardés.
+# Le dépôt GitHub ne voit jamais la base en clair : seule la clé PUBLIQUE est dans ses secrets, la clé privée reste sur le PC.
+# Coût : environ 1 minute par nuit. Réglages et restauration : docs/exploitation.md.
+name: Sauvegarde de la base
+
+on:
+  schedule:
+    - cron: '30 1 * * *' # 1 h 30 UTC, soit 2 h 30 ou 3 h 30 à Bruxelles
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sauvegarde
+  cancel-in-progress: false
+
+jobs:
+  sauvegarde:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
+      GPG_PUBLIC_KEY: ${{ secrets.BACKUP_GPG_PUBLIC_KEY }}
+      S3_ENDPOINT: ${{ secrets.BACKUP_S3_ENDPOINT }}
+      S3_BUCKET: ${{ secrets.BACKUP_S3_BUCKET }}
+      AWS_DEFAULT_REGION: ${{ secrets.BACKUP_S3_REGION }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_S3_ACCESS_KEY }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_S3_SECRET_KEY }}
+      # Stockages S3 autres qu'AWS : les sommes de contrôle ajoutées d'office par l'AWS CLI récente y sont refusées
+      AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+      AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
+      KEEP_DAYS: 30
+    steps:
+      - name: Réglages présents
+        run: |
+          for v in DATABASE_URL GPG_PUBLIC_KEY S3_ENDPOINT S3_BUCKET AWS_DEFAULT_REGION AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY; do
+            [ -n "${!v}" ] || { echo "Secret manquant pour $v (voir docs/exploitation.md)"; exit 1; }
+          done
+
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts/sauvegarde.sh
+          sparse-checkout-cone-mode: false
+
+      - name: Dump chiffré
+        run: |
+          umask 077
+          printf '%s\n' "$GPG_PUBLIC_KEY" > "$RUNNER_TEMP/cle.asc"
+          # pg_dump de la même version majeure que le serveur : l'archive se relit avec le pg_restore de cette version
+          major=$(docker run --rm postgres:17-alpine psql "$DATABASE_URL" -Atc 'SHOW server_version_num' | cut -c1-2)
+          [[ "$major" =~ ^1[5-9]$ ]] || { echo "Version du serveur inattendue : $major"; exit 1; }
+          echo "Serveur Postgres $major"
+          echo "PG_MAJOR=$major" >> "$GITHUB_ENV"
+          FILE="mybubble-$(date -u +%F).dump.gpg"
+          echo "FILE=$FILE" >> "$GITHUB_ENV"
+          PG_DUMP="docker run --rm postgres:$major-alpine pg_dump" GPG_PUBLIC_KEY_FILE="$RUNNER_TEMP/cle.asc" \
+            bash scripts/sauvegarde.sh "$RUNNER_TEMP/$FILE"
+
+      - name: Dépôt et rétention
+        run: |
+          s3() { aws --endpoint-url "$S3_ENDPOINT" s3 "$@"; }
+          s3 cp "$RUNNER_TEMP/$FILE" "s3://$S3_BUCKET/$FILE" --only-show-errors \
+            --metadata "postgres-major=$PG_MAJOR"
+          # Garde les KEEP_DAYS derniers jours : le nom porte la date, aucune autre donnée n'est lue
+          cutoff=$(date -u -d "-$KEEP_DAYS days" +%F)
+          s3 ls "s3://$S3_BUCKET/" | awk '{print $4}' | grep -E '^mybubble-[0-9]{4}-[0-9]{2}-[0-9]{2}\.dump\.gpg$' | while read -r key; do
+            day=${key#mybubble-}; day=${day%.dump.gpg}
+            if [[ "$day" < "$cutoff" ]]; then s3 rm "s3://$S3_BUCKET/$key" --only-show-errors && echo "Supprimé : $key"; fi
+          done
+          echo "Déposé : $FILE"
+          s3 ls "s3://$S3_BUCKET/" | tail -3

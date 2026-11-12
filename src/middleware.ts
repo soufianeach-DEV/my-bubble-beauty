@@ -25,6 +25,8 @@ const PUBLIC = new Set([
   // Lien suivi « Laisser un avis » des mails (jeton signé)
   '/avis/[jeton]',
   '/api/taches',
+  // Sonde de santé (Render, surveillance externe) : « ok » ou « indisponible », rien d'autre
+  '/api/sante',
 ]);
 // Seules routes ouvertes à l'équipe (admin, gestionnaire) avant le code TOTP : le code lui-même, et la déconnexion pour en sortir
 const BEFORE_CODE = new Set(['/admin/code', '/admin/deconnexion']);

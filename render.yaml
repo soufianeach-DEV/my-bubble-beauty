@@ -1,6 +1,8 @@
 # Plan de déploiement Render (New > Blueprint) : service web Node (pages du site, compte, réservation, admin) à Francfort ; base Postgres chez Supabase (région Francfort).
 # En-têtes, cache et redirections sont posés par server.mjs : les réglages headers/routes de Render ne valent que pour les sites statiques.
-# Supabase gratuit : projet mis en pause après 7 jours sans activité, aucune sauvegarde automatique ; exporter la base régulièrement.
+# Supabase gratuit : projet mis en pause après 7 jours sans activité, aucune sauvegarde automatique.
+# Sauvegarde : .github/workflows/sauvegarde.yml (chaque nuit, chiffrée, stockage UE). Réveil et tâches : appel externe de POST /api/taches
+# toutes les 15 min (docs/exploitation.md), qui garde aussi la base active.
 # Service gratuit Render : mis en veille sans trafic, premier affichage lent ; passer en payant avant d'ouvrir l'inscription à une vraie cliente.
 # Nouveau nom : l'ancien site statique « my-bubble-beauty » ne peut pas devenir un service Node (type figé à la création) ; le supprimer une fois celui-ci validé.
 # L'URL https://my-bubble-beauty-app.onrender.com doit figurer dans security.allowedDomains (astro.config.mjs) ; si Render y ajoute un suffixe, reporter l'URL réelle.
@@ -15,7 +17,8 @@ services:
     # Pas de branch : le service suit la branche du Blueprint (feat/reservation pour la recette, main ensuite)
     buildCommand: npm ci && npm run build
     startCommand: node server.mjs
-    healthCheckPath: /fr/index.html
+    # Sonde qui touche la base (SELECT 1) : une base injoignable rend le service « en panne » au lieu de servir des pages en erreur
+    healthCheckPath: /api/sante
     envVars:
       - key: NODE_VERSION
         value: "22"
