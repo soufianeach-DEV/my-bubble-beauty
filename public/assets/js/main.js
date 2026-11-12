@@ -132,6 +132,9 @@ if(hd&&!hd.hasAttribute('data-acct-known')&&/(?:^|;\s*)mb_in=1(?:;|$)/.test(d.co
   }).catch(()=>{});
 }
 
+/* 6 ter. Admin, nouveau rendez-vous : choisir la prestation montre tout de suite les créneaux (bouton « look » du formulaire) */
+d.querySelectorAll('select[data-autolook]').forEach(s=>s.addEventListener('change',()=>{const b=s.form&&s.form.querySelector('[name="look"]');b&&s.value&&s.form.requestSubmit(b)}));
+
 /* 7. Menu mobile, choix de langue et menu profil : se ferment sur un lien, un clic ailleurs ou Échap */
 const menus=[...d.querySelectorAll('details.mnav,details.langsel,details.pmenu')];
 menus.forEach(m=>{

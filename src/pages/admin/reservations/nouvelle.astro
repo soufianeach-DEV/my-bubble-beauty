@@ -47,6 +47,9 @@ const groups = byCategory(services).filter((g) => g.items.length);
 const svc = services.find((s) => String(s.id) === v.service);
 const free = svc && svc.active && isDay(v.day) ? await slots(Number(svc.id), v.day) : [];
 const guestOpen = !v.client && !!(v.name || v.phone);
+// Heure à la main : liste déroulante par quart d'heure de 7 h à 21 h 45 ; une heure saisie autrement (ex. 10:05) reste proposée
+const TIMES = Array.from({ length: 60 }, (_, i) => `${String(7 + Math.floor(i / 4)).padStart(2, '0')}:${String((i % 4) * 15).padStart(2, '0')}`);
+if (/^\d{2}:\d{2}$/.test(v.time ?? '') && !TIMES.includes(v.time)) { TIMES.push(v.time); TIMES.sort(); }
 ---
 <Admin title="Nouveau rendez-vous">
 <p class="lead">Pour un rendez-vous pris par téléphone ou WhatsApp. Il est confirmé tout de suite. Un chevauchement avec un autre rendez-vous est toujours refusé.</p>
@@ -74,7 +77,8 @@ const guestOpen = !v.client && !!(v.name || v.phone);
       <fieldset>
         <legend>Soin</legend>
         <div class="field"><label for="service">Prestation</label>
-          <select id="service" name="service" required>
+          {/* Choisir la prestation affiche tout de suite les créneaux (main.js, data-autolook) ; sans JS, « Voir les créneaux libres » */}
+          <select id="service" name="service" required data-autolook>
             <option value="">Choisir…</option>
             {groups.map((g) => (
               <optgroup label={g.label}>{g.items.map((s) => <option value={s.id} selected={String(s.id) === v.service}>{s.name_fr} ({s.duration_min} min){!s.active && ' — non proposée en ligne'}</option>)}</optgroup>
@@ -95,19 +99,20 @@ const guestOpen = !v.client && !!(v.name || v.phone);
     <div class="nb-col">
       <fieldset>
         <legend>Heure</legend>
-        {!svc ? <p class="hint">Choisissez une prestation et une date, puis « Voir les créneaux libres ».</p>
-          : !svc.active ? <p class="hint">Cette prestation n'est pas proposée en ligne : pas de créneaux calculés. Indiquez l'heure ci-dessous.</p>
-          : free.length === 0 ? <p class="hint">Aucun créneau libre le {fmtDay(v.day)} (fermé, complet, ou moins de 2 h d'avance). Indiquez une autre heure ci-dessous si besoin.</p>
+        {!svc ? <p class="hint">Choisissez une prestation et une date : les créneaux libres s'affichent ici.</p>
+          : !svc.active ? <p class="hint">Cette prestation n'est pas proposée en ligne : pas de créneaux calculés. Choisissez l'heure dans la liste.</p>
+          : free.length === 0 ? <p class="hint">Aucun créneau libre le {fmtDay(v.day)} (fermé, complet, ou moins de 2 h d'avance). Choisissez une autre heure dans la liste si besoin.</p>
           : <>
             <p class="hint">Créneaux libres le {fmtDay(v.day)} pour {svc.name_fr} ({svc.duration_min} min). Un clic enregistre le rendez-vous.</p>
             <div class="slots">{free.map((s) => <button class="btn btn--ghost" type="submit" name="slot" value={s.label}>{s.label}</button>)}</div>
           </>}
-        <details class="other" open={!!v.time || (!!svc && free.length === 0)}>
-          <summary>Autre heure</summary>
-          <div class="field"><label for="time">Heure de début (Bruxelles)</label><input id="time" name="time" type="time" value={v.time}></div>
+        {/* Autre heure toujours visible : liste déroulante plutôt que le champ horaire du navigateur */}
+        <div class="other">
+          <div class="field"><label for="time">{free.length ? 'Ou une autre heure (Bruxelles)' : 'Heure de début (Bruxelles)'}</label>
+            <select id="time" name="time"><option value="">Choisir une heure…</option>{TIMES.map((t) => <option value={t} selected={t === v.time}>{t}</option>)}</select></div>
           <label class="check"><input type="checkbox" name="force"><span>Ouvrir exceptionnellement (jour fermé ou hors des heures d'ouverture)</span></label>
           <button class="btn btn--solid" type="submit">Enregistrer le rendez-vous</button>
-        </details>
+        </div>
       </fieldset>
     </div>
   </form>
@@ -133,6 +138,8 @@ const guestOpen = !v.client && !!(v.name || v.phone);
   details[open] summary{margin-bottom:.5rem}
   details{display:grid;gap:.75rem}
   details > .btn{justify-self:start;min-height:44px}
+  .other{display:grid;gap:.75rem;padding-top:.75rem;border-top:1px solid var(--line-soft)}
+  .other > .btn{justify-self:start;min-height:44px}
   .slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(5.5rem,1fr));gap:.5rem}
   .slots .btn{min-height:44px;padding:.4rem .5rem;justify-content:center}
   .check{display:flex;align-items:center;gap:.5rem;min-height:44px}
