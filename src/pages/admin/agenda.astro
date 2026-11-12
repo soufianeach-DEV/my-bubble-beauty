@@ -127,7 +127,7 @@ const alertsOf = (r: Row) => (r.user_id ? careAlerts.get(r.user_id) ?? [] : []);
     <input type="hidden" name="action" value="add-closure">
     <input type="hidden" name="start_day" value={du}><input type="hidden" name="end_day" value={au}>
     {/* Un seul calendrier : un clic choisit le premier jour, un second clic plus tard choisit le dernier ; un nouveau clic recommence */}
-    <DayPicker lang="fr" day={du === au ? du : au} today={today} lastDay={addDays(today, 730)} label="Jours à fermer" soft href={(d) => `${link(jour)}&du=${du === au && d > du ? du : d}&au=${d}#fermer`} />
+    <DayPicker lang="fr" day={au} from={du} today={today} lastDay={addDays(today, 730)} label="Jours à fermer" soft href={(d) => `${link(jour)}&du=${du === au && d > du ? du : d}&au=${d}#fermer`} />
     <div class="cl-side">
       <p class="cl-range">{du === au ? <>Fermer le <strong>{fmtDay(du)}</strong></> : <>Fermer du <strong>{fmtDay(du)}</strong> au <strong>{fmtDay(au)}</strong></>}</p>
       <p class="hint">{du === au ? 'Pour plusieurs jours, cliquez ensuite sur le dernier jour.' : <>Un nouveau clic recommence la période. <a href={`${link(jour)}&du=${du}&au=${du}#fermer`}>Un seul jour</a></>}</p>
