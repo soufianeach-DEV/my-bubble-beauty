@@ -111,13 +111,11 @@ const alertsOf = (r: Row) => (r.user_id ? careAlerts.get(r.user_id) ?? [] : []);
   <a href={link(today)}>Aujourd'hui</a>
   <a href={link(addDays(from, count))}><span class="long">{vue === 'jour' ? 'Jour suivant' : 'Semaine suivante'}</span> <span aria-hidden="true">›</span></a>
 </nav>
-<form class="pick" method="get" action="/admin/agenda">
-  <input type="hidden" name="jour" value={jour}>
-  <div class="field"><label for="vue">Affichage</label>
-    <select id="vue" name="vue"><option value="semaine" selected={vue === 'semaine'}>Semaine</option><option value="jour" selected={vue === 'jour'}>Jour</option></select>
-  </div>
-  <button class="btn btn--ghost" type="submit">Afficher</button>
-</form>
+{/* Affichage en un clic : deux liens collés, l'actif marqué (plus de liste + « Afficher ») */}
+<nav class="pager seg-view" aria-label="Affichage">
+  <a href={link(jour, 'jour')} aria-current={vue === 'jour' ? 'page' : undefined}>Jour</a>
+  <a href={link(jour, 'semaine')} aria-current={vue === 'semaine' ? 'page' : undefined}>Semaine</a>
+</nav>
 {/* Même calendrier que la réservation en ligne ; les jours passés ou fermés restent consultables */}
 <details class="tb-fold" open={q.has('cal')}>
   <summary class="btn btn--ghost">Jour : {fmtDay(jour)}</summary>
@@ -128,13 +126,15 @@ const alertsOf = (r: Row) => (r.user_id ? careAlerts.get(r.user_id) ?? [] : []);
   <form class="tb-panel close-form" method="post">
     <input type="hidden" name="action" value="add-closure">
     <input type="hidden" name="start_day" value={du}><input type="hidden" name="end_day" value={au}>
-    <div class="cl-pick"><p class="cl-lbl">Du <strong>{fmtDay(du)}</strong></p>
-      <DayPicker lang="fr" day={du} today={today} lastDay={addDays(today, 730)} label="Premier jour fermé" soft href={(d) => `${link(jour)}&du=${d}&au=${d > au ? d : au}#fermer`} /></div>
-    <div class="cl-pick"><p class="cl-lbl">Au <strong>{fmtDay(au)}</strong> <span class="hint">(même jour pour une seule journée)</span></p>
-      <DayPicker lang="fr" day={au} today={today} min={du} lastDay={addDays(today, 730)} label="Dernier jour fermé" href={(d) => `${link(jour)}&du=${du}&au=${d}#fermer`} soft /></div>
-    <div class="field cl-reason"><label for="cl-reason">Motif <span class="hint">(facultatif, visible par l'équipe seulement)</span></label><input id="cl-reason" name="reason" maxlength="200" placeholder="Congé, formation…"></div>
-    <p class="hint cl-note">Journées entières. Plus aucun créneau en ligne ; « Nouveau rendez-vous » demande alors « Ouvrir exceptionnellement ». Pour fermer quelques heures : <a href="/admin/horaires#fermetures">Horaires</a>.</p>
-    <button class="btn btn--solid" type="submit">Fermer ces jours</button>
+    {/* Un seul calendrier : un clic choisit le premier jour, un second clic plus tard choisit le dernier ; un nouveau clic recommence */}
+    <DayPicker lang="fr" day={du === au ? du : au} today={today} lastDay={addDays(today, 730)} label="Jours à fermer" soft href={(d) => `${link(jour)}&du=${du === au && d > du ? du : d}&au=${d}#fermer`} />
+    <div class="cl-side">
+      <p class="cl-range">{du === au ? <>Fermer le <strong>{fmtDay(du)}</strong></> : <>Fermer du <strong>{fmtDay(du)}</strong> au <strong>{fmtDay(au)}</strong></>}</p>
+      <p class="hint">{du === au ? 'Pour plusieurs jours, cliquez ensuite sur le dernier jour.' : <>Un nouveau clic recommence la période. <a href={`${link(jour)}&du=${du}&au=${du}#fermer`}>Un seul jour</a></>}</p>
+      <div class="field"><label for="cl-reason">Motif <span class="hint">(facultatif, visible par l'équipe seulement)</span></label><input id="cl-reason" name="reason" maxlength="200" placeholder="Congé, formation…"></div>
+      <p class="hint">Journées entières : plus aucun créneau en ligne, et « Nouveau rendez-vous » demande « Ouvrir exceptionnellement ». Pour fermer quelques heures : <a href="/admin/horaires#fermetures">Horaires</a>.</p>
+      <button class="btn btn--solid" type="submit">{du === au ? 'Fermer ce jour' : 'Fermer ces jours'}</button>
+    </div>
   </form>
 </details>
 </div>
@@ -241,7 +241,7 @@ const alertsOf = (r: Row) => (r.user_id ? careAlerts.get(r.user_id) ?? [] : []);
 
 <style>
   .head-acts{display:flex;flex-wrap:wrap;gap:.5rem}
-  .toolbar{display:flex;flex-wrap:wrap;gap:1rem 1.5rem;align-items:flex-end;justify-content:space-between;margin:0 0 2rem;padding:1rem;border:1px solid var(--line-soft);border-radius:16px;background:var(--bg)}
+  .toolbar{display:flex;flex-wrap:wrap;gap:.75rem 1rem;align-items:center;margin:0 0 2rem;padding:1rem;border:1px solid var(--line-soft);border-radius:16px;background:var(--bg)}
   /* Trois liens collés en une seule pastille : se lit comme une navigation, pas comme trois actions */
   .pager{display:flex;flex-wrap:wrap;border:1px solid var(--line-soft);border-radius:999px;overflow:hidden}
   .pager a{display:inline-flex;align-items:center;gap:.35rem;min-height:44px;padding:.5rem 1rem;color:var(--text);text-decoration:none;font-size:.9375rem}
@@ -255,24 +255,27 @@ const alertsOf = (r: Row) => (r.user_id ? careAlerts.get(r.user_id) ?? [] : []);
     .pager .long{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
     .pager span[aria-hidden]{font-size:1.4rem;line-height:1}
   }
-  .pick{display:flex;flex-wrap:wrap;gap:.75rem;align-items:flex-end}
   /* Fermer un jour : replié dans la barre, le formulaire s'ouvre sur toute la largeur */
   .tb-fold{display:contents}
+  #fermer>summary{margin-left:auto}
   .tb-fold>summary{list-style:none;cursor:pointer}
   .tb-fold>summary::-webkit-details-marker{display:none}
   .tb-fold[open]>summary{background:var(--accent);color:var(--accent-ink)}
   .tb-panel{flex-basis:100%;padding-top:1rem;border-top:1px solid var(--line-soft)}
   .tb-panel :global(.daypick){margin:0}
-  .close-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr));gap:.75rem 1.5rem;align-items:start}
-  .cl-lbl{margin:0 0 .5rem}
-  .close-form .cl-reason,.close-form .cl-note{grid-column:1 / -1}
-  .close-form .cl-note{margin:0}
-  .close-form .btn{justify-self:start}
+  .close-form{display:grid;grid-template-columns:minmax(0,22rem) minmax(0,1fr);gap:1rem 2rem;align-items:start}
+  @media (max-width:767px){.close-form{grid-template-columns:minmax(0,1fr)}}
+  .cl-side{display:grid;gap:.75rem;align-content:start;max-width:34rem}
+  .cl-side p{margin:0}
+  .cl-range{font-size:1.0625rem}
+  .cl-side .btn{justify-self:start}
+  /* Bascule Jour / Semaine : l'affichage actif en plein */
+  .seg-view a[aria-current="page"]{background:var(--accent);color:var(--accent-ink);font-weight:500}
+  @media (max-width:599px){.seg-view a,.seg-view a:nth-child(2){flex:1}}
   .closures{display:grid;gap:.5rem;list-style:none;margin:-1rem 0 2rem;padding:0}
   .closures li{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem;padding:.5rem .5rem .5rem 1rem;border:1px solid rgb(176 70 60 / .35);border-radius:14px;background:rgb(176 70 60 / .08)}
   .closures form{margin-left:auto}
   .cal-day--closed{background:rgb(176 70 60 / .1)}
-  .pick .field{min-width:9rem;margin:0}
   .day{margin:0 0 1.75rem}
   .day h2{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem;margin:0 0 .75rem;font-size:1.35rem}
   .day h2 small{margin-left:auto;font:500 .8125rem var(--f-text);color:var(--text-soft)}
