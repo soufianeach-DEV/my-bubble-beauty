@@ -41,6 +41,8 @@ type Texts = {
   cancelRule: string;
   myBookings: string;
   otherTime: string;
+  /** Récapitulatif sans compte : le choix est gardé, la connexion ou l'inscription vient en dernier */
+  account: { title: string; text: string; register: string; login: string };
   err: { unavailable: string; limit: (n: number) => string; payment: string; busy: string; cgv: string; invalid: string; service: string; day: (last: string) => string };
   promo: Record<PromoProblem | 'blocked', string>;
 };
@@ -85,6 +87,7 @@ export const RESERVER: Record<Lang, Texts> = {
     cancelRule: "Annulation gratuite depuis votre compte jusqu'à 24 heures avant le rendez-vous.",
     myBookings: 'Voir mes rendez-vous',
     otherTime: 'Choisir un autre créneau',
+    account: { title: 'Dernière étape : votre compte', text: "Pour confirmer ce rendez-vous, créez votre compte ou connectez-vous. Votre choix est gardé : vous revenez ici juste après. Rien n'est réservé avant.", register: 'Créer mon compte', login: "J'ai déjà un compte" },
     err: {
       unavailable: "Ce créneau n'est plus libre. Choisissez-en un autre.",
       limit: (n) => `Vous avez déjà ${n} rendez-vous à venir. Vous pourrez en prendre un autre après l'un d'eux, ou appelez-nous.`,
@@ -145,6 +148,7 @@ export const RESERVER: Record<Lang, Texts> = {
     cancelRule: 'Gratis annuleren via uw account tot 24 uur voor de afspraak.',
     myBookings: 'Mijn afspraken bekijken',
     otherTime: 'Ander tijdstip kiezen',
+    account: { title: 'Laatste stap: uw account', text: 'Maak een account aan of meld u aan om deze afspraak te bevestigen. Uw keuze blijft bewaard: u komt meteen hierheen terug. Er wordt niets gereserveerd vóór die stap.', register: 'Mijn account aanmaken', login: 'Ik heb al een account' },
     err: {
       unavailable: 'Dit tijdstip is niet meer vrij. Kies een ander tijdstip.',
       limit: (n) => `U hebt al ${n} geplande afspraken. U kunt een nieuwe maken na een ervan, of bel ons.`,
@@ -206,6 +210,7 @@ export const RESERVER: Record<Lang, Texts> = {
     cancelRule: 'Free cancellation from your account up to 24 hours before the appointment.',
     myBookings: 'See my appointments',
     otherTime: 'Choose another time',
+    account: { title: 'Last step: your account', text: 'To confirm this appointment, create your account or log in. Your choice is kept: you come straight back here. Nothing is booked before that.', register: 'Create my account', login: 'I already have an account' },
     err: {
       unavailable: 'This time is no longer free. Please choose another one.',
       limit: (n) => `You already have ${n} upcoming appointments. You can book another one after one of them, or call us.`,

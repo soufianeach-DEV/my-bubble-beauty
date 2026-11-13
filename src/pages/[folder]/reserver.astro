@@ -20,9 +20,15 @@ const lang = langOfFolder(Astro.params.folder!);
 const L = RESERVER[lang];
 const folder = FOLDER[lang];
 const base = `/${folder}/reserver`;
-// Le middleware garde déjà la route ; la page relit la session avant d'agir
+// Sans compte : soins, jours, créneaux et récapitulatif visibles ; la connexion (ou l'inscription) n'est demandée que pour
+// confirmer, avec retour au même récapitulatif (?service=&debut=). Rien n'est réservé ni bloqué sans compte vérifié.
 const user = Astro.locals.user;
-if (!user) return Astro.redirect(`/${folder}/compte/connexion`);
+const session = Astro.locals.session;
+// Route ouverte sans session par le middleware : les gardes qu'il applique d'habitude sont refaites ici
+if (user?.deletedAt) return Astro.redirect(`/${folder}/compte/reactiver`);
+if (user?.role && !session?.mfaAt) return Astro.redirect('/admin/code');
+// Page personnelle même sans compte (créneaux du moment) : jamais mise en cache
+Astro.response.headers.set('Cache-Control', 'no-store');
 const method = Astro.request.method;
 if (method !== 'GET' && method !== 'HEAD' && method !== 'POST') return new Response(null, { status: 405, headers: { Allow: 'GET, HEAD, POST' } });
 
@@ -41,6 +47,23 @@ const groups = t(lang).home.tarifs.filters
   .filter((f) => f.key !== 'all')
   .map((f) => ({ key: f.key, label: f.label, items: services.filter((s) => s.category === f.key) }))
   .filter((g) => g.items.length);
+
+// Présélection depuis les tarifs (?soin=slug, une ligne) ou une fiche soin (?groupe=id,id) : une seule prestation trouvée = renvoi
+// vers l'adresse habituelle ?service= ; plusieurs = liste réduite à ces prestations ; aucune = liste complète avec un message
+let only: Set<number> | null = null;
+let preError = false;
+{
+  const sp = Astro.url.searchParams;
+  if (open && method === 'GET' && !sp.has('service') && (sp.has('soin') || sp.has('groupe'))) {
+    const soin = sp.get('soin') ?? '';
+    const gids = (sp.get('groupe') ?? '').split(',').filter((g) => /^[a-z0-9-]{1,60}$/.test(g)).slice(0, 12);
+    const hit = soin ? services.filter((s) => s.slug === soin) : services.filter((s) => gids.some((g) => s.slug.startsWith(`${g}-`)));
+    if (hit.length === 1) return Astro.redirect(`${base}?service=${hit[0].id}`);
+    if (hit.length > 1) only = new Set(hit.map((s) => s.id));
+    else preError = true;
+  }
+}
+const shown = only ? groups.map((g) => ({ ...g, items: g.items.filter((s) => only!.has(s.id)) })).filter((g) => g.items.length) : groups;
 
 const Id = z.string().regex(/^\d{1,9}$/).transform(Number);
 const Post = z.object({
@@ -76,6 +99,11 @@ if (open && method === 'POST') {
     fields = Object.fromEntries(await Astro.request.formData());
   } catch {}
   const f = Post.safeParse(fields);
+  // Sans compte, seul le choix d'un créneau passe : il mène au récapitulatif ; toute confirmation demande la connexion
+  if (!user) {
+    const recap = f.success ? `${base}?service=${f.data.service}&debut=${encodeURIComponent(f.data.debut)}` : base;
+    return Astro.redirect(f.success && f.data.etape !== 'choisir' ? `/${folder}/compte/connexion?retour=${encodeURIComponent(recap)}` : recap, 303);
+  }
   if (!f.success) error = L.err.invalid;
   else if (!(svc = pick(f.data.service))) error = L.err.service;
   else {
@@ -125,6 +153,33 @@ if (open && method === 'POST') {
       error = L.err.cgv;
     }
   }
+} else if (open && Astro.url.searchParams.has('service') && Astro.url.searchParams.has('debut')) {
+  // Récapitulatif par l'URL : après un créneau choisi sans compte, ou au retour de la connexion / de l'inscription
+  const sp = Astro.url.searchParams;
+  const id = Id.safeParse(sp.get('service'));
+  const debut = Post.shape.debut.safeParse(sp.get('debut'));
+  svc = id.success ? pick(id.data) : null;
+  if (!svc || !debut.success) error = L.err.service;
+  else {
+    at = new Date(debut.data);
+    day = todayBrussels(at);
+    const free = day >= today && day <= lastDay ? await slots(svc.id, day, user?.id ?? null) : [];
+    if (!free.some((s) => s.at.getTime() === at!.getTime())) {
+      view = 2;
+      error = L.err.unavailable;
+    } else if (!user) view = 3;
+    else {
+      const r = await quote({ userId: user.id, serviceId: svc.id, startsAt: at, promoCode: '', lang, ip: Astro.locals.ip });
+      if (r.ok) {
+        q = r.quote;
+        view = 3;
+      } else {
+        view = 2;
+        limit = r.error === 'limit';
+        error = limit ? L.err.limit(MAX_UPCOMING) : L.err.unavailable;
+      }
+    }
+  }
 } else if (open && Astro.url.searchParams.has('service')) {
   const sp = Astro.url.searchParams;
   const id = Id.safeParse(sp.get('service'));
@@ -139,9 +194,12 @@ if (open && method === 'POST') {
     }
   }
 }
-const list: Slot[] = view === 2 && svc && !limit ? await slots(svc.id, day, user.id) : [];
+const list: Slot[] = view === 2 && svc && !limit ? await slots(svc.id, day, user?.id ?? null) : [];
+// Récapitulatif sans compte : connexion ou inscription, puis retour à ce même récapitulatif
+const recapUrl = svc && at ? `${base}?service=${svc.id}&debut=${encodeURIComponent(at.toISOString())}` : base;
+const retour = `?retour=${encodeURIComponent(recapUrl)}`;
 // Résumé en tête de page ; le message du code promo est aussi répété sous son champ
-const summary = error ?? promoMsg;
+const summary = error ?? promoMsg ?? (preError ? L.err.service : null);
 ---
 <Base lang={lang} pageKey="home" route="reserver" title={L.metaTitle} description={L.description} noindex mainClass="legal">
 <div class="wrap"><article>
@@ -153,7 +211,8 @@ const summary = error ?? promoMsg;
 <section aria-labelledby="h-step">
 <p class="eyebrow">{L.step(1)}</p>
 <h2 id="h-step">{L.chooseService}</h2>
-{groups.map((g) => (
+{only && <p><a href={base}>{L.change}</a></p>}
+{shown.map((g) => (
   <section class="group" aria-labelledby={`h-cat-${g.key}`}>
   <h3 id={`h-cat-${g.key}`}>{g.label}</h3>
   <ul class="prices">{g.items.map((s) => {
@@ -186,7 +245,30 @@ const summary = error ?? promoMsg;
 </section>
 )}
 
-{open && view === 3 && svc && q && at && (
+{open && view === 3 && svc && at && !q && !user && (
+<section aria-labelledby="h-step">
+<p class="eyebrow">{L.step(3)}</p>
+<h2 id="h-step">{L.recap}</h2>
+<dl class="recap">
+<dt>{L.service}</dt><dd>{svc.name}</dd>
+<dt>{L.date}</dt><dd>{fmt({ dateStyle: 'full' }).format(at)}</dd>
+<dt>{L.time}</dt><dd>{fmt({ timeStyle: 'short' }).format(at)}</dd>
+<dt>{L.duration}</dt><dd>{L.minutes(svc.duration_min)}</dd>
+<dt>{L.price}</dt><dd>{euros(svc.price_cents, lang)}</dd>
+</dl>
+<div class="acct" role="region" aria-labelledby="h-acct">
+<h3 id="h-acct">{L.account.title}</h3>
+<p>{L.account.text}</p>
+<div class="actions">
+<a class="btn btn--solid" href={`/${folder}/compte/inscription${retour}`}>{L.account.register}</a>
+<a class="btn btn--ghost" href={`/${folder}/compte/connexion${retour}`}>{L.account.login}</a>
+</div>
+</div>
+<p class="other"><a href={`${base}?service=${svc.id}&jour=${day}`}>{L.otherTime}</a></p>
+</section>
+)}
+
+{open && view === 3 && svc && q && at && user && (
 <section aria-labelledby="h-step">
 <p class="eyebrow">{L.step(3)}</p>
 <h2 id="h-step">{L.recap}</h2>
@@ -240,6 +322,9 @@ const summary = error ?? promoMsg;
 .promo{display:flex;flex-wrap:wrap;gap:.5rem}
 .promo input{flex:1 1 10rem;width:auto}
 .other{margin-top:1.5rem}
+.acct{padding:1.1rem 1.25rem;border:1px solid var(--accent);border-radius:14px;background:var(--bg)}
+.acct h3{margin:0 0 .4rem}
+.acct .actions{margin-top:.9rem}
 /* Le libellé avec le montant dépasse un écran de téléphone sur une ligne */
 .pay{white-space:normal;line-height:1.3;text-align:center}
 </style>

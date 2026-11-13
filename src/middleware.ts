@@ -13,6 +13,8 @@ const PUBLIC = new Set([
   '/[folder]/compte/mot-de-passe-oublie',
   '/[folder]/compte/nouveau-mot-de-passe',
   '/[folder]/compte/lien',
+  // Réserver : soins, jours et créneaux visibles sans compte ; la page exige la connexion pour confirmer
+  '/[folder]/reserver',
   // Lien de désinscription des demandes d'avis : signé, sans session
   '/[folder]/compte/avis-desinscription',
   '/oauth/[provider]',
