@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import { LANGS, FOLDER, CONTACT, SITE, SALON_ID, LANG_META, EXTRA, HOURS, JS_VERSION, hoursRows, openingHoursSchema, t, pagePath, langOfFolder } from '../../lib/site';
+import { itemSlug } from '../../../db/slug.mjs';
 
 export function getStaticPaths() {
   return LANGS.map((l) => ({ params: { folder: FOLDER[l] } }));
@@ -11,6 +12,13 @@ const d = t(lang);
 const h = d.home;
 const ui = d.ui;
 const treat = (slug: string) => pagePath(lang, `treatment:${slug}`);
+// « Réserver » de chaque ligne des tarifs : la prestation est présélectionnée (?soin=, même slug que la synchro des prestations)
+const FR_GROUPS = t('fr').home.tarifs.groups;
+const bookHref = (gid: string, j: number) => {
+  const g = FR_GROUPS.find((x) => x.id === gid);
+  const it = g?.items[j];
+  return `/${FOLDER[lang]}/reserver${g && it ? `?soin=${itemSlug(g, it)}` : ''}`;
+};
 // Photo de chaque carte soin, dans l'ordre de home.soins.cards
 const CARD_IMG = ['visage', 'massage', 'epilation', 'corps', 'onglerie', 'sourire'];
 // FAQ : {hours} et {phone} viennent de site.ts, pour ne jamais diverger des horaires et du numéro affichés ailleurs
@@ -112,7 +120,7 @@ const jsonld = {
         ? <a href={treat(g.href)}>{g.title}<Icon name="info" class="i-info" /><span class="visually-hidden">, {ui.moreInfo}</span></a>
         : g.title}</h4>
       {g.intro && <p class="price-group__intro">{g.intro}</p>}
-      <ul class="prices">{g.items.map((it) => {
+      <ul class="prices">{g.items.map((it, j) => {
         // Prestation : « durée · description » ; formule : son contenu, puis « durée · prix par séance »
         const isFormule = 'detail' in it;
         const line1 = isFormule ? it.detail : [it.duration, it.desc].filter(Boolean).join(' · ');
@@ -120,14 +128,13 @@ const jsonld = {
         return (
           <li class="sheen"><span class="name">{it.href
             ? <a href={treat(it.href)}>{it.name}<Icon name="info" class="i-info" /><span class="visually-hidden">, {ui.moreInfo}</span></a>
-            : it.name}{it.badge && <span class="price-badge">{it.badge}</span>}{line1 && <small>{line1}</small>}{line2 && <small class="price-note">{line2}</small>}</span><span class="dots" aria-hidden="true"></span><span class="amount">{it.amount}{it.was && <s class="was"><span class="visually-hidden"> {h.tarifs.wasLabel} </span>{it.was}</s>}</span></li>
+            : it.name}{it.badge && <span class="price-badge">{it.badge}</span>}{line1 && <small>{line1}</small>}{line2 && <small class="price-note">{line2}</small>}</span><span class="dots" aria-hidden="true"></span><span class="amount">{it.amount}{it.was && <s class="was"><span class="visually-hidden"> {h.tarifs.wasLabel} </span>{it.was}</s>}</span><a class="price-book" href={part.key === 'presta' ? bookHref(g.id, j) : `/${FOLDER[lang]}/reserver`}>{h.tarifs.book}<span class="visually-hidden">{lang === 'fr' ? ' : ' : ': '}{it.name}</span></a></li>
         );
       })}</ul>
-      {/* Le titre est un lien, mais peu de clientes le devinent : la fiche est aussi proposée en toutes lettres */}
-      <div class="price-group__foot">
+      {/* Le titre est un lien, mais peu de clientes le devinent : la fiche est aussi proposée en toutes lettres ; « Réserver » est sur chaque ligne */}
+      {g.href && <div class="price-group__foot">
         {g.href && <a class="price-group__more" href={treat(g.href)}>{ui.moreInfo}<span class="visually-hidden">{lang === 'fr' ? ' : ' : ': '}{g.title}</span><span aria-hidden="true"> →</span></a>}
-        <a class="price-group__book" href={`/${FOLDER[lang]}/reserver`}>{h.tarifs.book}<span class="visually-hidden">{lang === 'fr' ? ' : ' : ': '}{g.title}</span><span aria-hidden="true"> →</span></a>
-      </div>
+      </div>}
     </section>
   ))}
   </div>

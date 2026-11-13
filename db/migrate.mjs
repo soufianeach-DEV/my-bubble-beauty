@@ -1,6 +1,7 @@
 // Migrations appliquées au démarrage (server.mjs) : chaque fichier db/migrations/NNN_nom.sql une seule fois, dans l'ordre, puis la graine des services.
 import { createHash } from 'node:crypto';
 import { readdir, readFile } from 'node:fs/promises';
+import { itemSlug } from './slug.mjs';
 
 const DIR = new URL('./migrations/', import.meta.url);
 const DATA = new URL('../src/data/', import.meta.url);
@@ -20,7 +21,6 @@ export function parseDuration(text) {
   return null;
 }
 
-const slugify = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 // Tarifs des JSON du site : nom « groupe, item » dans les 3 langues ; durée lue sur la carte française.
 // Une prestation qui a une durée arrive en ligne, les autres attendent que la gérante la saisisse.
@@ -33,7 +33,7 @@ export async function serviceSeed() {
     const twin = g.items.filter((x) => x.name === item.name).length > 1;
     const suffix = (it) => (twin && it.duration ? ` (${it.duration})` : '');
     return {
-      slug: slugify(`${g.id}-${item.name}${suffix(item)}`),
+      slug: itemSlug(g, item),
       category: g.cat,
       name_fr: `${g.title}, ${item.name}${suffix(item)}`,
       name_nl: `${nl[i].title}, ${nl[i].items[j].name}${suffix(nl[i].items[j])}`,

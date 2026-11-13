@@ -200,8 +200,8 @@ main{isolation:isolate;overflow-x:clip}
 .price-groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:clamp(1rem,2vw,1.5rem);align-items:stretch}
 .price-group{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);padding:1.5rem 1.75rem 1.25rem}
 /* Deux boutons courts côte à côte : la fiche du soin, puis la réservation */
-.price-group__foot{display:flex;flex-wrap:nowrap;align-items:center;gap:.5rem;margin-top:auto;padding-top:1rem}
-.price-group__more,.price-group__book{display:inline-flex;align-items:center;gap:.35em;justify-content:center;min-height:40px;padding:.4rem .9rem;border-radius:999px;font-size:.875rem;letter-spacing:.03em;white-space:nowrap;text-decoration:none;transition:border-color var(--dur-ui),background-color var(--dur-ui)}
+.price-group__foot{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-top:auto;padding-top:1rem}
+.price-group__more,.price-group__book{display:inline-flex;align-items:center;gap:.35em;justify-content:center;min-height:44px;padding:.4rem .9rem;border-radius:999px;font-size:.875rem;letter-spacing:.03em;white-space:nowrap;text-decoration:none;transition:border-color var(--dur-ui),background-color var(--dur-ui)}
 .price-group__more{border:1px solid var(--line);color:var(--text)}
 .price-group__more:hover{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent)}
 .price-group__book{margin-left:auto;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);font-weight:500}
@@ -227,6 +227,13 @@ main{isolation:isolate;overflow-x:clip}
 .prices .name small{display:block;color:var(--text-soft);font-size:.875rem}
 .prices .dots{flex:1 1 2rem;min-width:1.5rem;border-bottom:1px dotted var(--line);transform:translateY(-.3em)}
 .prices .amount{flex:none;font-weight:500;font-variant-numeric:tabular-nums}
+/* Tarifs : « Réserver » sur chaque ligne (prestation présélectionnée), discret ; passe sous le prix si la ligne manque de place */
+.prices li:has(.price-book){display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"name amount" "name book";column-gap:1rem;row-gap:.4rem;align-items:start}
+.prices li:has(.price-book) .name{grid-area:name}
+.prices li:has(.price-book) .dots{display:none}
+.prices li:has(.price-book) .amount{grid-area:amount;justify-self:end}
+.price-book{grid-area:book;justify-self:end;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:.35rem .95rem;border:1px solid var(--accent);border-radius:999px;color:var(--link);font-size:.875rem;font-weight:500;letter-spacing:.03em;white-space:nowrap;text-decoration:none;transition:background-color var(--dur-ui),color var(--dur-ui)}
+.price-book:hover,.price-book:focus-visible{background:var(--accent);color:var(--accent-ink)}
 .tarifs__note{margin:1rem 0 0;font-size:.9375rem;color:var(--text-soft)}
 
 /* ---------- Galerie ---------- */

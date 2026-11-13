@@ -15,6 +15,9 @@ const tr = (d.treatments as Record<string, (typeof d.treatments)['mado']>)[slug]
 const key = `treatment:${slug}` as const;
 // Le retour vise le groupe de tarifs du soin : main.js affiche alors son filtre
 const grp = d.home.tarifs.groups.find((g) => g.href === slug || g.items.some((it) => it.href === slug));
+// « Prendre rendez-vous » : la réservation s'ouvre sur les prestations de ce soin (tous ses groupes de tarifs)
+const bookGroups = d.home.tarifs.groups.filter((g) => !(g as { hidden?: boolean }).hidden && (g.href === slug || g.items.some((it) => it.href === slug))).map((g) => g.id);
+const bookHref = `/${FOLDER[lang]}/reserver${bookGroups.length ? `?groupe=${bookGroups.join(',')}` : ''}`;
 // Maillage entre fiches : jusqu'à 3 soins de la même famille, pris à la suite du soin courant pour répartir les liens
 const FAMILIES = [
   ['brosse', 'photo', 'hydra', 'microneed', 'charbon', 'peeling', 'plasma'],
@@ -66,7 +69,7 @@ const ogImage = OG_PHOTO.includes(Astro.params.slug!) && fig0 ? { src: fig0.src,
 <div class="treatment__side">
 <aside class="pricebox" aria-labelledby="h-price"><h2 id="h-price">{tr.priceTitle}</h2>
 <ul class="prices">{tr.prices.map((p) => <li><span class="name">{p.name}</span><span class="dots" aria-hidden="true"></span><span class="amount">{p.amount}</span></li>)}</ul>
-<div class="pricebox__cta"><a class="btn btn--solid sheen" href={`/${FOLDER[lang]}/reserver`}>{d.ui.book}</a><a class="btn btn--ghost" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{d.ui.call}</a><a class="btn btn--ghost" href={CONTACT.whatsapp}><Icon name="whatsapp" />WhatsApp</a></div>
+<div class="pricebox__cta"><a class="btn btn--solid sheen" href={bookHref}>{d.ui.book}</a><a class="btn btn--ghost" href={`tel:${CONTACT.phone}`}><Icon name="phone" />{d.ui.call}</a><a class="btn btn--ghost" href={CONTACT.whatsapp}><Icon name="whatsapp" />WhatsApp</a></div>
 </aside>
 <div class="treatment__figs">{tr.figures.map((f) => (
   <figure><img src={`/assets/img/${f.src}`} width={f.w} height={f.h} alt={f.alt} loading="lazy" decoding="async"></figure>
