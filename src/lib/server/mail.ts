@@ -204,9 +204,11 @@ const T = {
   },
 } as const;
 
-export function verifyMail(lang: Lang, token: string): Mail {
+// back : page où revenir après l'activation (récapitulatif d'une réservation), déjà passée par safeReturn
+export function verifyMail(lang: Lang, token: string, back?: string): Mail {
   const [subject, a, b, label] = T[lang].verify;
-  return build('verify', lang, subject, [T[lang].hello, a, b], [label, accountUrl(lang, `/verification?token=${token}`)]);
+  const retour = back ? `&retour=${encodeURIComponent(back)}` : '';
+  return build('verify', lang, subject, [T[lang].hello, a, b], [label, accountUrl(lang, `/verification?token=${token}${retour}`)]);
 }
 
 // Inscription sur une adresse déjà prise (vérifiée ou non) : aucune route de renvoi, la propriétaire passe par « mot de passe oublié »

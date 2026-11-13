@@ -8,7 +8,9 @@ import PasswordField from './_password-field.astro';
 import External from './_external.astro';
 import '../../../styles/forms.css';
 import { COMPTE } from '../../../data/i18n/compte.ts';
+import { SITE_URL } from 'astro:env/server';
 import { FOLDER, JS_VERSION, langOfFolder, pagePath } from '../../../lib/site';
+import { safeReturn } from '../../../lib/server/redirect.ts';
 import { register, type PasswordProblem } from '../../../lib/server/accounts.ts';
 import { confirmMismatch, EMAIL, NAME, PASSWORD, PHONE, readForm } from '../../../lib/server/compte.ts';
 
@@ -16,7 +18,10 @@ const lang = langOfFolder(Astro.params.folder!);
 const d = FOLDER[lang];
 const tx = COMPTE[lang];
 const t = tx.register;
-if (Astro.locals.user && Astro.request.method === 'GET') return Astro.redirect(`/${d}/compte`);
+// Retour (récapitulatif d'une réservation…) : suivi jusqu'à l'e-mail d'activation, Google / Microsoft et la connexion
+const back = safeReturn(Astro.url.searchParams.get('retour'), SITE_URL, `/${d}/compte`);
+const qs = back === `/${d}/compte` ? '' : `?retour=${encodeURIComponent(back)}`;
+if (Astro.locals.user && Astro.request.method === 'GET') return Astro.redirect(back);
 
 const SCHEMA = z.object({ email: EMAIL, password: PASSWORD, name: NAME, phone: PHONE, terms: z.literal('on') });
 let sent = false;
@@ -30,7 +35,7 @@ if (Astro.request.method === 'POST') {
   const off = confirmMismatch(raw);
   for (const k of off) bad.add(k);
   if (form.data && off.size === 0) {
-    problem = await register({ ...form.data, locale: lang, ip: Astro.locals.ip });
+    problem = await register({ ...form.data, locale: lang, ip: Astro.locals.ip, back });
     if (problem) bad.add('password');
     else sent = true;
   }
@@ -47,13 +52,13 @@ const [t0, cgv, t2, privacy, t4] = t.terms;
 <Fragment>
 <p class="notice" role="status">{t.sent}</p>
 <p>{t.spam}</p>
-<p><a href={`/${d}/compte/connexion`}>{tx.login.submit}</a></p>
+<p><a href={`/${d}/compte/connexion${qs}`}>{tx.login.submit}</a></p>
 </Fragment>
 ) : (
 <Fragment>
 {error && <p class="notice notice--error" role="alert">{error}</p>}
 <p>{t.intro}</p>
-<External lang={lang} back={`/${d}/compte`} compact />
+<External lang={lang} back={back} compact />
 <form class="form" method="post">
 <div class="field">
 <label for="email">{tx.email}</label>
@@ -88,6 +93,6 @@ const [t0, cgv, t2, privacy, t4] = t.terms;
 )}
 </article>
 {/* Même lame qu'à la connexion, en miroir à gauche */}
-<aside class="auth__blade"><img class="auth__avatar" src="/assets/img/auth-visage-voile-800.webp" srcset="/assets/img/auth-visage-voile-480.webp 480w, /assets/img/auth-visage-voile-800.webp 800w" sizes="(max-width:759px) 100vw, 480px" width="800" height="1169" alt="" decoding="async"><div class="auth__veil"><p class="auth__brand">My Bubble <span>Beauty</span></p><p>{t.have}</p><a class="btn btn--ghost" href={`/${d}/compte/connexion`}>{tx.login.submit}</a></div></aside>
+<aside class="auth__blade"><img class="auth__avatar" src="/assets/img/auth-visage-voile-800.webp" srcset="/assets/img/auth-visage-voile-480.webp 480w, /assets/img/auth-visage-voile-800.webp 800w" sizes="(max-width:759px) 100vw, 480px" width="800" height="1169" alt="" decoding="async"><div class="auth__veil"><p class="auth__brand">My Bubble <span>Beauty</span></p><p>{t.have}</p><a class="btn btn--ghost" href={`/${d}/compte/connexion${qs}`}>{tx.login.submit}</a></div></aside>
 </div></div>
 </Base>

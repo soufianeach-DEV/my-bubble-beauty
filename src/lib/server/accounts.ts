@@ -30,7 +30,7 @@ function mailWithToken(userId: number, email: string, purpose: 'verify' | 'reset
 
 // null = réponse générique « si l'adresse est valide, un e-mail vient de partir », que l'adresse soit libre ou prise.
 // Politique, HIBP et hash passent avant toute recherche : même message et même durée dans les deux cas.
-export async function register(input: { email: string; password: string; name?: string | null; phone?: string | null; locale: Lang; ip: string }): Promise<PasswordProblem | null> {
+export async function register(input: { email: string; password: string; name?: string | null; phone?: string | null; locale: Lang; ip: string; back?: string }): Promise<PasswordProblem | null> {
   const email = input.email.trim().toLowerCase();
   // Adresse impossible : aucune ne peut exister, la réponse générique ne trahit rien
   if (badEmail(email)) return null;
@@ -46,7 +46,7 @@ export async function register(input: { email: string; password: string; name?: 
     ON CONFLICT (email) DO NOTHING RETURNING id`;
   if (u) {
     journal('register', { actor: u.id, client: u.id, ip: input.ip });
-    mailWithToken(u.id, email, 'verify', 24 * 60, (t) => verifyMail(input.locale, t));
+    mailWithToken(u.id, email, 'verify', 24 * 60, (t) => verifyMail(input.locale, t, input.back));
   } else {
     log('register_existing', { ip: input.ip });
     sendMail(email, existsMail(input.locale));

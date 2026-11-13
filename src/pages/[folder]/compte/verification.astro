@@ -7,7 +7,9 @@ import Base from '../../../layouts/Base.astro';
 import PasswordField from './_password-field.astro';
 import '../../../styles/forms.css';
 import { COMPTE } from '../../../data/i18n/compte.ts';
+import { SITE_URL } from 'astro:env/server';
 import { FOLDER, JS_VERSION, langOfFolder } from '../../../lib/site';
+import { safeReturn } from '../../../lib/server/redirect.ts';
 import { verifyEmail } from '../../../lib/server/accounts.ts';
 import { PASSWORD, TOKEN, readForm } from '../../../lib/server/compte.ts';
 
@@ -17,11 +19,14 @@ const tx = COMPTE[lang];
 const t = tx.verify;
 
 let token = Astro.url.searchParams.get('token');
+// Page où revenir une fois le compte activé (lien de l'e-mail) : champ caché du POST, relu par safeReturn
+let back = safeReturn(Astro.url.searchParams.get('retour'), SITE_URL, `/${d}/compte`);
 let failed = false;
 if (Astro.request.method === 'POST') {
-  const { data, raw } = await readForm(Astro.request, z.object({ token: TOKEN, password: PASSWORD }));
+  const { data, raw } = await readForm(Astro.request, z.object({ token: TOKEN, password: PASSWORD, retour: z.string().max(400).optional() }));
+  back = safeReturn(raw.retour, SITE_URL, `/${d}/compte`);
   const u = data && (await verifyEmail(Astro.cookies, data.token, data.password, Astro.locals.ip, Astro.request.headers.get('user-agent')));
-  if (u) return Astro.redirect(`/${d}/compte`, 303);
+  if (u) return Astro.redirect(back, 303);
   // Mauvais mot de passe : le jeton reste valable, le formulaire est proposé à nouveau
   token = raw.token ?? null;
   failed = true;
@@ -38,6 +43,7 @@ const valid = TOKEN.safeParse(token).success;
 <p>{t.intro}</p>
 <form class="form" method="post" action={`/${d}/compte/verification`}>
 <input type="hidden" name="token" value={token}>
+{back !== `/${d}/compte` && <input type="hidden" name="retour" value={back}>}
 <PasswordField id="password" name="password" label={tx.pw.label} lang={lang} invalid={failed} />
 <button class="btn btn--solid" type="submit">{t.submit}</button>
 </form>
