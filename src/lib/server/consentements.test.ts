@@ -296,6 +296,12 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     // Feuille du jour imprimée : mêmes alertes, contre-indications avec l'accord seulement (vérifié plus bas après retrait)
     assert.ok((await prof.saveProfile(other, sheet, fd({ ...base, allergies: ['latex', 'autre'], allergies_other: 'Cire au miel', skin: ['sensible'], contra: 'Rétinoïdes' }))).ok);
     assert.deepEqual((await prof.printNotesFor([sheet])).get(Number(sheet)), { alerts, contra: 'Rétinoïdes' });
+    // Tableau des clientes : un état et un nombre d'alertes, jamais le contenu ; une fiche vide est « à compléter »
+    const empty = await mk('vide');
+    const states = await prof.sheetsFor([sheet, empty]);
+    assert.deepEqual(states.get(Number(sheet)), { filled: true, alerts: 3 });
+    assert.deepEqual(states.get(Number(empty)), { filled: false, alerts: 0 });
+    assert.ok(!JSON.stringify([...states]).includes('Latex'));
     const ex = await rgpd.exportData(sheet, '127.0.0.1');
     assert.deepEqual(ex.account.care_sheet.sante.allergies, ['Latex', 'Autre']);
     assert.equal(ex.account.care_sheet.zones_et_toucher.toucher, 'Prévenir avant chaque contact');
@@ -306,6 +312,10 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     assert.equal((await sql`SELECT health_profile FROM users WHERE id = ${sheet}`)[0].health_profile, null);
     assert.equal(read.care.touch, 'prevenir');
     assert.deepEqual((await prof.printNotesFor([sheet])).get(Number(sheet)), { alerts: ['Ne pas toucher : Ventre, Pieds', 'Prévenir avant chaque contact'], contra: '' }, 'sans accord : ni allergies ni contre-indications sur la feuille');
+    assert.equal((await prof.sheetsFor([sheet])).get(Number(sheet))?.alerts, 2, 'sans accord : les allergies ne comptent plus');
+    // Après un refus, la saisie revient dans le formulaire (santé ignorée sans accord)
+    const draft = prof.withDraft(await prof.readProfile(sheet), fd({ heat: 'chaud', zones: ['dos'], allergies: ['latex'], notes: 'Brouillon' }));
+    assert.deepEqual([draft.care.heat, draft.care.zones, draft.health, draft.notes], ['chaud', ['dos'], null, 'Brouillon']);
   } finally {
     await sql`DELETE FROM bookings WHERE service_id IN (SELECT id FROM services WHERE slug IN (${`laser-${tag}`}, ${`blanchiment-des-dents-${tag}`}))`;
     await sql`DELETE FROM services WHERE slug IN (${`laser-${tag}`}, ${`blanchiment-des-dents-${tag}`})`;

@@ -265,16 +265,6 @@ const alertsOf = (r: Row) => (r.user_id ? careAlerts.get(r.user_id) ?? [] : []);
   }
   /* Fermer un jour : replié dans la barre, le formulaire s'ouvre sur toute la largeur */
   .tb-close{margin-left:auto}
-  /* Pop-ups (Jour, Fermer un jour) : boîte centrée avec voile ; sans JS, la boîte ouverte par l'URL flotte aussi au-dessus de la page */
-  .modal{padding:0;width:min(100% - 2rem,26rem);max-height:calc(100dvh - 2rem);border:1px solid var(--line-soft);border-radius:18px;background:var(--bg);color:var(--text);box-shadow:0 24px 60px rgb(0 0 0 / .35)}
-  .modal--wide{width:min(100% - 2rem,52rem)}
-  .modal::backdrop{background:rgb(20 14 13 / .55)}
-  .modal[open]:not(:modal){position:fixed;inset:0;z-index:100;margin:auto;box-shadow:0 0 0 100vmax rgb(20 14 13 / .55)}
-  .modal-in{max-height:calc(100dvh - 2rem);overflow:auto;padding:1.1rem 1.4rem 1.4rem}
-  .modal-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:0 0 1rem}
-  .modal-head h2{margin:0;font-size:1.4rem}
-  .modal-x{display:grid;place-items:center;flex:none;width:44px;height:44px;border-radius:50%;color:var(--text);font-size:1.6rem;line-height:1;text-decoration:none}
-  .modal-x:hover,.modal-x:focus-visible{background:var(--line-soft)}
   .modal :global(.daypick){max-width:none;margin:0}
   .close-form{display:grid;grid-template-columns:minmax(0,22rem) minmax(0,1fr);gap:1rem 2rem;align-items:start}
   @media (max-width:767px){.close-form{grid-template-columns:minmax(0,1fr)}}

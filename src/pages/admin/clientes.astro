@@ -4,10 +4,14 @@ export const prerender = false;
 // tri par colonne, 25 par page ; un clic sur le nom ouvre la fiche.
 // Colonne Actions (admin seulement, comme sur la fiche) : désactiver ou réactiver, supprimer (suppression douce) ou restaurer.
 // Même chemin que la fiche (clientAction) : sessions fermées, journal ; l'effacement définitif reste sur la fiche.
+// Colonne Fiche (admin et gestionnaire) : état de la fiche de soin, jamais son contenu ; « Modifier » ouvre la fiche d'une seule
+// cliente dans une pop-up (?fiche=id : seule cette fiche est déchiffrée), enregistrée par saveProfile comme sur la page de la cliente.
 import Admin from './_layout.astro';
 import { adminId, staffId, fmtDateTime, readForm } from '../../lib/server/admin.ts';
 import { CLIENT_SORTS, clientAction, clientCounts, listClients, type ClientFilter, type ClientSort } from '../../lib/server/admin-clientes.ts';
 import { euros } from '../../lib/server/pricing.ts';
+import { alertsOf, readProfile, saveProfile, sheetsFor, withDraft } from '../../lib/server/profil.ts';
+import FicheForm from './_fiche-form.astro';
 
 const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
@@ -15,21 +19,28 @@ const manage = adminId(Astro.locals) !== null;
 const sp = Astro.url.searchParams;
 let error = '';
 let errorId: number | null = null;
+let sheetDraft: FormData | null = null;
 if (Astro.request.method === 'POST') {
-  if (!manage) return new Response(null, { status: 404 });
   const form = await readForm(Astro.request);
   if (!form) return new Response(null, { status: 413 });
+  // Fiche de soin : admin et gestionnaire, comme sur la page de la cliente ; les actions sur le compte : admin seulement
+  const sheet = form.get('scope') === 'profil';
+  if (!sheet && !manage) return new Response(null, { status: 404 });
+  const sheetId = /^[1-9]\d{0,17}$/.test(String(form.get('id') ?? '')) ? Number(form.get('id')) : null;
   const action = String(form.get('action') ?? '');
-  // Seules les actions de la liste passent ici ; notes, annulation de suppression et effacement restent sur la fiche
-  const r = ['block', 'unblock', 'remove', 'unremove'].includes(action) ? await clientAction(me, form, true) : { ok: false as const, error: 'Action inconnue.' };
+  // Seules les actions de la liste passent ici ; annulation de suppression et effacement restent sur la fiche
+  const r = sheet ? (sheetId ? await saveProfile(me, sheetId, form) : { ok: false as const, error: 'Cliente introuvable.' })
+    : ['block', 'unblock', 'remove', 'unremove'].includes(action) ? await clientAction(me, form, true) : { ok: false as const, error: 'Action inconnue.' };
   if (r.ok) {
-    // Même onglet, même recherche et même page après l'action
+    // Même onglet, même recherche, même tri et même page après l'action ; la pop-up se referme
     const back = new URLSearchParams(sp);
-    back.set('ok', r.key ?? '');
+    back.delete('fiche');
+    back.set('ok', sheet ? 'fiche' : r.key ?? '');
     return Astro.redirect(`/admin/clientes?${back}#c-${r.id}`, 303);
   }
   error = r.error;
   errorId = Number(form.get('id')) || null;
+  if (sheet) sheetDraft = form;
   Astro.response.status = 400;
 }
 const q = (sp.get('q') ?? '').slice(0, 100);
@@ -48,13 +59,22 @@ const plural = (n: number, one: string, many: string) => `${n} ${n > 1 ? many : 
 const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', dateStyle: 'medium' }).format;
 const erased = sp.get('ok') === 'efface';
 const DONE: Record<string, string> = { block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter ni réserver. Ses rendez-vous restent.', unblock: 'Compte réactivé.',
+  fiche: 'Fiche de soin enregistrée.',
   remove: "Compte supprimé : il sort des listes et ne peut plus se connecter. Ses rendez-vous restent ; rien n'est effacé.", unremove: 'Compte restauré : la cliente peut de nouveau se connecter.' };
 const done = !error && DONE[sp.get('ok') ?? ''];
+const sheets = await sheetsFor(rows.map((c) => Number(c.id)));
+// Pop-up : seulement pour une cliente de la liste affichée ; après un refus, la saisie revient dans le formulaire
+const open = sp.has('fiche') ? rows.find((c) => String(c.id) === sp.get('fiche')) : undefined;
+const prof = open ? await readProfile(Number(open.id)) : null;
+const openAlerts = prof ? alertsOf(prof.care, prof.health) : [];
+if (prof && sheetDraft) withDraft(prof, sheetDraft);
+const ficheLink = (id: number) => `${link(page)}&fiche=${id}`;
 ---
 <Admin title="Clientes">
 {erased && <p class="notice" role="status">Compte effacé. Ses rendez-vous restent dans l'agenda, marqués « compte supprimé ».</p>}
 {done && <p class="notice" role="status">{done}</p>}
-{error && <p class="notice notice--error" role="alert">{error}</p>}
+{/* Refus d'une fiche : le message s'affiche dans la pop-up, pas deux fois */}
+{error && !(open && sheetDraft) && <p class="notice notice--error" role="alert">{error}</p>}
 <nav class="tabs" aria-label="État des comptes">{(Object.keys(FILTERS) as ClientFilter[]).map((k) => (
   <a href={link(1, k)} aria-current={k === filter ? 'page' : undefined}>{FILTERS[k]} <span class="count">{counts[k]}</span></a>
 ))}</nav>
@@ -74,6 +94,7 @@ const done = !error && DONE[sp.get('ok') ?? ''];
     <th scope="col" aria-sort={th('total').sort} class="num"><a href={th('total').href}>Total payé</a></th>
     <th scope="col" aria-sort={th('absences').sort}><a href={th('absences').href}>Absences et retards</a></th>
     <th scope="col">Abonnements et avantages</th>
+    <th scope="col">Fiche</th>
     <th scope="col">État</th>{manage && <th scope="col">Actions</th>}
   </tr></thead>
   <tbody>{rows.map((c) => (
@@ -92,6 +113,9 @@ const done = !error && DONE[sp.get('ok') ?? ''];
         <br><small>Fidélité : {c.loyalty_sessions} / {loyalty.free_after} séances</small>
         {c.reward === 'free' && <><br><span class="badge badge--ok">Soin offert dû</span></>}
         {c.reward === 'discount' && <><br><span class="badge badge--ok">Remise de {loyalty.discount_percent} % due</span></>}</td>
+      <td class="sheet-cell">{sheets.get(Number(c.id))?.filled ? <span class="badge badge--ok">Remplie</span> : <span class="badge badge--wait">À compléter</span>}
+        {(sheets.get(Number(c.id))?.alerts ?? 0) > 0 && <span class="badge badge--alert">{plural(sheets.get(Number(c.id))!.alerts, 'alerte', 'alertes')}</span>}
+        <a class="btn btn--ghost sheet-btn" href={ficheLink(Number(c.id))} aria-haspopup="dialog">Modifier<span class="visually-hidden"> la fiche de {c.name || c.email}</span></a></td>
       <td>{c.removed_at && <span class="badge badge--alert">Supprimée le {day(c.removed_at)}</span>}{c.blocked_at && <span class="badge badge--alert">Désactivée</span>}{c.deleted_at && <span class="badge badge--wait">Suppression demandée le {day(c.deleted_at)}</span>}
         {!c.blocked_at && !c.deleted_at && !c.removed_at && <small>Cliente depuis {day(c.created_at)}</small>}</td>
       {manage && <td>
@@ -116,6 +140,17 @@ const done = !error && DONE[sp.get('ok') ?? ''];
   ))}</tbody>
 </table></div>
 )}
+{open && prof && (
+<dialog class="modal modal--wide sheet-dlg" id="dlg-fiche" aria-labelledby="dlg-fiche-t" open><div class="modal-in">
+  <div class="modal-head"><h2 id="dlg-fiche-t">Fiche de soin · {open.name || open.email}</h2><a class="modal-x" href={`${link(page)}#c-${open.id}`} data-close aria-label="Fermer la fenêtre">×</a></div>
+  {error && <p class="notice notice--error" role="alert">{error}</p>}
+  {openAlerts.length > 0 && <p class="dlg-alerts" role="note">{openAlerts.map((a) => <span class="badge badge--alert">{a}</span>)}</p>}
+  {prof.filledAt && <p class="hint">Remplie par la cliente le {day(prof.filledAt)}.</p>}
+  {prof.clientNote && <p><strong>Mot de la cliente :</strong> {prof.clientNote}</p>}
+  <p class="hint"><a href={`/admin/clientes/${open.id}`}>Ouvrir la page de la cliente</a></p>
+  <FicheForm prof={prof} action={ficheLink(Number(open.id))} hidden={{ id: String(open.id) }} />
+</div></dialog>
+)}
 <nav class="actions bar" aria-label="Pages">
   {page > 1 && <a class="btn btn--ghost" href={link(page - 1)}>Page précédente</a>}
   {more && <a class="btn btn--ghost" href={link(page + 1)}>Page suivante</a>}
@@ -139,6 +174,14 @@ const done = !error && DONE[sp.get('ok') ?? ''];
   .row-acts .check{display:flex;align-items:center;gap:.5rem;min-height:44px;font-size:.875rem}
   .row-acts .check input{width:1.25rem;height:1.25rem;margin:0;accent-color:var(--accent)}
   .row-acts .warn{margin:0;font-size:.8125rem;color:var(--text-soft);max-width:16rem}
+  /* Colonne Fiche : un état et un nombre d'alertes, jamais le contenu (données de santé) */
+  .sheet-cell{white-space:nowrap}
+  .sheet-btn{display:flex;width:max-content;min-height:44px;margin-top:.35rem;padding:.4rem .9rem}
+  /* Pop-up de fiche : formulaire sur toute la largeur ; sans marge basse, le bouton collant ne laisse rien passer dessous */
+  .sheet-dlg{--sheet-bg:var(--bg)}
+  .sheet-dlg .modal-in{padding-bottom:0}
+  .sheet-dlg :global(.form){max-width:none}
+  .dlg-alerts{display:flex;flex-wrap:wrap;gap:.4rem;margin:0 0 1rem}
   .row-error{outline:2px solid var(--accent);outline-offset:-2px}
   /* Tableau de bord : en-têtes triables, montants alignés à droite, badges compacts */
   .dash th a{color:inherit;text-decoration:none}

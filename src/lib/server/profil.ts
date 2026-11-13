@@ -118,6 +118,28 @@ export async function alertsFor(ids: number[]): Promise<Map<number, string[]>> {
   return new Map(rows.map((r) => [r.id, alertsOf(r.care_profile ?? {}, r.consent ? openHealth(r.health_profile) : null)]));
 }
 
+// Après un refus : le formulaire réaffiche toute la saisie (santé seulement si l'accord existe)
+export function withDraft(prof: Awaited<ReturnType<typeof readProfile>>, f: FormData) {
+  const one = (k: string) => String(f.get(k) ?? '').slice(0, 2000);
+  const all = (k: string) => f.getAll(k).map((v) => String(v).slice(0, 40));
+  prof.care = { heat: one('heat'), cover: one('cover'), pressure: one('pressure'), ambience: one('ambience'), scents: one('scents'), zones: all('zones'), zones_other: one('zones_other'), touch: one('touch') };
+  if (prof.health) prof.health = { allergies: all('allergies'), allergies_other: one('allergies_other'), skin: all('skin'), contra: one('contra') };
+  prof.notes = String(f.get('notes') ?? '').slice(0, 4000);
+  return prof;
+}
+
+// Tableau des clientes : état de la fiche seulement (remplie ou non, nombre d'alertes), jamais son contenu
+export async function sheetsFor(ids: number[]): Promise<Map<number, { filled: boolean; alerts: number }>> {
+  if (!ids.length) return new Map();
+  const rows = await sql<{ id: number; care_profile: Care; health_profile: Buffer | null; consent: boolean; notes: string }[]>`
+    SELECT id, care_profile, health_profile, health_consent_at IS NOT NULL AS consent, notes FROM users WHERE id = ANY(${ids}::bigint[])`;
+  return new Map(rows.map((r) => {
+    const care = r.care_profile ?? {};
+    const filled = Object.values(care).some((v) => (Array.isArray(v) ? v.length > 0 : !!v)) || !!r.notes || (r.consent && !!r.health_profile);
+    return [Number(r.id), { filled, alerts: alertsOf(care, r.consent ? openHealth(r.health_profile) : null).length }];
+  }));
+}
+
 // Feuille du jour imprimée : badges d'alerte et contre-indications ; données de santé seulement avec l'accord de la cliente
 export async function printNotesFor(ids: number[]): Promise<Map<number, { alerts: string[]; contra: string }>> {
   if (!ids.length) return new Map();

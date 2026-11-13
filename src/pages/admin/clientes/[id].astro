@@ -6,6 +6,7 @@ export const prerender = false;
 import Admin from '../_layout.astro';
 import { adminId, staffId, agendaAction, deleteAction, fmtDateTime, readForm } from '../../../lib/server/admin.ts';
 import Supprimer from '../_supprimer.astro';
+import FicheForm from '../_fiche-form.astro';
 import { clientAction, clientDetail } from '../../../lib/server/admin-clientes.ts';
 import { ACTION_LABELS } from '../../../lib/server/journal.ts';
 import { euros, todayBrussels } from '../../../lib/server/pricing.ts';
@@ -18,7 +19,7 @@ import { suivi, suiviAction } from '../../../lib/server/suivi.ts';
 import { clientGifts, STATE_LABELS as GIFT_STATES } from '../../../lib/server/cadeaux.ts';
 import { applyReward, loyaltyCard, rewardableBookings } from '../../../lib/server/fidelite.ts';
 import { clientPackages, saleLines, sellPackage, stopPackage, STATE_LABELS as PACKAGE_STATES } from '../../../lib/server/forfaits.ts';
-import { ALLERGIES, AMBIENCE, alertsOf, COVER, HEAT, PRESSURE, readProfile, saveProfile, SKIN, TOUCH, ZONES } from '../../../lib/server/profil.ts';
+import { ALLERGIES, AMBIENCE, alertsOf, COVER, HEAT, PRESSURE, readProfile, saveProfile, SKIN, TOUCH, withDraft, ZONES } from '../../../lib/server/profil.ts';
 
 const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
@@ -27,7 +28,6 @@ const id = /^[1-9]\d{0,17}$/.test(Astro.params.id ?? '') ? Number(Astro.params.i
 if (!id) return new Response(null, { status: 404 });
 const self = `/admin/clientes/${id}`;
 let error = '';
-let notesDraft: string | null = null;
 let historyDraft: string | null = null;
 let birthDraft: string | null = null;
 let profDraft: FormData | null = null;
@@ -40,7 +40,6 @@ if (Astro.request.method === 'POST') {
   if (r.ok && r.key === 'efface') return Astro.redirect('/admin/clientes?ok=efface', 303);
   if (r.ok) return Astro.redirect(`${self}?ok=${r.key}${r.id !== id && r.key !== 'supprime' ? `#b-${r.id}` : ''}`, 303);
   error = r.error;
-  if (form.get('action') === 'notes' || form.get('scope') === 'profil') notesDraft = String(form.get('notes') ?? '');
   if (form.get('action') === 'health') {
     historyDraft = String(form.get('medical_history') ?? '').slice(0, 4000);
     birthDraft = String(form.get('birth_date') ?? '').slice(0, 10);
@@ -58,12 +57,7 @@ const gifts = manage ? await clientGifts(u.id) : [];
 const [consents, sv, card, rewardable, prof, packages, lines] = await Promise.all([listConsents(u.id), suivi(u.id), loyaltyCard(u.id), rewardableBookings(u.id), readProfile(u.id), clientPackages(u.id), saleLines()]);
 // Badges d'alerte d'après la fiche enregistrée ; après un refus, le formulaire réaffiche toute la saisie, pas seulement les notes
 const careAlerts = alertsOf(prof.care, prof.health);
-if (profDraft) {
-  const one = (k: string) => String(profDraft!.get(k) ?? '').slice(0, 2000);
-  const all = (k: string) => profDraft!.getAll(k).map((v) => String(v).slice(0, 40));
-  prof.care = { heat: one('heat'), cover: one('cover'), pressure: one('pressure'), ambience: one('ambience'), scents: one('scents'), zones: all('zones'), zones_other: one('zones_other'), touch: one('touch') };
-  if (prof.health) prof.health = { allergies: all('allergies'), allergies_other: one('allergies_other'), skin: all('skin'), contra: one('contra') };
-}
+if (profDraft) withDraft(prof, profDraft);
 // Lecture de la fiche : [titre, valeurs, alerte] ; seules les lignes renseignées s'affichent
 const pick = <T extends Record<string, string>>(o: T, keys: string[] | undefined, other?: string) => [...(keys ?? []).filter((k) => k !== 'autre' || !other).map((k) => o[k as keyof T] ?? k), ...(other ? [other] : [])];
 const sheetRows = ([
@@ -202,43 +196,7 @@ const canSell = !u.blocked_at && !u.removed_at && !u.deleted_at;
 {!prof.consent && <p class="hint">Pas d'accord pour les données de santé : allergies, peau et contre-indications ne sont pas notées.</p>}
 <details class="sheet-edit" open={!!profDraft}>
 <summary class="btn btn--ghost">Modifier la fiche</summary>
-{/* Cases et boutons segmentés (radio) plutôt que des menus : utilisables au pouce sur téléphone */}
-<form class="form sheet" method="post" action={`${self}#h-notes`}>
-  <input type="hidden" name="scope" value="profil">
-  <fieldset><legend>Santé et sensibilités</legend>
-    {prof.consent ? (<>
-      <p class="hint">Données de santé : chiffrées, visibles par l'admin et la gestionnaire seulement, effacées si la cliente retire son accord.</p>
-      <fieldset class="group"><legend class="sub">Allergies et intolérances aux produits</legend>
-      <div class="chips">{Object.entries(ALLERGIES).map(([k, l]) => <label class="chip"><input type="checkbox" name="allergies" value={k} checked={prof.health?.allergies?.includes(k)}><span>{l}</span></label>)}</div></fieldset>
-      <label class="free">Autre allergie ou précision<input name="allergies_other" maxlength="200" value={prof.health?.allergies_other ?? ''}></label>
-      <fieldset class="group"><legend class="sub">Type de peau</legend>
-      <div class="chips">{Object.entries(SKIN).map(([k, l]) => <label class="chip"><input type="checkbox" name="skin" value={k} checked={prof.health?.skin?.includes(k)}><span>{l}</span></label>)}</div></fieldset>
-      <label class="free">Contre-indications et traitements en cours (rétinoïdes, grossesse…)<textarea name="contra" rows="3" maxlength="2000">{prof.health?.contra ?? ''}</textarea></label>
-    </>) : <p class="notice notice--error">Pas d'accord pour les données de santé : allergies, type de peau et contre-indications ne peuvent pas être notés. La cliente donne son accord en réservant ou depuis son compte.</p>}
-  </fieldset>
-  <fieldset><legend>Préférences de soin</legend>
-    {([['heat', 'Chaleur', HEAT], ['cover', 'Couverture pendant le soin', COVER], ['pressure', 'Pression du toucher', PRESSURE], ['ambience', 'Ambiance', AMBIENCE]] as const).map(([name, title, o]) => (
-      <fieldset class="seg-group"><legend class="sub">{title}</legend><div class="seg">
-        {Object.entries(o).map(([k, l]) => <label><input type="radio" name={name} value={k} checked={prof.care[name] === k}><span>{l}</span></label>)}
-        <label><input type="radio" name={name} value="" checked={!prof.care[name]}><span>Non précisé</span></label>
-      </div></fieldset>
-    ))}
-    <label class="free">Odeurs : parfums appréciés ou à éviter<input name="scents" maxlength="200" value={prof.care.scents ?? ''}></label>
-  </fieldset>
-  <fieldset><legend>Zones et toucher</legend>
-    <fieldset class="group"><legend class="sub">Zones à ne pas toucher</legend>
-    <div class="chips">{Object.entries(ZONES).map(([k, l]) => <label class="chip"><input type="checkbox" name="zones" value={k} checked={prof.care.zones?.includes(k)}><span>{l}</span></label>)}</div></fieldset>
-    <label class="free">Précision sur les zones<input name="zones_other" maxlength="200" value={prof.care.zones_other ?? ''}></label>
-    <fieldset class="seg-group"><legend class="sub">Sensibilité au toucher</legend><div class="seg">
-      {Object.entries(TOUCH).map(([k, l]) => <label><input type="radio" name="touch" value={k} checked={prof.care.touch === k}><span>{l}</span></label>)}
-      <label><input type="radio" name="touch" value="" checked={!prof.care.touch}><span>Non précisé</span></label>
-    </div></fieldset>
-  </fieldset>
-  <div class="field"><label for="notes">Notes libres</label><textarea id="notes" name="notes" rows="5" maxlength="4000">{notesDraft ?? prof.notes}</textarea>
-    <p class="hint">La cliente voit toute sa fiche si elle demande l'export de ses données. Écrivez des faits utiles aux soins, sans jugement.</p></div>
-  {/* Collant en bas de l'écran : la fiche est longue, le bouton reste à portée */}
-  <div class="save-bar"><button class="btn btn--solid" type="submit">Enregistrer la fiche</button></div>
-</form>
+<FicheForm prof={prof} action={`${self}#h-notes`} />
 </details>
 </section>
 </div>
@@ -430,7 +388,6 @@ const canSell = !u.blocked_at && !u.removed_at && !u.deleted_at;
   .sheet-edit > summary{list-style:none;display:inline-flex;margin:0 0 1rem;cursor:pointer}
   .sheet-edit > summary::-webkit-details-marker{display:none}
   .sheet-edit[open] > summary{margin-bottom:1rem}
-  .save-bar{position:sticky;bottom:0;z-index:2;padding:.75rem 0;background:var(--surface);border-top:1px solid var(--line-soft)}
   .recap{display:grid;grid-template-columns:auto 1fr;gap:.4rem 1.25rem;margin:0 0 1.5rem}
   .recap dt{color:var(--text-soft)}
   .recap dd{margin:0;min-width:0;overflow-wrap:anywhere}
@@ -440,20 +397,6 @@ const canSell = !u.blocked_at && !u.removed_at && !u.deleted_at;
   .events{padding-left:1.1rem}
   .consents{padding-left:1.1rem}
   .care-alerts{display:flex;flex-wrap:wrap;gap:.4rem;margin:0 0 1rem}
-  .sheet fieldset{display:grid;gap:.6rem;margin:0;padding:1rem;border:1px solid var(--line-soft);border-radius:14px;min-width:0}
-  .sheet legend{font-weight:600;padding:0 .3rem}
-  /* Groupes de cases et de boutons : fieldset + legend pour les lecteurs d'écran, sans cadre visible */
-  .sheet fieldset.group,.sheet fieldset.seg-group{display:block;border:0;padding:0;border-radius:0}
-  .sheet legend.sub{padding:0 0 .6rem;font-weight:400}
-  .sheet .sub{margin:.25rem 0 0;font-size:.875rem;color:var(--text-soft)}
-  .chips,.seg{display:flex;flex-wrap:wrap;gap:.4rem}
-  .chip,.seg label{position:relative;display:inline-flex}
-  .chip input,.seg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
-  .chip span,.seg span{display:inline-flex;align-items:center;min-height:44px;padding:.4rem .85rem;border:1px solid var(--line-soft);border-radius:999px;font-size:.9375rem}
-  .chip input:checked + span,.seg input:checked + span{background:var(--accent);border-color:var(--accent);color:var(--bg)}
-  .chip input:focus-visible + span,.seg input:focus-visible + span{outline:2px solid var(--link);outline-offset:2px}
-  .free{display:grid;gap:.25rem;font-size:.875rem;color:var(--text-soft)}
-  .free input,.free textarea{min-height:44px;font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line-soft);border-radius:12px;padding:.6rem .8rem;width:100%}
   .meter span{display:flex;flex-wrap:wrap;gap:.3rem}
   .meter i{width:1.1rem;height:1.1rem;border-radius:50%;border:1px solid var(--line-soft)}
   .meter i.on{background:var(--accent);border-color:var(--accent)}

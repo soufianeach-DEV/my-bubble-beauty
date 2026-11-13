@@ -107,6 +107,16 @@ const PROFILE = [
   .admin :global(.data-table th){background:var(--bg);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase}
   .admin :global(.data-table th),.admin :global(.data-table td){padding:.8rem 1rem}
   .admin :global(.data-table tbody tr:last-child td){border-bottom:0}
+  /* Pop-ups de l'admin (Agenda, fiche de soin des Clientes) : boîte centrée avec voile ; sans JS, la boîte ouverte par l'URL flotte aussi au-dessus de la page */
+  .admin :global(.modal){padding:0;width:min(100% - 2rem,26rem);max-height:calc(100dvh - 2rem);border:1px solid var(--line-soft);border-radius:18px;background:var(--bg);color:var(--text);box-shadow:0 24px 60px rgb(0 0 0 / .35)}
+  .admin :global(.modal--wide){width:min(100% - 2rem,52rem)}
+  .admin :global(.modal)::backdrop{background:rgb(20 14 13 / .55)}
+  .admin :global(.modal[open]:not(:modal)){position:fixed;inset:0;z-index:100;margin:auto;box-shadow:0 0 0 100vmax rgb(20 14 13 / .55)}
+  .admin :global(.modal-in){max-height:calc(100dvh - 2rem);overflow:auto;padding:1.1rem 1.4rem 1.4rem}
+  .admin :global(.modal-head){display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:0 0 1rem}
+  .admin :global(.modal-head h2){margin:0;font-size:1.4rem}
+  .admin :global(.modal-x){display:grid;place-items:center;flex:none;width:44px;height:44px;border-radius:50%;color:var(--text);font-size:1.6rem;line-height:1;text-decoration:none}
+  .admin :global(.modal-x:hover),.admin :global(.modal-x:focus-visible){background:var(--line-soft)}
   /* Pastille de statut, à poser sur un span dans n'importe quelle page */
   .admin :global(.badge){display:inline-block;padding:.2rem .65rem;border-radius:999px;font-size:.8125rem;font-weight:500;line-height:1.4;white-space:nowrap;background:rgb(138 90 82 / .14);color:var(--text)}
   .admin :global(.badge--ok){background:rgb(76 128 92 / .18)}

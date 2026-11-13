@@ -154,7 +154,7 @@ d.querySelectorAll('dialog.modal').forEach(m=>{
   if(m.hasAttribute('open')){m.close();m.showModal()}
   m.addEventListener('click',e=>{e.target===m&&m.close()});
   m.querySelectorAll('[data-close]').forEach(x=>x.addEventListener('click',e=>{e.preventDefault();m.close()}));
-  m.addEventListener('close',()=>{const u=new URL(location.href);['cal','fermer','du','au'].forEach(k=>u.searchParams.delete(k));history.replaceState(null,'',u)});
+  m.addEventListener('close',()=>{const u=new URL(location.href);['cal','fermer','du','au','fiche'].forEach(k=>u.searchParams.delete(k));history.replaceState(null,'',u)});
 });
 d.querySelectorAll('[data-dialog]').forEach(a=>a.addEventListener('click',e=>{const m=d.getElementById(a.dataset.dialog);if(m&&m.showModal){e.preventDefault();m.showModal()}}));
 
