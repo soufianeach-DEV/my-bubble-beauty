@@ -895,3 +895,12 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 /* Petits flocons dans les sur-titres de section (décoratifs : ignorés par les lecteurs d'écran) */
 :root[data-saison] .section__head .eyebrow::after{content:"❄" / "";margin-left:.5em;color:var(--frost-ink);letter-spacing:0}
 
+/* Petit tas de neige posé sur la première lettre des titres (toujours une capitale), qu'ils soient centrés ou non, sur une ou plusieurs lignes.
+   SVG inline (neige bosselée, dessous bleuté) en fond de ::first-letter. Le remplissage du haut fait monter le fond au-dessus
+   de la lettre sans toucher à la hauteur de ligne ; les marges négatives annulent les remplissages côtés : aucun décalage.
+   Réglé à l'œil sur Fraunces : .2 em de remplissage posent le bas du tas sur le haut de la capitale, qu'il mord à peine.
+   Le liseré bleuté et l'ombre sont dans le SVG (filter ne s'applique pas à ::first-letter). */
+:root[data-saison] :is(.section__head h2,#h-about,#h-cta,#h-contact,.hero .h1-brand)::first-letter{padding:.2em 1em 0 .25em;margin:0 -1em 0 -.25em;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 32' preserveAspectRatio='none'%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='.5' stop-color='%23FFFFFF'/%3E%3Cstop offset='1' stop-color='%23E1ECF5'/%3E%3C/linearGradient%3E%3Cpath fill='%2390AFC8' fill-opacity='.35' transform='translate(0 2.2)' d='M2 28C6 25 10 22 16 21C19 15 27 13 33 16C37 8 49 4 58 9C64 3 78 3 84 10C90 7 100 9 103 15C109 15 114 20 118 28C110 29.5 100 28.5 90 29.5C78 28.5 66 29.8 54 28.8C42 29.8 30 28.6 18 29.6C10 29.2 5 29 2 28Z'/%3E%3Cpath fill='%23BCD3E5' transform='translate(0 1.2)' d='M2 28C6 25 10 22 16 21C19 15 27 13 33 16C37 8 49 4 58 9C64 3 78 3 84 10C90 7 100 9 103 15C109 15 114 20 118 28C110 29.5 100 28.5 90 29.5C78 28.5 66 29.8 54 28.8C42 29.8 30 28.6 18 29.6C10 29.2 5 29 2 28Z'/%3E%3Cpath fill='url(%23g)' d='M2 28C6 25 10 22 16 21C19 15 27 13 33 16C37 8 49 4 58 9C64 3 78 3 84 10C90 7 100 9 103 15C109 15 114 20 118 28C110 29.5 100 28.5 90 29.5C78 28.5 66 29.8 54 28.8C42 29.8 30 28.6 18 29.6C10 29.2 5 29 2 28Z'/%3E%3C/svg%3E") no-repeat 0 0/100% .6em}
+/* Hero : capitale plus haute dans sa zone de texte, le tas descend un peu */
+:root[data-saison] #h-hero .h1-brand::first-letter{padding-top:.08em}
