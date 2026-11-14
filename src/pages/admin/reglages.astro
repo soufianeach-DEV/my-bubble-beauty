@@ -1,17 +1,18 @@
 ---
 export const prerender = false;
-// Réglages (admin seulement) : règles de la carte de fidélité, nom du spécialiste cité dans les consentements, note Google de l'Accueil.
+// Réglages (admin seulement) : règles de la carte de fidélité, nom du spécialiste cité dans les consentements, note Google de l'Accueil,
+// habillage de saison du site public.
 // Sous-menu à gauche (?vue=), champs groupés au centre, aperçu de la carte à droite. Un seul formulaire : la section masquée
 // est envoyée aussi, avec ses valeurs actuelles.
 import Admin from './_layout.astro';
 import { adminId, readForm } from '../../lib/server/admin.ts';
-import { readRating, readSettings, saveSettings } from '../../lib/server/reglages.ts';
+import { readRating, readSettings, saveSettings, SEASON_LABELS, seasonOn, type Season } from '../../lib/server/reglages.ts';
 import { googleConfigured } from '../../lib/server/avis.ts';
 import { placesConfigured } from '../../lib/server/note-google.ts';
 
 const me = adminId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
-const MENU = [['fidelite', 'Carte de fidélité'], ['consentements', 'Consentements'], ['avis', 'Note Google']] as const;
+const MENU = [['fidelite', 'Carte de fidélité'], ['consentements', 'Consentements'], ['avis', 'Note Google'], ['saison', 'Habillage de saison']] as const;
 const asked = Astro.url.searchParams.get('vue');
 const vue = MENU.find(([k]) => k === asked)?.[0] ?? 'fidelite';
 let error = '';
@@ -34,6 +35,7 @@ const v = (k: string, fallback: string | number) => draft?.[k] ?? String(fallbac
 const L = s.loyalty;
 const eur = (n: number) => `${new Intl.NumberFormat('fr-BE').format(n)} €`;
 const stamps = Array.from({ length: L.free_after }, (_, i) => i + 1);
+const season = (draft?.season ?? s.season) as Season;
 ---
 <Admin title="Réglages">
 {Astro.url.searchParams.has('ok') && !error && <p class="notice" role="status">Réglages enregistrés.</p>}
@@ -84,10 +86,20 @@ const stamps = Array.from({ length: L.free_after }, (_, i) => i + 1);
       <p class="hint">{g.source === 'places' ? `Mise à jour par Google le ${when(g.updated_at)}.` : g.source === 'admin' ? `Saisie le ${when(g.updated_at)}.` : 'Valeurs relevées sur la fiche le 14 novembre 2026.'}</p>
       <p class="hint">{googleConfigured() ? "Les vrais avis Google sont branchés : cette note n'est plus affichée." : places ? 'Mise à jour automatique chaque nuit après minuit : une saisie ici sera remplacée par la valeur de Google.' : 'Pas de mise à jour automatique (clé API Places absente) : recopiez la note de la fiche Google de temps en temps.'}</p>
     </section>
+
+    <section class="panel" hidden={vue !== 'saison'} aria-labelledby="h-saison">
+      <h2 id="h-saison">Habillage de saison</h2>
+      <p class="hint">Neige qui tombe doucement, givre léger et bandeau « Bons cadeaux pour les fêtes » sur le site public. Jamais sur l'admin ni dans les e-mails. Les visiteurs qui ont demandé moins d'animations voient le givre sans la neige.</p>
+      <fieldset class="choices"><legend class="visually-hidden">Quand l'afficher</legend>
+        {(Object.keys(SEASON_LABELS) as Season[]).map((k) => <label class="check"><input type="radio" name="season" value={k} checked={season === k}><span>{SEASON_LABELS[k]}</span></label>)}
+      </fieldset>
+      <p>{seasonOn(s.season) ? <span class="badge badge--ok">Affiché en ce moment</span> : <span class="badge">Pas affiché en ce moment</span>}</p>
+      <p class="hint">Le site met jusqu'à 5 minutes à suivre un changement.</p>
+    </section>
     <button class="btn btn--solid" type="submit">Enregistrer</button>
   </form>
 
-  <aside class="panel preview" aria-labelledby="h-prev" hidden={vue === 'avis'}>
+  <aside class="panel preview" aria-labelledby="h-prev" hidden={vue === 'avis' || vue === 'saison'}>
     <h2 id="h-prev">Aperçu de la carte</h2>
     <ol class="stamps" aria-label={`Carte de ${L.free_after} séances`}>
       {stamps.map((n) => <li class:list={{ mark: n === L.discount_after || n === L.free_after }}>
@@ -123,4 +135,7 @@ const stamps = Array.from({ length: L.free_after }, (_, i) => i + 1);
   .stamps li{display:grid;place-items:center;aspect-ratio:1;border:1px dashed var(--accent);border-radius:999px;font-size:.75rem;color:var(--text-soft);text-align:center;line-height:1.1}
   .stamps .mark{border-style:solid;background:var(--accent);color:var(--accent-ink);font-weight:600}
   .rules{display:grid;gap:.5rem;margin:0 0 .75rem;padding-left:1.1rem;font-size:.9375rem}
+  .choices{display:grid;gap:.25rem;margin:0 0 1rem;padding:0;border:0}
+  .choices .check{display:flex;align-items:center;gap:.6rem;min-height:44px}
+  .choices input{width:1.2rem;height:1.2rem;margin:0;accent-color:var(--accent)}
 </style>

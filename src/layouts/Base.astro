@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import Icon from '../components/Icon.astro';
-import { t, LANGS, LANG_META, CONTACT, SITE, JS_VERSION, GOATCOUNTER_ENDPOINT, EXTRA, FOLDER, initialsOf, pagePath, alternates, type Lang, type PageKey } from '../lib/site';
+import { t, LANGS, LANG_META, CONTACT, SITE, JS_VERSION, GOATCOUNTER_ENDPOINT, EXTRA, FOLDER, SAISON, initialsOf, pagePath, alternates, type Lang, type PageKey } from '../lib/site';
 import { COMPTE } from '../data/i18n/compte.ts';
 
 interface Props {
@@ -98,6 +98,8 @@ const year = new Date().getFullYear();
 <meta name="twitter:card" content="summary_large_image">
 <script is:inline src={`/assets/js/motion-pref.js?v=${JS_VERSION}`}></script>
 <script is:inline src={`/assets/js/main.js?v=${JS_VERSION}`} defer></script>
+{/* Habillage de saison (neige, givre, bandeau) : site public seulement, jamais l'admin (bare) */}
+{!bare && <script is:inline src={`/assets/js/saison.js?v=${JS_VERSION}`} defer></script>}
 {GOATCOUNTER_ENDPOINT && !noindex && <script is:inline src={`/assets/js/stats.js?v=${JS_VERSION}`} data-gc={GOATCOUNTER_ENDPOINT} defer></script>}
 {jsonld && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonld)} />}
 </head>
@@ -134,6 +136,8 @@ const year = new Date().getFullYear();
 <a class="btn btn--solid sheen" href={`/${FOLDER[lang]}/reserver`}><span class="lbl-long">{ui.book}</span><span class="lbl-short">{ui.bookShort}</span></a>
 </div>
 </header>}
+{/* Caché hors saison (CSS) ; vers le contact, il n'y a pas de page publique de bon cadeau */}
+{!bare && <p class="saison-band"><span aria-hidden="true">❄</span> {SAISON[lang].text} <a href={`${home}#contact`}>{SAISON[lang].link}</a></p>}
 <main id="main" class={mainClass}>
 <slot />
 </main>

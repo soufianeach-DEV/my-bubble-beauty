@@ -20,6 +20,8 @@ const PUBLIC = new Set([
   '/oauth/[provider]',
   '/oauth/[provider]/retour',
   '/api/stripe/webhook',
+  // Habillage de saison du site public (même réponse pour tous, sans session)
+  '/api/saison',
   // Qui est connecté, pour l'en-tête des pages pré-rendues : 204 sans session
   '/api/moi',
   // Avis Google de l'Accueil, et tâches planifiées (protégées par TASKS_SECRET)

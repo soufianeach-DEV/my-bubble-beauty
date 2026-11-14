@@ -16,7 +16,7 @@ export const SITE = (process.env.SITE_URL || 'https://mybubble-beauty.com').repl
 // Même établissement dans les trois langues : un seul identifiant pour Google
 export const SALON_ID = `${SITE}/#salon`;
 // Empreinte des scripts : servis « immutable » un an, ils changent d'URL dès que leur contenu change.
-export const JS_VERSION = createHash('sha1').update(['main', 'motion-pref', 'stats', 'password', 'auth-swap', 'compte-a-rebours', 'admin-selection', 'imprimer', 'bon-cliente', 'avis'].map((f) => readFileSync(`public/assets/js/${f}.js`, 'utf8')).join('\n')).digest('hex').slice(0, 8);
+export const JS_VERSION = createHash('sha1').update(['main', 'motion-pref', 'stats', 'password', 'auth-swap', 'compte-a-rebours', 'admin-selection', 'imprimer', 'bon-cliente', 'avis', 'saison'].map((f) => readFileSync(`public/assets/js/${f}.js`, 'utf8')).join('\n')).digest('hex').slice(0, 8);
 
 // Mesure d'audience GoatCounter (sans cookie). Vide = désactivée.
 // Mettre le code du site créé sur goatcounter.com, ex. 'mybubble' pour https://mybubble.goatcounter.com
@@ -71,6 +71,13 @@ export const alternates = (key: PageKey) =>
   LANGS.map((l) => ({ lang: l, hreflang: LANG_META[l].hreflang, href: SITE + pagePath(l, key) }));
 
 // Libellés ajoutés en v2 (absents de la v1).
+// Bandeau de l'habillage d'hiver (affiché seulement quand la saison est active, voir saison.js)
+export const SAISON: Record<Lang, { text: string; link: string }> = {
+  fr: { text: 'Bons cadeaux pour les fêtes : offrez un moment de douceur.', link: 'Nous contacter' },
+  nl: { text: 'Cadeaubonnen voor de feestdagen: schenk een moment van zachtheid.', link: 'Contacteer ons' },
+  en: { text: 'Gift vouchers for the holidays: give a moment of calm.', link: 'Contact us' },
+};
+
 export const EXTRA: Record<Lang, { cgv: string; cookies: string; hours: string; closed: string; days: string[]; toDark: string; toLight: string }> = {
   fr: { cgv: 'Conditions générales', cookies: 'Gérer les cookies', hours: 'Horaires', closed: 'Fermé', days: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'], toDark: 'Passer en mode sombre', toLight: 'Passer en mode clair' },
   nl: { cgv: 'Algemene voorwaarden', cookies: 'Cookies beheren', hours: 'Openingsuren', closed: 'Gesloten', days: ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'], toDark: 'Donkere modus inschakelen', toLight: 'Lichte modus inschakelen' },
