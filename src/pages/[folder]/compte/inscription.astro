@@ -13,8 +13,11 @@ import { FOLDER, JS_VERSION, langOfFolder, pagePath } from '../../../lib/site';
 import { safeReturn } from '../../../lib/server/redirect.ts';
 import { register, type PasswordProblem } from '../../../lib/server/accounts.ts';
 import { confirmMismatch, EMAIL, NAME, PASSWORD, PHONE, readForm } from '../../../lib/server/compte.ts';
+import { seasonActive } from '../../../lib/server/reglages.ts';
 
 const lang = langOfFolder(Astro.params.folder!);
+// Habillage d'hiver : Souade en tenue d'hiver pendant la saison (dates ou réglage « Toujours »), image choisie côté serveur
+const avatar = (await seasonActive()) ? 'auth-visage-hiver' : 'auth-visage-voile';
 const d = FOLDER[lang];
 const tx = COMPTE[lang];
 const t = tx.register;
@@ -93,6 +96,6 @@ const [t0, cgv, t2, privacy, t4] = t.terms;
 )}
 </article>
 {/* Même lame qu'à la connexion, en miroir à gauche */}
-<aside class="auth__blade"><img class="auth__avatar" src="/assets/img/auth-visage-voile-800.webp" srcset="/assets/img/auth-visage-voile-480.webp 480w, /assets/img/auth-visage-voile-800.webp 800w" sizes="(max-width:759px) 100vw, 480px" width="800" height="1169" alt="" decoding="async"><div class="auth__veil"><p class="auth__brand">My Bubble <span>Beauty</span></p><p>{t.have}</p><a class="btn btn--ghost" href={`/${d}/compte/connexion${qs}`}>{tx.login.submit}</a></div></aside>
+<aside class="auth__blade"><img class="auth__avatar" src={`/assets/img/${avatar}-800.webp`} srcset={`/assets/img/${avatar}-480.webp 480w, /assets/img/${avatar}-800.webp 800w`} sizes="(max-width:759px) 100vw, 480px" width="800" height="1169" alt="" decoding="async"><div class="auth__veil"><p class="auth__brand">My Bubble <span>Beauty</span></p><p>{t.have}</p><a class="btn btn--ghost" href={`/${d}/compte/connexion${qs}`}>{tx.login.submit}</a></div></aside>
 </div></div>
 </Base>

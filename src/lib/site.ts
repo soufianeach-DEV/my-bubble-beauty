@@ -72,10 +72,10 @@ export const alternates = (key: PageKey) =>
 
 // Libellés ajoutés en v2 (absents de la v1).
 // Bandeau de l'habillage d'hiver (affiché seulement quand la saison est active, voir saison.js)
-export const SAISON: Record<Lang, { text: string; link: string; heroAlt: string }> = {
-  fr: { text: 'Bons cadeaux pour les fêtes : offrez un moment de douceur.', link: 'Nous contacter', heroAlt: "Souade en doudoune d'hiver dans l'institut My Bubble Beauty" },
-  nl: { text: 'Cadeaubonnen voor de feestdagen: schenk een moment van zachtheid.', link: 'Contacteer ons', heroAlt: 'Souade in een winterjas in het instituut My Bubble Beauty' },
-  en: { text: 'Gift vouchers for the holidays: give a moment of calm.', link: 'Contact us', heroAlt: 'Souade in a winter puffer jacket at the My Bubble Beauty salon' },
+export const SAISON: Record<Lang, { text: string; link: string; heroAlt: string; contactAlt: string }> = {
+  fr: { text: 'Bons cadeaux pour les fêtes : offrez un moment de douceur.', link: 'Nous contacter', heroAlt: "Souade en doudoune d'hiver dans l'institut My Bubble Beauty", contactAlt: 'Souade en doudoune, une tasse chaude à la main, My Bubble Beauty' },
+  nl: { text: 'Cadeaubonnen voor de feestdagen: schenk een moment van zachtheid.', link: 'Contacteer ons', heroAlt: 'Souade in een winterjas in het instituut My Bubble Beauty', contactAlt: 'Souade in een winterjas met een warme kop in de hand, My Bubble Beauty' },
+  en: { text: 'Gift vouchers for the holidays: give a moment of calm.', link: 'Contact us', heroAlt: 'Souade in a winter puffer jacket at the My Bubble Beauty salon', contactAlt: 'Souade in a winter puffer jacket holding a warm mug, My Bubble Beauty' },
 };
 
 export const EXTRA: Record<Lang, { cgv: string; cookies: string; hours: string; closed: string; days: string[]; toDark: string; toLight: string }> = {

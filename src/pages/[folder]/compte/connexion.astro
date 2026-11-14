@@ -13,8 +13,11 @@ import { FOLDER, JS_VERSION, langOfFolder } from '../../../lib/site';
 import { signIn } from '../../../lib/server/accounts.ts';
 import { PASSWORD, readForm } from '../../../lib/server/compte.ts';
 import { safeReturn, staffReturn } from '../../../lib/server/redirect.ts';
+import { seasonActive } from '../../../lib/server/reglages.ts';
 
 const lang = langOfFolder(Astro.params.folder!);
+// Habillage d'hiver : Souade en tenue d'hiver pendant la saison (dates ou réglage « Toujours »), image choisie côté serveur
+const avatar = (await seasonActive()) ? 'auth-table-hiver' : 'auth-table-voile';
 const d = FOLDER[lang];
 const tx = COMPTE[lang];
 const back = safeReturn(Astro.url.searchParams.get('retour'), SITE_URL, `/${d}/compte`);
@@ -60,6 +63,6 @@ if (Astro.request.method === 'POST') {
 <External lang={lang} back={back} link />
 </article>
 {/* Lame de marque : glisse de droite à gauche vers l'inscription (transition de vue, voir forms.css) */}
-<aside class="auth__blade"><img class="auth__avatar" src="/assets/img/auth-table-voile-800.webp" srcset="/assets/img/auth-table-voile-480.webp 480w, /assets/img/auth-table-voile-800.webp 800w" sizes="(max-width:759px) 100vw, 480px" width="800" height="1169" alt="" decoding="async"><div class="auth__veil"><p class="auth__brand">My Bubble <span>Beauty</span></p><p>{tx.login.noAccount}</p><a class="btn btn--ghost" href={`/${d}/compte/inscription${back === `/${d}/compte` ? '' : `?retour=${encodeURIComponent(back)}`}`}>{tx.login.register}</a></div></aside>
+<aside class="auth__blade"><img class="auth__avatar" src={`/assets/img/${avatar}-800.webp`} srcset={`/assets/img/${avatar}-480.webp 480w, /assets/img/${avatar}-800.webp 800w`} sizes="(max-width:759px) 100vw, 480px" width="800" height="1169" alt="" decoding="async"><div class="auth__veil"><p class="auth__brand">My Bubble <span>Beauty</span></p><p>{tx.login.noAccount}</p><a class="btn btn--ghost" href={`/${d}/compte/inscription${back === `/${d}/compte` ? '' : `?retour=${encodeURIComponent(back)}`}`}>{tx.login.register}</a></div></aside>
 </div></div>
 </Base>
