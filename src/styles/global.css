@@ -875,9 +875,9 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 /* ---------- Habillage d'hiver (saison.js pose :root[data-saison="hiver"]) : givre discret, bandeau des fêtes, neige ----------
    Rien hors saison ni sur l'admin. Couleurs froides mêlées au rose doré ; le texte garde ses couleurs (contraste inchangé). */
 .saison-band,.saison-snow{display:none}
-:root[data-saison]{--frost:#B9D3E6;--frost-ink:#5E7F98;--snow:150,185,210}
-@media (prefers-color-scheme:dark){:where(:root[data-saison]:not([data-theme="light"])){--frost:#7FA3BF;--frost-ink:#B9D3E6;--snow:235,243,250}}
-:where(:root[data-saison][data-theme="dark"]){--frost:#7FA3BF;--frost-ink:#B9D3E6;--snow:235,243,250}
+:root[data-saison]{--frost:#B9D3E6;--frost-ink:#5E7F98}
+@media (prefers-color-scheme:dark){:where(:root[data-saison]:not([data-theme="light"])){--frost:#7FA3BF;--frost-ink:#B9D3E6}}
+:where(:root[data-saison][data-theme="dark"]){--frost:#7FA3BF;--frost-ink:#B9D3E6}
 /* Neige : par-dessus la page mais jamais devant les clics, sous l'en-tête collant */
 :root[data-saison] .saison-snow{display:block;position:fixed;inset:0;width:100%;height:100%;z-index:40;pointer-events:none}
 /* Bandeau sous l'en-tête : texte normal sur fond givré très clair (contraste du texte inchangé) */
