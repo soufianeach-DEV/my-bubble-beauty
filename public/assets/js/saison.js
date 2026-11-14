@@ -2,7 +2,7 @@
    au 6 janvier), pose <html data-saison="hiver"> (givre et bandeau en CSS) et fait tomber une neige légère sur un canvas.
    Neige : jamais devant les clics (pointer-events:none), lancée après le chargement (aucun effet sur le LCP), arrêtée quand
    l'onglet est caché, peu de flocons sur téléphone, aucune si la visiteuse demande moins d'animations (givre et bandeau restent).
-   Moitié cristaux à 6 branches, moitié boules de neige duveteuses, sur trois plans (loin, milieu, près), rotation lente,
+   Moitié cristaux à 6 branches, moitié petites boules de neige duveteuses (2 à 6 px), sur trois plans (loin, milieu, près), rotation lente,
    balancement et vent. */
 (()=>{
 const d=document,root=d.documentElement,KEY='mb-saison';
@@ -28,7 +28,8 @@ function flakes(){
   const x=c.getContext('2d');
   let w=0,h=0,dpr=1,raf=0,list=[],last=0,sprites=[];
   // Trois plans : loin (petits, flous, lents, plus pâles), milieu, près (gros, nets, plus rapides)
-  const PLANES=[{min:6,max:10,v:.35,a:.6,blur:1.4},{min:10,max:15,v:.6,a:.8,blur:.5},{min:15,max:22,v:.95,a:.95,blur:0}];
+  // Cristaux : 6 à 22 px ; boules : petites, 2 à 6 px visibles (bmin/bmax, la boule occupe 92 % de la taille z)
+  const PLANES=[{min:6,max:10,bmin:2.2,bmax:3.3,v:.35,a:.6,blur:1.4},{min:10,max:15,bmin:3.3,bmax:4.9,v:.6,a:.8,blur:.5},{min:15,max:22,bmin:4.9,bmax:6.5,v:.95,a:.95,blur:0}];
   // z = taille visible du flocon (6 à 22 px) ; le cristal occupe 50 px de son image de 64 px, d'où le facteur 1,28 au dessin
   // Cristal à 6 branches, dessiné une fois par plan dans une petite image : contour sombre léger puis trait blanc,
   // visible sur fond clair comme sur fond sombre
@@ -49,8 +50,8 @@ function flakes(){
     g.fillStyle=r;g.beginPath();g.arc(32,32,23,0,6.283);g.fill();return o};
   const paint=()=>{const dark=root.dataset.theme==='dark'||(root.dataset.theme!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches);
     sprites=PLANES.map(p=>[crystal(p.blur,dark),ball(p.blur,dark)])};
-  const make=any=>{const p=Math.random()<.45?0:Math.random()<.6?1:2,P=PLANES[p];
-    return{p,k:Math.random()<.5?1:0,x:Math.random()*w,y:any?Math.random()*h:-30,z:P.min+Math.random()*(P.max-P.min),v:P.v*(.8+Math.random()*.4),
+  const make=any=>{const p=Math.random()<.45?0:Math.random()<.6?1:2,P=PLANES[p],k=Math.random()<.5?1:0;
+    return{p,k,x:Math.random()*w,y:any?Math.random()*h:-30,z:k?P.bmin+Math.random()*(P.bmax-P.bmin):P.min+Math.random()*(P.max-P.min),v:P.v*(.8+Math.random()*.4),
       s:Math.random()*6.283,sw:.4+Math.random()*.8,r:Math.random()*6.283,vr:(Math.random()-.5)*.012}};
   const size=()=>{dpr=Math.min(devicePixelRatio||1,2);w=innerWidth;h=innerHeight;c.width=w*dpr;c.height=h*dpr;x.setTransform(dpr,0,0,dpr,0,0);
     // Téléphone : peu de particules ; PC : environ 70 (moitié cristaux, moitié boules)
