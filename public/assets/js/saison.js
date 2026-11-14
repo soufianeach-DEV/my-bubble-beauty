@@ -2,7 +2,8 @@
    au 6 janvier), pose <html data-saison="hiver"> (givre et bandeau en CSS) et fait tomber une neige légère sur un canvas.
    Neige : jamais devant les clics (pointer-events:none), lancée après le chargement (aucun effet sur le LCP), arrêtée quand
    l'onglet est caché, peu de flocons sur téléphone, aucune si la visiteuse demande moins d'animations (givre et bandeau restent).
-   Flocons en cristaux à 6 branches sur trois plans (loin, milieu, près), rotation lente, balancement et vent. */
+   Moitié cristaux à 6 branches, moitié boules de neige duveteuses, sur trois plans (loin, milieu, près), rotation lente,
+   balancement et vent. */
 (()=>{
 const d=document,root=d.documentElement,KEY='mb-saison';
 const save=on=>{try{localStorage.setItem(KEY,JSON.stringify({on,until:Date.now()+6*3600e3}))}catch(e){}};
@@ -39,14 +40,21 @@ function flakes(){
       g.stroke();g.restore()}};
     arms(5.5,dark?'rgba(15,25,40,.45)':'rgba(70,100,130,.55)');arms(2.6,'rgba(255,255,255,.97)');
     g.fillStyle='#fff';g.beginPath();g.arc(0,0,3.2,0,6.283);g.fill();return o};
+  // Boule de neige : ronde, duveteuse, bord flou, légèrement lumineuse ; liseré froid en thème clair pour rester visible
+  const ball=(blur,dark)=>{const S=64,o=d.createElement('canvas');o.width=o.height=S;const g=o.getContext('2d');
+    if(blur)g.filter=`blur(${blur}px)`;
+    if(!dark){g.fillStyle='rgba(90,120,150,.28)';g.beginPath();g.arc(32,32,24,0,6.283);g.fill()}
+    const r=g.createRadialGradient(28,28,2,32,32,23);
+    r.addColorStop(0,'rgba(255,255,255,1)');r.addColorStop(.55,'rgba(255,255,255,.92)');r.addColorStop(.85,'rgba(240,247,252,.55)');r.addColorStop(1,'rgba(240,247,252,0)');
+    g.fillStyle=r;g.beginPath();g.arc(32,32,23,0,6.283);g.fill();return o};
   const paint=()=>{const dark=root.dataset.theme==='dark'||(root.dataset.theme!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches);
-    sprites=PLANES.map(p=>crystal(p.blur,dark))};
+    sprites=PLANES.map(p=>[crystal(p.blur,dark),ball(p.blur,dark)])};
   const make=any=>{const p=Math.random()<.45?0:Math.random()<.6?1:2,P=PLANES[p];
-    return{p,x:Math.random()*w,y:any?Math.random()*h:-30,z:P.min+Math.random()*(P.max-P.min),v:P.v*(.8+Math.random()*.4),
+    return{p,k:Math.random()<.5?1:0,x:Math.random()*w,y:any?Math.random()*h:-30,z:P.min+Math.random()*(P.max-P.min),v:P.v*(.8+Math.random()*.4),
       s:Math.random()*6.283,sw:.4+Math.random()*.8,r:Math.random()*6.283,vr:(Math.random()-.5)*.012}};
   const size=()=>{dpr=Math.min(devicePixelRatio||1,2);w=innerWidth;h=innerHeight;c.width=w*dpr;c.height=h*dpr;x.setTransform(dpr,0,0,dpr,0,0);
-    // Téléphone : gros flocons mais peu ; PC : environ 45
-    const n=w<600?14:Math.min(48,Math.round(w*h/28000));
+    // Téléphone : peu de particules ; PC : environ 70 (moitié cristaux, moitié boules)
+    const n=w<600?22:Math.min(72,Math.round(w*h/18000));
     while(list.length<n)list.push(make(true));list.length=n;list.sort((a,b)=>a.p-b.p)};
   const frame=t=>{const dt=Math.min(40,t-(last||t))/16.7;last=t;x.clearRect(0,0,w,h);
     // Vent : souffle lent qui change de sens, plus sensible sur les flocons proches
@@ -54,7 +62,7 @@ function flakes(){
     for(const f of list){f.y+=f.v*dt;f.s+=.012*dt;f.r+=f.vr*dt;
       f.x+=(Math.sin(f.s)*f.sw+wind*(.4+f.p*.4))*dt;
       if(f.y>h+30||f.x<-40||f.x>w+40)Object.assign(f,make(false));
-      x.save();x.globalAlpha=PLANES[f.p].a;x.translate(f.x,f.y);x.rotate(f.r);x.drawImage(sprites[f.p],-f.z*.64,-f.z*.64,f.z*1.28,f.z*1.28);x.restore()}
+      x.save();x.globalAlpha=PLANES[f.p].a;x.translate(f.x,f.y);x.rotate(f.r);x.drawImage(sprites[f.p][f.k],-f.z*.64,-f.z*.64,f.z*1.28,f.z*1.28);x.restore()}
     raf=requestAnimationFrame(frame)};
   const run=()=>{cancelAnimationFrame(raf);last=0;if(!d.hidden)raf=requestAnimationFrame(frame)};
   paint();size();run();
