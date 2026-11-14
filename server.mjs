@@ -6,6 +6,7 @@ import postgres from 'postgres';
 import { migrate } from './db/migrate.mjs';
 import { purge } from './db/purge.mjs';
 import { isCountable, recordVisit } from './db/visits.mjs';
+import { seasonMode, seasonOn, winterDirect, winterHome } from './db/saison.mjs';
 
 // site.ts lit public/ en chemin relatif : le serveur travaille dans son propre dossier, d'où qu'on le lance
 process.chdir(fileURLToPath(new URL('.', import.meta.url)));
@@ -71,6 +72,18 @@ const otherHost = (req, path) => {
     && !/^(localhost|127\.|\[::1\]|\d+\.\d+\.\d+\.\d+)(:|$)/.test(host);
 };
 
+// Habillage d'hiver : réglage de l'admin relu au plus une fois par minute, sans jamais retarder une page (valeur précédente servie)
+let season = { mode: 'auto', at: 0 };
+const seasonNow = () => {
+  if (Date.now() - season.at > 60_000) {
+    season.at = Date.now();
+    sql`SELECT value FROM settings WHERE key = 'season'`.then(([r]) => { season.mode = seasonMode(r?.value); }, (e) => log('season_failed', { error: String(e) }));
+  }
+  return seasonOn(season.mode);
+};
+// Lu une fois avant d'ouvrir le port : la première visite après un démarrage voit déjà la bonne version
+season = { mode: seasonMode((await sql`SELECT value FROM settings WHERE key = 'season'`.catch(() => []))[0]?.value), at: Date.now() };
+
 // Pages privées : noindex aussi dans l'en-tête, pour toute réponse (redirection vers la connexion comprise). Jamais ailleurs.
 const NOINDEX = /^\/(admin|api|avis|(fr|nl|eng)\/(compte|reserver))(\/|$)/;
 
@@ -106,11 +119,14 @@ const server = http.createServer((req, res) => {
   }
   // /fr, /nl, /eng -> accueil de la langue (URL d'origine conservées)
   const home = /^\/(fr|nl|eng)\/?$/.exec(path);
-  const to = home ? `/${home[1]}/index.html` : REDIRECTS.get(path);
+  const to = home ? `/${home[1]}/index.html` : REDIRECTS.get(path) ?? winterDirect(path);
   if (to) {
     res.writeHead(301, { Location: to });
     return res.end();
   }
+  // Pendant la saison, l'accueil est servi dans sa version d'hiver (image du hero), à la même adresse
+  const winter = (req.method === 'GET' || req.method === 'HEAD') && winterHome(path, seasonNow());
+  if (winter) req.url = winter + req.url.slice(path.length);
   handler(req, res);
 });
 // HOST=127.0.0.1 sur le VPS : seul Caddy, sur la même machine, joint Node. Absent (Render), écoute sur toutes les interfaces.

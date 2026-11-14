@@ -72,10 +72,10 @@ export const alternates = (key: PageKey) =>
 
 // Libellés ajoutés en v2 (absents de la v1).
 // Bandeau de l'habillage d'hiver (affiché seulement quand la saison est active, voir saison.js)
-export const SAISON: Record<Lang, { text: string; link: string }> = {
-  fr: { text: 'Bons cadeaux pour les fêtes : offrez un moment de douceur.', link: 'Nous contacter' },
-  nl: { text: 'Cadeaubonnen voor de feestdagen: schenk een moment van zachtheid.', link: 'Contacteer ons' },
-  en: { text: 'Gift vouchers for the holidays: give a moment of calm.', link: 'Contact us' },
+export const SAISON: Record<Lang, { text: string; link: string; heroAlt: string }> = {
+  fr: { text: 'Bons cadeaux pour les fêtes : offrez un moment de douceur.', link: 'Nous contacter', heroAlt: "Souade en doudoune d'hiver dans l'institut My Bubble Beauty" },
+  nl: { text: 'Cadeaubonnen voor de feestdagen: schenk een moment van zachtheid.', link: 'Contacteer ons', heroAlt: 'Souade in een winterjas in het instituut My Bubble Beauty' },
+  en: { text: 'Gift vouchers for the holidays: give a moment of calm.', link: 'Contact us', heroAlt: 'Souade in a winter puffer jacket at the My Bubble Beauty salon' },
 };
 
 export const EXTRA: Record<Lang, { cgv: string; cookies: string; hours: string; closed: string; days: string[]; toDark: string; toLight: string }> = {

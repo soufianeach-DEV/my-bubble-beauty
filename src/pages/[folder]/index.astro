@@ -1,13 +1,17 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
-import { LANGS, FOLDER, CONTACT, SITE, SALON_ID, LANG_META, EXTRA, HOURS, JS_VERSION, hoursRows, openingHoursSchema, t, pagePath, langOfFolder } from '../../lib/site';
+import { LANGS, FOLDER, CONTACT, SITE, SALON_ID, LANG_META, EXTRA, HOURS, JS_VERSION, SAISON, hoursRows, openingHoursSchema, t, pagePath, langOfFolder } from '../../lib/site';
 import { itemSlug } from '../../../db/slug.mjs';
 
 export function getStaticPaths() {
   return LANGS.map((l) => ({ params: { folder: FOLDER[l] } }));
 }
 const lang = langOfFolder(Astro.params.folder!);
+// Version d'hiver (accueil-hiver.astro) : seule l'image du hero change, preload compris ; servie à la place de cette page pendant la saison
+const hiver = (Astro.props as { hiver?: boolean }).hiver === true;
+const heroImg = hiver ? 'hero-souade-hiver' : 'hero-souade-voile';
+const heroSet = [800, 1200, 1536].map((w) => `/assets/img/${heroImg}-${w}.webp ${w}w`).join(', ');
 const d = t(lang);
 const h = d.home;
 const ui = d.ui;
@@ -40,10 +44,10 @@ const jsonld = {
 };
 ---
 <Base lang={lang} pageKey="home" title={h.title} description={h.description} jsonld={jsonld} isHome>
-<link slot="head" rel="preload" as="image" href="/assets/img/hero-souade-voile-1200.webp" imagesrcset="/assets/img/hero-souade-voile-800.webp 800w, /assets/img/hero-souade-voile-1200.webp 1200w, /assets/img/hero-souade-voile-1536.webp 1536w" imagesizes="100vw" fetchpriority="high">
+<link slot="head" rel="preload" as="image" href={`/assets/img/${heroImg}-1200.webp`} imagesrcset={heroSet} imagesizes="100vw" fetchpriority="high">
 
 <section class="hero" data-loop aria-labelledby="h-hero">
-<div class="hero__media"><img class="hero__img px-far" src="/assets/img/hero-souade-voile-1200.webp" srcset="/assets/img/hero-souade-voile-800.webp 800w, /assets/img/hero-souade-voile-1200.webp 1200w, /assets/img/hero-souade-voile-1536.webp 1536w" sizes="100vw" width="1536" height="768" alt={h.hero.imgAlt} fetchpriority="high" decoding="async"></div>
+<div class="hero__media"><img class="hero__img px-far" src={`/assets/img/${heroImg}-1200.webp`} srcset={heroSet} sizes="100vw" width="1536" height="768" alt={hiver ? SAISON[lang].heroAlt : h.hero.imgAlt} fetchpriority="high" decoding="async"></div>
 <div class="wrap hero__wrap">
 <div class="hero__panel">
 <p class="hero__eyebrow">{h.hero.eyebrow}</p>

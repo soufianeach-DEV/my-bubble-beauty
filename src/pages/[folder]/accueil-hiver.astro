@@ -1,0 +1,12 @@
+---
+// Accueil d'hiver : la même page que index.astro avec l'image du hero d'hiver (même canonical, même og:image).
+// Pré-rendue à part ; server.mjs la sert à l'adresse de l'accueil pendant la saison (db/saison.mjs) et renvoie vers
+// l'accueil toute visite directe de cette adresse.
+import Home from './index.astro';
+import { FOLDER, LANGS } from '../../lib/site';
+
+export function getStaticPaths() {
+  return LANGS.map((l) => ({ params: { folder: FOLDER[l] } }));
+}
+---
+<Home hiver />

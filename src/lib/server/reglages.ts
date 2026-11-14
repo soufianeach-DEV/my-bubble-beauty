@@ -12,13 +12,9 @@ export type Loyalty = { discount_after: number; discount_percent: number; free_a
 export const LOYALTY_DEFAULT: Loyalty = { discount_after: 5, discount_percent: 10, free_after: 10, free_label: 'HydraPure', min_euros: 50, free_min_total: 500, free_value: 120 };
 
 // Habillage de saison du site public (neige, givre, bandeau des fêtes) : auto = du 1er décembre au 6 janvier, heure de Bruxelles
-export type Season = 'auto' | 'on' | 'off';
+import { seasonMode, seasonOn, type Season } from '../../../db/saison.mjs';
+export { seasonOn, type Season };
 export const SEASON_LABELS: Record<Season, string> = { auto: 'Automatique : du 1er décembre au 6 janvier', on: 'Toujours (dès maintenant)', off: 'Jamais' };
-export function seasonOn(mode: Season, now = new Date()): boolean {
-  if (mode !== 'auto') return mode === 'on';
-  const [m, d] = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Brussels', month: '2-digit', day: '2-digit' }).format(now).split('-').map(Number);
-  return m === 12 || (m === 1 && d <= 6);
-}
 
 const n = (min: number, max: number, msg: string) => z.coerce.number({ error: msg }).int(msg).min(min, msg).max(max, msg);
 export const settingsForm = z.object({
@@ -39,9 +35,8 @@ export const settingsForm = z.object({
 export async function readSettings(): Promise<{ specialist_name: string; loyalty: Loyalty; season: Season }> {
   const rows = await sql<{ key: string; value: unknown }[]>`SELECT key, value FROM settings WHERE key IN ('specialist_name', 'loyalty', 'season')`;
   const get = (k: string) => rows.find((r) => r.key === k)?.value;
-  const season = get('season');
   return { specialist_name: (get('specialist_name') as string) ?? '', loyalty: { ...LOYALTY_DEFAULT, ...((get('loyalty') as Partial<Loyalty>) ?? {}) },
-    season: season === 'on' || season === 'off' ? season : 'auto' };
+    season: seasonMode(get('season')) };
 }
 
 // Lu à chaque visite du site public (/api/saison) : une minute de cache en mémoire suffit
@@ -49,7 +44,7 @@ let seasonCache: { mode: Season; at: number } | null = null;
 export async function seasonActive(now = new Date()): Promise<boolean> {
   if (!seasonCache || now.getTime() - seasonCache.at > 60_000) {
     const [r] = await sql<{ value: unknown }[]>`SELECT value FROM settings WHERE key = 'season'`;
-    seasonCache = { mode: r?.value === 'on' || r?.value === 'off' ? r.value : 'auto', at: now.getTime() };
+    seasonCache = { mode: seasonMode(r?.value), at: now.getTime() };
   }
   return seasonOn(seasonCache.mode, now);
 }

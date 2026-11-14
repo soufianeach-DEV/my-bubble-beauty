@@ -22,3 +22,15 @@ test('saison automatique : du 1er décembre au 6 janvier, heure de Bruxelles', a
   assert.equal(seasonOn('on', new Date('2027-07-14T12:00:00Z')), true, 'toujours');
   assert.equal(seasonOn('off', new Date('2026-12-24T12:00:00Z')), false, 'jamais');
 });
+
+test("accueil d'hiver : servi à l'adresse de l'accueil pendant la saison seulement, jamais par son adresse propre", async () => {
+  const { winterHome, winterDirect, seasonMode } = await import('../../../db/saison.mjs');
+  for (const l of ['fr', 'nl', 'eng']) {
+    assert.equal(winterHome(`/${l}/index.html`, true), `/${l}/accueil-hiver.html`);
+    assert.equal(winterHome(`/${l}/index.html`, false), null, 'hors saison : accueil habituel');
+    assert.equal(winterDirect(`/${l}/accueil-hiver.html`), `/${l}/index.html`);
+  }
+  for (const p of ['/fr/reserver', '/fr/subPages/hydra.html', '/de/index.html', '/fr/index.html.bak']) assert.equal(winterHome(p, true), null, p);
+  assert.equal(winterDirect('/fr/index.html'), null);
+  assert.deepEqual(['on', 'off', 'auto', 'x', null].map(seasonMode), ['on', 'off', 'auto', 'auto', 'auto']);
+});
