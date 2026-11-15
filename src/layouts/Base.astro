@@ -138,27 +138,27 @@ const year = new Date().getFullYear();
 </header>}
 {/* Caché hors saison (CSS) ; vers le contact, il n'y a pas de page publique de bon cadeau */}
 {!bare && <p class="saison-band"><span aria-hidden="true">❄</span> {SAISON[lang].text} <a href={`${home}#contact`}>{SAISON[lang].link}</a></p>}
-{/* Neige posée sur les titres (filtres utilisés par le CSS de saison) : bords hauts de chaque lettre, bosselés, et quelques coulures.
+{/* Neige posée sur les titres (filtres utilisés par le CSS de saison) : bords hauts de chaque lettre, grain fin, quelques coulures, blanc nacré et ombre chocolat douce dessous (lisible sur lettres claires).
     Réglages en pixels : une variante plus fine (mb-neige-s) pour les titres plus petits des écrans étroits. */}
 {!bare && <svg class="saison-filtres" aria-hidden="true" focusable="false" width="0" height="0">{([['mb-neige', 1], ['mb-neige-s', .7]] as const).map(([id, k]) => (
   <filter id={id} x="-5%" y="-40%" width="110%" height="180%" color-interpolation-filters="sRGB">
-    <feOffset in="SourceAlpha" dy={2.4 * k} result="bas"/>
+    <feOffset in="SourceAlpha" dy={2.2 * k} result="bas"/>
     <feComposite in="SourceAlpha" in2="bas" operator="out" result="bord"/>
     <feMorphology in="bord" operator="dilate" radius={`${k} ${.4 * k}`} result="epais"/>
-    <feTurbulence type="fractalNoise" baseFrequency={.3 / k} numOctaves="1" seed="3" result="bruit"/>
-    <feDisplacementMap in="epais" in2="bruit" scale={2.6 * k} xChannelSelector="R" yChannelSelector="G" result="bosses"/>
+    <feTurbulence type="fractalNoise" baseFrequency={.6 / k} numOctaves="1" seed="3" result="bruit"/>
+    <feDisplacementMap in="epais" in2="bruit" scale={2 * k} xChannelSelector="R" yChannelSelector="G" result="bosses"/>
     <feOffset in="bosses" dy={-1.5 * k} result="neige"/>
     <feTurbulence type="fractalNoise" baseFrequency={`${.28 / k} .002`} numOctaves="1" seed="9" result="cols"/>
     <feColorMatrix in="cols" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  24 0 0 0 -15.9" result="filets"/>
-    <feMorphology in="neige" operator="dilate" radius={`0 ${9 * k}`} result="haute"/>
-    <feOffset in="haute" dy={9 * k} result="descente"/>
+    <feMorphology in="neige" operator="dilate" radius={`0 ${7 * k}`} result="haute"/>
+    <feOffset in="haute" dy={7 * k} result="descente"/>
     <feComposite in="descente" in2="filets" operator="in" result="c1"/>
     <feComposite in="c1" in2="SourceAlpha" operator="in" result="coulures"/>
     <feMerge result="tout"><feMergeNode in="neige"/><feMergeNode in="coulures"/></feMerge>
     <feGaussianBlur in="tout" stdDeviation={.6 * k} result="flou"/>
     <feColorMatrix in="flou" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 10 -4.2" result="forme"/>
-    <feFlood flood-color="#BCD3E5"/><feComposite in2="forme" operator="in"/><feOffset dy={1.2 * k} result="ombre"/>
-    <feFlood flood-color="#FFFFFF"/><feComposite in2="forme" operator="in" result="blanc"/>
+    <feFlood flood-color="#3A2518" flood-opacity=".4"/><feComposite in2="forme" operator="in"/><feGaussianBlur stdDeviation={.5 * k}/><feOffset dy={1 * k} result="ombre"/>
+    <feFlood flood-color="#FFF9F8"/><feComposite in2="forme" operator="in" result="blanc"/>
     <feMerge><feMergeNode in="ombre"/><feMergeNode in="blanc"/></feMerge>
   </filter>))}</svg>}
 <main id="main" class={mainClass}>

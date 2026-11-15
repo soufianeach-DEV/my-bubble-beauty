@@ -873,11 +873,11 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 .admin-shell .combo__list .combo__none{color:var(--text-soft);cursor:default}
 
 /* ---------- Habillage d'hiver (saison.js pose :root[data-saison="hiver"]) : givre discret, bandeau des fêtes, neige ----------
-   Rien hors saison ni sur l'admin. Couleurs froides mêlées au rose doré ; le texte garde ses couleurs (contraste inchangé). */
+   Rien hors saison ni sur l'admin. Givre chaud (rose sablé en clair, fil d'or en sombre), accordé au rose poudré et au doré ; le texte garde ses couleurs (contraste inchangé). */
 .saison-band,.saison-snow{display:none}
-:root[data-saison]{--frost:#B9D3E6;--frost-ink:#5E7F98}
-@media (prefers-color-scheme:dark){:where(:root[data-saison]:not([data-theme="light"])){--frost:#7FA3BF;--frost-ink:#B9D3E6}}
-:where(:root[data-saison][data-theme="dark"]){--frost:#7FA3BF;--frost-ink:#B9D3E6}
+:root[data-saison]{--frost:#E7C3B2;--frost-ink:#A9824F}
+@media (prefers-color-scheme:dark){:where(:root[data-saison]:not([data-theme="light"])){--frost:#C5A059;--frost-ink:#DFB86C}}
+:where(:root[data-saison][data-theme="dark"]){--frost:#C5A059;--frost-ink:#DFB86C}
 /* Neige : par-dessus la page mais jamais devant les clics, sous l'en-tête collant */
 :root[data-saison] .saison-snow{display:block;position:fixed;inset:0;width:100%;height:100%;z-index:40;pointer-events:none}
 /* Bandeau sous l'en-tête : texte normal sur fond givré très clair (contraste du texte inchangé) */
@@ -890,8 +890,8 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 :root[data-saison] :is(.price-group,.pricebox,.treatment__article,.legal article,.faq details){box-shadow:0 0 0 1px color-mix(in srgb,var(--frost) 35%,transparent),inset 0 1px 0 rgb(255 255 255 / .35);
   background-image:linear-gradient(180deg,color-mix(in srgb,var(--frost) 16%,transparent),transparent 3.5rem)}
 :root[data-saison] .hero__panel{box-shadow:0 30px 80px -40px rgb(59 42 39 / .45),0 0 0 1px color-mix(in srgb,var(--frost) 40%,transparent),inset 0 1px 0 rgb(255 255 255 / .45)}
-/* Reflet glacé sur les boutons pleins */
-:root[data-saison] .btn--solid{box-shadow:inset 0 1px 0 rgb(255 255 255 / .38),0 0 0 1px color-mix(in srgb,var(--frost) 40%,transparent),0 6px 18px -10px color-mix(in srgb,var(--frost) 80%,transparent)}
+/* Reflet nacré et halo doré très diffus sur les boutons pleins */
+:root[data-saison] .btn--solid{box-shadow:inset 0 1.5px 2px rgb(255 249 248 / .55),0 6px 16px rgb(197 160 89 / .16)}
 /* Petits flocons dans les sur-titres de section (décoratifs : ignorés par les lecteurs d'écran) */
 :root[data-saison] .section__head .eyebrow::after{content:"❄" / "";margin-left:.5em;color:var(--frost-ink);letter-spacing:0}
 
@@ -904,5 +904,5 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 :root[data-saison] [data-snow]::after{content:attr(data-snow);content:attr(data-snow) / "";position:absolute;top:0;left:0;right:0;pointer-events:none;
   font:inherit;letter-spacing:inherit;text-wrap:inherit;color:#000;filter:url(#mb-neige);
   /* Seulement le haut de chaque ligne : la neige ne se pose pas sur les empattements du pied des lettres */
-  -webkit-mask:repeating-linear-gradient(#000 0 calc(1lh * .6),transparent calc(1lh * .72) 1lh);mask:repeating-linear-gradient(#000 0 calc(1lh * .6),transparent calc(1lh * .72) 1lh)}
+  -webkit-mask:repeating-linear-gradient(#000 0 calc(1lh * .5),transparent calc(1lh * .6) 1lh);mask:repeating-linear-gradient(#000 0 calc(1lh * .5),transparent calc(1lh * .6) 1lh)}
 @media (max-width:1023px){:root[data-saison] [data-snow]::after{filter:url(#mb-neige-s)}}
