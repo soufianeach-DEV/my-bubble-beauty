@@ -2,8 +2,9 @@
    au 6 janvier), pose <html data-saison="hiver"> (givre et bandeau en CSS) et fait tomber une neige légère sur un canvas.
    Neige : jamais devant les clics (pointer-events:none), lancée après le chargement (aucun effet sur le LCP), arrêtée quand
    l'onglet est caché, peu de flocons sur téléphone, aucune si la visiteuse demande moins d'animations (givre et bandeau restent).
-   Moitié cristaux à 6 branches, moitié petites boules de neige duveteuses (2 à 6 px), sur trois plans (loin, milieu, près), rotation lente,
-   balancement et vent. */
+   Neige « bokeh » : halos ronds et doux d'un blanc légèrement chaud (accordé au rose poudré et au doré), sur quatre plans :
+   loin, milieu, près, et quelques gros flocons très flous et transparents qui passent « devant l'objectif ». Balancement et vent doux.
+   Images en dégradé radial seul (pas de filter blur), dessin sans save/rotate/restore : peu de calcul. */
 (()=>{
 const d=document,root=d.documentElement,KEY='mb-saison';
 const save=on=>{try{localStorage.setItem(KEY,JSON.stringify({on,until:Date.now()+6*3600e3}))}catch(e){}};
@@ -27,49 +28,38 @@ function flakes(){
   d.body.append(c);
   const x=c.getContext('2d');
   let w=0,h=0,dpr=1,raf=0,list=[],last=0,sprites=[];
-  // Trois plans : loin (petits, flous, lents, plus pâles), milieu, près (gros, nets, plus rapides)
-  // Cristaux : 6 à 22 px ; boules : petites, 2 à 6 px visibles (bmin/bmax, la boule occupe 92 % de la taille z)
-  const PLANES=[{min:6,max:10,bmin:2.2,bmax:3.3,v:.35,a:.6,blur:1.4},{min:10,max:15,bmin:3.3,bmax:4.9,v:.6,a:.8,blur:.5},{min:15,max:22,bmin:4.9,bmax:6.5,v:.95,a:.95,blur:0}];
-  // z = taille visible du flocon (6 à 22 px) ; le cristal occupe 50 px de son image de 64 px, d'où le facteur 1,28 au dessin
-  // Cristal à 6 branches, dessiné une fois par plan dans une petite image : contour sombre léger puis trait blanc,
-  // visible sur fond clair comme sur fond sombre
-  const crystal=(blur,dark)=>{const S=64,o=d.createElement('canvas');o.width=o.height=S;const g=o.getContext('2d');
-    g.translate(S/2,S/2);g.lineCap='round';if(blur)g.filter=`blur(${blur}px)`;
-    const arms=(lw,col)=>{g.strokeStyle=col;g.lineWidth=lw;for(let i=0;i<6;i++){g.save();g.rotate(i*Math.PI/3);g.beginPath();
-      g.moveTo(0,0);g.lineTo(0,-25);
-      for(const [at,len] of [[-11,7],[-18,5]]){g.moveTo(0,at);g.lineTo(-len,at-len);g.moveTo(0,at);g.lineTo(len,at-len)}
-      g.stroke();g.restore()}};
-    arms(5.5,dark?'rgba(15,25,40,.45)':'rgba(70,100,130,.55)');arms(2.6,'rgba(255,255,255,.97)');
-    g.fillStyle='#fff';g.beginPath();g.arc(0,0,3.2,0,6.283);g.fill();return o};
-  // Boule de neige : ronde, duveteuse, bord flou, légèrement lumineuse ; liseré froid en thème clair pour rester visible
-  const ball=(blur,dark)=>{const S=64,o=d.createElement('canvas');o.width=o.height=S;const g=o.getContext('2d');
-    if(blur)g.filter=`blur(${blur}px)`;
-    if(!dark){g.fillStyle='rgba(90,120,150,.28)';g.beginPath();g.arc(32,32,24,0,6.283);g.fill()}
-    const r=g.createRadialGradient(28,28,2,32,32,23);
-    r.addColorStop(0,'rgba(255,255,255,1)');r.addColorStop(.55,'rgba(255,255,255,.92)');r.addColorStop(.85,'rgba(240,247,252,.55)');r.addColorStop(1,'rgba(240,247,252,0)');
-    g.fillStyle=r;g.beginPath();g.arc(32,32,23,0,6.283);g.fill();return o};
+  // Quatre plans : loin (petits, pâles, lents), milieu, près (plus nets), macro (gros, très flous, transparents, rapides, rares)
+  // r = rayon visible en px ; soft = part floue du halo (0 net, 1 tout en dégradé) ; n = part des flocons de ce plan
+  const PLANES=[{min:1.2,max:2.2,v:.35,a:.6,soft:.75,n:.42},{min:2,max:3.2,v:.6,a:.8,soft:.6,n:.32},{min:3,max:4.6,v:.95,a:.92,soft:.45,n:.2},{min:6,max:12,v:1.7,a:.3,soft:1,n:.06}];
+  // Halo rond : cœur blanc chaud puis dégradé jusqu'à zéro. Thème clair : ombre chaude très douce autour (sinon le blanc se perd sur le rose), sauf pour les gros flocons flous qui feraient des anneaux
+  const halo=(soft,dark)=>{const S=64,o=d.createElement('canvas');o.width=o.height=S;const g=o.getContext('2d');
+    if(!dark&&soft<1){const sh=g.createRadialGradient(32,32,0,32,32,32);sh.addColorStop(.45,'rgba(120,85,75,.22)');sh.addColorStop(1,'rgba(120,85,75,0)');g.fillStyle=sh;g.fillRect(0,0,S,S)}
+    const r=g.createRadialGradient(32,32,0,32,32,26);
+    r.addColorStop(0,'rgba(255,252,250,1)');r.addColorStop(Math.max(.05,1-soft),'rgba(255,252,250,.95)');r.addColorStop(1,'rgba(255,252,250,0)');
+    g.fillStyle=r;g.fillRect(0,0,S,S);return o};
   const paint=()=>{const dark=root.dataset.theme==='dark'||(root.dataset.theme!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches);
-    sprites=PLANES.map(p=>[crystal(p.blur,dark),ball(p.blur,dark)])};
-  const make=any=>{const p=Math.random()<.45?0:Math.random()<.6?1:2,P=PLANES[p],k=Math.random()<.5?1:0;
-    return{p,k,x:Math.random()*w,y:any?Math.random()*h:-30,z:k?P.bmin+Math.random()*(P.bmax-P.bmin):P.min+Math.random()*(P.max-P.min),v:P.v*(.8+Math.random()*.4),
-      s:Math.random()*6.283,sw:.4+Math.random()*.8,r:Math.random()*6.283,vr:(Math.random()-.5)*.012}};
+    sprites=PLANES.map(p=>halo(p.soft,dark))};
+  const pick=()=>{let u=Math.random(),p=0;while(p<PLANES.length-1&&(u-=PLANES[p].n)>0)p++;return p};
+  const make=any=>{const p=pick(),P=PLANES[p];
+    return{p,x:Math.random()*w,y:any?Math.random()*h:-40,z:P.min+Math.random()*(P.max-P.min),v:P.v*(.8+Math.random()*.4),s:Math.random()*6.283,sw:.4+Math.random()*.8}};
   const size=()=>{dpr=Math.min(devicePixelRatio||1,2);w=innerWidth;h=innerHeight;c.width=w*dpr;c.height=h*dpr;x.setTransform(dpr,0,0,dpr,0,0);
-    // Téléphone : peu de particules ; PC : environ 70 (moitié cristaux, moitié boules)
+    // Téléphone : peu de flocons ; PC : environ 70 au plus
     const n=w<600?22:Math.min(72,Math.round(w*h/18000));
     while(list.length<n)list.push(make(true));list.length=n;list.sort((a,b)=>a.p-b.p)};
   const frame=t=>{const dt=Math.min(40,t-(last||t))/16.7;last=t;x.clearRect(0,0,w,h);
-    // Vent : souffle lent qui change de sens, plus sensible sur les flocons proches
-    const wind=Math.sin(t*.00023)*.5+Math.sin(t*.00071)*.25;
-    for(const f of list){f.y+=f.v*dt;f.s+=.012*dt;f.r+=f.vr*dt;
-      f.x+=(Math.sin(f.s)*f.sw+wind*(.4+f.p*.4))*dt;
-      if(f.y>h+30||f.x<-40||f.x>w+40)Object.assign(f,make(false));
-      x.save();x.globalAlpha=PLANES[f.p].a;x.translate(f.x,f.y);x.rotate(f.r);x.drawImage(sprites[f.p][f.k],-f.z*.64,-f.z*.64,f.z*1.28,f.z*1.28);x.restore()}
+    // Vent doux qui change lentement de sens, plus sensible sur les plans proches
+    const wind=Math.sin(t*.0002)*.4+Math.sin(t*.0006)*.15;
+    for(const f of list){f.y+=f.v*dt;f.s+=.012*dt;
+      f.x+=(Math.sin(f.s)*f.sw+wind*(.4+f.p*.35))*dt;
+      if(f.y>h+40||f.x<-50||f.x>w+50)Object.assign(f,make(false));
+      // L'image fait 64 px pour un halo de rayon 26 : facteur 64/26 ≈ 2,46 sur le rayon visible
+      const z=f.z*2.46;x.globalAlpha=PLANES[f.p].a;x.drawImage(sprites[f.p],f.x-z,f.y-z,z*2,z*2)}
     raf=requestAnimationFrame(frame)};
   const run=()=>{cancelAnimationFrame(raf);last=0;if(!d.hidden)raf=requestAnimationFrame(frame)};
   paint();size();run();
   addEventListener('resize',size);
   d.addEventListener('visibilitychange',run);
-  // Thème clair ou sombre changé : le contour des flocons suit
+  // Thème clair ou sombre changé : l'ombre douce des flocons suit
   new MutationObserver(paint).observe(root,{attributes:true,attributeFilter:['data-theme']});
   return{stop(){cancelAnimationFrame(raf);removeEventListener('resize',size);d.removeEventListener('visibilitychange',run);c.remove();snow=null}};
 }
