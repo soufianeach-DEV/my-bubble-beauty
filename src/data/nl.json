@@ -1361,10 +1361,6 @@
      "a": "Ja, maderotherapie, in Dilbeek, vlak bij Sint-Agatha-Berchem. Ze kan het uitzicht van sinaasappelhuid tijdelijk verbeteren. De resultaten verschillen van persoon tot persoon."
     },
     {
-     "q": "Val ik af met Lipo Licht (lipo laser)?",
-     "a": "Nee. Deze behandeling combineert warmte, koude en rood licht voor een huid die gladder oogt. Ze doet geen gewicht verliezen. Een sessie kost 45 € (30 min) of 70 € (60 min)."
-    },
-    {
      "q": "Bieden jullie kuren aan?",
      "a": "Ja, voor verschillende behandelingen, bijvoorbeeld 5 led-sessies voor 110 € of 5 sessies maderotherapie voor 340 €. Een kuur is persoonlijk. De geldigheidsduur wordt bij aankoop meegedeeld."
     },
@@ -1757,8 +1753,8 @@
   },
   "lipolaser": {
    "title": "Lipo Licht: warmte, koude en rood licht",
-   "metaTitle": "Lipo Licht (lipo laser): prijs, verloop, resultaat - My Bubble Beauty",
-   "description": "Lipo Licht, vaak lipo laser genoemd: warmte, koude en rood licht op buik, heupen, dijen of armen. 45 € of 70 €. Deze behandeling doet geen gewicht verliezen.",
+   "metaTitle": "Lipo Licht (lipo laser): prijs, resultaat - My Bubble Beauty",
+   "description": "Lipo Licht, vaak lipo laser genoemd: warmte, koude en rood licht op buik, heupen, dijen of armen. 45 € of 70 €. Geen gewichtsverlies.",
    "articleHtml": "<p>Het ritueel Lipo Licht gebruikt plaatjes die op de gekozen zones worden gelegd: buik, heupen, dijen of armen. Het toestel combineert warmte en koude met rood licht.</p><h2>Wat we beogen</h2><ul><li>Een huid die gladder en strakker oogt.</li><li>Een aangenaam gevoel van comfort op de behandelde zones.</li><li>Een aanvulling op uw silhouetbehandelingen.</li></ul><p>Warmte, koude en rood licht werken niet op dezelfde manier. Deze behandeling doet geen gewicht verliezen en de resultaten zijn niet gegarandeerd.</p><h2>Verloop</h2><p>Een sessie duurt 30 of 60 minuten, volgens het aantal zones.</p><p>Voor de behandeling overlopen we samen de mogelijke contra-indicaties, bijvoorbeeld een zwangerschap, een lopende medische behandeling of beschadigde huid.</p>",
    "priceTitle": "Tarieven",
    "prices": [

@@ -1361,10 +1361,6 @@
      "a": "Oui, la madérothérapie, à Dilbeek, à deux pas de Berchem-Sainte-Agathe. Elle peut améliorer temporairement l’aspect peau d’orange. Les résultats varient d’une personne à l’autre."
     },
     {
-     "q": "Le Lipo Lumière fait-il maigrir ?",
-     "a": "Non. Ce soin associe chaud, froid et lumière rouge pour une peau qui paraît plus lisse. Il ne fait pas perdre de poids. Une séance coûte 45 € (30 min) ou 70 € (60 min)."
-    },
-    {
      "q": "Proposez-vous des cures ?",
      "a": "Oui, pour plusieurs soins, par exemple 5 séances de LED pour 110 € ou 5 séances de madérothérapie pour 340 €. Une cure est nominative. Sa durée de validité est donnée à l'achat."
     },
@@ -1757,8 +1753,8 @@
   },
   "lipolaser": {
    "title": "Lipo Lumière : chaud, froid et lumière rouge",
-   "metaTitle": "Lipo Lumière (lipo laser) : prix, déroulement, résultats - My Bubble Beauty",
-   "description": "Le Lipo Lumière, souvent appelé lipo laser : chaud, froid et lumière rouge sur le ventre, les hanches, les cuisses ou les bras. 45 € ou 70 €. Ce soin ne fait pas perdre de poids.",
+   "metaTitle": "Lipo Lumière (lipo laser), prix, résultat - My Bubble Beauty",
+   "description": "Lipo Lumière, souvent appelé lipo laser : chaud, froid et lumière rouge sur ventre, hanches, cuisses ou bras. 45 € ou 70 €. Ne fait pas maigrir.",
    "articleHtml": "<p>Le Rituel Lipo Lumière utilise des plaquettes posées sur les zones choisies : ventre, hanches, cuisses ou bras. L’appareil associe des fonctions de chaud et de froid à la lumière rouge.</p><h2>Les bénéfices recherchés</h2><ul><li>Une peau qui paraît plus lisse et plus tonique.</li><li>Une agréable sensation de confort sur les zones traitées.</li><li>Un complément à vos soins silhouette.</li></ul><p>Le chaud, le froid et la lumière rouge n’agissent pas de la même façon. Ce soin ne fait pas perdre de poids et ses résultats ne sont pas garantis.</p><h2>Déroulement</h2><p>La séance dure 30 ou 60 minutes, selon le nombre de zones.</p><p>Avant le soin, nous vérifions avec vous les contre-indications éventuelles, par exemple une grossesse, un traitement médical en cours ou une peau lésée.</p>",
    "priceTitle": "Tarifs",
    "prices": [
