@@ -239,6 +239,11 @@ main{isolation:isolate;overflow-x:clip}
 /* ---------- Galerie ---------- */
 /* FAQ : <details> natif, sans JavaScript */
 /* Avis Google (section cachée tant que avis.js n'a rien reçu) */
+.note-google{padding-block:0 clamp(2.5rem,5vw,4rem)}
+.note-google__inner{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.75rem 1.5rem;text-align:center}
+.note-google__score{margin:0;font-size:1.125rem;color:var(--text)}
+.note-google__score b{font-family:var(--f-title,inherit);font-size:1.6em;font-weight:500}
+.note-google__star{color:var(--accent)}
 .avis__score{font-size:1.125rem;color:var(--text)}
 .avis__score b{font-family:var(--f-title,inherit);font-size:1.6em;font-weight:500;margin-right:.35rem}
 .avis__list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,19rem),1fr));gap:1.25rem;margin:0;padding:0;list-style:none}

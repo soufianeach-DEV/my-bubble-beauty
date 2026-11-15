@@ -1318,7 +1318,9 @@
    "stars": "{n} étoiles sur 5",
    "note": "Les avis les plus récents publiés sur Google, sans sélection.",
    "more": "Voir tous les avis sur Google",
-   "write": "Laisser un avis"
+   "write": "Laisser un avis",
+   "badge": "{avg} ★ sur Google · {n} avis",
+   "read": "Lire nos avis"
   },
   "faq": {
    "eyebrow": "Questions fréquentes",

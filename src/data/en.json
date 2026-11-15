@@ -1318,7 +1318,9 @@
    "stars": "{n} stars out of 5",
    "note": "The most recent reviews published on Google, unfiltered.",
    "more": "See all reviews on Google",
-   "write": "Leave a review"
+   "write": "Leave a review",
+   "badge": "{avg} ★ on Google · {n} reviews",
+   "read": "Read our reviews"
   },
   "faq": {
    "eyebrow": "Frequently asked questions",

@@ -51,6 +51,9 @@ export default defineConfig({
       GBP_CLIENT_SECRET: secret({ optional: true }),
       GBP_REFRESH_TOKEN: secret({ optional: true }),
       GBP_LOCATION: secret({ optional: true, startsWith: 'accounts/' }),
+      // Note Google de l'Accueil relue chaque nuit (API Places, champs rating et userRatingCount) : les deux requis, sinon note saisie à la main
+      GOOGLE_PLACES_KEY: secret({ optional: true }),
+      GOOGLE_PLACE_ID: secret({ optional: true }),
     },
   },
   build: {

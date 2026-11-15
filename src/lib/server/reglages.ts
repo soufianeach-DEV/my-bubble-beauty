@@ -1,5 +1,5 @@
 // Réglages de l'institut modifiables depuis l'admin, sans toucher au code : nom du spécialiste cité dans les consentements,
-// règles de la carte de fidélité. Une ligne par clé dans la table settings ; toute modification passe au journal.
+// règles de la carte de fidélité, note Google de l'Accueil. Une ligne par clé dans la table settings ; toute modification passe au journal.
 import { z } from 'astro/zod';
 import { audit, type Result } from './admin.ts';
 import { sql } from './db.ts';
@@ -20,6 +20,9 @@ export const settingsForm = z.object({
   min_euros: n(0, 1000, 'Montant minimum par séance : de 0 à 1 000 €.'),
   free_min_total: n(0, 100000, 'Total payé exigé : de 0 à 100 000 €.'),
   free_value: n(0, 10000, 'Prix du soin offert : de 0 à 10 000 €.'),
+  // Note saisie « 4,6 » ou « 4.6 »
+  google_rating: z.preprocess((x) => String(x ?? '').replace(',', '.'), z.coerce.number({ error: 'Note Google : de 1 à 5.' }).min(1, 'Note Google : de 1 à 5.').max(5, 'Note Google : de 1 à 5.')),
+  google_count: n(0, 100000, 'Nombre d’avis Google : de 0 à 100 000.'),
   free_label: z.string({ error: 'Soin offert : 60 caractères au plus.' }).trim().min(1, 'Indiquez le soin offert.').max(60, 'Soin offert : 60 caractères au plus.').regex(/^\P{Cc}*$/u, 'Nom invalide.'),
 }).refine((f) => f.free_after > f.discount_after, { message: 'Le soin offert doit venir après la remise (plus de séances).' });
 
@@ -32,12 +35,37 @@ export async function readSettings(): Promise<{ specialist_name: string; loyalty
 export async function saveSettings(actor: number, form: FormData): Promise<Result> {
   const p = settingsForm.safeParse(Object.fromEntries(form));
   if (!p.success) return { ok: false, error: p.error.issues[0]?.message ?? 'Saisie invalide.' };
-  const { specialist_name, ...loyalty } = p.data;
+  const { specialist_name, google_rating, google_count, ...loyalty } = p.data;
+  // Formulaire unique : la note n'est réécrite que si elle a changé (sinon un enregistrement de la carte la marquerait « saisie »)
+  const cur = await readRating();
+  const rating = Math.round(google_rating * 10) / 10;
+  const ratingChanged = rating !== cur.rating || google_count !== cur.count;
   await sql.begin(async (tx) => {
     for (const [key, value] of [['specialist_name', specialist_name], ['loyalty', loyalty]] as const)
       await tx`INSERT INTO settings (key, value, updated_by) VALUES (${key}, ${tx.json(value as never)}, ${actor})
         ON CONFLICT (key) DO UPDATE SET value = excluded.value, updated_at = now(), updated_by = excluded.updated_by`;
+    if (ratingChanged) await saveRating(tx as unknown as typeof sql, { rating, count: google_count, source: 'admin', updated_at: new Date().toISOString() }, actor);
   });
-  audit(actor, 'settings_saved', { loyalty, specialist: specialist_name !== '' });
+  audit(actor, 'settings_saved', { loyalty, specialist: specialist_name !== '', ...(ratingChanged ? { google_rating: rating, google_count } : {}) });
   return { ok: true, id: actor };
+}
+
+// Note Google de l'Accueil (tant que les avis Business Profile ne sont pas branchés) : saisie ici, ou relue chaque nuit par
+// l'API Places (note-google.ts). Aucune variable d'environnement ici : ce module est importé par beaucoup d'autres.
+// Valeurs de la fiche relevées le 14/11/2026, tant que rien n'est enregistré
+export const RATING_DEFAULT = { rating: 4.6, count: 42 };
+export type GoogleRating = { rating: number; count: number; source: 'defaut' | 'admin' | 'places'; updated_at: string | null; checked_at?: string };
+
+export async function readRating(): Promise<GoogleRating> {
+  const [row] = await sql<{ value: Partial<GoogleRating> }[]>`SELECT value FROM settings WHERE key = 'google_rating'`;
+  const v = row?.value;
+  return v && typeof v.rating === 'number' && typeof v.count === 'number'
+    ? { rating: v.rating, count: v.count, source: v.source ?? 'admin', updated_at: v.updated_at ?? null, checked_at: v.checked_at }
+    : { ...RATING_DEFAULT, source: 'defaut', updated_at: null };
+}
+
+// Fusion jsonb : la saisie de la gérante garde la date du dernier passage de la tâche, et inversement
+export async function saveRating(tx: typeof sql, value: Partial<GoogleRating>, actor: number | null = null) {
+  await tx`INSERT INTO settings (key, value, updated_by) VALUES ('google_rating', ${tx.json(value as never)}, ${actor})
+    ON CONFLICT (key) DO UPDATE SET value = settings.value || excluded.value, updated_at = now(), updated_by = excluded.updated_by`;
 }

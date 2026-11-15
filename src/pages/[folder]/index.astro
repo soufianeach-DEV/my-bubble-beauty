@@ -179,6 +179,11 @@ const jsonld = {
 <script is:inline src={`/assets/js/avis.js?v=${JS_VERSION}`} defer></script>
 </section>
 
+{/* Note Google seule, tant que les avis ne sont pas branchés : texte et lien, sans balisage aggregateRating (interdit pour sa propre fiche) */}
+<section class="note-google" hidden data-note-google data-badge={h.avis.badge} data-locale={LANG_META[lang].hreflang} aria-label={h.avis.eyebrow}>
+<div class="wrap note-google__inner"><p class="note-google__score" data-note-score></p><a class="btn btn--ghost" href={CONTACT.maps} rel="noopener" data-note-link>{h.avis.read}</a></div>
+</section>
+
 {faq.length > 0 && <section class="section faq lit" id="faq" aria-labelledby="h-faq">
 <div class="wrap">
 <div class="section__head"><p class="eyebrow">{h.faq.eyebrow}</p><h2 id="h-faq">{h.faq.title}</h2></div>

@@ -1318,7 +1318,9 @@
    "stars": "{n} sterren op 5",
    "note": "De meest recente reviews op Google, zonder selectie.",
    "more": "Alle reviews op Google bekijken",
-   "write": "Een review schrijven"
+   "write": "Een review schrijven",
+   "badge": "{avg} ★ op Google · {n} reviews",
+   "read": "Onze reviews lezen"
   },
   "faq": {
    "eyebrow": "Veelgestelde vragen",

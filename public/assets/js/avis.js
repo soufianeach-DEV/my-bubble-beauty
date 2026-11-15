@@ -6,9 +6,25 @@
   var loc = sec.getAttribute('data-locale') || document.documentElement.lang;
   var fill = function (tpl, k, v) { return (sec.getAttribute(tpl) || '').replace('{' + k + '}', v); };
   var el = function (tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  // Note Google seule (avis pas encore branchés) : « 4,6 ★ sur Google · 42 avis », note en gras, étoile décorative
+  var showNote = function (n) {
+    var box = document.querySelector('[data-note-google]');
+    if (!box || typeof n.rating !== 'number' || typeof n.count !== 'number') return;
+    var num = new Intl.NumberFormat(loc, { maximumFractionDigits: 1, minimumFractionDigits: 1 });
+    var score = box.querySelector('[data-note-score]');
+    (box.getAttribute('data-badge') || '{avg} ★ · {n}').split(/(\{avg\}|\{n\}|★)/).forEach(function (part) {
+      if (part === '{avg}') score.appendChild(el('b', null, num.format(n.rating)));
+      else if (part === '{n}') score.appendChild(document.createTextNode(String(n.count)));
+      else if (part === '★') score.appendChild(el('span', 'note-google__star', '★')).setAttribute('aria-hidden', 'true');
+      else if (part) score.appendChild(document.createTextNode(part));
+    });
+    if (/^https:\/\//.test(n.url || '')) box.querySelector('[data-note-link]').href = n.url;
+    box.hidden = false;
+  };
   fetch('/api/avis', { headers: { Accept: 'application/json' } })
     .then(function (r) { return r.status === 200 ? r.json() : null; })
     .then(function (d) {
+      if (d && d.note) return showNote(d.note);
       if (!d || !d.reviews || !d.reviews.length) return;
       var num = new Intl.NumberFormat(loc, { maximumFractionDigits: 1, minimumFractionDigits: 1 });
       var month = new Intl.DateTimeFormat(loc, { month: 'long', year: 'numeric' });
