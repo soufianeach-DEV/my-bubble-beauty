@@ -10,7 +10,7 @@ import { JS_VERSION } from '../../lib/site';
 import { fmtDateTime, staffId } from '../../lib/server/admin.ts';
 import { changePassword, forgetDevice, signOutOthers, trustedUntil, updateProfile } from '../../lib/server/accounts.ts';
 import { NAME, PASSWORD, PHONE, device, readForm } from '../../lib/server/compte.ts';
-import { MFA_COOKIE } from '../../lib/server/cookie.ts';
+import { MFA_COOKIE, MFA_DAYS } from '../../lib/server/cookie.ts';
 import { listSessions } from '../../lib/server/session.ts';
 import { ROLE_LABELS, totpConfirmedAt } from '../../lib/server/staff.ts';
 
@@ -114,7 +114,7 @@ const invalid = (k: string) => (bad.has(k) ? 'true' : undefined);
         <p>Ce navigateur ne redemande pas le code jusqu'au {day(trusted)}.</p>
         <form method="post"><input type="hidden" name="action" value="forget"><button class="btn btn--ghost" type="submit">Oublier cet appareil</button></form>
       </>) : <p>Ce navigateur n'est pas reconnu. Le code est demandé à chaque connexion.</p>}
-      <p class="hint">Un code juste rend le navigateur de confiance pendant 30 jours. Un changement de rôle ou d'application d'authentification oublie tous les appareils.</p>
+      <p class="hint">Un code juste rend le navigateur de confiance pendant {MFA_DAYS} jours. Un changement de rôle ou d'application d'authentification oublie tous les appareils.</p>
     </section>
 
     <section id="sessions" aria-labelledby="h-sessions">

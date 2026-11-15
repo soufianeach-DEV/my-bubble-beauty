@@ -30,11 +30,11 @@ const same = (a: string, b: string) => {
 };
 export const isDevice = (key: string, email: string, value: string | null | undefined) => same(value ?? '', deviceToken(key, email));
 
-// Appareil de confiance de l'équipe : après un code TOTP juste, ce navigateur ne le redemande plus pendant 30 jours.
+// Appareil de confiance de l'équipe : après un code TOTP juste, ce navigateur ne le redemande plus pendant 90 jours.
 // Valeur = « échéance.HMAC(compte, échéance, état du TOTP) » : l'échéance est relue côté serveur, et un changement de rôle,
 // un nouveau secret TOTP ou un autre poivre rend tous les cookies déjà posés invalides. Rien en base.
 export const MFA_COOKIE = '__Host-mb_mfa';
-export const MFA_DAYS = 30;
+export const MFA_DAYS = 90;
 export const MFA = { ...COOKIE, maxAge: MFA_DAYS * 24 * 3600 } as const;
 const mfaMac = (key: string, who: string, until: number) => createHmac('sha256', key).update(`mfa\n${who}\n${until}`).digest('base64url');
 export const mfaToken = (key: string, who: string, now = Date.now()) => {
