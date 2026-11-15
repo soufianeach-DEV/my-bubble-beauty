@@ -68,7 +68,7 @@
     },
     {
      "label": "Afspraken",
-     "html": "<a href=\"/nl/reserver\">Reserveer online</a>, telefonisch of via WhatsApp."
+     "html": "Telefonisch of via WhatsApp. <a href=\"/nl/reserver\">Online reserveren</a> kan binnenkort."
     }
    ]
   },
@@ -1300,7 +1300,7 @@
   },
   "contact": {
    "title": "Contact",
-   "intro": "Reserveer online in een paar klikken, of bel ons.",
+   "intro": "Bel ons of stuur ons een bericht via WhatsApp. Online reserveren kan binnenkort.",
    "labels": [
     "Adres",
     "Telefoon",
@@ -1334,7 +1334,7 @@
     },
     {
      "q": "Hoe maak ik een afspraak?",
-     "a": "Online via de pagina Reserveren, telefonisch op {phone} of via WhatsApp."
+     "a": "Telefonisch op {phone} of via WhatsApp. Online reserveren kan binnenkort."
     },
     {
      "q": "Kan ik mijn afspraak annuleren of verplaatsen?",

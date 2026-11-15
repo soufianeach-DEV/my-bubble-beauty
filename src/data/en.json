@@ -68,7 +68,7 @@
     },
     {
      "label": "Appointments",
-     "html": "<a href=\"/eng/reserver\">Book online</a>, by phone or on WhatsApp."
+     "html": "By phone or on WhatsApp. <a href=\"/eng/reserver\">Online booking</a> opens soon."
     }
    ]
   },
@@ -1300,7 +1300,7 @@
   },
   "contact": {
    "title": "Contact",
-   "intro": "Book online in a few clicks, or give us a call.",
+   "intro": "Call us or message us on WhatsApp. Online booking opens soon.",
    "labels": [
     "Address",
     "Phone",
@@ -1334,7 +1334,7 @@
     },
     {
      "q": "How do I book an appointment?",
-     "a": "Online on the Book page, by phone on {phone} or on WhatsApp."
+     "a": "By phone on {phone} or on WhatsApp. Online booking opens soon."
     },
     {
      "q": "Can I cancel or move my appointment?",

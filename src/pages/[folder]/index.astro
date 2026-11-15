@@ -60,7 +60,7 @@ const jsonld = {
 <section class="infos lit" id="intro" aria-label={h.infos.label}>
 <div class="halo halo--lilas px-halo" aria-hidden="true"></div>
 <div class="wrap"><ul class="infos__list">
-{h.infos.items.map((it) => <li><strong>{it.label}</strong><Fragment set:html={it.html} /></li>)}
+{h.infos.items.map((it) => <li><strong>{it.label}</strong><span set:html={it.html} /></li>)}
 </ul></div>
 </section>
 

@@ -205,7 +205,16 @@ const summary = error ?? promoMsg ?? (preError ? L.err.service : null);
 <div class="wrap"><article>
 <h1>{L.h1}</h1>
 {summary && <p class="notice notice--error" role="alert">{summary}{limit && <> <a href={`/${folder}/compte`}>{L.myBookings}</a></>}</p>}
-{!open && <p class="notice">{L.soon} <a href={`tel:${CONTACT.phone}`}>{CONTACT.phoneLabel}</a>.</p>}
+{!open && (user
+  ? <p class="notice">{L.soon} <a href={`tel:${CONTACT.phone}`}>{CONTACT.phoneLabel}</a>.</p>
+  : <div class="notice soon">
+      <p>{L.soonJoin}</p>
+      <div class="actions">
+        <a class="btn btn--solid" href={`/${folder}/compte/inscription`}>{L.account.register}</a>
+        <a class="btn btn--ghost" href={`tel:${CONTACT.phone}`}>{CONTACT.phoneLabel}</a>
+        <a class="btn btn--ghost" href={CONTACT.whatsapp}>WhatsApp</a>
+      </div>
+    </div>)}
 
 {open && view === 1 && (
 <section aria-labelledby="h-step">
@@ -213,12 +222,12 @@ const summary = error ?? promoMsg ?? (preError ? L.err.service : null);
 <h2 id="h-step">{L.chooseService}</h2>
 {only && <p><a href={base}>{L.change}</a></p>}
 {shown.map((g) => (
-  <section class="group" aria-labelledby={`h-cat-${g.key}`}>
-  <h3 id={`h-cat-${g.key}`}>{g.label}</h3>
+  <details class="group" open={shown.length === 1}>
+  <summary><h3>{g.label}</h3><span class="count">{g.items.length}</span></summary>
   <ul class="prices">{g.items.map((s) => {
     return <li><span class="name"><a href={`${base}?service=${s.id}`}>{s.name}</a><small>{L.minutes(s.duration_min)}</small></span><span class="dots" aria-hidden="true"></span><span class="amount">{euros(s.price_cents, lang)}</span></li>;
   })}</ul>
-  </section>
+  </details>
 ))}
 </section>
 )}
@@ -314,7 +323,15 @@ const summary = error ?? promoMsg ?? (preError ? L.err.service : null);
 </Base>
 
 <style>
-.group{margin-top:1.75rem}
+.group{margin-top:.75rem;background:var(--surface);border:1px solid var(--line-soft);border-radius:calc(var(--radius) / 2)}
+.group summary{list-style:none;cursor:pointer;min-height:44px;display:flex;align-items:center;gap:.75rem;padding:1rem 1.25rem}
+.group summary::-webkit-details-marker{display:none}
+.group summary h3{margin:0;flex:1}
+.group .count{font-size:.875rem;color:var(--text-soft)}
+.group summary::after{content:"+";flex:none;font-size:1.25rem;line-height:1;color:var(--accent)}
+.group[open] summary::after{content:"–"}
+.group summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:inherit}
+.group .prices{padding:0 1.25rem 1rem;margin:0}
 .days{margin-top:1.25rem}
 .recap{display:grid;grid-template-columns:auto 1fr;gap:.5rem 1.25rem;margin:0 0 1.75rem}
 .recap dt{color:var(--text-soft)}
@@ -325,6 +342,7 @@ const summary = error ?? promoMsg ?? (preError ? L.err.service : null);
 .acct{padding:1.1rem 1.25rem;border:1px solid var(--accent);border-radius:14px;background:var(--bg)}
 .acct h3{margin:0 0 .4rem}
 .acct .actions{margin-top:.9rem}
+.soon p{margin:0 0 .9rem}
 /* Le libellé avec le montant dépasse un écran de téléphone sur une ligne */
 .pay{white-space:normal;line-height:1.3;text-align:center}
 </style>

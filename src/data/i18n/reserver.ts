@@ -20,6 +20,7 @@ type Texts = {
   brussels: string;
   noSlot: string;
   soon: string;
+  soonJoin: string;
   recap: string;
   service: string;
   date: string;
@@ -66,6 +67,7 @@ export const RESERVER: Record<Lang, Texts> = {
     brussels: 'Heures de Bruxelles.',
     noSlot: 'Aucun créneau libre ce jour-là. Essayez un autre jour.',
     soon: 'Les réservations en ligne ouvrent bientôt. En attendant, appelez-nous au',
+    soonJoin: 'Créez votre compte dès maintenant : vous serez prête à réserver en ligne dès l’ouverture. En attendant, appelez-nous ou écrivez-nous sur WhatsApp.',
     recap: 'Vérifiez votre rendez-vous',
     service: 'Prestation',
     date: 'Date',
@@ -127,6 +129,7 @@ export const RESERVER: Record<Lang, Texts> = {
     brussels: 'Uren in Brusselse tijd.',
     noSlot: 'Geen vrij tijdstip op die dag. Probeer een andere dag.',
     soon: 'Online reserveren kan binnenkort. Bel ons intussen op',
+    soonJoin: 'Maak nu al uw account aan: zo kunt u online reserveren zodra het kan. Bel ons intussen of stuur een bericht via WhatsApp.',
     recap: 'Controleer uw afspraak',
     service: 'Behandeling',
     date: 'Datum',
@@ -188,6 +191,7 @@ export const RESERVER: Record<Lang, Texts> = {
     brussels: 'Brussels time.',
     noSlot: 'No free time on that day. Try another day.',
     soon: 'Online booking opens soon. In the meantime, call us on',
+    soonJoin: 'Create your account now: you will be ready to book online as soon as it opens. In the meantime, call us or message us on WhatsApp.',
     recap: 'Check your appointment',
     service: 'Treatment',
     date: 'Date',
