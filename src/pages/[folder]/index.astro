@@ -174,7 +174,7 @@ const jsonld = {
 <div class="section__head"><p class="eyebrow">{h.avis.eyebrow}</p><h2 id="h-avis">{h.avis.title}</h2><p class="avis__score" data-avis-score></p></div>
 <ul class="avis__list" data-avis-list></ul>
 <p class="avis__note">{h.avis.note}</p>
-<p class="avis__links"><a class="btn btn--ghost" href={CONTACT.maps} rel="noopener">{h.avis.more}</a><a class="btn btn--solid sheen" data-avis-write hidden rel="noopener">{h.avis.write}</a></p>
+<p class="avis__links"><a class="btn btn--ghost" href={CONTACT.maps} rel="noopener">{h.avis.more}</a><a class="btn btn--solid sheen" href={CONTACT.maps} data-avis-write hidden rel="noopener">{h.avis.write}</a></p>
 </div>
 <script is:inline src={`/assets/js/avis.js?v=${JS_VERSION}`} defer></script>
 </section>

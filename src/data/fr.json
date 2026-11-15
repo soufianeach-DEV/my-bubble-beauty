@@ -68,7 +68,7 @@
     },
     {
      "label": "Rendez-vous",
-     "html": "Par téléphone ou sur WhatsApp. La <a href=\"/fr/reserver\">réservation en ligne</a> ouvre bientôt."
+     "html": "<a href=\"/fr/reserver\">Réservez en ligne</a>, par téléphone ou sur WhatsApp."
     }
    ]
   },
@@ -1300,7 +1300,7 @@
   },
   "contact": {
    "title": "Contact",
-   "intro": "Appelez-nous ou écrivez-nous sur WhatsApp. La réservation en ligne ouvre bientôt.",
+   "intro": "Réservez en ligne en quelques clics, ou appelez-nous.",
    "labels": [
     "Adresse",
     "Téléphone",
@@ -1334,7 +1334,7 @@
     },
     {
      "q": "Comment prendre rendez-vous ?",
-     "a": "Par téléphone au {phone} ou sur WhatsApp. La réservation en ligne ouvre bientôt."
+     "a": "En ligne sur la page Réserver, par téléphone au {phone} ou sur WhatsApp."
     },
     {
      "q": "Puis-je annuler ou déplacer mon rendez-vous ?",
