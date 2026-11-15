@@ -2,14 +2,10 @@
 import type { APIRoute } from 'astro';
 import { LANGS, PAGES, SITE, t, pagePath, alternates, hiddenTreatment, type PageKey } from '../lib/site';
 
-// Soins en attente d'un avis juridique (allégations santé ou minceur, appareils réglementés) :
-// les pages restent en ligne, mais on ne les propose pas à Google.
-const SITEMAP_EXCLUDED = new Set(['laserepilation', 'lipolaser', 'dents', 'radiofrequence', 'mado']);
-
 export const GET: APIRoute = () => {
   const keys: PageKey[] = [
     ...(Object.keys(PAGES) as (keyof typeof PAGES)[]),
-    ...Object.keys(t('fr').treatments).filter((s) => !hiddenTreatment(s) && !SITEMAP_EXCLUDED.has(s)).map((s) => `treatment:${s}` as const),
+    ...Object.keys(t('fr').treatments).filter((s) => !hiddenTreatment(s)).map((s) => `treatment:${s}` as const),
   ];
   const link = (hreflang: string, href: string) => `<xhtml:link rel="alternate" hreflang="${hreflang}" href="${href}"/>`;
   const urls: string[] = [];
