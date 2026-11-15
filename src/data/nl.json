@@ -1353,6 +1353,18 @@
      "a": "Dat hangt af van de behandeling: 20 of 30 minuten voor een sessie led-lichttherapie, 30 of 45 minuten voor het Puur Ritueel, 30 tot 60 minuten voor een massage, 60 minuten voor maderotherapie. De duur van elke behandeling staat bij de tarieven."
     },
     {
+     "q": "Wat is maderotherapie?",
+     "a": "Een massagetechniek uit Colombia. Houten instrumenten masseren de weefsels en werken op het uitzicht van de huid. Een sessie duurt 60 minuten. Maderotherapie doet geen vet verliezen."
+    },
+    {
+     "q": "Hebben jullie een behandeling voor het uitzicht van cellulitis, dicht bij Berchem?",
+     "a": "Ja, maderotherapie, in Dilbeek, vlak bij Sint-Agatha-Berchem. Ze kan het uitzicht van sinaasappelhuid tijdelijk verbeteren. De resultaten verschillen van persoon tot persoon."
+    },
+    {
+     "q": "Val ik af met Lipo Licht (lipo laser)?",
+     "a": "Nee. Deze behandeling combineert warmte, koude en rood licht voor een huid die gladder oogt. Ze doet geen gewicht verliezen. Een sessie kost 45 € (30 min) of 70 € (60 min)."
+    },
+    {
      "q": "Bieden jullie kuren aan?",
      "a": "Ja, voor verschillende behandelingen, bijvoorbeeld 5 led-sessies voor 110 € of 5 sessies maderotherapie voor 340 €. Een kuur is persoonlijk. De geldigheidsduur wordt bij aankoop meegedeeld."
     },
@@ -1745,8 +1757,8 @@
   },
   "lipolaser": {
    "title": "Lipo Licht: warmte, koude en rood licht",
-   "metaTitle": "Lipo Licht, warmte, koude en rood licht - My Bubble Beauty",
-   "description": "Een lichaamsbehandeling met plaatjes die warmte, koude en rood licht combineren, op buik, heupen, dijen of armen. Tarieven.",
+   "metaTitle": "Lipo Licht (lipo laser): prijs, verloop, resultaat - My Bubble Beauty",
+   "description": "Lipo Licht, vaak lipo laser genoemd: warmte, koude en rood licht op buik, heupen, dijen of armen. 45 € of 70 €. Deze behandeling doet geen gewicht verliezen.",
    "articleHtml": "<p>Het ritueel Lipo Licht gebruikt plaatjes die op de gekozen zones worden gelegd: buik, heupen, dijen of armen. Het toestel combineert warmte en koude met rood licht.</p><h2>Wat we beogen</h2><ul><li>Een huid die gladder en strakker oogt.</li><li>Een aangenaam gevoel van comfort op de behandelde zones.</li><li>Een aanvulling op uw silhouetbehandelingen.</li></ul><p>Warmte, koude en rood licht werken niet op dezelfde manier. Deze behandeling doet geen gewicht verliezen en de resultaten zijn niet gegarandeerd.</p><h2>Verloop</h2><p>Een sessie duurt 30 of 60 minuten, volgens het aantal zones.</p><p>Voor de behandeling overlopen we samen de mogelijke contra-indicaties, bijvoorbeeld een zwangerschap, een lopende medische behandeling of beschadigde huid.</p>",
    "priceTitle": "Tarieven",
    "prices": [
@@ -1759,7 +1771,32 @@
      "amount": "70 €"
     }
    ],
-   "figures": []
+   "figures": [],
+   "quick": {
+    "title": "Korte antwoorden",
+    "items": [
+     {
+      "q": "Is Lipo Licht hetzelfde als lipo laser?",
+      "a": "Veel mensen zoeken deze behandeling als « lipo laser ». Bij ons heet ze Lipo Licht. Het is geen liposuctie en geen medische laser. Plaatjes op de huid combineren warmte, koude en rood licht."
+     },
+     {
+      "q": "Wat kost een Lipo Licht-behandeling?",
+      "a": "45 € voor 30 minuten en 70 € voor 60 minuten. De duur hangt af van het aantal zones."
+     },
+     {
+      "q": "Val ik af met Lipo Licht?",
+      "a": "Nee. Deze behandeling doet geen gewicht verliezen. Ook niet op de buik."
+     },
+     {
+      "q": "Welk resultaat mag ik verwachten?",
+      "a": "We beogen een huid die gladder en strakker oogt en een aangenaam gevoel van comfort. De resultaten zijn niet gegarandeerd."
+     },
+     {
+      "q": "Op welke zones?",
+      "a": "Buik, heupen, dijen of armen. Voor de behandeling overlopen we samen de mogelijke contra-indicaties."
+     }
+    ]
+   }
   },
   "mado": {
    "title": "Maderotherapie",

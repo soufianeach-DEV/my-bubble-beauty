@@ -37,8 +37,10 @@ const offers = tr.prices.flatMap((p) => {
   return [{ '@type': 'Offer', name: p.name, priceCurrency: 'EUR',
     ...(/^\s*\d/.test(p.amount) ? { price } : { priceSpecification: { '@type': 'PriceSpecification', minPrice: price, priceCurrency: 'EUR' } }) }];
 });
-const jsonld = {
-  '@context': 'https://schema.org', '@type': 'WebPage', name: tr.title, inLanguage: d.htmlLang,
+// Réponses courtes en tête de fiche (requêtes fréquentes de la Search Console), reprises en FAQPage
+const quick = (tr as { quick?: { title: string; items: { q: string; a: string }[] } }).quick;
+const page = {
+  '@type': 'WebPage', name: tr.title, inLanguage: d.htmlLang,
   url: SITE + pagePath(lang, key), description: tr.description,
   // Le soin est proposé par le salon décrit sur l'accueil (même @id dans les trois langues) ; nom et URL repris pour que la fiche se suffise
   about: { '@type': 'Service', name: tr.title, url: SITE + pagePath(lang, key), areaServed: 'Dilbeek',
@@ -48,6 +50,7 @@ const jsonld = {
     { '@type': 'ListItem', position: 2, name: tr.title, item: SITE + pagePath(lang, key) },
   ] },
 };
+const jsonld = { '@context': 'https://schema.org', '@graph': quick ? [page, { '@type': 'FAQPage', mainEntity: quick.items.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }] : [page] };
 // Image de partage : la première photo de la fiche, seulement pour les fiches dont c'est une vraie photo (pas un schéma).
 // Plasma et dents gardent l'image générale tant que leur cadre légal n'est pas vérifié.
 const OG_PHOTO = ['charbon', 'hydra', 'mado', 'photo', 'massages', 'brosse', 'semi-permanent'];
@@ -61,6 +64,8 @@ const ogImage = OG_PHOTO.includes(Astro.params.slug!) && fig0 ? { src: fig0.src,
 <div class="treatment__grid">
 <article class="treatment__article">
 <h1>{tr.title}</h1>
+{quick && <section class="quick" aria-labelledby="h-quick"><h2 id="h-quick">{quick.title}</h2>
+<dl>{quick.items.map((f) => <div><dt>{f.q}</dt><dd>{f.a}</dd></div>)}</dl></section>}
 <p class="treatment__jump" hidden><a href="#h-price">{tr.priceTitle}<span aria-hidden="true"> ↓</span></a></p>
 <Fragment set:html={tr.articleHtml} />
 {related.length > 0 && <nav class="related" aria-labelledby="h-related"><h2 id="h-related">{d.ui.related}</h2>
