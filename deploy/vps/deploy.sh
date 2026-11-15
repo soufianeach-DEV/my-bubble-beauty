@@ -43,7 +43,7 @@ fi
 chown -R -h root:mybubble "$DEST"
 chmod -R go-w "$DEST"
 
-PREV=$(readlink -f "$REL/current" 2>/dev/null || true)
+PREV=$([ -L "$REL/current" ] && readlink -e "$REL/current" || true)   # premier déploiement : aucune version précédente
 ln -sfn "$DEST" "$REL/current.new" && mv -T "$REL/current.new" "$REL/current"
 # Jamais d'unité systemd lue depuis la version : le build y a exécuté le code des paquets npm sous mybubble.
 # Une modification de mybubble.service se pose à la main, après relecture (LISEZMOI.md).
