@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import Icon from '../components/Icon.astro';
-import { t, LANGS, LANG_META, CONTACT, SITE, JS_VERSION, GOATCOUNTER_ENDPOINT, EXTRA, FOLDER, SAISON, initialsOf, pagePath, alternates, type Lang, type PageKey } from '../lib/site';
+import { t, GALERIE_VISIBLE, LANGS, LANG_META, CONTACT, SITE, JS_VERSION, GOATCOUNTER_ENDPOINT, EXTRA, FOLDER, SAISON, initialsOf, pagePath, alternates, type Lang, type PageKey } from '../lib/site';
 import { COMPTE } from '../data/i18n/compte.ts';
 
 interface Props {
@@ -36,7 +36,7 @@ const og = ogImage
 const ui = d.ui;
 const home = pagePath(lang, 'home');
 const anchor = (hash: string) => (isHome ? hash : home + hash);
-const nav = ui.nav.map((n) => ({ label: n.label, href: anchor(n.href) }));
+const nav = ui.nav.filter((n) => GALERIE_VISIBLE || n.href !== '#gallery').map((n) => ({ label: n.label, href: anchor(n.href) }));
 // Route à la demande : pagePath ajouterait « .html » (404)
 const account = `/${FOLDER[lang]}/compte`;
 // Compte dans l'en-tête : visiteur → Connexion, cliente → menu profil, équipe → Admin.

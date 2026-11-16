@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
-import { LANGS, FOLDER, CONTACT, SITE, SALON_ID, LANG_META, EXTRA, HOURS, JS_VERSION, SAISON, hoursRows, openingHoursSchema, t, pagePath, langOfFolder } from '../../lib/site';
+import { LANGS, FOLDER, CONTACT, GALERIE_VISIBLE, SITE, SALON_ID, LANG_META, EXTRA, HOURS, JS_VERSION, SAISON, hoursRows, openingHoursSchema, t, pagePath, langOfFolder } from '../../lib/site';
 import { itemSlug } from '../../../db/slug.mjs';
 
 export function getStaticPaths() {
@@ -150,6 +150,7 @@ const jsonld = {
 </div>
 </section>
 
+{GALERIE_VISIBLE && (
 <section class="section galerie lit" id="gallery" aria-labelledby="h-galerie">
 <div class="halo halo--lilas" aria-hidden="true"></div>
 <div class="wrap">
@@ -170,6 +171,7 @@ const jsonld = {
 <button class="lightbox__close" type="button" aria-label={h.gallery.close}>×</button>
 </dialog>
 </section>
+)}
 
 {/* Avis Google copiés par la tâche planifiée : la page est pré-rendue, avis.js les demande à /api/avis et laisse la section cachée s'il n'y en a pas */}
 <section class="section avis lit" id="avis" aria-labelledby="h-avis" hidden data-avis

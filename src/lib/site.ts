@@ -23,6 +23,9 @@ export const JS_VERSION = createHash('sha1').update(['main', 'motion-pref', 'sta
 export const GOATCOUNTER = '';
 export const GOATCOUNTER_ENDPOINT = GOATCOUNTER ? `https://${GOATCOUNTER}.goatcounter.com/count` : '';
 
+// Galerie de l'accueil masquée (section et lien du menu) en attendant les nouvelles photos de l'institut. Remettre à true pour la réafficher.
+export const GALERIE_VISIBLE = false;
+
 export const CONTACT = {
   phone: '+32484118395',
   phoneLabel: '0484.118.395',
