@@ -17,7 +17,7 @@ const when = (d: Date, lang: Lang) => new Intl.DateTimeFormat(LOCALE[lang], { ti
 
 // Gabarit commun : fond crème, carte blanche de 600 px, logo, titre Georgia, corps Arial, bouton en tableau (VML pour Outlook),
 // pied hors carte. Styles en ligne, aucune police web ni image de fond ; le mode sombre passe par les classes de la balise <style>.
-const C = { bg: '#FCF9F7', card: '#FFFFFF', ink: '#4A3732', soft: '#786A65', line: '#E8D9D2', recap: '#F8F3F0', brand: '#8A5A50', btn: '#482E32' };
+const C = { bg: '#FCF9F7', card: '#FFFFFF', ink: '#482E32', soft: '#786A65', line: '#E8D9D2', recap: '#F8F3F0', brand: '#8A5A50', btn: '#482E32' };
 const SERIF = "Georgia,'Times New Roman',serif";
 const SANS = 'Arial,Helvetica,sans-serif';
 // Mail toujours blanc, même quand le lecteur de mails est en mode sombre (choix de la gérante)
