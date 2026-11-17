@@ -5,6 +5,7 @@ import { ADMIN_EMAIL } from 'astro:env/server';
 import { audit, type Result } from './admin.ts';
 import { clientForm } from './admin-form.ts';
 import { sql } from './db.ts';
+import { openNote, sealNote } from './profil.ts';
 import { readSettings } from './reglages.ts';
 import { eraseUser, GRACE_DAYS } from './rgpd.ts';
 import { isAdminEmail } from './session.ts';
@@ -98,6 +99,7 @@ export async function clientDetail(id: number) {
   const [u] = await sql<{ id: number; name: string | null; email: string; phone: string | null; locale: string; created_at: Date; email_verified_at: Date | null; deleted_at: Date | null; blocked_at: Date | null; removed_at: Date | null; health_consent_at: Date | null; notes: string; role: string | null }[]>`
     SELECT id, name, email, phone, locale, created_at, email_verified_at, deleted_at, blocked_at, removed_at, health_consent_at, notes, role FROM users WHERE id = ${id}`;
   if (!u || isAdminEmail(u.email) || u.role) return null;
+  u.notes = openNote(u.notes);
   const [bookings, [stats], events] = await Promise.all([
     sql<ClientBooking[]>`
       SELECT b.id, b.starts_at, b.ends_at, s.name_fr AS service, b.status, b.no_show, b.late_minutes, b.paid_method, b.paid_cents, b.starts_at < now() AS past, b.cancel_reason,
@@ -129,7 +131,7 @@ export async function clientAction(adminUser: number, form: FormData, manage = t
   if (!u || isAdminEmail(u.email) || u.role) return { ok: false, error: 'Cliente introuvable.' };
   if (f.action !== 'notes' && !manage) return { ok: false, error: "Seule l'admin peut désactiver, supprimer ou effacer un compte." };
   if (f.action === 'notes') {
-    await sql`UPDATE users SET notes = ${f.notes.replace(/\r\n/g, '\n')}, updated_at = now() WHERE id = ${f.id}`;
+    await sql`UPDATE users SET notes = ${sealNote(f.notes.replace(/\r\n/g, '\n'))}, updated_at = now() WHERE id = ${f.id}`;
     // Le contenu des notes n'entre jamais au journal (données de santé possibles)
     audit(adminUser, 'client_notes', { client_id: f.id, length: f.notes.length });
     return { ok: true, id: f.id, key: 'notes' };

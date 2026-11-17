@@ -12,7 +12,8 @@ import { accountDeletedMail, accountErasedMail, sendMail } from './mail.ts';
 import { closeSession, isAdminEmail } from './session.ts';
 import { PASSWORD_PEPPER } from 'astro:env/server';
 import { openText } from './totp.ts';
-import { openHealth, readableProfile } from './profil.ts';
+import { openHealth, openNote, readableProfile } from './profil.ts';
+import { HEALTH_CONSENT } from '../../data/i18n/accord-sante.ts';
 import { expireSession } from './stripe.ts';
 
 export const GRACE_DAYS = 30;
@@ -83,6 +84,8 @@ export async function eraseUser(clientId: number, actor: number | null, ip: stri
     await tx`UPDATE audit_log SET ip = NULL WHERE client_id = ${clientId} OR actor_id = ${clientId}`;
     await tx`INSERT INTO audit_log (action, actor_id, client_id, ip, details)
       VALUES ('account_erased', ${by}, ${clientId}, NULL, ${tx.json({ by: why, cancelled: cancelled.length })})`;
+    // Bons cadeaux de la cliente (rattachés ou envoyés à son adresse) : nom et e-mail retirés ; le bon reste utilisable par son code
+    await tx`UPDATE gift_cards SET recipient = 'Compte supprimé', recipient_email = NULL WHERE user_id = ${clientId} OR lower(recipient_email) = lower(${u.email})`;
     await tx`DELETE FROM users WHERE id = ${clientId}`;
     return { u, cancelled };
   });
@@ -104,19 +107,21 @@ export async function eraseNow(cookies: AstroCookies, user: { id: number; email:
 }
 
 // Accord pour les données de santé (allergies, contre-indications) notées par l'institut ; retirable à tout moment
-export async function setConsent(userId: number, give: boolean, ip: string) {
+// Le texte exact accepté est gardé avec la date (preuve de l'accord, RGPD art. 7.1)
+export async function setConsent(userId: number, give: boolean, ip: string, lang: Lang = 'fr') {
   const [r] = give
-    ? await sql`UPDATE users SET health_consent_at = now() WHERE id = ${userId} AND health_consent_at IS NULL RETURNING id`
-    // Accord retiré : les antécédents médicaux notés par l'institut sont effacés avec lui
-    : await sql`UPDATE users SET health_consent_at = NULL, medical_history = NULL, health_profile = NULL WHERE id = ${userId} AND health_consent_at IS NOT NULL RETURNING id`;
+    ? await sql`UPDATE users SET health_consent_at = now(), health_consent_text = ${HEALTH_CONSENT[lang]} WHERE id = ${userId} AND health_consent_at IS NULL RETURNING id`
+    // Accord retiré : antécédents, fiche santé et mot de la cliente effacés avec lui ; les notes de l'équipe restent (chiffrées)
+    : await sql`UPDATE users SET health_consent_at = NULL, health_consent_text = NULL, medical_history = NULL, health_profile = NULL, client_note = '' WHERE id = ${userId} AND health_consent_at IS NOT NULL RETURNING id`;
   if (r) journal(give ? 'consent_given' : 'consent_withdrawn', { actor: userId, client: userId, ip });
 }
 
 // Accès et portabilité (art. 15 et 20) : tout ce que le site garde sur la cliente, notes de l'institut comprises
 export async function exportData(userId: number, ip: string) {
   const [[account], bookings, sessions, events, linked, consents, loyalty, gifts, packages] = await Promise.all([
-    sql`SELECT email, name, phone, locale, created_at, email_verified_at, health_consent_at, notes AS institute_notes, client_note, care_filled_at, birth_date::text, medical_history, care_profile, health_profile FROM users WHERE id = ${userId}`,
-    sql`SELECT s.name_fr AS service, b.starts_at, b.ends_at, b.status, b.no_show, b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents,
+    sql`SELECT email, name, phone, locale, created_at, email_verified_at, health_consent_at, health_consent_text, notes AS institute_notes, client_note, care_filled_at, care_skipped_at, birth_date::text, medical_history, care_profile, health_profile FROM users WHERE id = ${userId}`,
+    sql`SELECT s.name_fr AS service, b.starts_at, b.ends_at, b.status, b.no_show, b.late_minutes, b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents,
+          b.refunded_manually_at, b.paid_method, b.paid_cents, b.paid_at, b.arrived_at, b.cancel_reason,
           p.code AS promo_code, b.created_at, b.cancelled_at, b.moved_at, b.zone, pr.name AS practitioner
         FROM bookings b JOIN services s ON s.id = b.service_id LEFT JOIN promo_codes p ON p.id = b.promo_code_id
           LEFT JOIN users pr ON pr.id = b.practitioner_id
@@ -133,7 +138,8 @@ export async function exportData(userId: number, ip: string) {
         FROM loyalty_rewards r LEFT JOIN bookings b ON b.id = r.booking_id WHERE r.user_id = ${userId} ORDER BY r.used_at`,
     // Bons cadeaux rattachés à la cliente : code masqué (4 derniers caractères), un export qui circule ne doit pas valoir un bon
     sql`SELECT '…' || right(g.code, 4) AS code_end, s.name_fr AS service, g.recipient, g.message, g.issued_on::text, g.expires_on::text,
-          g.used_at, g.cancelled_at FROM gift_cards g JOIN services s ON s.id = g.service_id WHERE g.user_id = ${userId} ORDER BY g.created_at`,
+          g.used_at, g.cancelled_at FROM gift_cards g JOIN services s ON s.id = g.service_id
+        WHERE g.user_id = ${userId} OR lower(g.recipient_email) = (SELECT lower(email) FROM users WHERE id = ${userId}) ORDER BY g.created_at`,
     // Forfaits achetés à l'institut
     sql`SELECT p.label, s.name_fr AS service, p.sessions_total, p.price_cents, p.sold_at, p.expires_on::text, p.cancelled_at
         FROM packages p JOIN services s ON s.id = p.service_id WHERE p.user_id = ${userId} ORDER BY p.sold_at`,
@@ -141,6 +147,11 @@ export async function exportData(userId: number, ip: string) {
   journal('data_exported', { actor: userId, client: userId, ip });
   // Antécédents médicaux : déchiffrés pour la cliente elle-même
   if (account) account.medical_history = account.medical_history ? openText(PASSWORD_PEPPER, 'health', account.medical_history) : null;
+  // Notes de l'institut et mot de la cliente : déchiffrés pour elle (art. 15)
+  if (account) {
+    account.institute_notes = openNote(account.institute_notes);
+    account.client_note = openNote(account.client_note);
+  }
   // Fiche de soin avec des libellés lisibles ; la partie santé déchiffrée pour la cliente elle-même
   if (account) {
     account.care_sheet = readableProfile(account.care_profile ?? {}, openHealth(account.health_profile));

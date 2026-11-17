@@ -36,7 +36,7 @@ if (Astro.request.method === 'POST') {
   const closing = action === 'add-closure' || action === 'del-closure';
   const r = closing ? await (action === 'add-closure' ? addClosure : deleteClosure)(me, form)
     : action === 'delete' ? admin ? await deleteAction(form) : { ok: false as const, error: "Seule l'admin peut supprimer un rendez-vous." }
-    : await agendaAction(me, form);
+    : await agendaAction(me, form, admin);
   const start = String(form.get('start_day') ?? '');
   if (r.ok && closing) return Astro.redirect(`${link(action === 'add-closure' && isDay(start) ? start : jour)}&ok=${action === 'add-closure' ? 'ferme' : 'rouvert'}`, 303);
   // Déplacé : l'agenda suit le rendez-vous à sa nouvelle date

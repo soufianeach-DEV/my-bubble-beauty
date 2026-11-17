@@ -26,7 +26,7 @@ if (Astro.request.method === 'POST') {
     await skipOwnProfile(user.id);
     return Astro.redirect(`/${d}/compte`, 303);
   }
-  const r = await saveOwnProfile(user.id, form, Astro.locals.ip);
+  const r = await saveOwnProfile(user.id, form, Astro.locals.ip, lang);
   if (r.ok) return Astro.redirect(`/${d}/compte?fiche=ok`, 303);
   error = true;
   Astro.response.status = 400;

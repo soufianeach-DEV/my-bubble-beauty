@@ -1,5 +1,6 @@
 // « Ma fiche de soin » remplie par la cliente : mêmes clés que la fiche de l'institut (lib/server/profil.ts), libellés à la 1re personne.
 import type { Lang } from '../../lib/site';
+import { HEALTH_CONSENT } from './accord-sante';
 
 const fr = {
   title: 'Ma fiche de soin',
@@ -20,7 +21,7 @@ const fr = {
   comfort: 'Votre confort',
   contact: 'Zones et toucher',
   healthTitle: 'Santé et sensibilités',
-  consentLabel: "J'accepte que My Bubble Beauty conserve mes allergies, mon type de peau et mes contre-indications pour adapter mes soins.",
+  consentLabel: HEALTH_CONSENT.fr,
   consentHint: "Ce sont des données de santé : elles sont chiffrées, vues seulement par l'institut, jamais envoyées par e-mail. Vous pouvez retirer cet accord à tout moment depuis Mon compte : elles sont alors effacées.",
   consentDone: (d: string) => `Accord donné le ${d}.`,
   allergies: 'Allergies et intolérances aux produits',
@@ -61,7 +62,7 @@ export const FICHE: Record<Lang, typeof fr> = {
     comfort: 'Uw comfort',
     contact: 'Zones en aanraking',
     healthTitle: 'Gezondheid en gevoeligheden',
-    consentLabel: 'Ik ga ermee akkoord dat My Bubble Beauty mijn allergieën, huidtype en contra-indicaties bewaart om mijn behandelingen aan te passen.',
+    consentLabel: HEALTH_CONSENT.nl,
     consentHint: 'Dit zijn gezondheidsgegevens: ze worden versleuteld, alleen door het instituut ingezien en nooit per e-mail verstuurd. U kunt dit akkoord op elk moment intrekken via Mijn account: ze worden dan gewist.',
     consentDone: (d: string) => `Akkoord gegeven op ${d}.`,
     allergies: 'Allergieën en intoleranties voor producten',
@@ -99,7 +100,7 @@ export const FICHE: Record<Lang, typeof fr> = {
     comfort: 'Your comfort',
     contact: 'Areas and touch',
     healthTitle: 'Health and sensitivities',
-    consentLabel: 'I agree that My Bubble Beauty keeps my allergies, skin type and contraindications to adapt my treatments.',
+    consentLabel: HEALTH_CONSENT.en,
     consentHint: 'This is health data: it is encrypted, seen only by the institute and never sent by email. You can withdraw this consent at any time from My account: it is then deleted.',
     consentDone: (d: string) => `Consent given on ${d}.`,
     allergies: 'Allergies and intolerances to products',

@@ -12,6 +12,7 @@ export const RULES = {
   totp: { max: 5, ms: 15 * MIN, keys: 100 }, // codes admin faux, par compte (un seul admin)
   mailTo: { max: 3, ms: HOUR, keys: 10_000 }, // e-mails d'inscription ou d'oubli par adresse destinataire
   mailIp: { max: 20, ms: HOUR, keys: 10_000 }, // mêmes e-mails par IP
+  registerIp: { max: 20, ms: HOUR, keys: 10_000 }, // inscriptions par IP, comptées avant HIBP et argon2 (travail coûteux)
   promo: { max: 10, ms: HOUR, keys: 10_000 }, // codes promo invalides par cliente
   promoIp: { max: 30, ms: HOUR, keys: 10_000 }, // mêmes essais par IP : plusieurs comptes ne multiplient pas les essais depuis une connexion
   booking: { max: 4, ms: HOUR, keys: 10_000 }, // réservations créées par IP : plusieurs comptes ne bloquent pas l'agenda depuis une seule connexion

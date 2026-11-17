@@ -8,7 +8,7 @@ import Admin from './_layout.astro';
 import Encaisser from './_encaisser.astro';
 import Supprimer from './_supprimer.astro';
 import { adminId, agendaAction, deleteAction, readForm, staffId, fmtDateTime, fmtDay, fmtTime } from '../../lib/server/admin.ts';
-import { alertsFor } from '../../lib/server/profil.ts';
+import { alertsFor, openNote } from '../../lib/server/profil.ts';
 import { addDays, monday } from '../../lib/server/admin-form.ts';
 import { PAY_METHODS, type PayMethod } from '../../lib/server/booking.ts';
 import { alerts, clientCards, dayBookings, dayFrame, freeMinutes, loadByDay, type DayBooking } from '../../lib/server/accueil.ts';
@@ -26,7 +26,7 @@ if (Astro.request.method === 'POST') {
   if (!form) return new Response(null, { status: 413 });
   const r = form.get('action') === 'delete'
     ? admin ? await deleteAction(form) : { ok: false as const, error: "Seule l'admin peut supprimer un rendez-vous." }
-    : await agendaAction(me, form);
+    : await agendaAction(me, form, admin);
   if (r.ok) return Astro.redirect(`/admin?ok=${r.key}#${r.key === 'supprime' ? 'h-day' : `c-${r.id}`}`, 303);
   error = r.error;
   Astro.response.status = 400;
@@ -57,7 +57,8 @@ const [rows, frame, cards, freeTomorrow, load, week, al] = await Promise.all([
 ]);
 // Badges d'alerte de la fiche de soin (zones, allergies, toucher) : repliés sous une icône, jamais affichés au comptoir
 const careAlerts = await alertsFor(cards.map((c) => c.id));
-const card = new Map(cards.map((c) => [c.id, c]));
+// Notes de la fiche chiffrées en base : déchiffrées ici, pour l'affichage seulement
+const card = new Map(cards.map((c) => [c.id, { ...c, notes: openNote(c.notes) }]));
 
 const minutes = (n: number) => (n < 60 ? `${n} min` : `${Math.floor(n / 60)} h${n % 60 ? ` ${String(n % 60).padStart(2, '0')}` : ''}`);
 const length = (r: DayBooking) => minutes(Math.round((r.ends_at.getTime() - r.starts_at.getTime()) / 60000));
@@ -150,7 +151,7 @@ const tillTotal = tills.reduce((s, t) => s + t.cents, 0);
             {primary === 'arrive' && <form method="post" action={`/admin#c-${r.id}`}><input type="hidden" name="action" value="arrive"><input type="hidden" name="id" value={r.id}>
               <button class="btn btn--solid big" type="submit">Arrivée<span class="visually-hidden"> de {r.name ?? 'la cliente'}</span></button></form>}
             {primary === 'consent' && <a class="btn btn--solid big" href={`/admin/clientes/${r.user_id}/consentement?type=${consent}`}>Faire signer sur la tablette</a>}
-            {primary === 'pay' && <Encaisser r={r} />}
+            {primary === 'pay' && (admin ? <Encaisser r={r} /> : <p class="none">À encaisser par l'admin</p>)}
             <details class="more">
               <summary aria-label={`Plus d'actions : ${r.name ?? 'rendez-vous'} à ${fmtTime(r.starts_at)}`}><span aria-hidden="true">···</span></summary>
               <div class="menu">
@@ -166,11 +167,11 @@ const tillTotal = tills.reduce((s, t) => s + t.cents, 0);
                   ? <form method="post" action={`/admin#c-${r.id}`}><input type="hidden" name="action" value="show"><input type="hidden" name="id" value={r.id}><button class="btn btn--ghost" type="submit">Retirer l'absence</button></form>
                   : <details><summary>Absente</summary><form method="post" action={`/admin#c-${r.id}`}><input type="hidden" name="action" value="no_show"><input type="hidden" name="id" value={r.id}>
                       <ul class="cons">{absence.map((t) => <li>{t}</li>)}</ul><button class="btn btn--ghost" type="submit">Confirmer l'absence</button></form></details>)}
-                {live && r.paid_method && <details><summary>Retirer l'encaissement</summary><form method="post" action={`/admin#c-${r.id}`}><input type="hidden" name="action" value="unpay"><input type="hidden" name="id" value={r.id}>
+                {admin && live && r.paid_method && <details><summary>Retirer l'encaissement</summary><form method="post" action={`/admin#c-${r.id}`}><input type="hidden" name="action" value="unpay"><input type="hidden" name="id" value={r.id}>
                   <ul class="cons"><li>Le rendez-vous repasse « à encaisser ». Le montant sort de la caisse du jour.</li></ul><button class="btn btn--ghost" type="submit">Confirmer le retrait</button></form></details>}
                 {(r.status === 'pending_payment' || (live && !r.past)) && <details><summary>Annuler le rendez-vous</summary><form method="post" action={`/admin#c-${r.id}`}><input type="hidden" name="action" value="cancel"><input type="hidden" name="id" value={r.id}>
                   <ul class="cons"><li>Le créneau est libéré.</li>{r.user_id && <li>La cliente reçoit un e-mail d'annulation.</li>}{r.package && <li>La séance est rendue au forfait.</li>}</ul>
-                  {due > 0 && <label class="check"><input type="checkbox" name="refund"><span>Rembourser l'acompte ({euros(due)})</span></label>}
+                  {admin && due > 0 && <label class="check"><input type="checkbox" name="refund"><span>Rembourser l'acompte ({euros(due)})</span></label>}
                   <button class="btn btn--ghost" type="submit">Confirmer l'annulation</button></form></details>}
                 {admin && !r.past && <Supprimer id={r.id} label={`le rendez-vous de ${fmtTime(r.starts_at)}`} action="/admin" />}
                 <p class="links">{r.user_id && <a href={`/admin/clientes/${r.user_id}`}>Fiche</a>}{r.phone && <a href={`tel:${digits(r.phone)}`}>Appeler</a>}<a href={`${agenda(today)}#r-${r.id}`}>Agenda</a></p>
@@ -187,7 +188,7 @@ const tillTotal = tills.reduce((s, t) => s + t.cents, 0);
       {toCash.length > 0 && <>
         <h3>À encaisser ({toCash.length})</h3>
         <ul class="cash">{toCash.map(({ r }) => (
-          <li><p><strong>{fmtTime(r.starts_at)}</strong> {r.name ?? 'Sans nom'}<br><small>{r.service}</small></p><Encaisser r={r} label="Encaisser" /></li>
+          <li><p><strong>{fmtTime(r.starts_at)}</strong> {r.name ?? 'Sans nom'}<br><small>{r.service}</small></p>{admin && <Encaisser r={r} label="Encaisser" />}</li>
         ))}</ul>
       </>}
       <h3>Caisse du jour</h3>

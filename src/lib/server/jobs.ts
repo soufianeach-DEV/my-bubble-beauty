@@ -6,14 +6,15 @@ import { refreshIfDue, sendReviewRequests } from './avis.ts';
 import { sendAftercare, sendReminders } from './booking.ts';
 import { sql } from './db.ts';
 import { log } from './log.ts';
+import { sealLegacyNotes } from './profil.ts';
 import { refreshRatingIfDue } from './note-google.ts';
 
-export type JobsResult = { ran: boolean; reminders: number; aftercare: number; reviewRequests: number; googleReviews: number | null; googleRating: boolean | null };
+export type JobsResult = { ran: boolean; reminders: number; aftercare: number; reviewRequests: number; googleReviews: number | null; googleRating: boolean | null; notesSealed: number };
 
 let started = false;
 
 export async function runJobs(): Promise<JobsResult> {
-  const none: JobsResult = { ran: false, reminders: 0, aftercare: 0, reviewRequests: 0, googleReviews: null, googleRating: null };
+  const none: JobsResult = { ran: false, reminders: 0, aftercare: 0, reviewRequests: 0, googleReviews: null, googleRating: null, notesSealed: 0 };
   try {
     const r = await sql.begin(async (tx) => {
       const [{ ok }] = await tx`SELECT pg_try_advisory_xact_lock(hashtext('my-bubble-rappels')) AS ok`;
@@ -28,11 +29,14 @@ export async function runJobs(): Promise<JobsResult> {
         googleReviews: await safe('google_reviews', () => refreshIfDue(), null),
         // Note Google par l'API Places : une fois par nuit, seulement sans les avis Business Profile
         googleRating: await safe('google_rating', () => refreshRatingIfDue(), null),
+        // Notes d'avant la migration 028 encore en clair : rechiffrées par lots (plus rien à faire ensuite)
+        notesSealed: await safe('seal_notes', () => sealLegacyNotes(), 0),
       };
     });
     if (r.reminders) log('reminders_sent', { count: r.reminders });
     if (r.aftercare) log('aftercare_sent', { count: r.aftercare });
     if (r.reviewRequests) log('review_requests_sent', { count: r.reviewRequests });
+    if (r.notesSealed) log('notes_sealed', { count: r.notesSealed });
     return r;
   } catch (e) {
     log('reminders_failed', { error: String(e) });

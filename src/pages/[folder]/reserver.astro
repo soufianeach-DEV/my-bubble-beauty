@@ -120,7 +120,7 @@ if (open && method === 'POST') {
     if (etape === 'reserver' && cgv) {
       const r = await createBooking({ userId: user.id, serviceId, startsAt, promoCode: code, lang, ip: Astro.locals.ip });
       if (r.ok) {
-        if (f.data.sante) await setConsent(user.id, true, Astro.locals.ip);
+        if (f.data.sante) await setConsent(user.id, true, Astro.locals.ip, lang);
         return Astro.redirect(r.checkoutUrl ?? `/${folder}/compte?reservation=ok`, 303);
       }
       fail = r.error;

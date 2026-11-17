@@ -34,6 +34,11 @@ export async function register(input: { email: string; password: string; name?: 
   const email = input.email.trim().toLowerCase();
   // Adresse impossible : aucune ne peut exister, la réponse générique ne trahit rien
   if (badEmail(email)) return null;
+  // Rafale depuis une IP : arrêtée avant l'appel à HIBP et le hachage argon2, qui saturent le serveur (même réponse générique)
+  if (hit('registerIp', input.ip)) {
+    log('register_ip_limited', { ip: input.ip });
+    return null;
+  }
   const problem = await newPasswordProblem(input.password);
   if (problem) return problem;
   const hash = await hashPassword(input.password);
@@ -130,7 +135,9 @@ export async function requestReset(email: string, lang: Lang, ip: string): Promi
     log('reset_mail_limited', { ip });
     return;
   }
-  const [u] = await sql`SELECT id FROM users WHERE email = ${email} AND removed_at IS NULL`;
+  // Équipe dont l'application TOTP n'est pas encore confirmée : pas de lien (le secret affiché à l'enrôlement pourrait être relevé
+  // par qui lit sa boîte mail). Elle demande à l'admin de relancer son enrôlement. Réponse identique dans tous les cas.
+  const [u] = await sql`SELECT id FROM users WHERE email = ${email} AND removed_at IS NULL AND NOT (role IS NOT NULL AND totp_confirmed_at IS NULL)`;
   log('reset_requested', { user_id: u?.id ?? null, ip });
   if (u) mailWithToken(u.id, email, 'reset', 30, (t) => resetMail(lang, t));
 }

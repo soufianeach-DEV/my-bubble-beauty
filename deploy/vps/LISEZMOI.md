@@ -103,13 +103,29 @@ Dès que le DNS répond, Caddy obtient le certificat HTTPS tout seul (`journalct
 
 ## Sauvegardes
 
+### Chiffrer les sauvegardes (à faire une fois)
+
+Sans clé, la sauvegarde reste en clair et le journal du timer l'écrit en toutes lettres. Avec une clé GPG **publique** posée sur le VPS, chaque copie devient `mybubble-AAAA-MM-JJ.dump.gpg`. Le VPS peut alors chiffrer mais jamais relire. La clé privée reste chez toi, hors du VPS (même clé que pour la sauvegarde GitHub : `docs/exploitation.md` §1.1).
+
+```bash
+# Depuis le PC : envoyer la clé publique
+scp mybubble-sauvegarde-publique.asc ubuntu@IP_DU_VPS:/tmp/
+# Sur le VPS : la poser, lisible par postgres (une clé publique ne protège rien en lecture)
+sudo install -o root -g root -m 0644 /tmp/mybubble-sauvegarde-publique.asc /etc/mybubble-sauvegarde.asc && rm /tmp/mybubble-sauvegarde-publique.asc
+sudo systemctl start mybubble-backup && ls -l /var/backups/mybubble/ | tail -2
+```
+
+Pour restaurer une copie chiffrée, déchiffre-la d'abord sur le PC (`gpg --decrypt fichier.dump.gpg > fichier.dump`), puis renvoie le `.dump` sur le VPS. La clé privée ne va jamais sur le VPS.
+
+### Rapatrier une copie
+
 Les copies de la nuit sont sur le même disque que la base. Si le VPS est perdu, elles le sont aussi. Rapatrie-en une chaque semaine sur ton PC :
 
 ```bash
 # Sur le VPS
 sudo install -o ubuntu -m 600 /var/backups/mybubble/mybubble-AAAA-MM-JJ.dump /tmp/
 # Sur le PC
-scp ubuntu@IP_DU_VPS:/tmp/mybubble-AAAA-MM-JJ.dump .
+scp ubuntu@IP_DU_VPS:/tmp/mybubble-AAAA-MM-JJ.dump .   # .dump.gpg une fois la clé posée
 # Puis sur le VPS : la copie de /tmp ne reste pas
 sudo rm /tmp/mybubble-AAAA-MM-JJ.dump
 ```

@@ -4,13 +4,15 @@ export const prerender = false;
 // Une ligne se déplie pour modifier noms, durée, tampon, prix, ordre et ouverture en ligne (même formulaire et mêmes règles
 // qu'avant : saveService garde duration_manual et closed_by_admin) ; jamais de suppression.
 import Admin from './_layout.astro';
-import { staffId, bulkServices, byCategory, listServicesWithStats, readForm, saveService } from '../../lib/server/admin.ts';
+import { adminId, staffId, bulkServices, byCategory, listServicesWithStats, readForm, saveService } from '../../lib/server/admin.ts';
 import { JS_VERSION } from '../../lib/site';
 import { centsInput } from '../../lib/server/admin-form.ts';
 import { euros } from '../../lib/server/pricing.ts';
 
 const me = staffId(Astro.locals);
 if (!me) return new Response(null, { status: 404 });
+// Prix : admin seulement (saveService le refuse aussi côté serveur)
+const admin = adminId(Astro.locals) !== null;
 // Message affiché sous la ligne enregistrée (le formulaire renvoie sur son ancre)
 let flash: { id: number; text: string; error?: boolean } | null = null;
 // Message de l'action en lot, affiché au-dessus de la liste
@@ -30,7 +32,7 @@ if (Astro.request.method === 'POST') {
     if (b.ok) return Astro.redirect(`/admin/prestations?${keep({ lot: form.get('bulk') === 'on' ? 'on' : 'off', n: String(b.changed), sans: String(b.skipped) })}#lot`, 303);
     bulkMsg = { text: b.error, error: true };
   } else {
-    const r = await saveService(me, form);
+    const r = await saveService(me, form, admin);
     if (r.ok) return Astro.redirect(`/admin/prestations?${keep({ ok: String(r.id) })}#p-${r.id}`, 303);
     flash = { id: Number(form.get('id')), text: r.error, error: true };
   }
@@ -109,7 +111,7 @@ const link = (f: Filter) => `/admin/prestations?${new URLSearchParams({ ...(sear
             <div class="row"><div class="nums">
               <label>Durée (min)<input name="duration" type="number" min="5" max="600" step="1" value={s.duration_min ?? ''}></label>
               <label>Tampon (min)<input name="buffer" type="number" min="0" max="120" step="5" value={s.buffer_min}></label>
-              <label>Prix (€)<input name="price" inputmode="decimal" pattern="[0-9]{1,5}([.,][0-9]{1,2})?" value={centsInput(s.price_cents)} required></label>
+              <label>Prix (€)<input name="price" inputmode="decimal" pattern="[0-9]{1,5}([.,][0-9]{1,2})?" value={centsInput(s.price_cents)} required readonly={!admin} title={admin ? undefined : "Prix réglé par l'admin"}></label>
               <label>Ordre<input name="sort" type="number" min="0" max="9999" step="1" value={s.sort} required></label>
             </div>
             <div class="end">

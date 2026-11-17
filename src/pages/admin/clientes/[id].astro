@@ -36,7 +36,7 @@ if (Astro.request.method === 'POST') {
   if (!form) return new Response(null, { status: 413 });
   // Les actions sur un rendez-vous passent par l'agenda (mêmes règles et même journal)
   const scope = form.get('scope');
-  const r = form.get('action') === 'delete' ? (manage ? await deleteAction(form) : { ok: false as const, error: "Seule l'admin peut supprimer un rendez-vous." }) : scope === 'booking' ? await agendaAction(me, form) : scope === 'suivi' ? await suiviAction(me, form) : scope === 'fidelite' ? await applyReward(me, form) : scope === 'profil' ? await saveProfile(me, id, form) : scope === 'forfait' ? await (form.get('action') === 'stop' ? stopPackage : sellPackage)(me, id, form) : await clientAction(me, form, manage);
+  const r = form.get('action') === 'delete' ? (manage ? await deleteAction(form) : { ok: false as const, error: "Seule l'admin peut supprimer un rendez-vous." }) : scope === 'booking' ? await agendaAction(me, form, manage) : scope === 'suivi' ? await suiviAction(me, form) : scope === 'fidelite' ? await applyReward(me, form) : scope === 'profil' ? await saveProfile(me, id, form) : scope === 'forfait' ? (manage ? await (form.get('action') === 'stop' ? stopPackage : sellPackage)(me, id, form) : { ok: false as const, error: "Réservé à l'admin : vente et arrêt d'un forfait." }) : await clientAction(me, form, manage);
   if (r.ok && r.key === 'efface') return Astro.redirect('/admin/clientes?ok=efface', 303);
   if (r.ok) return Astro.redirect(`${self}?ok=${r.key}${r.id !== id && r.key !== 'supprime' ? `#b-${r.id}` : ''}`, 303);
   error = r.error;
@@ -87,7 +87,8 @@ const LANGS: Record<string, string> = { fr: 'français', nl: 'néerlandais', en:
 const tel = (p: string) => `tel:${p.replace(/[^0-9+]/g, '')}`;
 const dmy = (d: string) => d.split('-').reverse().join('/');
 const PACKAGE_TONE = { actif: 'ok', epuise: 'wait', expire: 'alert', arrete: 'alert' } as const;
-const canSell = !u.blocked_at && !u.removed_at && !u.deleted_at;
+// Vendre un forfait : argent, donc admin seulement (la page le refuse aussi au POST)
+const canSell = manage && !u.blocked_at && !u.removed_at && !u.deleted_at;
 ---
 <Admin title={u.name || u.email}>
 {done && <p class="notice" role="status">{done}</p>}
@@ -236,7 +237,7 @@ const canSell = !u.blocked_at && !u.removed_at && !u.deleted_at;
             <button class="btn btn--ghost" type="submit" name="action" value={b.no_show ? 'show' : 'no_show'}>{b.no_show ? "Retirer l'absence" : 'Marquer absente'}</button>
           </form>
         )}
-{b.status === 'confirmed' && b.past && !b.no_show && (b.paid_method ? (
+{manage && b.status === 'confirmed' && b.past && !b.no_show && (b.paid_method ? (
           <form class="cell-form" method="post" action={self}>
             <input type="hidden" name="scope" value="booking"><input type="hidden" name="id" value={b.id}>
             <small>Encaissé {euros(b.paid_cents ?? 0)} · {PAY_METHODS[b.paid_method as PayMethod]}</small>
@@ -266,7 +267,7 @@ const canSell = !u.blocked_at && !u.removed_at && !u.deleted_at;
             </form>
           </details>
         ))}
-        {b.status !== 'confirmed' && b.status !== 'pending_payment' && due(b) > 0 && (
+        {manage && b.status !== 'confirmed' && b.status !== 'pending_payment' && due(b) > 0 && (
           <form class="cell-form" method="post" action={self}>
             <input type="hidden" name="scope" value="booking"><input type="hidden" name="id" value={b.id}>
             <button class="btn btn--ghost" type="submit" name="action" value="manual_refund">Marquer remboursé hors site ({euros(due(b))})</button>
@@ -288,7 +289,7 @@ const canSell = !u.blocked_at && !u.removed_at && !u.deleted_at;
     <p><strong>{p.left} séance{p.left > 1 ? 's' : ''} restante{p.left > 1 ? 's' : ''}</strong> sur {p.total} · {p.done} faite{p.done > 1 ? 's' : ''} · {p.booked} réservée{p.booked > 1 ? 's' : ''}</p>
     <p class="meter" aria-hidden="true"><span>{Array.from({ length: p.total }, (_, i) => <i class:list={{ on: i < p.done, mark: i >= p.done && i < p.done + p.booked }}></i>)}</span></p>
     <p class="hint">{p.service} · vendu {euros(p.price_cents)} le {day(p.sold_at)} · valable jusqu'au {dmy(p.expires_on)}{p.cancelled_at && ` · arrêté le ${day(p.cancelled_at)}${p.cancel_reason ? ` : ${p.cancel_reason}` : ''}`}</p>
-    {!p.cancelled_at && p.state !== 'expire' && (
+    {manage && !p.cancelled_at && p.state !== 'expire' && (
       <details class="cancel"><summary>Arrêter le forfait<span class="visually-hidden"> {p.label}</span></summary>
         <form class="cell-form" method="post" action={`${self}#f-${p.id}`}>
           <input type="hidden" name="scope" value="forfait"><input type="hidden" name="action" value="stop"><input type="hidden" name="package" value={p.id}>

@@ -1,5 +1,6 @@
 // Textes de l'espace cliente : connexion, inscription, activation, mot de passe et tableau de bord, dans les trois langues.
 import type { Lang } from '../../lib/site';
+import { HEALTH_CONSENT, HEALTH_CONSENT_ON } from './accord-sante';
 
 const fr = {
   email: 'Adresse e-mail',
@@ -150,9 +151,9 @@ const fr = {
     exportHint: "Téléchargez tout ce que nous gardons sur vous (compte, rendez-vous, notes de l'institut, journal de sécurité) dans un fichier JSON.",
     export: 'Télécharger mes données',
     consentTitle: 'Informations de santé',
-    consentOn: (d: string) => `Vous avez accepté le ${d} que l'institut note dans votre fiche les informations de santé utiles à vos soins (allergies, contre-indications).`,
+    consentOn: HEALTH_CONSENT_ON.fr,
     consentOff: "Vous n'avez pas donné votre accord : l'institut ne note aucune information de santé dans votre fiche.",
-    consentText: "J'accepte que l'institut note dans ma fiche les informations de santé utiles à mes soins (allergies, contre-indications). Je peux retirer cet accord à tout moment depuis mon compte.",
+    consentText: HEALTH_CONSENT.fr,
     consentGive: 'Donner mon accord',
     consentWithdraw: 'Retirer mon accord',
     consentGiven: 'Votre accord est enregistré.',
@@ -388,9 +389,9 @@ export const COMPTE: Record<Lang, typeof fr> = {
       exportHint: 'Download alles wat we over u bewaren (account, afspraken, notities van het instituut, beveiligingslogboek) in een JSON-bestand.',
       export: 'Mijn gegevens downloaden',
       consentTitle: 'Gezondheidsinformatie',
-      consentOn: (d: string) => `U hebt op ${d} aanvaard dat het instituut gezondheidsinformatie die nuttig is voor uw behandelingen (allergieën, contra-indicaties) in uw dossier noteert.`,
+      consentOn: HEALTH_CONSENT_ON.nl,
       consentOff: 'U hebt geen toestemming gegeven: het instituut noteert geen gezondheidsinformatie in uw dossier.',
-      consentText: 'Ik aanvaard dat het instituut gezondheidsinformatie die nuttig is voor mijn behandelingen (allergieën, contra-indicaties) in mijn dossier noteert. Ik kan deze toestemming op elk moment intrekken via mijn account.',
+      consentText: HEALTH_CONSENT.nl,
       consentGive: 'Toestemming geven',
       consentWithdraw: 'Mijn toestemming intrekken',
       consentGiven: 'Uw toestemming is geregistreerd.',
@@ -622,9 +623,9 @@ export const COMPTE: Record<Lang, typeof fr> = {
       exportHint: 'Download everything we keep about you (account, appointments, salon notes, security log) as a JSON file.',
       export: 'Download my data',
       consentTitle: 'Health information',
-      consentOn: (d: string) => `On ${d}, you agreed that the salon may note health information useful for your treatments (allergies, contraindications) in your file.`,
+      consentOn: HEALTH_CONSENT_ON.en,
       consentOff: 'You have not given your consent: the salon notes no health information in your file.',
-      consentText: 'I agree that the salon may note health information useful for my treatments (allergies, contraindications) in my file. I can withdraw this consent at any time from my account.',
+      consentText: HEALTH_CONSENT.en,
       consentGive: 'Give my consent',
       consentWithdraw: 'Withdraw my consent',
       consentGiven: 'Your consent has been recorded.',

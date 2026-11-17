@@ -58,10 +58,15 @@ export const listServicesWithStats = () =>
       (SELECT count(*)::int FROM bookings b WHERE b.service_id = s.id AND b.status = 'confirmed' AND b.created_at > now() - interval '30 days') AS booked_30d
     FROM services s WHERE s.retired_at IS NULL ORDER BY s.sort, s.id`;
 
-export async function saveService(userId: number, form: FormData): Promise<Result> {
+export async function saveService(userId: number, form: FormData, admin: boolean): Promise<Result> {
   const p = serviceForm.safeParse(fields(form));
   if (!p.success) return first(p.error);
   const s = p.data;
+  // La gestionnaire règle durée, tampon et mise en ligne ; le prix reste à l'admin
+  if (!admin) {
+    const [c] = await sql<{ price_cents: number }[]>`SELECT price_cents FROM services WHERE id = ${s.id}`;
+    if (c && c.price_cents !== s.price) return { ok: false, error: "Seule l'admin peut changer un prix." };
+  }
   const [r] = await sql`
     UPDATE services SET name_fr = ${s.name_fr}, name_nl = ${s.name_nl}, name_en = ${s.name_en}, duration_min = ${s.duration}, buffer_min = ${s.buffer},
       price_cents = ${s.price}, deposit_cents = 0, sort = ${s.sort}, active = ${s.active},
@@ -199,10 +204,16 @@ export async function deleteAction(form: FormData): Promise<Result> {
   return (await deleteBooking(p.data.id, p.data.notify)) ? { ok: true, id: p.data.id, key: 'supprime' } : { ok: false, error: 'Rendez-vous introuvable.' };
 }
 
-export async function agendaAction(userId: number, form: FormData): Promise<Result> {
+// L'argent est réservé à l'admin (décision de la gérante) : encaisser, retirer un encaissement, rembourser.
+// admin sans valeur par défaut : un nouvel appel doit dire qui agit, rien ne s'ouvre par oubli.
+const MONEY = new Set(['pay', 'unpay', 'refund', 'manual_refund']);
+export const ADMIN_ONLY_MONEY = "Réservé à l'admin : encaissement et remboursement.";
+
+export async function agendaAction(userId: number, form: FormData, admin: boolean): Promise<Result> {
   const p = agendaForm.safeParse(fields(form));
   if (!p.success) return first(p.error);
   const { action, id } = p.data;
+  if (!admin && (MONEY.has(action) || p.data.refund)) return { ok: false, error: ADMIN_ONLY_MONEY };
   if (action === 'no_show' || action === 'show') {
     const b = await setNoShow(id, action === 'no_show');
     if (b === 'gift') return { ok: false, error: "Le bon cadeau de ce rendez-vous sert déjà à un autre rendez-vous : l'absence reste notée." };

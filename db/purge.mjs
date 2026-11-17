@@ -8,6 +8,9 @@ async function erase(tx, ids, why) {
   await tx`UPDATE bookings SET client_erased = true WHERE user_id = ANY(${ids}::bigint[])`;
   await tx`UPDATE audit_log SET ip = NULL WHERE client_id = ANY(${ids}::bigint[]) OR actor_id = ANY(${ids}::bigint[])`;
   await tx`INSERT INTO audit_log (action, client_id, details) SELECT 'account_erased', id, ${tx.json({ by: why })} FROM unnest(${ids}::bigint[]) id`;
+  // Bons cadeaux de la personne (rattachés ou envoyés à son adresse) : nom et e-mail retirés ; le bon reste utilisable par son code
+  await tx`UPDATE gift_cards SET recipient = 'Compte supprimé', recipient_email = NULL
+    WHERE user_id = ANY(${ids}::bigint[]) OR lower(recipient_email) IN (SELECT lower(email) FROM users WHERE id = ANY(${ids}::bigint[]))`;
   return (await tx`DELETE FROM users WHERE id = ANY(${ids}::bigint[])`).count;
 }
 const ids = (rows) => rows.map((r) => r.id);

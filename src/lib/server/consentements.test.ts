@@ -316,6 +316,44 @@ test('consentements sur une vraie base', { skip: !url && 'TEST_DATABASE_URL abse
     // Après un refus, la saisie revient dans le formulaire (santé ignorée sans accord)
     const draft = prof.withDraft(await prof.readProfile(sheet), fd({ heat: 'chaud', zones: ['dos'], allergies: ['latex'], notes: 'Brouillon' }));
     assert.deepEqual([draft.care.heat, draft.care.zones, draft.health, draft.notes], ['chaud', ['dos'], null, 'Brouillon']);
+
+    // Notes de l'équipe et mot de la cliente chiffrés en base, lisibles par l'application
+    const rawNotes = async () => (await sql<{ notes: string; client_note: string }[]>`SELECT notes, client_note FROM users WHERE id = ${sheet}`)[0];
+    assert.ok((await rawNotes()).notes.startsWith('enc1:'));
+    assert.ok(!(await rawNotes()).notes.includes('Ancienne'));
+    assert.equal((await prof.readProfile(sheet)).notes, 'Ancienne note gardée.');
+    // Note d'avant la migration 028 (en clair) : lue telle quelle, puis rechiffrée par les tâches
+    await sql`UPDATE users SET notes = 'Note en clair' WHERE id = ${sheet}`;
+    assert.equal((await prof.readProfile(sheet)).notes, 'Note en clair');
+    assert.ok((await prof.sealLegacyNotes()) >= 1);
+    assert.ok((await rawNotes()).notes.startsWith('enc1:'));
+    assert.equal((await prof.readProfile(sheet)).notes, 'Note en clair');
+    // Accord santé : le texte exact accepté est gardé, dans la langue de la page
+    const { HEALTH_CONSENT } = await import('../../data/i18n/accord-sante.ts');
+    await rgpd.setConsent(sheet, true, '127.0.0.1', 'nl');
+    assert.equal((await sql`SELECT health_consent_text FROM users WHERE id = ${sheet}`)[0].health_consent_text, HEALTH_CONSENT.nl);
+    assert.ok((await prof.saveOwnProfile(sheet, fd({ client_note: 'Enceinte de 3 mois' }), '127.0.0.1', 'nl')).ok);
+    assert.ok((await rawNotes()).client_note.startsWith('enc1:'));
+    assert.equal((await prof.readProfile(sheet)).clientNote, 'Enceinte de 3 mois');
+    const ex2 = await rgpd.exportData(sheet, '127.0.0.1');
+    assert.equal(ex2.account.client_note, 'Enceinte de 3 mois');
+    assert.equal(ex2.account.institute_notes, 'Note en clair');
+    assert.equal(ex2.account.health_consent_text, HEALTH_CONSENT.nl);
+    // Retrait : texte de l'accord et mot de la cliente effacés, notes de l'équipe gardées
+    await rgpd.setConsent(sheet, false, '127.0.0.1');
+    const after = (await sql`SELECT health_consent_text, client_note, notes FROM users WHERE id = ${sheet}`)[0];
+    assert.deepEqual([after.health_consent_text, after.client_note], [null, '']);
+    assert.ok(after.notes.startsWith('enc1:'));
+
+    // Argent réservé à l'admin : la gestionnaire ne peut ni encaisser, ni retirer un encaissement, ni rembourser, ni changer un prix
+    const adm = await import('./admin.ts');
+    for (const a of [{ action: 'pay', method: 'especes', amount: '10' }, { action: 'unpay' }, { action: 'refund' }, { action: 'manual_refund' }, { action: 'cancel', refund: 'on' }]) {
+      assert.deepEqual(await adm.agendaAction(other, fd({ ...a, id: '1' }), false), { ok: false, error: adm.ADMIN_ONLY_MONEY }, a.action);
+    }
+    const svc = { id: String(laser.id), name_fr: 'Laser test', name_nl: 'Laser test', name_en: 'Laser test', duration: '30', buffer: '', sort: '1', active: 'on' };
+    assert.equal((await adm.saveService(other, fd({ ...svc, price: '1' }), false)).ok, false, 'prix changé par la gestionnaire');
+    assert.ok((await adm.saveService(other, fd({ ...svc, price: '45' }), false)).ok, 'même prix : durée et mise en ligne restent permises');
+    assert.ok((await adm.saveService(other, fd({ ...svc, price: '50' }), true)).ok, "l'admin change le prix");
   } finally {
     await sql`DELETE FROM bookings WHERE service_id IN (SELECT id FROM services WHERE slug IN (${`laser-${tag}`}, ${`blanchiment-des-dents-${tag}`}))`;
     await sql`DELETE FROM services WHERE slug IN (${`laser-${tag}`}, ${`blanchiment-des-dents-${tag}`})`;

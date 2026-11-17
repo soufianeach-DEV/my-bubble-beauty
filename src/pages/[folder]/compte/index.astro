@@ -74,7 +74,7 @@ if (Astro.request.method === 'POST') {
       headers: { 'Content-Type': 'application/json; charset=utf-8', 'Content-Disposition': 'attachment; filename="mes-donnees-my-bubble-beauty.json"' },
     });
   } else if (f.action === 'consent') {
-    await setConsent(user.id, f.give === 'on', Astro.locals.ip);
+    await setConsent(user.id, f.give === 'on', Astro.locals.ip, lang);
     consent = f.give === 'on' ? (consent ?? new Date()) : null;
     notice = { text: consent ? ta.consentGiven : ta.consentWithdrawn };
   } else if (f.action === 'delete') {

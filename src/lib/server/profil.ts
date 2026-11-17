@@ -6,6 +6,8 @@ import { audit, type Result } from './admin.ts';
 import { sql } from './db.ts';
 import { openText, sealText } from './totp.ts';
 import { journal } from './journal.ts';
+import { HEALTH_CONSENT } from '../../data/i18n/accord-sante.ts';
+import type { Lang } from '../site.ts';
 
 const opts = <T extends Record<string, string>>(o: T) => o;
 export const ALLERGIES = opts({ fruits_coque: 'Fruits à coque', parfum: 'Parfum', huiles: 'Huiles essentielles', latex: 'Latex', lanoline: 'Lanoline', conservateurs: 'Conservateurs', nickel: 'Nickel', autre: 'Autre' });
@@ -26,13 +28,40 @@ export const openHealth = (blob: Buffer | null): Health | null => {
   return t ? (JSON.parse(t) as Health) : null;
 };
 
+// Notes de l'équipe et mot de la cliente : texte libre où de la santé peut se glisser, donc chiffré comme la fiche santé
+// (clé d'un autre usage). Stocké en texte « enc1:<base64> » ; une note d'avant le chiffrement se lit telle quelle
+// jusqu'à ce que sealLegacyNotes la rechiffre. Poivre changé ou chiffré altéré : note illisible, rendue vide.
+const NOTES = 'client-notes';
+const SEALED = 'enc1:';
+export const sealNote = (text: string) => (text ? SEALED + sealText(PASSWORD_PEPPER, NOTES, text).toString('base64') : '');
+export const openNote = (stored: string | null | undefined): string => {
+  if (!stored) return '';
+  if (!stored.startsWith(SEALED)) return stored;
+  return openText(PASSWORD_PEPPER, NOTES, Buffer.from(stored.slice(SEALED.length), 'base64')) ?? '';
+};
+
+// Rechiffre les notes encore en clair (d'avant la migration 028), par lots ; lancé avec les tâches de fond
+export async function sealLegacyNotes(limit = 200): Promise<number> {
+  const rows = await sql<{ id: number; notes: string; client_note: string }[]>`
+    SELECT id, notes, client_note FROM users
+    WHERE (notes <> '' AND notes NOT LIKE 'enc1:%') OR (client_note <> '' AND client_note NOT LIKE 'enc1:%') LIMIT ${limit}`;
+  for (const r of rows) {
+    // Comparaison dans l'écriture : une note modifiée entre-temps (déjà chiffrée) n'est pas écrasée
+    await sql`UPDATE users SET
+      notes = CASE WHEN notes = ${r.notes} AND notes NOT LIKE 'enc1:%' THEN ${sealNote(r.notes)} ELSE notes END,
+      client_note = CASE WHEN client_note = ${r.client_note} AND client_note NOT LIKE 'enc1:%' THEN ${sealNote(r.client_note)} ELSE client_note END
+      WHERE id = ${r.id}`;
+  }
+  return rows.length;
+}
+
 export async function readProfile(userId: number) {
   const [u] = await sql<{ care_profile: Care; health_profile: Buffer | null; notes: string; consent: boolean; consent_at: Date | null; filled_at: Date | null; skipped_at: Date | null; client_note: string }[]>`
     SELECT care_profile, health_profile, notes, health_consent_at IS NOT NULL AS consent, health_consent_at AS consent_at,
       care_filled_at AS filled_at, care_skipped_at AS skipped_at, client_note FROM users WHERE id = ${userId}`;
   return {
-    care: u?.care_profile ?? {}, health: u?.consent ? openHealth(u.health_profile) ?? {} : null, notes: u?.notes ?? '', consent: !!u?.consent,
-    consentAt: u?.consent_at ?? null, filledAt: u?.filled_at ?? null, skippedAt: u?.skipped_at ?? null, clientNote: u?.client_note ?? '',
+    care: u?.care_profile ?? {}, health: u?.consent ? openHealth(u.health_profile) ?? {} : null, notes: openNote(u?.notes), consent: !!u?.consent,
+    consentAt: u?.consent_at ?? null, filledAt: u?.filled_at ?? null, skippedAt: u?.skipped_at ?? null, clientNote: openNote(u?.client_note),
   };
 }
 
@@ -56,7 +85,7 @@ function parseHealth(form: FormData): { health: Health; hasHealth: boolean } {
 
 // Fiche remplie par la cliente : l'accord santé se donne sur la même page (case séparée, art. 9 RGPD) ; sans accord, la partie santé
 // est ignorée. Le mot pour l'institut va dans client_note, jamais dans les notes internes de l'équipe.
-export async function saveOwnProfile(userId: number, form: FormData, ip: string): Promise<{ ok: boolean }> {
+export async function saveOwnProfile(userId: number, form: FormData, ip: string, lang: Lang = 'fr'): Promise<{ ok: boolean }> {
   const note = String(form.get('client_note') ?? '').replace(/\r\n/g, '\n').trim();
   if (note.length > 500) return { ok: false };
   const care = JSON.parse(JSON.stringify(parseCare(form)));
@@ -66,11 +95,11 @@ export async function saveOwnProfile(userId: number, form: FormData, ip: string)
     const [u] = await tx<{ consent: boolean }[]>`SELECT health_consent_at IS NOT NULL AS consent FROM users WHERE id = ${userId} AND role IS NULL FOR UPDATE`;
     if (!u) return { ok: false };
     if (give && !u.consent) {
-      await tx`UPDATE users SET health_consent_at = now() WHERE id = ${userId}`;
+      await tx`UPDATE users SET health_consent_at = now(), health_consent_text = ${HEALTH_CONSENT[lang]} WHERE id = ${userId}`;
       journal('consent_given', { actor: userId, client: userId, ip });
     }
     const consent = u.consent || give;
-    await tx`UPDATE users SET care_profile = ${tx.json(care)}, client_note = ${note}, care_filled_at = now(), care_skipped_at = NULL,
+    await tx`UPDATE users SET care_profile = ${tx.json(care)}, client_note = ${sealNote(note)}, care_filled_at = now(), care_skipped_at = NULL,
       health_profile = CASE WHEN ${consent} AND health_consent_at IS NOT NULL THEN ${hasHealth ? sealText(PASSWORD_PEPPER, HEALTH, JSON.stringify(health)) : null}::bytea ELSE health_profile END,
       updated_at = now() WHERE id = ${userId} AND role IS NULL`;
     // Rien du contenu au journal (données de santé possibles)
@@ -92,7 +121,7 @@ export async function saveProfile(actor: number, clientId: number, form: FormDat
   if (hasHealth && !u.consent) return { ok: false, error: "Sans l'accord de la cliente pour ses données de santé, allergies, type de peau et contre-indications ne peuvent pas être notés." };
   const clean = JSON.parse(JSON.stringify(care));
   // Accord relu dans l'écriture même : un retrait d'accord entre la lecture et l'écriture ne laisse aucune donnée de santé
-  await sql`UPDATE users SET care_profile = ${sql.json(clean)}, notes = ${notes},
+  await sql`UPDATE users SET care_profile = ${sql.json(clean)}, notes = ${sealNote(notes)},
     health_profile = CASE WHEN health_consent_at IS NOT NULL THEN ${hasHealth ? sealText(PASSWORD_PEPPER, HEALTH, JSON.stringify(health)) : null}::bytea END,
     updated_at = now() WHERE id = ${clientId} AND role IS NULL`;
   // Le contenu ne va jamais au journal (données de santé possibles) : seulement ce qui a été rempli
