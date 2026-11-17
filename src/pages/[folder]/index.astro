@@ -32,7 +32,7 @@ const faq = h.faq ? h.faq.items.map((it: { q: string; a: string }) => ({ q: it.q
 const salon = {
   '@type': 'BeautySalon', '@id': SALON_ID, name: 'My Bubble Beauty', description: h.description,
   url: SITE + pagePath(lang, 'home'), telephone: CONTACT.phone, email: CONTACT.email, hasMap: CONTACT.maps,
-  logo: SITE + '/assets/img/logo-my-bubble.png', image: SITE + '/assets/img/galerie-1.webp',
+  logo: SITE + '/assets/img/logo-my-bubble.png', image: SITE + '/assets/img/galerie-10.webp',
   address: { '@type': 'PostalAddress', streetAddress: CONTACT.street, postalCode: CONTACT.postal, addressLocality: CONTACT.city, addressCountry: 'BE' },
   geo: { '@type': 'GeoCoordinates', latitude: 50.8522424, longitude: 4.2847883 },
   areaServed: ['Anderlecht', 'Molenbeek-Saint-Jean', 'Dilbeek', 'Berchem-Sainte-Agathe'],
@@ -154,21 +154,25 @@ const jsonld = {
 <section class="section galerie lit" id="gallery" aria-labelledby="h-galerie">
 <div class="halo halo--lilas" aria-hidden="true"></div>
 <div class="wrap">
-<div class="section__head"><p class="eyebrow">{h.gallery.eyebrow}</p><h2 id="h-galerie" data-snow={h.gallery.title}>{h.gallery.title}</h2></div>
+<div class="section__head"><p class="eyebrow">{h.gallery.eyebrow}</p><h2 id="h-galerie" data-snow={h.gallery.title}>{h.gallery.title}</h2>{h.gallery.intro && <p class="galerie__intro">{h.gallery.intro}</p>}</div>
+{/* Grille régulière : vignettes toutes au même format, recadrées (data-pos choisit le cadrage, la CSP interdit les attributs style) ;
+    la visionneuse montre la photo entière ; l'ordre du fichier de textes est l'ordre de lecture et celui de la visionneuse */}
 <ul class="mosaic">
 {h.gallery.items.map((g) => {
-  // Taille de l'image pleine (les photos d'origine sont en 1600 × 1200) ; variantes 800 et 1200 seulement si plus petites
+  // Taille de l'image pleine ; variantes 800 et 1200 seulement si plus petites
   const gw = g.w ?? 1600, gh = g.h ?? 1200;
   // Vidéo : tuile à part (pas .frame, qui ouvre la visionneuse), muette, lancée seulement par la cliente
   if (g.video) return <li><div class="frame-video"><video src={`/assets/video/${g.video}.mp4`} poster={`/assets/video/${g.video}.webp`} width={gw} height={gh} controls muted playsinline preload="none" aria-label={g.alt}></video></div></li>;
   const srcset = [...[800, 1200].filter((x) => x < gw).map((x) => `/assets/img/galerie-${g.n}-${x}.webp ${x}w`), `/assets/img/galerie-${g.n}.webp ${gw}w`].join(', ');
-  return <li><a class="frame" href={`/assets/img/galerie-${g.n}.webp`} aria-label={g.ariaLabel}><img src={`/assets/img/galerie-${g.n}-800.webp`} srcset={srcset} sizes="(max-width: 767px) 100vw, 50vw" width="800" height={Math.round(800 * gh / gw)} data-w={gw} data-h={gh} alt={g.alt} loading="lazy" decoding="async"></a></li>;
+  return <li><a class="frame" href={`/assets/img/galerie-${g.n}.webp`} data-pos={g.pos} aria-label={g.ariaLabel}><img src={`/assets/img/galerie-${g.n}-800.webp`} srcset={srcset} sizes="(max-width: 899px) 50vw, 300px" width="800" height={Math.round(800 * gh / gw)} data-w={gw} data-h={gh} alt={g.alt} loading="lazy" decoding="async">{g.cap && <span class="frame__cap" aria-hidden="true">{g.cap}</span>}</a></li>;
 })}
 </ul>
 </div>
 <dialog class="lightbox" aria-label={h.gallery.dialogLabel}>
-<figure><img src="/assets/img/galerie-1-800.webp" alt="" width="1600" height="1200" loading="lazy"><figcaption></figcaption></figure>
-<button class="lightbox__close" type="button" aria-label={h.gallery.close}>×</button>
+<figure class="lightbox__fig"><img src={`/assets/img/galerie-${h.gallery.items.find((g) => g.n).n}-800.webp`} alt="" width="1600" height="1200" loading="lazy"><figcaption aria-live="polite"><span class="lightbox__cap"></span><span class="lightbox__count"></span></figcaption></figure>
+<button class="lightbox__nav lightbox__nav--prev" type="button" aria-label={h.gallery.prev}><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg></button>
+<button class="lightbox__nav lightbox__nav--next" type="button" aria-label={h.gallery.next}><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg></button>
+<button class="lightbox__close" type="button" aria-label={h.gallery.close} autofocus>×</button>
 </dialog>
 </section>
 )}

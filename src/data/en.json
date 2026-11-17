@@ -1249,54 +1249,75 @@
    "close": "Close",
    "items": [
     {
-     "n": "5",
+     "n": "10",
+     "w": 1600,
+     "h": 1200,
+     "pos": "droite",
+     "cap": "The treatment room",
+     "alt": "The treatment room: the treatment table set with beige towels, the arc lamp and the wooden “My Bubble” letters on the wall",
+     "ariaLabel": "Enlarge photo: The treatment room: the treatment table set with beige towels, the arc lamp and the wooden “My Bubble” letters on the wall"
+    },
+    {
+     "n": "11",
      "w": 1200,
      "h": 1600,
-     "alt": "Wooden letters spelling “Moment”, “My Bubble” and “Beauty” on the wall, next to a green plant",
-     "ariaLabel": "Enlarge photo: Wooden letters spelling “Moment”, “My Bubble” and “Beauty” on the wall, next to a green plant"
+     "cap": "Comfort",
+     "alt": "The headrest of the treatment table, covered with a towel embroidered with the My Bubble logo, in front of the salon's shelves",
+     "ariaLabel": "Enlarge photo: The headrest of the treatment table, covered with a towel embroidered with the My Bubble logo, in front of the salon's shelves"
     },
     {
      "n": "6",
      "w": 900,
      "h": 1600,
      "alt": "Fresh mint herbal tea served in the treatment room, in a glass decorated with a flower",
-     "ariaLabel": "Enlarge photo: Fresh mint herbal tea served in the treatment room, in a glass decorated with a flower"
+     "ariaLabel": "Enlarge photo: Fresh mint herbal tea served in the treatment room, in a glass decorated with a flower",
+     "cap": "Herbal tea"
     },
     {
-     "video": "galerie-vapeur",
-     "w": 480,
-     "h": 848,
-     "alt": "Video: steam from the facial steamer on a hand, in the treatment room"
-    },
-    {
-     "n": "7",
+     "n": "15",
      "w": 1200,
-     "h": 1290,
-     "alt": "The My Bubble client form on a wooden stand, by the window",
-     "ariaLabel": "Enlarge photo: The My Bubble client form on a wooden stand, by the window"
+     "h": 1600,
+     "cap": "The colours",
+     "alt": "The semi-permanent polish colour chart, to choose from before application",
+     "ariaLabel": "Enlarge photo: The semi-permanent polish colour chart, to choose from before application"
     },
     {
-     "alt": "The treatment room, with the treatment table and beauty equipment",
-     "ariaLabel": "Enlarge photo: The treatment room, with the treatment table and beauty equipment",
-     "n": "1"
+     "n": "12",
+     "w": 1600,
+     "h": 1200,
+     "cap": "The details",
+     "alt": "On the mantelpiece, jars of cotton and reusable make-up pads, neatly arranged",
+     "ariaLabel": "Enlarge photo: On the mantelpiece, jars of cotton and reusable make-up pads, neatly arranged"
     },
     {
-     "alt": "The facial treatment devices in front of the large windows",
-     "ariaLabel": "Enlarge photo: The facial treatment devices in front of the large windows",
-     "n": "2"
+     "n": "14",
+     "w": 900,
+     "h": 1200,
+     "cap": "Calm",
+     "alt": "The treatment table set in front of the large windows, with a folded towel on top",
+     "ariaLabel": "Enlarge photo: The treatment table set in front of the large windows, with a folded towel on top"
     },
     {
-     "alt": "The treatment table set with towels, next to the wooden door",
-     "ariaLabel": "Enlarge photo: The treatment table set with towels, next to the wooden door",
-     "n": "3"
+     "n": "5",
+     "w": 1200,
+     "h": 1600,
+     "alt": "Wooden letters spelling “Moment”, “My Bubble” and “Beauty” on the wall, next to a green plant",
+     "ariaLabel": "Enlarge photo: Wooden letters spelling “Moment”, “My Bubble” and “Beauty” on the wall, next to a green plant",
+     "cap": "The mood"
     },
     {
-     "alt": "Wooden letters spelling “Moment”, “My Bubble” and “Beauty” on the wall",
-     "ariaLabel": "Enlarge photo: Wooden letters spelling “Moment”, “My Bubble” and “Beauty” on the wall",
-     "n": "4"
+     "n": "16",
+     "w": 1200,
+     "h": 1600,
+     "cap": "The entrance",
+     "alt": "The My Bubble Beauty “Entrée” sign on the brick façade, with the arrow to the car park",
+     "ariaLabel": "Enlarge photo: The My Bubble Beauty “Entrée” sign on the brick façade, with the arrow to the car park"
     }
    ],
-   "eyebrow": "The salon"
+   "eyebrow": "The salon",
+   "intro": "A calm, bright place in Dilbeek, designed for you to feel at ease.",
+   "prev": "Previous photo",
+   "next": "Next photo"
   },
   "contact": {
    "title": "Contact",

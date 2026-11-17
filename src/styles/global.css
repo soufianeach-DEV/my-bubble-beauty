@@ -275,24 +275,44 @@ main{isolation:isolate;overflow-x:clip}
 .faq summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:inherit}
 .faq details p{margin:0;padding:0 1.25rem 1.1rem;color:var(--text-soft)}
 .galerie .halo{width:70vw;height:70vw;max-width:900px;max-height:900px;left:-25vw;top:20%}
-.mosaic{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:clamp(140px,18vw,250px);gap:clamp(.6rem,1.4vw,1.25rem);list-style:none;margin:0;padding:0}
-.mosaic li:nth-child(1){grid-column:span 2;grid-row:span 2}
-/* 2e case haute (et non large) : la photo en portrait n'est pas coupée en bandeau, et 8 photos remplissent 3 rangées */
-.mosaic li:nth-child(2){grid-row:span 2}
-.frame-video{position:relative;width:100%;height:100%;border-radius:16px;overflow:hidden;background:var(--surface);box-shadow:0 0 0 1px var(--line-soft)}
-.frame-video video{display:block;width:100%;height:100%;object-fit:cover}
-@media (max-width:767px){.mosaic{grid-template-columns:repeat(2,1fr);grid-auto-rows:150px}.mosaic li:nth-child(n){grid-column:auto;grid-row:auto}.mosaic li:nth-child(1),.mosaic li:nth-child(2){grid-column:span 2}.mosaic li:nth-child(1){grid-row:span 2}}
-.frame{display:block;position:relative;width:100%;height:100%;padding:0;border:0;border-radius:16px;overflow:hidden;background:var(--surface);cursor:zoom-in;box-shadow:0 0 0 1px var(--line-soft)}
-.frame img{position:absolute;left:0;top:-20px;width:100%;height:calc(100% + 40px);object-fit:cover}
-.frame::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgb(255 255 255 / .25);pointer-events:none}
+.galerie__intro{margin:.9rem auto 0;max-width:44ch}
+/* Grille régulière : toutes les vignettes au même format 4:5 ; 4 colonnes, 2 sous 900 px (8 photos : les rangées tombent juste) */
+.mosaic{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(.75rem,1.6vw,1.5rem);list-style:none;margin:0;padding:0}
+@media (max-width:899px){.mosaic{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.frame,.frame-video{display:block;position:relative;aspect-ratio:4/5;border-radius:20px;overflow:hidden;background:var(--surface);box-shadow:0 0 0 1px var(--line-soft),0 18px 40px -32px rgb(59 42 39 / .45)}
+.frame{cursor:zoom-in;isolation:isolate}
+.frame img,.frame-video video{display:block;width:100%;height:100%;object-fit:cover}
+/* Cadrage des photos en largeur dans la vignette en hauteur */
+.frame[data-pos="droite"] img{object-position:88% 50%}
+.frame[data-pos="gauche"] img{object-position:12% 50%}
+.frame::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgb(255 255 255 / .22);pointer-events:none}
+/* Légende courte : bandeau en dégradé en bas de la photo, au survol et au focus clavier (le texte complet est dans alt) */
+.frame__cap{position:absolute;left:0;right:0;bottom:0;padding:2.75rem 1.15rem .95rem;background:linear-gradient(180deg,transparent,rgb(30 18 20 / .64));color:#FFF8EE;font:300 1.2rem/1.1 var(--f-title);opacity:0;transform:translateY(6px);transition:opacity .35s var(--ease-soft),transform .35s var(--ease-soft)}
+.frame:focus-visible .frame__cap{opacity:1;transform:none}
 
-dialog.lightbox{width:min(100vw - 2rem,1100px);max-height:calc(100dvh - 2rem);padding:0;border:0;border-radius:var(--radius);background:var(--surface);color:var(--text);overflow:hidden}
-dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
-.lightbox figure{margin:0}
-.lightbox img{width:100%;height:auto;max-height:calc(100dvh - 7rem);object-fit:contain;background:var(--bg)}
-.lightbox figcaption{padding:1rem 4.5rem 1rem 1.5rem}
-.lightbox__close{position:absolute;right:.75rem;bottom:.5rem;width:48px;height:48px;border-radius:50%;border:1px solid var(--line-soft);background:var(--surface);color:var(--text);font-size:1.5rem;line-height:1;cursor:pointer}
-@media (prefers-reduced-motion:no-preference){dialog.lightbox[open]{animation:pop .35s var(--ease-soft)}}
+/* Visionneuse plein écran : fond sombre quel que soit le thème, photo entière, flèches, compteur */
+dialog.lightbox{width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;padding:clamp(1.25rem,3vw,2.5rem) clamp(4.25rem,8vw,7rem);border:0;background:transparent;color:#FFF8EE;overflow:hidden}
+dialog.lightbox[open]{display:grid;place-items:center}
+dialog.lightbox::backdrop{background:rgb(24 14 16 / .92)}
+.lightbox__fig{margin:0;display:grid;justify-items:center;gap:1rem;max-width:100%;min-width:0}
+.lightbox__fig img{display:block;width:auto;height:auto;max-width:100%;max-height:calc(100dvh - 9rem);border-radius:14px;box-shadow:0 30px 80px -30px rgb(0 0 0 / .7)}
+.lightbox figcaption{display:flex;flex-direction:column;align-items:center;gap:.45rem;max-width:62ch;text-align:center;font-size:.95rem;line-height:1.45;color:rgb(255 248 238 / .9)}
+.lightbox__count{flex:none;font:500 .75rem/1 var(--f-text);letter-spacing:.18em;color:rgb(255 248 238 / .6)}
+.lightbox__nav,.lightbox__close{position:absolute;display:grid;place-items:center;width:48px;height:48px;padding:0;border-radius:50%;border:1px solid rgb(255 248 238 / .35);background:rgb(255 248 238 / .08);color:#FFF8EE;cursor:pointer;transition:background var(--dur-ui),border-color var(--dur-ui)}
+.lightbox__nav:hover,.lightbox__nav:focus-visible,.lightbox__close:hover,.lightbox__close:focus-visible{background:rgb(255 248 238 / .2);border-color:#FFF8EE}
+.lightbox__nav svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.lightbox__nav--prev{left:clamp(.75rem,2vw,1.75rem);top:50%;translate:0 -50%}
+.lightbox__nav--next{right:clamp(.75rem,2vw,1.75rem);top:50%;translate:0 -50%}
+.lightbox__close{top:clamp(.75rem,2vw,1.5rem);right:clamp(.75rem,2vw,1.5rem);font-size:1.6rem;line-height:1}
+/* Téléphone : flèches en bas, de part et d'autre, pour garder toute la largeur à la photo */
+@media (max-width:767px){
+  /* bas : flèches (1 rem + 48 px) et une marge, pour que la légende sur deux lignes et le compteur ne passent jamais dessous */
+  dialog.lightbox{padding:4.25rem .75rem 6.25rem}
+  .lightbox__fig img{max-height:calc(100dvh - 16.5rem)}
+  .lightbox__nav{top:auto;bottom:1rem;translate:none}
+  .lightbox__nav--prev{left:calc(50% - 60px)}.lightbox__nav--next{right:calc(50% - 60px)}
+}
+@media (prefers-reduced-motion:no-preference){dialog.lightbox[open]{animation:pop .35s var(--ease-soft)}.lightbox__fig img{transition:opacity .25s var(--ease-soft)}.lightbox__fig img.is-loading{opacity:.15}}
 @keyframes pop{from{opacity:0;transform:scale(.97)}}
 
 /* ---------- Contact ---------- */
@@ -430,7 +450,11 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
 .btn--outline-light:hover{background:rgb(255 251 249 / .1)}
 
 /* ---------- Galerie : survol ---------- */
-@media (hover:hover){.frame{transition:box-shadow .4s var(--ease-soft)}.frame:hover{box-shadow:0 0 0 1px var(--line),0 20px 40px -25px rgb(59 42 39 / .5)}}
+@media (hover:hover){
+  .frame{transition:box-shadow .4s var(--ease-soft)}.frame:hover{box-shadow:0 0 0 1px var(--line),0 24px 48px -28px rgb(59 42 39 / .55)}
+  .frame:hover .frame__cap{opacity:1;transform:none}
+}
+@media (hover:hover) and (prefers-reduced-motion:no-preference){.frame img{transition:transform .9s var(--ease-soft)}.frame:hover img{transform:scale(1.04)}}
 
 /* ---------- Bandeau d'infos : version compacte ---------- */
 .infos__list li{display:flex;flex-direction:column;justify-content:center}
@@ -494,16 +518,14 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
    Parallax — scroll-driven animations (repli JS dans main.js)
    ========================================================================== */
 @supports (animation-timeline:view()){
-  .px-far,.px-mid,.px-halo,.frame img{animation-timing-function:linear;animation-fill-mode:both}
+  .px-far,.px-mid,.px-halo{animation-timing-function:linear;animation-fill-mode:both}
   .px-far{animation-name:pxFar;animation-timeline:scroll(root);animation-range:0 100vh}
   .px-mid{animation-name:pxMid;animation-timeline:scroll(root);animation-range:0 100vh}
   .px-halo{animation-name:pxHalo;animation-timeline:view();animation-range:cover}
-  .frame img{animation-name:pxImg;animation-timeline:view();animation-range:cover}
 }
 @keyframes pxFar{to{transform:translate3d(0,calc(15vh * var(--k)),0)}}
 @keyframes pxMid{to{transform:translate3d(0,calc(8vh * var(--k)),0)}}
 @keyframes pxHalo{from{transform:translate3d(0,calc(-90px * var(--k)),0)}to{transform:translate3d(0,calc(90px * var(--k)),0)}}
-@keyframes pxImg{from{transform:translate3d(0,calc(-20px * var(--k)),0)}to{transform:translate3d(0,calc(20px * var(--k)),0)}}
 
 /* Hors écran : on met en pause les boucles */
 
@@ -690,10 +712,10 @@ dialog.lightbox::backdrop{background:rgb(30 22 21 / .72)}
   .prices .name a,.price-group h4 a{padding-block:.65rem;background-origin:content-box}
 }
 
-/* Galerie : grille régulière de 2 × 2 carrés */
+/* Galerie : grille resserrée sur téléphone */
 @media (max-width:767px){
-  .mosaic{grid-auto-rows:auto;gap:.6rem}
-  .mosaic li:nth-child(n){grid-column:auto;grid-row:auto;aspect-ratio:1}
+  .mosaic{gap:.6rem}
+  .frame,.frame-video{border-radius:14px}
 }
 
 /* Pied de page : centré et resserré */

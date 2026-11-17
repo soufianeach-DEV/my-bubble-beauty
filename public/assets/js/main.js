@@ -61,14 +61,14 @@ if(mm('(pointer: fine)').matches){
 /* 4. Parallax : repli JS si pas de scroll-driven animations */
 var px=null;
 if(!CSS.supports('animation-timeline','view()')){
-  const hero=[...d.querySelectorAll('.px-far,.px-mid')],vis=new Set(),view=[...d.querySelectorAll('.px-halo,.frame img')];
+  const hero=[...d.querySelectorAll('.px-far,.px-mid')],vis=new Set(),view=[...d.querySelectorAll('.px-halo')];
   let tick=0;
   const vio=new IntersectionObserver(es=>{es.forEach(e=>e.isIntersecting?vis.add(e.target):vis.delete(e.target));tick||(tick=requestAnimationFrame(px))});
   view.forEach(el=>vio.observe(el));
   px=()=>{tick=0;const h=innerHeight,p=Math.min(scrollY/h,1);
     hero.forEach(el=>{el.style.transform=`translate3d(0,${p*h*(el.classList.contains('px-far')?.15:.08)*K}px,0)`});
-    vis.forEach(el=>{const r=el.getBoundingClientRect(),t=(h-r.top)/(h+r.height),a=el.tagName==='IMG'?20:90;
-      el.style.transform=`translate3d(0,${(t*2-1)*a*K}px,0)`});
+    vis.forEach(el=>{const r=el.getBoundingClientRect(),t=(h-r.top)/(h+r.height);
+      el.style.transform=`translate3d(0,${(t*2-1)*90*K}px,0)`});
   };
   addEventListener('scroll',()=>{tick||(tick=requestAnimationFrame(px))},{passive:true});
   addEventListener('resize',()=>{readK();px()});
@@ -110,14 +110,24 @@ if(fl){
     location.hash!=='#'+id&&history.pushState(null,'','#'+id);g.scrollIntoView()});
 }
 
-/* 6. Galerie : agrandissement dans <dialog> */
+/* 6. Galerie : visionneuse plein écran dans <dialog> (flèches, ← → au clavier, glisser du doigt, compteur) */
 const dlg=d.querySelector('dialog.lightbox');
 if(dlg&&dlg.showModal){
-  const img=dlg.querySelector('img'),cap=dlg.querySelector('figcaption');
-  d.querySelectorAll('.frame').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();
-    const s=b.querySelector('img');img.src=b.getAttribute('href');img.alt=s.alt;img.width=s.dataset.w;img.height=s.dataset.h;cap.textContent=s.alt;dlg.showModal()}));
+  const img=dlg.querySelector('img'),cap=dlg.querySelector('.lightbox__cap'),cnt=dlg.querySelector('.lightbox__count');
+  const tuiles=[...d.querySelectorAll('.mosaic .frame')],nb=tuiles.length;let i=0,x0=null,glisse=false;
+  const voir=k=>{i=(k+nb)%nb;const b=tuiles[i],s=b.querySelector('img');
+    img.classList.add('is-loading');img.onload=()=>img.classList.remove('is-loading');
+    img.src=b.getAttribute('href');img.alt=s.alt;img.width=s.dataset.w;img.height=s.dataset.h;cap.textContent=s.alt;cnt.textContent=`${i+1} / ${nb}`;
+    new Image().src=tuiles[(i+1)%nb].getAttribute('href')}; // la suivante est prête quand on avance
+  tuiles.forEach((b,k)=>b.addEventListener('click',e=>{e.preventDefault();voir(k);dlg.showModal()}));
   dlg.querySelector('.lightbox__close').addEventListener('click',()=>dlg.close());
-  dlg.addEventListener('click',e=>{e.target===dlg&&dlg.close()});
+  dlg.querySelector('.lightbox__nav--prev').addEventListener('click',()=>voir(i-1));
+  dlg.querySelector('.lightbox__nav--next').addEventListener('click',()=>voir(i+1));
+  dlg.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();voir(i+(e.key==='ArrowLeft'?-1:1))}});
+  // Glisser horizontal (téléphone) : photo suivante/précédente ; un glissé ne ferme pas la visionneuse
+  dlg.addEventListener('pointerdown',e=>{x0=e.clientX;glisse=false});
+  dlg.addEventListener('pointerup',e=>{if(x0===null)return;const dx=e.clientX-x0;x0=null;glisse=Math.abs(dx)>10;if(Math.abs(dx)>50)voir(dx<0?i+1:i-1)});
+  dlg.addEventListener('click',e=>{e.target===dlg&&!glisse&&dlg.close()});
 }
 
 /* 6 bis. Compte dans l'en-tête des pages pré-rendues : sans témoin mb_in (aucune donnée), aucun appel.

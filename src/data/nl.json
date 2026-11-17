@@ -1249,54 +1249,75 @@
    "close": "Sluiten",
    "items": [
     {
-     "n": "5",
+     "n": "10",
+     "w": 1600,
+     "h": 1200,
+     "pos": "droite",
+     "cap": "De behandelkamer",
+     "alt": "De behandelkamer: de behandeltafel klaargemaakt met beige handdoeken, de booglamp en de houten letters “My Bubble” aan de muur",
+     "ariaLabel": "Foto vergroten: De behandelkamer: de behandeltafel klaargemaakt met beige handdoeken, de booglamp en de houten letters “My Bubble” aan de muur"
+    },
+    {
+     "n": "11",
      "w": 1200,
      "h": 1600,
-     "alt": "De houten letters “Moment”, “My Bubble” en “Beauty” aan de muur, naast een groene plant",
-     "ariaLabel": "Foto vergroten: De houten letters “Moment”, “My Bubble” en “Beauty” aan de muur, naast een groene plant"
+     "cap": "Comfort",
+     "alt": "De hoofdsteun van de behandeltafel, bedekt met een handdoek met het geborduurde My Bubble-logo, voor de rekken van het instituut",
+     "ariaLabel": "Foto vergroten: De hoofdsteun van de behandeltafel, bedekt met een handdoek met het geborduurde My Bubble-logo, voor de rekken van het instituut"
     },
     {
      "n": "6",
      "w": 900,
      "h": 1600,
      "alt": "Kruidenthee met verse munt, geserveerd in de behandelkamer in een glas met een bloem",
-     "ariaLabel": "Foto vergroten: Kruidenthee met verse munt, geserveerd in de behandelkamer in een glas met een bloem"
+     "ariaLabel": "Foto vergroten: Kruidenthee met verse munt, geserveerd in de behandelkamer in een glas met een bloem",
+     "cap": "De thee"
     },
     {
-     "video": "galerie-vapeur",
-     "w": 480,
-     "h": 848,
-     "alt": "Video: stoom van de gezichtsvaporisator op een hand, in de behandelkamer"
-    },
-    {
-     "n": "7",
+     "n": "15",
      "w": 1200,
-     "h": 1290,
-     "alt": "De klantenfiche van My Bubble op een houten standaard, bij het raam",
-     "ariaLabel": "Foto vergroten: De klantenfiche van My Bubble op een houten standaard, bij het raam"
+     "h": 1600,
+     "cap": "De kleuren",
+     "alt": "De kleurenwaaier van de semi-permanente lak, om uit te kiezen vóór het lakken",
+     "ariaLabel": "Foto vergroten: De kleurenwaaier van de semi-permanente lak, om uit te kiezen vóór het lakken"
     },
     {
-     "alt": "De behandelruimte met de behandeltafel en de schoonheidstoestellen",
-     "ariaLabel": "Foto vergroten: De behandelruimte met de behandeltafel en de schoonheidstoestellen",
-     "n": "1"
+     "n": "12",
+     "w": 1600,
+     "h": 1200,
+     "cap": "De details",
+     "alt": "Op de schouw: potten met watten en herbruikbare make-uppads, netjes opgeborgen",
+     "ariaLabel": "Foto vergroten: Op de schouw: potten met watten en herbruikbare make-uppads, netjes opgeborgen"
     },
     {
-     "alt": "De toestellen voor gezichtsverzorging voor de grote ramen",
-     "ariaLabel": "Foto vergroten: De toestellen voor gezichtsverzorging voor de grote ramen",
-     "n": "2"
+     "n": "14",
+     "w": 900,
+     "h": 1200,
+     "cap": "De rust",
+     "alt": "De behandeltafel klaargemaakt voor de grote ramen, met een opgevouwen handdoek erop",
+     "ariaLabel": "Foto vergroten: De behandeltafel klaargemaakt voor de grote ramen, met een opgevouwen handdoek erop"
     },
     {
-     "alt": "De behandeltafel met handdoeken, naast de houten deur",
-     "ariaLabel": "Foto vergroten: De behandeltafel met handdoeken, naast de houten deur",
-     "n": "3"
+     "n": "5",
+     "w": 1200,
+     "h": 1600,
+     "alt": "De houten letters “Moment”, “My Bubble” en “Beauty” aan de muur, naast een groene plant",
+     "ariaLabel": "Foto vergroten: De houten letters “Moment”, “My Bubble” en “Beauty” aan de muur, naast een groene plant",
+     "cap": "De sfeer"
     },
     {
-     "alt": "De houten letters “Moment”, “My Bubble” en “Beauty” aan de muur",
-     "ariaLabel": "Foto vergroten: De houten letters “Moment”, “My Bubble” en “Beauty” aan de muur",
-     "n": "4"
+     "n": "16",
+     "w": 1200,
+     "h": 1600,
+     "cap": "De ingang",
+     "alt": "Het bord “Entrée” van My Bubble Beauty op de bakstenen gevel, met de pijl naar de parking",
+     "ariaLabel": "Foto vergroten: Het bord “Entrée” van My Bubble Beauty op de bakstenen gevel, met de pijl naar de parking"
     }
    ],
-   "eyebrow": "Het instituut"
+   "eyebrow": "Het instituut",
+   "intro": "Een rustige, lichte plek in Dilbeek, ingericht zodat u zich goed voelt.",
+   "prev": "Vorige foto",
+   "next": "Volgende foto"
   },
   "contact": {
    "title": "Contact",
