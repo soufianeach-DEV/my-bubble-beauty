@@ -12,7 +12,7 @@ const lang = langOfFolder(Astro.params.folder!);
 const hiver = (Astro.props as { hiver?: boolean }).hiver === true;
 const heroImg = hiver ? 'hero-souade-hiver' : 'hero-souade-voile';
 const contactImg = hiver ? 'souade-hiver' : 'souade-voile';
-const heroSet = [800, 1200, 1536].map((w) => `/assets/img/${heroImg}-${w}.webp ${w}w`).join(', ');
+const heroSet = [800, 1200, 1536].map((w) => `/assets/img/${heroImg}-${w}.webp?v=4 ${w}w`).join(', ');
 const d = t(lang);
 const h = d.home;
 const ui = d.ui;
@@ -45,10 +45,10 @@ const jsonld = {
 };
 ---
 <Base lang={lang} pageKey="home" title={h.title} description={h.description} jsonld={jsonld} isHome>
-<link slot="head" rel="preload" as="image" href={`/assets/img/${heroImg}-1200.webp`} imagesrcset={heroSet} imagesizes="100vw" fetchpriority="high">
+<link slot="head" rel="preload" as="image" href={`/assets/img/${heroImg}-1200.webp?v=4`} imagesrcset={heroSet} imagesizes="100vw" fetchpriority="high">
 
 <section class="hero" data-loop aria-labelledby="h-hero">
-<div class="hero__media"><img class="hero__img px-far" src={`/assets/img/${heroImg}-1200.webp`} srcset={heroSet} sizes="100vw" width="1536" height="768" alt={hiver ? SAISON[lang].heroAlt : h.hero.imgAlt} fetchpriority="high" decoding="async"></div>
+<div class="hero__media"><img class="hero__img px-far" src={`/assets/img/${heroImg}-1200.webp?v=4`} srcset={heroSet} sizes="100vw" width="1536" height="768" alt={hiver ? SAISON[lang].heroAlt : h.hero.imgAlt} fetchpriority="high" decoding="async"></div>
 <div class="wrap hero__wrap">
 <div class="hero__panel">
 <p class="hero__eyebrow">{h.hero.eyebrow}</p>
@@ -218,7 +218,7 @@ const jsonld = {
 {/* Gauche : l'action d'abord, puis les coordonnées ; droite : horaires et canaux, pour équilibrer les deux colonnes */}
 <div class="contact__card">
 {/* Le même avatar que dans les reels, en grand : la cliente reconnaît la personne qui l'accueille */}
-<figure class="contact__avatar"><img class="contact__avatar-img" src={`/assets/img/${contactImg}-480.webp`} srcset={`/assets/img/${contactImg}-300.webp 300w, /assets/img/${contactImg}-480.webp 480w`} sizes="(max-width:1023px) 220px, 300px" width="480" height="672" alt={hiver ? SAISON[lang].contactAlt : 'Souade, My Bubble Beauty'} loading="lazy" decoding="async"><figcaption><span class="contact__avatar-name">Souade</span><span class="contact__avatar-role">My Bubble Beauty</span></figcaption></figure>
+<figure class="contact__avatar"><img class="contact__avatar-img" src={`/assets/img/${contactImg}-480.webp?v=4`} srcset={`/assets/img/${contactImg}-300.webp?v=4 300w, /assets/img/${contactImg}-480.webp?v=4 480w`} sizes="(max-width:1023px) 220px, 300px" width="480" height="672" alt={hiver ? SAISON[lang].contactAlt : 'Souade, My Bubble Beauty'} loading="lazy" decoding="async"><figcaption><span class="contact__avatar-name">Souade</span><span class="contact__avatar-role">My Bubble Beauty</span></figcaption></figure>
 <div class="contact__main">
 <p class="eyebrow">{h.contact.eyebrow}</p>
 <h2 id="h-contact" data-snow={h.contact.title}>{h.contact.title}</h2>

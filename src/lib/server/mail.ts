@@ -20,7 +20,7 @@ const when = (d: Date, lang: Lang) => new Intl.DateTimeFormat(LOCALE[lang], { ti
 const C = { bg: '#FCF9F7', card: '#FFFFFF', ink: '#4A3732', soft: '#786A65', line: '#E8D9D2', recap: '#F8F3F0', brand: '#8A5A50' };
 const SERIF = "Georgia,'Times New Roman',serif";
 const SANS = 'Arial,Helvetica,sans-serif';
-const DARK = '.mb-bg{background:#1E1615!important}.mb-card{background:#2A201E!important}.mb-ink{color:#F3E6E1!important}.mb-soft{color:#D8C4BD!important}.mb-recap{background:#3A2C29!important}.mb-line{border-color:#4A3A36!important}.mb-link{color:#E8BFB5!important}';
+const DARK = '.mb-bg{background:#482E32!important}.mb-card{background:#593B3F!important}.mb-ink{color:#FFF8EE!important}.mb-soft{color:#E8D8C4!important}.mb-recap{background:#6A474C!important}.mb-line{border-color:#7A5A5E!important}.mb-link{color:#F2C9CF!important}';
 // Le numéro du salon devient un lien tel: partout où il apparaît
 const tel = (html: string) => html.split(esc(CONTACT.phoneLabel)).join(`<a href="tel:${CONTACT.phone}" class="mb-link" style="color:${C.brand};text-decoration:underline">${esc(CONTACT.phoneLabel)}</a>`);
 const para = (l: string) => `<p class="mb-ink" style="margin:0 0 16px;font-family:${SANS};font-size:16px;line-height:1.6;color:${C.ink}">${tel(esc(l))}</p>`;
