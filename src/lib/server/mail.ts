@@ -17,18 +17,19 @@ const when = (d: Date, lang: Lang) => new Intl.DateTimeFormat(LOCALE[lang], { ti
 
 // Gabarit commun : fond crème, carte blanche de 600 px, logo, titre Georgia, corps Arial, bouton en tableau (VML pour Outlook),
 // pied hors carte. Styles en ligne, aucune police web ni image de fond ; le mode sombre passe par les classes de la balise <style>.
-const C = { bg: '#FCF9F7', card: '#FFFFFF', ink: '#4A3732', soft: '#786A65', line: '#E8D9D2', recap: '#F8F3F0', brand: '#8A5A50' };
+const C = { bg: '#FCF9F7', card: '#FFFFFF', ink: '#4A3732', soft: '#786A65', line: '#E8D9D2', recap: '#F8F3F0', brand: '#8A5A50', btn: '#482E32' };
 const SERIF = "Georgia,'Times New Roman',serif";
 const SANS = 'Arial,Helvetica,sans-serif';
-const DARK = '.mb-bg{background:#482E32!important}.mb-card{background:#593B3F!important}.mb-ink{color:#FFF8EE!important}.mb-soft{color:#E8D8C4!important}.mb-recap{background:#6A474C!important}.mb-line{border-color:#7A5A5E!important}.mb-link{color:#F2C9CF!important}';
+// Mail toujours blanc, même quand le lecteur de mails est en mode sombre (choix de la gérante)
+const DARK = '';
 // Le numéro du salon devient un lien tel: partout où il apparaît
 const tel = (html: string) => html.split(esc(CONTACT.phoneLabel)).join(`<a href="tel:${CONTACT.phone}" class="mb-link" style="color:${C.brand};text-decoration:underline">${esc(CONTACT.phoneLabel)}</a>`);
 const para = (l: string) => `<p class="mb-ink" style="margin:0 0 16px;font-family:${SANS};font-size:16px;line-height:1.6;color:${C.ink}">${tel(esc(l))}</p>`;
 // Bouton principal toujours centré (règle de la gérante) : ligne pleine largeur centrée, puis tableau centré, VML compris
 const button = ([label, url]: [string, string]) => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="padding:8px 0 24px;text-align:center">
-<table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto"><tr><td align="center" bgcolor="${C.brand}" style="border-radius:8px">
-<!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${esc(url)}" style="height:48px;v-text-anchor:middle;width:240px" arcsize="17%" stroke="f" fillcolor="${C.brand}"><w:anchorlock/><center style="color:#FFFFFF;font-family:Arial,sans-serif;font-size:16px;font-weight:bold">${esc(label)}</center></v:roundrect><![endif]-->
-<!--[if !mso]><!--><a href="${esc(url)}" style="display:inline-block;min-width:240px;box-sizing:border-box;padding:14px 24px;background:${C.brand};border-radius:8px;font-family:${SANS};font-size:16px;font-weight:bold;line-height:20px;color:#FFFFFF;text-align:center;text-decoration:none">${esc(label)}</a><!--<![endif]-->
+<table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto"><tr><td align="center" bgcolor="${C.btn}" style="border-radius:8px">
+<!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${esc(url)}" style="height:48px;v-text-anchor:middle;width:240px" arcsize="17%" stroke="f" fillcolor="${C.btn}"><w:anchorlock/><center style="color:#FFF8EE;font-family:Arial,sans-serif;font-size:16px;font-weight:bold">${esc(label)}</center></v:roundrect><![endif]-->
+<!--[if !mso]><!--><a href="${esc(url)}" style="display:inline-block;min-width:240px;box-sizing:border-box;padding:14px 24px;background:${C.btn};border-radius:8px;font-family:${SANS};font-size:16px;font-weight:bold;line-height:20px;color:#FFF8EE;text-align:center;text-decoration:none">${esc(label)}</a><!--<![endif]-->
 </td></tr></table>
 </td></tr></table>`;
 const recapBlock = (rows: [string, string][]) => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="mb-recap" style="background:${C.recap};border-radius:8px;margin:0 0 20px"><tr><td style="padding:20px 24px">${rows
@@ -48,8 +49,8 @@ function build(kind: string, lang: Lang, subject: string, lines: (string | false
     kind,
     subject,
     text: [title, ...body, ...(opts.recap ?? []).map(([k, v]) => `${k}${lang === 'fr' ? ' : ' : ': '}${v}`), ...after, `${link[0]}\n${link[1]}`, foot, ...(unsub ? [`${unsub[0]}\n${unsub[1]}`] : [])].join('\n\n'),
-    html: `<!doctype html><html lang="${lang}" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="x-apple-disable-message-reformatting"><meta name="color-scheme" content="light dark"><meta name="supported-color-schemes" content="light dark"><title>${esc(subject)}</title>
-<style>:root{color-scheme:light dark;supported-color-schemes:light dark}@media (max-width:620px){.mb-pad{padding:24px!important}}@media (prefers-color-scheme:dark){${DARK}}</style>
+    html: `<!doctype html><html lang="${lang}" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="x-apple-disable-message-reformatting"><meta name="color-scheme" content="light"><meta name="supported-color-schemes" content="light"><title>${esc(subject)}</title>
+<style>:root{color-scheme:light;supported-color-schemes:light}@media (max-width:620px){.mb-pad{padding:24px!important}}@media (prefers-color-scheme:dark){${DARK}}</style>
 <!--[if mso]><noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript><![endif]--></head>
 <body class="mb-bg" style="margin:0;padding:0;background:${C.bg};-webkit-text-size-adjust:100%">${pre ? `<div style="display:none;max-height:0;overflow:hidden;mso-hide:all">${esc(pre)}</div>` : ''}
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="mb-bg" style="background:${C.bg}"><tr><td align="center" style="padding:32px 12px">
