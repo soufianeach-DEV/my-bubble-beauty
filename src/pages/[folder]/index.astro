@@ -36,7 +36,7 @@ const salon = {
   address: { '@type': 'PostalAddress', streetAddress: CONTACT.street, postalCode: CONTACT.postal, addressLocality: CONTACT.city, addressCountry: 'BE' },
   geo: { '@type': 'GeoCoordinates', latitude: 50.8522424, longitude: 4.2847883 },
   areaServed: ['Anderlecht', 'Molenbeek-Saint-Jean', 'Dilbeek', 'Berchem-Sainte-Agathe'],
-  sameAs: CONTACT.social.map((s) => s.href), priceRange: '€€',
+  sameAs: [...CONTACT.social.map((s) => s.href), CONTACT.maps], priceRange: '€€',
   ...(HOURS.length ? { openingHoursSpecification: openingHoursSchema() } : {}),
 };
 const jsonld = {

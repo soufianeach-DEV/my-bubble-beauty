@@ -34,11 +34,11 @@ export const CONTACT = {
   street: 'Palokestraat 146',
   postal: '1700',
   city: 'Dilbeek',
-  maps: 'https://www.google.com/maps/search/?api=1&query=MyBubbleBeauty%2C%20Palokestraat%20146%2C%201700%20Dilbeek',
+  // Fiche Google « MyBubbleBeauty » (identifiant cid) : itinéraire, avis et sameAs.
+  maps: 'https://maps.google.com/?cid=6215977490782217803',
   social: [
-    { key: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/my.bubblebeauty/' },
+    { key: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61596896030374' },
     { key: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/my.bubblebeauty/' },
-    { key: 'snapchat', label: 'Snapchat', href: 'https://www.snapchat.com/add/mybubblebeauty' },
   ],
 };
 
