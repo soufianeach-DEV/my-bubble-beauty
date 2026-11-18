@@ -1254,18 +1254,10 @@
      "n": "10",
      "w": 1600,
      "h": 1200,
-     "pos": "droite",
+     "pos": "mi-haut",
      "cap": "The treatment room",
      "alt": "The treatment room: the treatment table set with beige towels, the arc lamp and the wooden “My Bubble” letters on the wall",
      "ariaLabel": "Enlarge photo: The treatment room: the treatment table set with beige towels, the arc lamp and the wooden “My Bubble” letters on the wall"
-    },
-    {
-     "n": "11",
-     "w": 1200,
-     "h": 1600,
-     "cap": "Comfort",
-     "alt": "The headrest of the treatment table, covered with a towel embroidered with the My Bubble logo, in front of the salon's shelves",
-     "ariaLabel": "Enlarge photo: The headrest of the treatment table, covered with a towel embroidered with the My Bubble logo, in front of the salon's shelves"
     },
     {
      "n": "6",
@@ -1274,6 +1266,14 @@
      "alt": "Fresh mint herbal tea served in the treatment room, in a glass decorated with a flower",
      "ariaLabel": "Enlarge photo: Fresh mint herbal tea served in the treatment room, in a glass decorated with a flower",
      "cap": "Herbal tea"
+    },
+    {
+     "n": "5",
+     "w": 1200,
+     "h": 1600,
+     "alt": "Wooden letters spelling “Moment”, “My Bubble” and “Beauty” on the wall, next to a green plant",
+     "ariaLabel": "Enlarge photo: Wooden letters spelling “Moment”, “My Bubble” and “Beauty” on the wall, next to a green plant",
+     "cap": "The mood"
     },
     {
      "n": "15",
@@ -1292,20 +1292,13 @@
      "ariaLabel": "Enlarge photo: On the mantelpiece, jars of cotton and reusable make-up pads, neatly arranged"
     },
     {
-     "n": "14",
-     "w": 900,
-     "h": 1200,
-     "cap": "Calm",
-     "alt": "The treatment table set in front of the large windows, with a folded towel on top",
-     "ariaLabel": "Enlarge photo: The treatment table set in front of the large windows, with a folded towel on top"
-    },
-    {
-     "n": "5",
+     "n": "11",
      "w": 1200,
      "h": 1600,
-     "alt": "Wooden letters spelling “Moment”, “My Bubble” and “Beauty” on the wall, next to a green plant",
-     "ariaLabel": "Enlarge photo: Wooden letters spelling “Moment”, “My Bubble” and “Beauty” on the wall, next to a green plant",
-     "cap": "The mood"
+     "pos": "mi-bas",
+     "cap": "Comfort",
+     "alt": "The headrest of the treatment table, covered with a towel embroidered with the My Bubble logo, in front of the salon's shelves",
+     "ariaLabel": "Enlarge photo: The headrest of the treatment table, covered with a towel embroidered with the My Bubble logo, in front of the salon's shelves"
     },
     {
      "n": "16",
@@ -1314,12 +1307,42 @@
      "cap": "The entrance",
      "alt": "The My Bubble Beauty “Entrée” sign on the brick façade, with the arrow to the car park",
      "ariaLabel": "Enlarge photo: The My Bubble Beauty “Entrée” sign on the brick façade, with the arrow to the car park"
+    },
+    {
+     "n": "14",
+     "w": 900,
+     "h": 1200,
+     "pos": "mi-bas",
+     "cap": "Calm",
+     "alt": "The treatment table set in front of the large windows, with a folded towel on top",
+     "ariaLabel": "Enlarge photo: The treatment table set in front of the large windows, with a folded towel on top"
+    },
+    {
+     "n": "18",
+     "w": 1200,
+     "h": 1600,
+     "cap": "The salon",
+     "alt": "The My Bubble Beauty salon building in Dilbeek, with its stone steps and garden",
+     "ariaLabel": "Enlarge photo: The My Bubble Beauty salon building in Dilbeek, with its stone steps and garden"
+    },
+    {
+     "n": "17",
+     "w": 1600,
+     "h": 1200,
+     "pos": "haut",
+     "cap": "The care",
+     "alt": "On the wooden mantelpiece, skincare products, jars of cotton and reusable make-up pads",
+     "ariaLabel": "Enlarge photo: On the wooden mantelpiece, skincare products, jars of cotton and reusable make-up pads"
     }
    ],
    "eyebrow": "The salon",
    "intro": "A calm, bright place in Dilbeek, designed for you to feel at ease.",
    "prev": "Previous photo",
-   "next": "Next photo"
+   "next": "Next photo",
+   "pagesPrev": "Previous photos",
+   "pagesNext": "Next photos",
+   "page": "Page",
+   "pagesLabel": "Gallery pages"
   },
   "contact": {
    "title": "Contact",

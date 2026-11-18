@@ -276,16 +276,46 @@ main{isolation:isolate;overflow-x:clip}
 .faq details p{margin:0;padding:0 1.25rem 1.1rem;color:var(--text-soft)}
 .galerie .halo{width:70vw;height:70vw;max-width:900px;max-height:900px;left:-25vw;top:20%}
 .galerie__intro{margin:.9rem auto 0;max-width:44ch}
-/* Grille régulière : toutes les vignettes au même format 4:5 ; 4 colonnes, 2 sous 900 px (8 photos : les rangées tombent juste) */
-.mosaic{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(.75rem,1.6vw,1.5rem);list-style:none;margin:0;padding:0}
-@media (max-width:899px){.mosaic{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.frame,.frame-video{display:block;position:relative;aspect-ratio:4/5;border-radius:20px;overflow:hidden;background:var(--surface);box-shadow:0 0 0 1px var(--line-soft),0 18px 40px -32px rgb(59 42 39 / .45)}
-.frame{cursor:zoom-in;isolation:isolate}
-.frame img,.frame-video video{display:block;width:100%;height:100%;object-fit:cover}
-/* Cadrage des photos en largeur dans la vignette en hauteur */
-.frame[data-pos="droite"] img{object-position:88% 50%}
-.frame[data-pos="gauche"] img{object-position:12% 50%}
+/* Galerie en pages coulissantes (maquette de Soufiane) : une page = 5 tuiles — large en haut (a), haute sur le côté (b),
+   presque carrée (c), petite portrait (d), bandeau en bas (e) ; la disposition s'inverse une page sur deux.
+   Glisser au doigt natif grâce au scroll-snap ; flèches et points dessous (main.js). */
+.gal__vue{overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;padding-block:.5rem;margin-block:-.5rem}
+.gal__vue::-webkit-scrollbar{display:none}
+.gal__pages{display:flex;list-style:none;margin:0;padding:0}
+.gal__page{flex:0 0 100%;min-width:0;scroll-snap-align:start;scroll-snap-stop:always}
+.mosaic{display:grid;grid-template-columns:1.65fr 1fr 1.25fr;grid-template-rows:clamp(170px,21vw,290px) clamp(250px,36vw,500px) clamp(110px,14vw,195px);grid-template-areas:"a a b" "c d b" "e e e";gap:clamp(.75rem,1.4vw,1.25rem);list-style:none;margin:0;padding:0}
+.mosaic--inverse{grid-template-columns:1.25fr 1fr 1.65fr;grid-template-areas:"b a a" "b d c" "e e e"}
+.mosaic>li:nth-child(1){grid-area:a}.mosaic>li:nth-child(2){grid-area:b}.mosaic>li:nth-child(3){grid-area:c}.mosaic>li:nth-child(4){grid-area:d}.mosaic>li:nth-child(5){grid-area:e}
+.frame{display:block;position:relative;height:100%;border-radius:clamp(14px,1.6vw,22px);overflow:hidden;background:var(--surface);box-shadow:0 0 0 1px var(--line-soft),0 18px 40px -32px rgb(59 42 39 / .45);cursor:zoom-in;isolation:isolate}
+/* Coins arrondis plus discrets (demande de Soufiane) ; la large et le bandeau gardent un arrondi un peu plus marqué */
+.mosaic>li:nth-child(1) .frame,.mosaic>li:nth-child(5) .frame{border-radius:clamp(16px,2vw,28px)}
+.frame img{display:block;width:100%;height:100%;object-fit:cover}
+/* Cadrage de la photo dans sa tuile (data-pos) */
+.frame[data-pos="haut"] img{object-position:50% 24%}
+.frame[data-pos="mi-haut"] img{object-position:50% 40%}
+.frame[data-pos="mi-bas"] img{object-position:50% 64%}
+.frame[data-pos="bas"] img{object-position:50% 80%}
 .frame::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgb(255 255 255 / .22);pointer-events:none}
+/* Reflet doré qui traverse la photo au survol (même lumière que les boutons .sheen) */
+.frame::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(105deg,transparent 32%,rgb(255 246 222 / .16) 44%,rgb(232 201 160 / .38) 50%,transparent 64%);transform:translateX(-115%)}
+/* Pagination sous la galerie : flèches et points (le point de la page affichée s'allonge) */
+.gal__nav{display:flex;align-items:center;justify-content:center;gap:.75rem;margin-top:clamp(1.25rem,3vw,2rem)}
+.gal__fleche{display:grid;place-items:center;width:48px;height:48px;padding:0;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--text);cursor:pointer;transition:background var(--dur-ui),opacity var(--dur-ui)}
+.gal__fleche:hover:not(:disabled){background:var(--bg)}
+.gal__fleche:disabled{opacity:.35;cursor:default}
+.gal__fleche svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.gal__points{display:flex;list-style:none;margin:0;padding:0}
+.gal__points button{display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;background:none;cursor:pointer}
+.gal__points button::before{content:"";width:10px;height:10px;border-radius:999px;background:var(--line);opacity:.55;transition:width .35s var(--ease-soft),opacity .35s,background .35s}
+.gal__points button[aria-current="true"]::before{width:30px;opacity:1;background:var(--accent)}
+/* Apparition au défilement : les tuiles montent l'une après l'autre quand leur page entre à l'écran (main.js pose .anime puis .is-in) */
+@media (prefers-reduced-motion:no-preference){
+  .gal.anime .mosaic>li{transition:opacity .8s var(--ease-soft),transform .8s var(--ease-soft)}
+  .gal.anime .mosaic>li:not(.is-in){opacity:0;transform:translateY(22px) scale(.98)}
+  .gal.anime .mosaic>li:nth-child(2){transition-delay:.08s}.gal.anime .mosaic>li:nth-child(3){transition-delay:.16s}
+  .gal.anime .mosaic>li:nth-child(4){transition-delay:.24s}.gal.anime .mosaic>li:nth-child(5){transition-delay:.32s}
+  .gal__vue{scroll-behavior:smooth}
+}
 /* Légende courte : bandeau en dégradé en bas de la photo, au survol et au focus clavier (le texte complet est dans alt) */
 .frame__cap{position:absolute;left:0;right:0;bottom:0;padding:2.75rem 1.15rem .95rem;background:linear-gradient(180deg,transparent,rgb(30 18 20 / .64));color:#FFF8EE;font:300 1.2rem/1.1 var(--f-title);opacity:0;transform:translateY(6px);transition:opacity .35s var(--ease-soft),transform .35s var(--ease-soft)}
 .frame:focus-visible .frame__cap{opacity:1;transform:none}
@@ -454,7 +484,10 @@ dialog.lightbox::backdrop{background:rgb(24 14 16 / .92)}
   .frame{transition:box-shadow .4s var(--ease-soft)}.frame:hover{box-shadow:0 0 0 1px var(--line),0 24px 48px -28px rgb(59 42 39 / .55)}
   .frame:hover .frame__cap{opacity:1;transform:none}
 }
-@media (hover:hover) and (prefers-reduced-motion:no-preference){.frame img{transition:transform .9s var(--ease-soft)}.frame:hover img{transform:scale(1.04)}}
+@media (hover:hover) and (prefers-reduced-motion:no-preference){
+  .frame img{transition:transform .9s var(--ease-soft)}.frame:hover img{transform:scale(1.05)}
+  .frame:hover::before{transform:translateX(115%);transition:transform var(--dur-sheen) var(--ease-soft)}
+}
 
 /* ---------- Bandeau d'infos : version compacte ---------- */
 .infos__list li{display:flex;flex-direction:column;justify-content:center}
@@ -712,10 +745,11 @@ dialog.lightbox::backdrop{background:rgb(24 14 16 / .92)}
   .prices .name a,.price-group h4 a{padding-block:.65rem;background-origin:content-box}
 }
 
-/* Galerie : grille resserrée sur téléphone */
+/* Galerie sur téléphone : page empilée lisible — la large en haut, la haute à côté de deux petites, le bandeau en bas */
 @media (max-width:767px){
-  .mosaic{gap:.6rem}
-  .frame,.frame-video{border-radius:14px}
+  .mosaic,.mosaic--inverse{grid-template-columns:1fr 1fr;grid-template-rows:52vw 40vw 40vw 30vw;grid-template-areas:"a a" "c b" "d b" "e e";gap:.6rem}
+  .mosaic--inverse{grid-template-areas:"a a" "b c" "b d" "e e"}
+  .frame,.mosaic>li:nth-child(1) .frame,.mosaic>li:nth-child(5) .frame{border-radius:12px}
 }
 
 /* Pied de page : centré et resserré */

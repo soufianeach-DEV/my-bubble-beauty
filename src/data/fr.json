@@ -1254,18 +1254,10 @@
      "n": "10",
      "w": 1600,
      "h": 1200,
-     "pos": "droite",
+     "pos": "mi-haut",
      "cap": "La cabine",
      "alt": "La cabine de soins : la table préparée avec des serviettes beiges, la lampe en arc et les lettres en bois « My Bubble » au mur",
      "ariaLabel": "Agrandir la photo : La cabine de soins : la table préparée avec des serviettes beiges, la lampe en arc et les lettres en bois « My Bubble » au mur"
-    },
-    {
-     "n": "11",
-     "w": 1200,
-     "h": 1600,
-     "cap": "Le confort",
-     "alt": "L'appui-tête de la table de soin, couvert d'une serviette brodée du logo My Bubble, devant les étagères de l'institut",
-     "ariaLabel": "Agrandir la photo : L'appui-tête de la table de soin, couvert d'une serviette brodée du logo My Bubble, devant les étagères de l'institut"
     },
     {
      "n": "6",
@@ -1274,6 +1266,14 @@
      "alt": "Une tisane à la menthe fraîche servie en cabine, dans un verre décoré d'une fleur",
      "ariaLabel": "Agrandir la photo : Une tisane à la menthe fraîche servie en cabine, dans un verre décoré d'une fleur",
      "cap": "La tisane"
+    },
+    {
+     "n": "5",
+     "w": 1200,
+     "h": 1600,
+     "alt": "Les lettres en bois « Moment », « My Bubble » et « Beauty » au mur, à côté d'une plante verte",
+     "ariaLabel": "Agrandir la photo : Les lettres en bois « Moment », « My Bubble » et « Beauty » au mur, à côté d'une plante verte",
+     "cap": "L'esprit"
     },
     {
      "n": "15",
@@ -1292,20 +1292,13 @@
      "ariaLabel": "Agrandir la photo : Sur la cheminée, les bocaux de coton et les disques démaquillants lavables, rangés avec soin"
     },
     {
-     "n": "14",
-     "w": 900,
-     "h": 1200,
-     "cap": "Le calme",
-     "alt": "La table de soin préparée devant les grandes fenêtres, une serviette pliée posée dessus",
-     "ariaLabel": "Agrandir la photo : La table de soin préparée devant les grandes fenêtres, une serviette pliée posée dessus"
-    },
-    {
-     "n": "5",
+     "n": "11",
      "w": 1200,
      "h": 1600,
-     "alt": "Les lettres en bois « Moment », « My Bubble » et « Beauty » au mur, à côté d'une plante verte",
-     "ariaLabel": "Agrandir la photo : Les lettres en bois « Moment », « My Bubble » et « Beauty » au mur, à côté d'une plante verte",
-     "cap": "L'esprit"
+     "pos": "mi-bas",
+     "cap": "Le confort",
+     "alt": "L'appui-tête de la table de soin, couvert d'une serviette brodée du logo My Bubble, devant les étagères de l'institut",
+     "ariaLabel": "Agrandir la photo : L'appui-tête de la table de soin, couvert d'une serviette brodée du logo My Bubble, devant les étagères de l'institut"
     },
     {
      "n": "16",
@@ -1314,12 +1307,42 @@
      "cap": "L'entrée",
      "alt": "Le panneau « Entrée » de My Bubble Beauty sur la façade en briques, avec la flèche vers le parking",
      "ariaLabel": "Agrandir la photo : Le panneau « Entrée » de My Bubble Beauty sur la façade en briques, avec la flèche vers le parking"
+    },
+    {
+     "n": "14",
+     "w": 900,
+     "h": 1200,
+     "pos": "mi-bas",
+     "cap": "Le calme",
+     "alt": "La table de soin préparée devant les grandes fenêtres, une serviette pliée posée dessus",
+     "ariaLabel": "Agrandir la photo : La table de soin préparée devant les grandes fenêtres, une serviette pliée posée dessus"
+    },
+    {
+     "n": "18",
+     "w": 1200,
+     "h": 1600,
+     "cap": "L'institut",
+     "alt": "La maison de l'institut My Bubble Beauty à Dilbeek, avec ses marches en pierre et son jardin",
+     "ariaLabel": "Agrandir la photo : La maison de l'institut My Bubble Beauty à Dilbeek, avec ses marches en pierre et son jardin"
+    },
+    {
+     "n": "17",
+     "w": 1600,
+     "h": 1200,
+     "pos": "haut",
+     "cap": "Les soins",
+     "alt": "Sur la cheminée en bois, les produits de soin, les bocaux de coton et les disques démaquillants lavables",
+     "ariaLabel": "Agrandir la photo : Sur la cheminée en bois, les produits de soin, les bocaux de coton et les disques démaquillants lavables"
     }
    ],
    "eyebrow": "L'institut",
    "intro": "Un lieu calme et lumineux à Dilbeek, pensé pour que vous vous sentiez bien.",
    "prev": "Photo précédente",
-   "next": "Photo suivante"
+   "next": "Photo suivante",
+   "pagesPrev": "Photos précédentes",
+   "pagesNext": "Photos suivantes",
+   "page": "Page",
+   "pagesLabel": "Pages de la galerie"
   },
   "contact": {
    "title": "Contact",

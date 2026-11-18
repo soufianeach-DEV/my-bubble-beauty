@@ -35,13 +35,15 @@ if(th){
   dark.addEventListener('change',sync);
 }
 
-/* 2. Halos de section + pause hors écran */
+/* 2. Halos de section + pause hors écran ; tuiles de la galerie qui apparaissent quand leur page entre à l'écran */
 const io=new IntersectionObserver(es=>es.forEach(e=>{
   const t=e.target;
   if(t.classList.contains('lit')&&e.isIntersecting)t.classList.add('is-lit');
   if(t.hasAttribute('data-loop'))t.classList.toggle('is-off',!e.isIntersecting);
+  if(e.isIntersecting&&t.parentElement.classList.contains('mosaic')){t.classList.add('is-in');io.unobserve(t)}
 }),{threshold:.15});
-d.querySelectorAll('.lit,[data-loop]').forEach(el=>io.observe(el));
+d.querySelectorAll('[data-gal]').forEach(g=>g.classList.add('anime')); // sans JS, les tuiles restent visibles
+d.querySelectorAll('.lit,[data-loop],.mosaic>li').forEach(el=>io.observe(el));
 
 /* 3. Lumière qui suit le curseur (pointeur fin uniquement) */
 if(mm('(pointer: fine)').matches){
@@ -110,6 +112,34 @@ if(fl){
     location.hash!=='#'+id&&history.pushState(null,'','#'+id);g.scrollIntoView()});
 }
 
+/* 5 bis. Galerie en pages coulissantes : flèches et points sous la grille ; le glisser au doigt est natif (scroll-snap).
+   Les pages hors écran sont inertes (ni tabulation ni lecteur d'écran) ; la visionneuse ramène à la page de la photo vue. */
+let galPage=null;
+const gal=d.querySelector('[data-gal]');
+if(gal){
+  const vue=gal.querySelector('.gal__vue'),pages=[...gal.querySelectorAll('.gal__page')],pts=[...gal.querySelectorAll('[data-gal-page]')];
+  const prev=gal.querySelector('[data-gal-prev]'),next=gal.querySelector('[data-gal-next]');
+  let cur=-1,cible=null; // cible : page visée par un clic, tant que le défilement fluide n'y est pas arrivé
+  const maj=k=>{if(k===cur)return;cur=k;
+    pts.forEach((b,j)=>j===k?b.setAttribute('aria-current','true'):b.removeAttribute('aria-current'));
+    pages.forEach((p,j)=>{p.inert=j!==k});
+    if(prev){prev.disabled=k===0;next.disabled=k===pages.length-1}};
+  galPage=k=>{k=Math.max(0,Math.min(pages.length-1,k));cible=k;vue.scrollTo({left:k*vue.clientWidth});maj(k)}; // fluide sauf « moins d'animations » (CSS)
+  // Glisser au doigt : la page suit la position ; après un clic, les positions intermédiaires sont ignorées (pas de clignotement)
+  vue.addEventListener('scroll',()=>{const p=vue.scrollLeft/vue.clientWidth;
+    if(cible!==null){if(Math.abs(p-cible)>.02)return;cible=null}
+    maj(Math.round(p))},{passive:true});
+  // Si la visiteuse reprend la main pendant le défilement (doigt, molette) ou s'il s'arrête avant la page visée, la position fait foi
+  const libre=()=>{cible=null;maj(Math.round(vue.scrollLeft/vue.clientWidth))};
+  ['pointerdown','wheel','scrollend'].forEach(t=>vue.addEventListener(t,libre,{passive:true}));
+  // Fenêtre redimensionnée ou téléphone tourné : on reste sur la même page (sinon la position peut retomber entre deux pages)
+  addEventListener('resize',()=>vue.scrollTo({left:cur*vue.clientWidth,behavior:'instant'}));
+  prev&&prev.addEventListener('click',()=>galPage(cur-1));
+  next&&next.addEventListener('click',()=>galPage(cur+1));
+  pts.forEach((b,j)=>b.addEventListener('click',()=>galPage(j)));
+  maj(0);
+}
+
 /* 6. Galerie : visionneuse plein écran dans <dialog> (flèches, ← → au clavier, glisser du doigt, compteur) */
 const dlg=d.querySelector('dialog.lightbox');
 if(dlg&&dlg.showModal){
@@ -128,6 +158,7 @@ if(dlg&&dlg.showModal){
   dlg.addEventListener('pointerdown',e=>{x0=e.clientX;glisse=false});
   dlg.addEventListener('pointerup',e=>{if(x0===null)return;const dx=e.clientX-x0;x0=null;glisse=Math.abs(dx)>10;if(Math.abs(dx)>50)voir(dx<0?i+1:i-1)});
   dlg.addEventListener('click',e=>{e.target===dlg&&!glisse&&dlg.close()});
+  dlg.addEventListener('close',()=>galPage&&galPage(Math.floor(i/5))); // 5 photos par page
 }
 
 /* 6 bis. Compte dans l'en-tête des pages pré-rendues : sans témoin mb_in (aucune donnée), aucun appel.

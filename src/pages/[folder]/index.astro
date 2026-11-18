@@ -155,18 +155,36 @@ const jsonld = {
 <div class="halo halo--lilas" aria-hidden="true"></div>
 <div class="wrap">
 <div class="section__head"><p class="eyebrow">{h.gallery.eyebrow}</p><h2 id="h-galerie" data-snow={h.gallery.title}>{h.gallery.title}</h2>{h.gallery.intro && <p class="galerie__intro">{h.gallery.intro}</p>}</div>
-{/* Grille régulière : vignettes toutes au même format, recadrées (data-pos choisit le cadrage, la CSP interdit les attributs style) ;
-    la visionneuse montre la photo entière ; l'ordre du fichier de textes est l'ordre de lecture et celui de la visionneuse */}
-<ul class="mosaic">
-{h.gallery.items.map((g) => {
-  // Taille de l'image pleine ; variantes 800 et 1200 seulement si plus petites
+{/* Pages coulissantes (maquette de Soufiane) : 5 photos par page — large en haut, haute sur le côté, presque carrée, petite
+    portrait, bandeau en bas ; la disposition s'inverse une page sur deux. Glisser au doigt natif (scroll-snap), flèches et
+    pagination dessous (main.js). Cadrage par data-pos (la CSP interdit les attributs style). L'ordre du fichier de textes est
+    celui de la visionneuse. */}
+<div class="gal" data-gal>
+<div class="gal__vue">
+<ul class="gal__pages">
+{Array.from({ length: Math.ceil(h.gallery.items.length / 5) }, (_, k) => h.gallery.items.slice(k * 5, k * 5 + 5)).map((page, k, pages) => (
+<li class="gal__page" aria-label={`${h.gallery.page} ${k + 1} / ${pages.length}`}>
+<ul class={k % 2 ? 'mosaic mosaic--inverse' : 'mosaic'}>
+{page.map((g, j) => {
+  // Taille de l'image pleine ; variantes 800 et 1200 seulement si plus petites ; largeur affichée selon la place de la tuile
   const gw = g.w ?? 1600, gh = g.h ?? 1200;
-  // Vidéo : tuile à part (pas .frame, qui ouvre la visionneuse), muette, lancée seulement par la cliente
-  if (g.video) return <li><div class="frame-video"><video src={`/assets/video/${g.video}.mp4`} poster={`/assets/video/${g.video}.webp`} width={gw} height={gh} controls muted playsinline preload="none" aria-label={g.alt}></video></div></li>;
   const srcset = [...[800, 1200].filter((x) => x < gw).map((x) => `/assets/img/galerie-${g.n}-${x}.webp ${x}w`), `/assets/img/galerie-${g.n}.webp ${gw}w`].join(', ');
-  return <li><a class="frame" href={`/assets/img/galerie-${g.n}.webp`} data-pos={g.pos} aria-label={g.ariaLabel}><img src={`/assets/img/galerie-${g.n}-800.webp`} srcset={srcset} sizes="(max-width: 899px) 50vw, 300px" width="800" height={Math.round(800 * gh / gw)} data-w={gw} data-h={gh} alt={g.alt} loading="lazy" decoding="async">{g.cap && <span class="frame__cap" aria-hidden="true">{g.cap}</span>}</a></li>;
+  const sizes = ['(max-width: 767px) 100vw, 860px', '(max-width: 767px) 50vw, 400px', '(max-width: 767px) 50vw, 530px', '(max-width: 767px) 50vw, 320px', '(max-width: 767px) 100vw, 1240px'][j];
+  return <li><a class="frame" href={`/assets/img/galerie-${g.n}.webp`} data-pos={g.pos} aria-label={g.ariaLabel}><img src={`/assets/img/galerie-${g.n}-800.webp`} srcset={srcset} sizes={sizes} width="800" height={Math.round(800 * gh / gw)} data-w={gw} data-h={gh} alt={g.alt} loading="lazy" decoding="async">{g.cap && <span class="frame__cap" aria-hidden="true">{g.cap}</span>}</a></li>;
 })}
 </ul>
+</li>
+))}
+</ul>
+</div>
+{h.gallery.items.length > 5 && (
+<nav class="gal__nav" aria-label={h.gallery.pagesLabel}>
+<button class="gal__fleche" type="button" data-gal-prev aria-label={h.gallery.pagesPrev} disabled><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg></button>
+<ol class="gal__points">{Array.from({ length: Math.ceil(h.gallery.items.length / 5) }, (_, k) => <li><button type="button" data-gal-page={k} aria-label={`${h.gallery.page} ${k + 1}`} aria-current={k === 0 ? 'true' : undefined}></button></li>)}</ol>
+<button class="gal__fleche" type="button" data-gal-next aria-label={h.gallery.pagesNext}><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg></button>
+</nav>
+)}
+</div>
 </div>
 <dialog class="lightbox" aria-label={h.gallery.dialogLabel}>
 <figure class="lightbox__fig"><img src={`/assets/img/galerie-${h.gallery.items.find((g) => g.n).n}-800.webp`} alt="" width="1600" height="1200" loading="lazy"><figcaption aria-live="polite"><span class="lightbox__cap"></span><span class="lightbox__count"></span></figcaption></figure>

@@ -1254,18 +1254,10 @@
      "n": "10",
      "w": 1600,
      "h": 1200,
-     "pos": "droite",
+     "pos": "mi-haut",
      "cap": "De behandelkamer",
      "alt": "De behandelkamer: de behandeltafel klaargemaakt met beige handdoeken, de booglamp en de houten letters “My Bubble” aan de muur",
      "ariaLabel": "Foto vergroten: De behandelkamer: de behandeltafel klaargemaakt met beige handdoeken, de booglamp en de houten letters “My Bubble” aan de muur"
-    },
-    {
-     "n": "11",
-     "w": 1200,
-     "h": 1600,
-     "cap": "Comfort",
-     "alt": "De hoofdsteun van de behandeltafel, bedekt met een handdoek met het geborduurde My Bubble-logo, voor de rekken van het instituut",
-     "ariaLabel": "Foto vergroten: De hoofdsteun van de behandeltafel, bedekt met een handdoek met het geborduurde My Bubble-logo, voor de rekken van het instituut"
     },
     {
      "n": "6",
@@ -1274,6 +1266,14 @@
      "alt": "Kruidenthee met verse munt, geserveerd in de behandelkamer in een glas met een bloem",
      "ariaLabel": "Foto vergroten: Kruidenthee met verse munt, geserveerd in de behandelkamer in een glas met een bloem",
      "cap": "De thee"
+    },
+    {
+     "n": "5",
+     "w": 1200,
+     "h": 1600,
+     "alt": "De houten letters “Moment”, “My Bubble” en “Beauty” aan de muur, naast een groene plant",
+     "ariaLabel": "Foto vergroten: De houten letters “Moment”, “My Bubble” en “Beauty” aan de muur, naast een groene plant",
+     "cap": "De sfeer"
     },
     {
      "n": "15",
@@ -1292,20 +1292,13 @@
      "ariaLabel": "Foto vergroten: Op de schouw: potten met watten en herbruikbare make-uppads, netjes opgeborgen"
     },
     {
-     "n": "14",
-     "w": 900,
-     "h": 1200,
-     "cap": "De rust",
-     "alt": "De behandeltafel klaargemaakt voor de grote ramen, met een opgevouwen handdoek erop",
-     "ariaLabel": "Foto vergroten: De behandeltafel klaargemaakt voor de grote ramen, met een opgevouwen handdoek erop"
-    },
-    {
-     "n": "5",
+     "n": "11",
      "w": 1200,
      "h": 1600,
-     "alt": "De houten letters “Moment”, “My Bubble” en “Beauty” aan de muur, naast een groene plant",
-     "ariaLabel": "Foto vergroten: De houten letters “Moment”, “My Bubble” en “Beauty” aan de muur, naast een groene plant",
-     "cap": "De sfeer"
+     "pos": "mi-bas",
+     "cap": "Comfort",
+     "alt": "De hoofdsteun van de behandeltafel, bedekt met een handdoek met het geborduurde My Bubble-logo, voor de rekken van het instituut",
+     "ariaLabel": "Foto vergroten: De hoofdsteun van de behandeltafel, bedekt met een handdoek met het geborduurde My Bubble-logo, voor de rekken van het instituut"
     },
     {
      "n": "16",
@@ -1314,12 +1307,42 @@
      "cap": "De ingang",
      "alt": "Het bord “Entrée” van My Bubble Beauty op de bakstenen gevel, met de pijl naar de parking",
      "ariaLabel": "Foto vergroten: Het bord “Entrée” van My Bubble Beauty op de bakstenen gevel, met de pijl naar de parking"
+    },
+    {
+     "n": "14",
+     "w": 900,
+     "h": 1200,
+     "pos": "mi-bas",
+     "cap": "De rust",
+     "alt": "De behandeltafel klaargemaakt voor de grote ramen, met een opgevouwen handdoek erop",
+     "ariaLabel": "Foto vergroten: De behandeltafel klaargemaakt voor de grote ramen, met een opgevouwen handdoek erop"
+    },
+    {
+     "n": "18",
+     "w": 1200,
+     "h": 1600,
+     "cap": "Het instituut",
+     "alt": "Het huis van het instituut My Bubble Beauty in Dilbeek, met de stenen trap en de tuin",
+     "ariaLabel": "Foto vergroten: Het huis van het instituut My Bubble Beauty in Dilbeek, met de stenen trap en de tuin"
+    },
+    {
+     "n": "17",
+     "w": 1600,
+     "h": 1200,
+     "pos": "haut",
+     "cap": "De verzorging",
+     "alt": "Op de houten schouw: verzorgingsproducten, potten met watten en herbruikbare make-uppads",
+     "ariaLabel": "Foto vergroten: Op de houten schouw: verzorgingsproducten, potten met watten en herbruikbare make-uppads"
     }
    ],
    "eyebrow": "Het instituut",
    "intro": "Een rustige, lichte plek in Dilbeek, ingericht zodat u zich goed voelt.",
    "prev": "Vorige foto",
-   "next": "Volgende foto"
+   "next": "Volgende foto",
+   "pagesPrev": "Vorige foto’s",
+   "pagesNext": "Volgende foto’s",
+   "page": "Pagina",
+   "pagesLabel": "Pagina’s van de galerij"
   },
   "contact": {
    "title": "Contact",
