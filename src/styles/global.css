@@ -33,6 +33,7 @@
   --f-text:"Jost","Jost-fb",Arial,sans-serif;
   /* Mouvement */
   --ease-soft:cubic-bezier(.22,.61,.36,1);
+  --ease-spa:cubic-bezier(.22,1,.36,1); /* part vite, se pose très lentement : apparitions et ouvertures */
   --ease-draw:cubic-bezier(.65,0,.35,1);
   --dur-ui:180ms; --dur-sheen:900ms; --dur-halo:1200ms;
   --drift-a:24s; --drift-b:31s; --drift-c:37s; --hue-cycle:40s;
@@ -95,7 +96,7 @@ p{margin:0 0 1em}
 .skip:focus{top:1rem}
 
 /* ---------- Boutons ---------- */
-.btn{position:relative;display:inline-flex;align-items:center;gap:.5em;min-height:48px;padding:.75rem 1.5rem;border-radius:999px;font:500 .9375rem/1 var(--f-text);letter-spacing:.06em;text-decoration:none;white-space:nowrap;border:1px solid var(--accent);overflow:hidden;isolation:isolate;transition:background-color var(--dur-ui) var(--ease-soft),color var(--dur-ui) var(--ease-soft)}
+.btn{position:relative;display:inline-flex;align-items:center;gap:.5em;min-height:48px;padding:.75rem 1.5rem;border-radius:999px;font:500 .9375rem/1 var(--f-text);letter-spacing:.06em;text-decoration:none;white-space:nowrap;border:1px solid var(--accent);overflow:hidden;isolation:isolate;transition:background-color var(--dur-ui) var(--ease-soft),color var(--dur-ui) var(--ease-soft),transform .15s var(--ease-soft)}
 .btn--solid{background:var(--accent);color:var(--accent-ink)}
 .btn--ghost{background:transparent;color:var(--link)}
 .btn--ghost:hover{background:var(--surface)}
@@ -312,8 +313,11 @@ main{isolation:isolate;overflow-x:clip}
 @media (prefers-reduced-motion:no-preference){
   .gal.anime .mosaic>li{transition:opacity .8s var(--ease-soft),transform .8s var(--ease-soft)}
   .gal.anime .mosaic>li:not(.is-in){opacity:0;transform:translateY(22px) scale(.98)}
-  .gal.anime .mosaic>li:nth-child(2){transition-delay:.08s}.gal.anime .mosaic>li:nth-child(3){transition-delay:.16s}
-  .gal.anime .mosaic>li:nth-child(4){transition-delay:.24s}.gal.anime .mosaic>li:nth-child(5){transition-delay:.32s}
+  .gal.anime .mosaic>li:nth-child(2){transition-delay:.06s}.gal.anime .mosaic>li:nth-child(3){transition-delay:.12s}
+  .gal.anime .mosaic>li:nth-child(4){transition-delay:.18s}.gal.anime .mosaic>li:nth-child(5){transition-delay:.24s}
+  /* la photo se pose dans sa tuile : léger dézoom pendant l'apparition */
+  .gal.anime .frame img{transition:transform 1.2s var(--ease-spa)}
+  .gal.anime .mosaic>li:not(.is-in) .frame img{transform:scale(1.05)}
   .gal__vue{scroll-behavior:smooth}
 }
 /* Légende courte : bandeau en dégradé en bas de la photo, au survol et au focus clavier (le texte complet est dans alt) */
@@ -973,3 +977,30 @@ dialog.lightbox::backdrop{background:rgb(24 14 16 / .92)}
   /* Seulement le haut de chaque ligne : la neige ne se pose pas sur les empattements du pied des lettres */
   -webkit-mask:repeating-linear-gradient(#000 0 calc(1lh * .5),transparent calc(1lh * .6) 1lh);mask:repeating-linear-gradient(#000 0 calc(1lh * .5),transparent calc(1lh * .6) 1lh)}
 @media (max-width:1023px){:root[data-saison] [data-snow]::after{filter:url(#mb-neige-s)}}
+
+/* ==========================================================================
+   Finitions (avis de design) : apparition douce, boutons, accordéons, photos en sombre
+   ========================================================================== */
+/* Apparition au défilement : main.js pose .rv, puis .rv-in quand l'élément arrive à l'écran, puis retire les deux */
+@media (prefers-reduced-motion:no-preference){
+  .rv{transition:opacity .9s var(--ease-spa),transform .9s var(--ease-spa)}
+  .rv:not(.rv-in){opacity:0;transform:translateY(20px)}
+  .rv:is(.about__tile,.soin):not(.rv-in) img{transform:scale(1.05)}
+}
+/* Boutons : léger enfoncement au clic */
+.btn:active,.gal__fleche:active:not(:disabled){transform:scale(.98)}
+.price-group__book,.price-group__more{transition:border-color var(--dur-ui),background-color var(--dur-ui),transform .15s var(--ease-soft)}
+.price-group__book:active,.price-group__more:active{transform:scale(.98)}
+/* Accordions (FAQ, « Lire la suite ») : ouverture fluide là où le navigateur sait animer la hauteur, sinon ouverture directe */
+.faq summary::after{transition:transform .35s var(--ease-spa)}
+.faq details[open] summary::after{content:"+";transform:rotate(45deg)}
+@supports (interpolate-size:allow-keywords){
+  :root{interpolate-size:allow-keywords}
+  @media (prefers-reduced-motion:no-preference){
+    .faq details::details-content,.about__more::details-content{block-size:0;overflow:hidden;transition:block-size .45s var(--ease-spa),content-visibility .45s allow-discrete}
+    .faq details[open]::details-content,.about__more[open]::details-content{block-size:auto}
+  }
+}
+/* Thème sombre : vraies photos un peu atténuées, pour ne pas éblouir sur le fond rosé */
+@media (prefers-color-scheme:dark){:where(:root:not([data-theme="light"])) :is(.frame,.about__tile,.soin__media) img{filter:brightness(.88)}}
+:where(:root[data-theme="dark"]) :is(.frame,.about__tile,.soin__media) img{filter:brightness(.88)}

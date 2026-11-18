@@ -45,6 +45,17 @@ const io=new IntersectionObserver(es=>es.forEach(e=>{
 d.querySelectorAll('[data-gal]').forEach(g=>g.classList.add('anime')); // sans JS, les tuiles restent visibles
 d.querySelectorAll('.lit,[data-loop],.mosaic>li').forEach(el=>io.observe(el));
 
+/* 2 bis. Apparition douce au défilement : fondu vers le haut (20 px, 0,9 s), photos qui se posent (1,05 → 1),
+   cascade de 60 ms dans les grilles. Seulement si les animations sont permises ; sans JS, tout reste visible. */
+if(!off()){
+  // Une fois apparu, l'élément retrouve ses propres transitions (survol des cartes, etc.)
+  const fini=el=>setTimeout(()=>{el.classList.remove('rv','rv-in');el.style.transitionDelay=''},1700);
+  const rv=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('rv-in');rv.unobserve(e.target);fini(e.target)}}),{rootMargin:'0px 0px -10% 0px'});
+  const marque=(el,k)=>{el.classList.add('rv');if(k)el.style.transitionDelay=`${Math.min(k,6)*60}ms`;rv.observe(el)};
+  d.querySelectorAll('.section .section__head,.about__content,.contact .wrap>*').forEach(el=>marque(el,0));
+  d.querySelectorAll('.about__mosaic,.soins__grid,.price-groups,.faq__list').forEach(g=>[...g.children].forEach(marque));
+}
+
 /* 3. Lumière qui suit le curseur (pointeur fin uniquement) */
 if(mm('(pointer: fine)').matches){
   d.querySelectorAll('.cursor-zone').forEach(z=>{
