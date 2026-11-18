@@ -283,7 +283,7 @@ main{isolation:isolate;overflow-x:clip}
 .gal__vue::-webkit-scrollbar{display:none}
 .gal__pages{display:flex;list-style:none;margin:0;padding:0}
 .gal__page{flex:0 0 100%;min-width:0;scroll-snap-align:start;scroll-snap-stop:always}
-.mosaic{display:grid;grid-template-columns:1.65fr 1fr 1.25fr;grid-template-rows:clamp(170px,21vw,290px) clamp(250px,36vw,500px) clamp(110px,14vw,195px);grid-template-areas:"a a b" "c d b" "e e e";gap:clamp(.75rem,1.4vw,1.25rem);list-style:none;margin:0;padding:0}
+.mosaic{display:grid;grid-template-columns:1.65fr 1fr 1.25fr;grid-template-rows:clamp(170px,21vw,290px) clamp(250px,36vw,500px) clamp(110px,14vw,195px);grid-template-areas:"a a b" "c d b" "e e e";gap:clamp(.5rem,.8vw,.75rem);list-style:none;margin:0;padding:0}
 .mosaic--inverse{grid-template-columns:1.25fr 1fr 1.65fr;grid-template-areas:"b a a" "b d c" "e e e"}
 .mosaic>li:nth-child(1){grid-area:a}.mosaic>li:nth-child(2){grid-area:b}.mosaic>li:nth-child(3){grid-area:c}.mosaic>li:nth-child(4){grid-area:d}.mosaic>li:nth-child(5){grid-area:e}
 .frame{display:block;position:relative;height:100%;border-radius:clamp(14px,1.6vw,22px);overflow:hidden;background:var(--surface);box-shadow:0 0 0 1px var(--line-soft),0 18px 40px -32px rgb(59 42 39 / .45);cursor:zoom-in;isolation:isolate}
@@ -747,7 +747,7 @@ dialog.lightbox::backdrop{background:rgb(24 14 16 / .92)}
 
 /* Galerie sur téléphone : page empilée lisible — la large en haut, la haute à côté de deux petites, le bandeau en bas */
 @media (max-width:767px){
-  .mosaic,.mosaic--inverse{grid-template-columns:1fr 1fr;grid-template-rows:52vw 40vw 40vw 30vw;grid-template-areas:"a a" "c b" "d b" "e e";gap:.6rem}
+  .mosaic,.mosaic--inverse{grid-template-columns:1fr 1fr;grid-template-rows:52vw 40vw 40vw 30vw;grid-template-areas:"a a" "c b" "d b" "e e";gap:.375rem}
   .mosaic--inverse{grid-template-areas:"a a" "b c" "b d" "e e"}
   .frame,.mosaic>li:nth-child(1) .frame,.mosaic>li:nth-child(5) .frame{border-radius:12px}
 }
