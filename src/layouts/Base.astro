@@ -25,14 +25,16 @@ interface Props {
 }
 const { lang, pageKey, title, description, ogType = 'website', jsonld, noindex = false, isHome = false, mainClass, canonicalPath, route, bare = false, ogImage } = Astro.props;
 const d = t(lang);
+// Image de partage par défaut : la façade avec le logo. Nouveau nom de fichier pour que Facebook ne garde pas l'ancienne
+// (og-image.jpg reste dans le dépôt pour les anciens partages qui pointent encore dessus).
 const OG_ALT: Record<Lang, string> = {
-  fr: 'Soin du visage en cabine, à la lumière des bougies',
-  nl: 'Gezichtsbehandeling in de cabine, bij kaarslicht',
-  en: 'Facial in the treatment room, by candlelight',
+  fr: "Façade de l'institut My Bubble Beauty, Palokestraat 146 à Dilbeek",
+  nl: 'Gevel van het instituut My Bubble Beauty, Palokestraat 146 in Dilbeek',
+  en: 'Front of the My Bubble Beauty salon, Palokestraat 146 in Dilbeek',
 };
 const og = ogImage
   ? { url: SITE + '/assets/img/' + ogImage.src, w: ogImage.w, h: ogImage.h, alt: ogImage.alt }
-  : { url: SITE + '/assets/img/og-image.jpg', w: 1200, h: 630, alt: OG_ALT[lang] };
+  : { url: SITE + '/assets/img/og-image-facade.jpg', w: 1200, h: 630, alt: OG_ALT[lang] };
 const ui = d.ui;
 const home = pagePath(lang, 'home');
 const anchor = (hash: string) => (isHome ? hash : home + hash);
