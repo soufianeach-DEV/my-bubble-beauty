@@ -62,6 +62,8 @@ const REDIRECTS = new Map([
   // SOS Pureté retirée de la carte (8bac70c) : même traitement
   ...['fr', 'nl', 'eng'].map((l) => [`/${l}/subPages/sos.html`, `/${l}/index.html#package`]),
 ]);
+// Pages v1 d'actes exclus, sans équivalent (HIFU, Plasma Pen) : 410 pour que Google les retire de l'index
+const GONE = new Set(['hifu', 'plasma'].flatMap((p) => ['fr', 'nl', 'eng'].map((l) => `/${l}/subPages/${p}.html`)));
 
 // Un seul domaine indexé : toute autre adresse publique (ex. *.onrender.com après la bascule) redirige vers SITE_URL.
 // Exemptés : localhost et adresses IP (sondes de santé, accès direct), POST (formulaires, webhook Stripe) et /api.
@@ -116,6 +118,10 @@ const server = http.createServer((req, res) => {
     // Cible de requête sous forme absolue (« GET http://… ») : jamais recollée derrière le domaine
     res.writeHead(301, { Location: process.env.SITE_URL + (req.url.startsWith('/') ? req.url : '/') });
     return res.end();
+  }
+  if (GONE.has(path)) {
+    res.writeHead(410, { 'Content-Type': 'text/plain; charset=utf-8' });
+    return res.end('Cette page n’existe plus. https://mybubble-beauty.com/\n');
   }
   // /fr, /nl, /eng -> accueil de la langue (URL d'origine conservées)
   const home = /^\/(fr|nl|eng)\/?$/.exec(path);
