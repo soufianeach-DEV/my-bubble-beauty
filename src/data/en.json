@@ -1187,6 +1187,111 @@
    "partFormules": "Packages & courses",
    "formulas": [
     {
+     "id": "future-mariee",
+     "cat": "visage corps",
+     "layout": "cartes",
+     "book": true,
+     "title": "Bride to be",
+     "intro": "Three moments of beauty and well-being before the big day",
+     "valueLabel": "À la carte value",
+     "extraLabel": "extra",
+     "bookLabel": "Book this package",
+     "assure": [
+      "Test the facial 4 to 6 weeks before the wedding",
+      "Book 6 to 8 weeks ahead"
+     ],
+     "open": "Are your bridesmaids or your mum coming along? Let us know when you book.",
+     "outro": "Treat yourself to a moment just for you, to approach the big day with serenity and radiance.",
+     "items": [
+      {
+       "name": "The Bride’s Awakening",
+       "detail": "A gentle break to relax and glow.",
+       "duration": "About 2 h",
+       "amount": "149 €",
+       "was": "160 €",
+       "note": "You save 11 €",
+       "list": [
+        {
+         "t": "Body scrub"
+        },
+        {
+         "t": "Relaxing body massage"
+        },
+        {
+         "t": "Complete facial"
+        }
+       ]
+      },
+      {
+       "name": "The Bride’s Elegance",
+       "detail": "A beauty session for soft, luminous skin.",
+       "duration": "3 h 30 to 4 h",
+       "amount": "239 €",
+       "featured": true,
+       "badge": "Most chosen",
+       "sub": "Face, body and hair removal in a single visit",
+       "list": [
+        {
+         "t": "Complete facial"
+        },
+        {
+         "t": "Relaxing body massage"
+        },
+        {
+         "t": "Underarm hair removal"
+        },
+        {
+         "t": "Bikini hair removal"
+        },
+        {
+         "t": "Full leg hair removal"
+        }
+       ]
+      },
+      {
+       "name": "The Bride’s Signature",
+       "detail": "The complete beauty experience to feel stunning down to your fingertips.",
+       "duration": "4 h 30 to 5 h 30",
+       "amount": "299 €",
+       "was": "363 €",
+       "badge": "Most complete",
+       "note": "You save 64 €",
+       "plus": "60 € more than The Bride’s Elegance",
+       "small": "Value excluding brunch",
+       "list": [
+        {
+         "t": "Premium Signature facial",
+         "extra": true
+        },
+        {
+         "t": "Relaxing body massage"
+        },
+        {
+         "t": "Underarm hair removal"
+        },
+        {
+         "t": "Bikini hair removal"
+        },
+        {
+         "t": "Full leg hair removal"
+        },
+        {
+         "t": "Manicure",
+         "extra": true
+        },
+        {
+         "t": "Pedicure",
+         "extra": true
+        },
+        {
+         "t": "Gourmet brunch",
+         "extra": true
+        }
+       ]
+      }
+     ]
+    },
+    {
      "id": "rituels-signature",
      "cat": "corps",
      "title": "Signature rituals",

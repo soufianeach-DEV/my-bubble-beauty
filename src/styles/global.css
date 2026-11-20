@@ -232,6 +232,35 @@ main{isolation:isolate;overflow-x:clip}
 .tarifs__part-title{display:flex;align-items:center;gap:1rem;font-size:clamp(1.4rem,1vw + 1rem,1.75rem);margin:0 0 1.25rem}
 .tarifs__part-title::after{content:"";flex:1;border-bottom:1px solid var(--line-soft)}
 .tarifs__part--formules .price-group{border-color:var(--line)}
+/* Formule en cartes (Future Mariée) : pleine largeur, trois cartes alignées ligne à ligne par une sous-grille
+   (titre, accroche, prix, soins, bouton) ; la carte vedette est marquée par sa bordure, pas décalée */
+.price-group.fcartes{grid-column:1/-1;background:none;border:0;padding:0}
+.fcartes>h4{text-align:center;border:0;padding:0;font-size:clamp(1.8rem,2vw + 1rem,2.4rem)}
+.fcartes>.price-group__intro{text-align:center;margin:0 auto 1.75rem;max-width:52ch}
+.fcartes__liste{list-style:none;margin:0;padding:.9rem 0 0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto auto 1fr auto;column-gap:clamp(1rem,2vw,1.5rem)}
+.fcarte{position:relative;display:grid;grid-row:span 5;grid-template-rows:subgrid;background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);padding:2rem 1.6rem 1.6rem}
+.fcarte--star{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 18px 40px color-mix(in srgb,var(--accent) 18%,transparent)}
+.fcarte__badge{position:absolute;top:-.85rem;left:50%;transform:translateX(-50%);white-space:nowrap;padding:.25rem .85rem;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-size:.78rem;font-weight:500;letter-spacing:.04em}
+.fcarte__badge--alt{background:var(--surface);color:var(--accent-text);border:1px solid var(--accent)}
+.fcarte h5{align-self:end;margin:0;text-align:center;font-family:var(--f-title);font-weight:300;font-variation-settings:"SOFT" 100,"WONK" 0;font-size:1.5rem;letter-spacing:.04em;line-height:1.15}
+.fcarte__accroche{margin:.5rem 0 1.1rem;text-align:center;font-size:.9375rem;color:var(--text-soft)}
+.fcarte__prix{display:flex;flex-direction:column;align-items:center;gap:.3rem;margin:0 0 1.1rem;padding:1rem 0;border-block:1px solid var(--line-soft);text-align:center;font-size:.875rem;color:var(--text-soft)}
+.fcarte__montant{font-family:var(--f-title);font-size:2.4rem;line-height:1.1;color:var(--text)}
+.fcarte__prix s{text-decoration-thickness:1px}
+.fcarte__eco{padding:.15rem .7rem;border-radius:999px;background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent-text);font-weight:500}
+.fcarte__plus{color:var(--accent-text)}
+.fcarte__prix small{font-size:.75rem}
+.fcarte__soins{list-style:none;margin:0 0 1.4rem;padding:0;align-self:start}
+.fcarte__soins li{position:relative;padding:.4rem 0 .4rem 1.4rem;border-bottom:1px dotted var(--line-soft);font-size:.9375rem}
+.fcarte__soins li::before{content:"";position:absolute;left:.2rem;top:.95rem;width:.45rem;height:.45rem;border-radius:50%;background:var(--line)}
+.fcarte__soins .is-extra{font-weight:500}
+.fcarte__extra{display:inline-block;white-space:nowrap;margin-left:.45rem;padding:0 .45rem;border:1px solid var(--line-soft);border-radius:999px;font-size:.7rem;color:var(--accent-text);vertical-align:1px}
+.fcarte__btn{align-self:end;justify-content:center;width:100%}
+.fcartes__rassure{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 1.75rem;margin:2rem 0 .6rem;padding:0;font-size:.9375rem;color:var(--text-soft)}
+.fcartes__rassure li::before{content:"✓";margin-right:.45rem;color:var(--accent-text);font-weight:500}
+.fcartes__ouverture{margin:.3rem 0;text-align:center}
+.fcartes__cloture{margin:1.4rem auto 0;max-width:46ch;text-align:center;font-family:var(--f-title);font-style:italic;font-size:1.2rem;color:var(--accent-text)}
+@media (max-width:899px){.fcartes__liste{grid-template-columns:1fr;grid-template-rows:none;row-gap:2.2rem}.fcarte{grid-row:auto;grid-template-rows:none}}
 .prices .name small.price-note{color:var(--text);font-weight:500}
 .prices{list-style:none;margin:0;padding:0}
 .prices li{display:flex;align-items:baseline;gap:.5rem;padding:.55rem .5rem;margin-inline:-.5rem;border-radius:8px}

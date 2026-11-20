@@ -24,6 +24,16 @@ const bookHref = (gid: string, j: number) => {
   const it = g?.items[j];
   return `/${FOLDER[lang]}/reserver${g && it ? `?soin=${itemSlug(g, it)}` : ''}`;
 };
+// Formules réservables (book) : même règle, slug calculé sur la formule française (synchro des prestations, db/migrate.mjs)
+const FR_FORMULAS = t('fr').home.tarifs.formulas;
+const formuleHref = (gid: string, j: number) => {
+  const g = FR_FORMULAS.find((x) => x.id === gid);
+  const it = g?.items[j];
+  return `/${FOLDER[lang]}/reserver${g && it ? `?soin=${itemSlug(g, it)}` : ''}`;
+};
+// Formule présentée en cartes (Future Mariée) : champs propres à ce bloc
+type Carte = { name: string; detail: string; duration: string; amount: string; was?: string; featured?: boolean; badge?: string; note?: string; sub?: string; plus?: string; small?: string; list: { t: string; extra?: boolean }[] };
+type Cartes = { id: string; cat: string; title: string; intro: string; valueLabel: string; extraLabel: string; bookLabel: string; assure: string[]; open: string; outro: string; items: Carte[] };
 // Photo de chaque carte soin, dans l'ordre de home.soins.cards
 const CARD_IMG = ['visage', 'massage', 'epilation', 'corps', 'onglerie', 'sourire'];
 // FAQ : {hours} et {phone} viennent de site.ts, pour ne jamais diverger des horaires et du numéro affichés ailleurs
@@ -119,7 +129,33 @@ const jsonld = {
   <section class={`tarifs__part tarifs__part--${part.key}`} aria-labelledby={`h-part-${part.key}`}>
   <h3 class="tarifs__part-title" id={`h-part-${part.key}`}>{part.title}</h3>
   <div class="price-groups">
-  {part.groups.map((g) => (
+  {part.groups.map((g) => (g as { layout?: string }).layout === 'cartes' ? (() => {
+    const c = g as unknown as Cartes;
+    // Trois cartes côte à côte, alignées ligne à ligne (sous-grille CSS) ; prix barré seulement quand la valeur à la carte est plus haute
+    return (
+    <section class="price-group fcartes" data-cat={c.cat} id={`tarif-${c.id}`} aria-labelledby={`h-tarif-${c.id}`}>
+      <h4 id={`h-tarif-${c.id}`}>{c.title}</h4>
+      <p class="price-group__intro">{c.intro}</p>
+      <ul class="fcartes__liste">{c.items.map((it, j) => (
+        <li class={it.featured ? 'fcarte fcarte--star' : 'fcarte'}>
+          {it.badge && <span class={it.featured ? 'fcarte__badge' : 'fcarte__badge fcarte__badge--alt'}>{it.badge}</span>}
+          <h5>{it.name}</h5>
+          <p class="fcarte__accroche">{it.detail}</p>
+          <p class="fcarte__prix"><span class="fcarte__montant">{it.amount}</span><span class="fcarte__info">{it.duration}</span>
+            {it.was && <span class="fcarte__info">{c.valueLabel} <s>{it.was}</s></span>}
+            {it.note && <span class="fcarte__eco">{it.note}</span>}
+            {it.sub && <span class="fcarte__info">{it.sub}</span>}
+            {it.plus && <span class="fcarte__plus">{it.plus}</span>}
+            {it.small && <small>{it.small}</small>}</p>
+          <ul class="fcarte__soins">{it.list.map((x) => <li class={x.extra ? 'is-extra' : undefined}>{x.t}{x.extra && <span class="fcarte__extra">{c.extraLabel}</span>}</li>)}</ul>
+          <a class={it.badge ? 'btn btn--solid fcarte__btn' : 'btn btn--ghost fcarte__btn'} href={formuleHref(c.id, j)}>{c.bookLabel}<span class="visually-hidden">{lang === 'fr' ? ' : ' : ': '}{it.name}</span></a>
+        </li>
+      ))}</ul>
+      <ul class="fcartes__rassure">{c.assure.map((a) => <li>{a}</li>)}</ul>
+      <p class="fcartes__ouverture">{c.open}</p>
+      <p class="fcartes__cloture">{c.outro}</p>
+    </section>);
+  })() : (
     <section class="price-group" data-cat={g.cat} id={`tarif-${g.id}`} aria-labelledby={`h-tarif-${g.id}`}>
       <h4 id={`h-tarif-${g.id}`}>{g.href
         ? <a href={treat(g.href)}>{g.title}<Icon name="info" class="i-info" /><span class="visually-hidden">, {ui.moreInfo}</span></a>

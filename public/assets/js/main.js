@@ -99,7 +99,8 @@ if(fl){
   const pick=(b,say)=>{if(!b)return;fl.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
     /* Rangée défilante sur mobile : la puce choisie revient au centre si elle est hors de vue */
     const r=b.getBoundingClientRect(),q=fl.getBoundingClientRect();(r.left<q.left||r.right>q.right)&&(fl.scrollLeft+=r.left-q.left-(q.width-r.width)/2);
-    const f=b.dataset.filter;groups.forEach(g=>g.hidden=f!=='all'&&g.dataset.cat!==f);d.querySelectorAll('.tarifs__part').forEach(p=>p.hidden=!p.querySelector('.price-group:not([hidden])'));
+    const f=b.dataset.filter;/* Une formule peut relever de deux filtres (data-cat="visage corps") */
+    groups.forEach(g=>g.hidden=f!=='all'&&!g.dataset.cat.split(' ').includes(f));d.querySelectorAll('.tarifs__part').forEach(p=>p.hidden=!p.querySelector('.price-group:not([hidden])'));
     say&&st&&(st.textContent=b.dataset.status||'')};
   /* Le filtre marqué dans le HTML (Visage) s'applique dès le chargement */
   pick(fl.querySelector('[aria-pressed="true"]')||fl.querySelector('button'));
@@ -110,7 +111,7 @@ if(fl){
   fl.addEventListener('scroll',edges,{passive:true});addEventListener('resize',edges);edges();
   /* Arrivée avec un #tarif-… dans l'URL (lien partagé, rechargement, retour) : afficher sa catégorie */
   const fromHash=()=>{const g=location.hash.startsWith('#tarif-')&&d.getElementById(location.hash.slice(1));
-    if(!g||!g.hidden)return;pick(fl.querySelector(`[data-filter="${g.dataset.cat}"]`)||fl.querySelector('[data-filter="all"]'));g.scrollIntoView();
+    if(!g||!g.hidden)return;pick(fl.querySelector(`[data-filter="${g.dataset.cat.split(' ')[0]}"]`)||fl.querySelector('[data-filter="all"]'));g.scrollIntoView();
     /* À l'arrivée, les images qui se chargent décalent la page : on revient au groupe une fois tout chargé */
     d.readyState!=='complete'&&addEventListener('load',()=>g.scrollIntoView({behavior:'instant'}),{once:true})};
   fromHash();addEventListener('hashchange',fromHash);
@@ -119,7 +120,7 @@ if(fl){
   d.addEventListener('click',e=>{const a=e.target.closest('a[href^="#tarif-"]');if(!a)return;
     const id=a.getAttribute('href').slice(1),g=d.getElementById(id);if(!g)return;
     e.preventDefault();
-    g.hidden&&pick(fl.querySelector(`[data-filter="${g.dataset.cat}"]`)||fl.querySelector('[data-filter="all"]'),1);
+    g.hidden&&pick(fl.querySelector(`[data-filter="${g.dataset.cat.split(' ')[0]}"]`)||fl.querySelector('[data-filter="all"]'),1);
     location.hash!=='#'+id&&history.pushState(null,'','#'+id);g.scrollIntoView()});
 }
 

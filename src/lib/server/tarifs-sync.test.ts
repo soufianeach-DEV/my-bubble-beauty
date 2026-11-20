@@ -15,8 +15,12 @@ test('durées de la carte : formats lus, toutes les lignes réelles de la grille
   const { default: fr } = await import('../../data/fr.json', { with: { type: 'json' } });
   const lines = fr.home.tarifs.groups.flatMap((g: { hidden?: boolean; items: { duration?: string }[] }) => (g.hidden ? [] : g.items));
   for (const it of lines) if (it.duration) assert.ok(parseDuration(it.duration)! > 0, `illisible : ${it.duration}`);
+  // Formules réservables (book) : ajoutées après la grille, durée en clair (« Environ 2 h ») jamais lue, donc hors ligne
+  // tant que la gérante ne saisit pas la durée dans Admin > Prestations
+  const formules = fr.home.tarifs.formulas.filter((f: { book?: boolean }) => f.book).flatMap((f: { items: unknown[] }) => f.items);
   const seed = await serviceSeed();
-  assert.equal(seed.length, lines.length);
+  assert.equal(seed.length, lines.length + formules.length);
+  assert.ok(seed.slice(lines.length).every((s: { active: boolean; duration_min: number | null }) => !s.active && s.duration_min === null), 'formules hors ligne');
   // Deux lignes de même nom dans un groupe donneraient le même slug : l'insertion échouerait et le site ne démarrerait plus
   assert.equal(new Set(seed.map((s: { slug: string }) => s.slug)).size, seed.length, 'slugs uniques');
   assert.equal(seed.filter((s: { duration_min: number | null }) => s.duration_min !== null).length, lines.filter((it: { duration?: string }) => it.duration).length);

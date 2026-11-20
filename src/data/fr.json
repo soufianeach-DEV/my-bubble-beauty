@@ -1187,6 +1187,111 @@
    "partFormules": "Formules & cures",
    "formulas": [
     {
+     "id": "future-mariee",
+     "cat": "visage corps",
+     "layout": "cartes",
+     "book": true,
+     "title": "Future Mariée",
+     "intro": "Trois parenthèses de beauté et de bien-être avant le grand jour",
+     "valueLabel": "Valeur à la carte",
+     "extraLabel": "en plus",
+     "bookLabel": "Réserver cette formule",
+     "assure": [
+      "Soin du visage à tester 4 à 6 semaines avant le mariage",
+      "Réservez 6 à 8 semaines à l’avance"
+     ],
+     "open": "Vos témoins ou votre maman vous accompagnent ? Dites-le nous à la réservation.",
+     "outro": "Offrez-vous un moment rien qu’à vous, pour aborder le plus beau jour avec sérénité et éclat.",
+     "items": [
+      {
+       "name": "L’Éveil de la Mariée",
+       "detail": "Une douce parenthèse pour se détendre et rayonner.",
+       "duration": "Environ 2 h",
+       "amount": "149 €",
+       "was": "160 €",
+       "note": "Vous économisez 11 €",
+       "list": [
+        {
+         "t": "Gommage du corps"
+        },
+        {
+         "t": "Massage relaxant du corps"
+        },
+        {
+         "t": "Soin complet du visage"
+        }
+       ]
+      },
+      {
+       "name": "L’Élégance de la Mariée",
+       "detail": "Une mise en beauté pour une peau douce et lumineuse.",
+       "duration": "3 h 30 à 4 h",
+       "amount": "239 €",
+       "featured": true,
+       "badge": "La plus choisie",
+       "sub": "Visage, corps et épilation en une seule visite",
+       "list": [
+        {
+         "t": "Soin complet du visage"
+        },
+        {
+         "t": "Massage relaxant du corps"
+        },
+        {
+         "t": "Épilation aisselles"
+        },
+        {
+         "t": "Épilation bikini"
+        },
+        {
+         "t": "Épilation jambes complètes"
+        }
+       ]
+      },
+      {
+       "name": "La Signature de la Mariée",
+       "detail": "L’expérience beauté complète pour se sentir sublime jusqu’au bout des ongles.",
+       "duration": "4 h 30 à 5 h 30",
+       "amount": "299 €",
+       "was": "363 €",
+       "badge": "La plus complète",
+       "note": "Vous économisez 64 €",
+       "plus": "60 € de plus que L’Élégance",
+       "small": "Valeur hors brunch",
+       "list": [
+        {
+         "t": "Soin du visage Premium Signature",
+         "extra": true
+        },
+        {
+         "t": "Massage relaxant du corps"
+        },
+        {
+         "t": "Épilation aisselles"
+        },
+        {
+         "t": "Épilation bikini"
+        },
+        {
+         "t": "Épilation jambes complètes"
+        },
+        {
+         "t": "Manucure",
+         "extra": true
+        },
+        {
+         "t": "Pédicure",
+         "extra": true
+        },
+        {
+         "t": "Brunch gourmand",
+         "extra": true
+        }
+       ]
+      }
+     ]
+    },
+    {
      "id": "rituels-signature",
      "cat": "corps",
      "title": "Rituels signature",

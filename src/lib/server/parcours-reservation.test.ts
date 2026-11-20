@@ -37,7 +37,8 @@ test('présélection : chaque ligne des tarifs vise une prestation de la synchro
   const { serviceSeed } = await import('../../../db/migrate.mjs');
   const { default: fr } = await import('../../data/fr.json', { with: { type: 'json' } });
   const seed = new Set((await serviceSeed()).map((s: { slug: string }) => s.slug));
-  const groups = fr.home.tarifs.groups.filter((g: { hidden?: boolean }) => !g.hidden);
+  // Prestations, plus les formules réservables (Future Mariée) : leur bouton vise aussi ?soin=slug
+  const groups = [...fr.home.tarifs.groups.filter((g: { hidden?: boolean }) => !g.hidden), ...fr.home.tarifs.formulas.filter((f: { book?: boolean }) => f.book)];
   let n = 0;
   for (const g of groups) for (const it of g.items) { assert.ok(seed.has(itemSlug(g, it)), `${g.id} / ${it.name}`); n++; }
   assert.equal(n, seed.size);

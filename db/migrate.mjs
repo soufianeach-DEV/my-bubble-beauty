@@ -25,7 +25,11 @@ export function parseDuration(text) {
 // Tarifs des JSON du site : nom « groupe, item » dans les 3 langues ; durée lue sur la carte française.
 // Une prestation qui a une durée arrive en ligne, les autres attendent que la gérante la saisisse.
 export async function serviceSeed() {
-  const [fr, nl, en] = await Promise.all(['fr', 'nl', 'en'].map(async (l) => JSON.parse(await readFile(new URL(`${l}.json`, DATA), 'utf8')).home.tarifs.groups));
+  // Prestations, puis formules réservables (book) en fin de liste : l'ordre des prestations existantes ne bouge pas
+  const [fr, nl, en] = await Promise.all(['fr', 'nl', 'en'].map(async (l) => {
+    const t = JSON.parse(await readFile(new URL(`${l}.json`, DATA), 'utf8')).home.tarifs;
+    return [...t.groups, ...t.formulas.filter((f) => f.book)];
+  }));
   // Groupe masqué (hidden) : hors carte, donc retiré de la réservation par syncServices (effacé, ou masqué si un rendez-vous y renvoie)
   return fr.flatMap((g, i) => (g.hidden ? [] : g.items).map((item, j) => {
     const m = AMOUNT.exec(item.amount);
@@ -34,7 +38,8 @@ export async function serviceSeed() {
     const suffix = (it) => (twin && it.duration ? ` (${it.duration})` : '');
     return {
       slug: itemSlug(g, item),
-      category: g.cat,
+      // Formule sur deux filtres (« visage corps ») : la réservation la range dans le premier
+      category: g.cat.split(' ')[0],
       name_fr: `${g.title}, ${item.name}${suffix(item)}`,
       name_nl: `${nl[i].title}, ${nl[i].items[j].name}${suffix(nl[i].items[j])}`,
       name_en: `${en[i].title}, ${en[i].items[j].name}${suffix(en[i].items[j])}`,
