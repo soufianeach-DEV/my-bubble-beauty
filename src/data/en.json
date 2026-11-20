@@ -1229,13 +1229,16 @@
        "amount": "239 €",
        "featured": true,
        "badge": "Most chosen",
-       "sub": "Face, body and hair removal in a single visit",
+       "sub": "Face, scrub, 60-min massage and hair removal in a single visit",
        "list": [
         {
          "t": "Complete facial"
         },
         {
-         "t": "Relaxing body massage"
+         "t": "Body scrub"
+        },
+        {
+         "t": "Relaxing 60-min hot stone massage"
         },
         {
          "t": "Underarm hair removal"

@@ -1229,13 +1229,16 @@
        "amount": "239 €",
        "featured": true,
        "badge": "Meest gekozen",
-       "sub": "Gezicht, lichaam en ontharing in één bezoek",
+       "sub": "Gezicht, scrub, massage van 60 min en ontharing in één bezoek",
        "list": [
         {
          "t": "Volledige gezichtsverzorging"
         },
         {
-         "t": "Ontspannende lichaamsmassage"
+         "t": "Lichaamsscrub"
+        },
+        {
+         "t": "Ontspannende massage van 60 min met warme stenen"
         },
         {
          "t": "Ontharing oksels"

@@ -1229,13 +1229,16 @@
        "amount": "239 €",
        "featured": true,
        "badge": "La plus choisie",
-       "sub": "Visage, corps et épilation en une seule visite",
+       "sub": "Visage, gommage, massage 60 min et épilation en une seule visite",
        "list": [
         {
          "t": "Soin complet du visage"
         },
         {
-         "t": "Massage relaxant du corps"
+         "t": "Gommage du corps"
+        },
+        {
+         "t": "Massage relaxant 60 min aux pierres chaudes"
         },
         {
          "t": "Épilation aisselles"
