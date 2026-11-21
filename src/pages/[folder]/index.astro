@@ -148,7 +148,7 @@ const jsonld = {
             {it.plus && <span class="fcarte__plus">{it.plus}</span>}
             {it.small && <small>{it.small}</small>}</p>
           <ul class="fcarte__soins">{it.list.map((x) => <li class={x.extra ? 'is-extra' : undefined}>{x.t}{x.extra && <span class="fcarte__extra">{c.extraLabel}</span>}</li>)}</ul>
-          <a class={it.badge ? 'btn btn--solid fcarte__btn' : 'btn btn--ghost fcarte__btn'} href={formuleHref(c.id, j)}>{c.bookLabel}<span class="visually-hidden">{lang === 'fr' ? ' : ' : ': '}{it.name}</span></a>
+          <a class={it.featured ? 'btn btn--solid fcarte__btn' : 'btn btn--ghost fcarte__btn'} href={formuleHref(c.id, j)}>{c.bookLabel}<span class="visually-hidden">{lang === 'fr' ? ' : ' : ': '}{it.name}</span></a>
         </li>
       ))}</ul>
       <ul class="fcartes__rassure">{c.assure.map((a) => <li>{a}</li>)}</ul>
