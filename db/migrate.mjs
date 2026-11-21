@@ -36,16 +36,19 @@ export async function serviceSeed() {
     // Même soin en deux durées (Sculpt & Fermeté 30 et 60 min) : la durée distingue le slug (unique) et le nom
     const twin = g.items.filter((x) => x.name === item.name).length > 1;
     const suffix = (it) => (twin && it.duration ? ` (${it.duration})` : '');
+    // Formule : durée en clair (« Environ 2 h ») jamais lue ; bookMin = minutes réservées, borne haute de la fourchette.
+    // shortcut: bookMin provisoire en attendant la durée de la gérante ; sa saisie dans l'admin (duration_manual) prime ensuite
+    const minutes = item.bookMin ?? parseDuration(item.duration);
     return {
       slug: itemSlug(g, item),
-      // Formule sur deux filtres (« visage corps ») : la réservation la range dans le premier
+      // Formule sur plusieurs filtres (« formules visage corps ») : la réservation la range dans le premier
       category: g.cat.split(' ')[0],
       name_fr: `${g.title}, ${item.name}${suffix(item)}`,
       name_nl: `${nl[i].title}, ${nl[i].items[j].name}${suffix(nl[i].items[j])}`,
       name_en: `${en[i].title}, ${en[i].items[j].name}${suffix(en[i].items[j])}`,
       price_cents: m ? Number(m[1]) * 100 + Number(m[2] ?? 0) : 0,
-      duration_min: parseDuration(item.duration),
-      active: parseDuration(item.duration) !== null,
+      duration_min: minutes,
+      active: minutes !== null,
     };
   })).map((s, sort) => ({ ...s, sort }));
 }

@@ -143,6 +143,11 @@
      "status": "Affichage : Tous"
     },
     {
+     "key": "formules",
+     "label": "Formules",
+     "status": "Affichage : Formules"
+    },
+    {
      "key": "visage",
      "label": "Visage",
      "status": "Affichage : Visage"
@@ -1188,7 +1193,7 @@
    "formulas": [
     {
      "id": "future-mariee",
-     "cat": "visage corps",
+     "cat": "formules visage corps",
      "layout": "cartes",
      "book": true,
      "title": "Future Mariée",
@@ -1206,6 +1211,7 @@
        "name": "L’Éveil de la Mariée",
        "detail": "Une douce parenthèse pour se détendre et rayonner.",
        "duration": "Environ 2 h",
+       "bookMin": 120,
        "amount": "149 €",
        "was": "160 €",
        "note": "Vous économisez 11 €",
@@ -1225,6 +1231,7 @@
        "name": "L’Élégance de la Mariée",
        "detail": "Une mise en beauté pour une peau douce et lumineuse.",
        "duration": "3 h 30 à 4 h",
+       "bookMin": 240,
        "amount": "239 €",
        "featured": true,
        "badge": "La plus choisie",
@@ -1254,6 +1261,7 @@
        "name": "La Signature de la Mariée",
        "detail": "L’expérience beauté complète pour se sentir sublime jusqu’au bout des ongles.",
        "duration": "4 h 30 à 5 h 30",
+       "bookMin": 330,
        "amount": "299 €",
        "was": "363 €",
        "badge": "La plus complète",

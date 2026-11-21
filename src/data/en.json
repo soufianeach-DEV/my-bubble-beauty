@@ -143,6 +143,11 @@
      "status": "Showing: All"
     },
     {
+     "key": "formules",
+     "label": "Packages",
+     "status": "Showing: Packages"
+    },
+    {
      "key": "visage",
      "label": "Face",
      "status": "Showing: Face"
@@ -1188,7 +1193,7 @@
    "formulas": [
     {
      "id": "future-mariee",
-     "cat": "visage corps",
+     "cat": "formules visage corps",
      "layout": "cartes",
      "book": true,
      "title": "Bride to be",
@@ -1206,6 +1211,7 @@
        "name": "The Bride’s Awakening",
        "detail": "A gentle break to relax and glow.",
        "duration": "About 2 h",
+       "bookMin": 120,
        "amount": "149 €",
        "was": "160 €",
        "note": "You save 11 €",
@@ -1225,6 +1231,7 @@
        "name": "The Bride’s Elegance",
        "detail": "A beauty session for soft, luminous skin.",
        "duration": "3 h 30 to 4 h",
+       "bookMin": 240,
        "amount": "239 €",
        "featured": true,
        "badge": "Most chosen",
@@ -1254,6 +1261,7 @@
        "name": "The Bride’s Signature",
        "detail": "The complete beauty experience to feel stunning down to your fingertips.",
        "duration": "4 h 30 to 5 h 30",
+       "bookMin": 330,
        "amount": "299 €",
        "was": "363 €",
        "badge": "Most complete",

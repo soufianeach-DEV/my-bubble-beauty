@@ -143,6 +143,11 @@
      "status": "Weergave: Alles"
     },
     {
+     "key": "formules",
+     "label": "Formules",
+     "status": "Weergave: Formules"
+    },
+    {
      "key": "visage",
      "label": "Gezicht",
      "status": "Weergave: Gezicht"
@@ -1188,7 +1193,7 @@
    "formulas": [
     {
      "id": "future-mariee",
-     "cat": "visage corps",
+     "cat": "formules visage corps",
      "layout": "cartes",
      "book": true,
      "title": "Toekomstige bruid",
@@ -1206,6 +1211,7 @@
        "name": "Het Ontwaken van de Bruid",
        "detail": "Een zacht moment om te ontspannen en te stralen.",
        "duration": "Ongeveer 2 u",
+       "bookMin": 120,
        "amount": "149 €",
        "was": "160 €",
        "note": "U bespaart 11 €",
@@ -1225,6 +1231,7 @@
        "name": "De Elegantie van de Bruid",
        "detail": "Een schoonheidsbehandeling voor een zachte, stralende huid.",
        "duration": "3 u 30 tot 4 u",
+       "bookMin": 240,
        "amount": "239 €",
        "featured": true,
        "badge": "Meest gekozen",
@@ -1254,6 +1261,7 @@
        "name": "De Signature van de Bruid",
        "detail": "De volledige schoonheidservaring om u stralend te voelen tot in de vingertoppen.",
        "duration": "4 u 30 tot 5 u 30",
+       "bookMin": 330,
        "amount": "299 €",
        "was": "363 €",
        "badge": "Meest volledig",

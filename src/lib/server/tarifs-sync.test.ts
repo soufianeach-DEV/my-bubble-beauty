@@ -15,15 +15,17 @@ test('durées de la carte : formats lus, toutes les lignes réelles de la grille
   const { default: fr } = await import('../../data/fr.json', { with: { type: 'json' } });
   const lines = fr.home.tarifs.groups.flatMap((g: { hidden?: boolean; items: { duration?: string }[] }) => (g.hidden ? [] : g.items));
   for (const it of lines) if (it.duration) assert.ok(parseDuration(it.duration)! > 0, `illisible : ${it.duration}`);
-  // Formules réservables (book) : ajoutées après la grille, durée en clair (« Environ 2 h ») jamais lue, donc hors ligne
-  // tant que la gérante ne saisit pas la durée dans Admin > Prestations
-  const formules = fr.home.tarifs.formulas.filter((f: { book?: boolean }) => f.book).flatMap((f: { items: unknown[] }) => f.items);
+  // Formules réservables (book) : ajoutées après la grille, durée en clair (« Environ 2 h ») jamais lue ; minutes réservées = bookMin,
+  // en ligne dans la catégorie « formules » (premier filtre, donc premier groupe de l'accordéon de réservation)
+  const formules = fr.home.tarifs.formulas.filter((f: { book?: boolean }) => f.book).flatMap((f: { items: { bookMin: number }[] }) => f.items);
   const seed = await serviceSeed();
   assert.equal(seed.length, lines.length + formules.length);
-  assert.ok(seed.slice(lines.length).every((s: { active: boolean; duration_min: number | null }) => !s.active && s.duration_min === null), 'formules hors ligne');
+  assert.deepEqual(seed.slice(lines.length).map((s: { active: boolean; duration_min: number | null; category: string }) => [s.category, s.duration_min, s.active]),
+    formules.map((f: { bookMin: number }) => ['formules', f.bookMin, true]), 'formules en ligne, durée provisoire');
+  assert.equal(fr.home.tarifs.filters[1].key, 'formules', 'Formules en premier');
   // Deux lignes de même nom dans un groupe donneraient le même slug : l'insertion échouerait et le site ne démarrerait plus
   assert.equal(new Set(seed.map((s: { slug: string }) => s.slug)).size, seed.length, 'slugs uniques');
-  assert.equal(seed.filter((s: { duration_min: number | null }) => s.duration_min !== null).length, lines.filter((it: { duration?: string }) => it.duration).length);
+  assert.equal(seed.filter((s: { duration_min: number | null }) => s.duration_min !== null).length, lines.filter((it: { duration?: string }) => it.duration).length + formules.length);
   assert.ok(seed.every((s: { active: boolean; duration_min: number | null }) => s.active === (s.duration_min !== null)), 'en ligne si et seulement si la carte donne une durée');
 });
 
