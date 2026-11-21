@@ -37,7 +37,7 @@ export async function serviceSeed() {
     const twin = g.items.filter((x) => x.name === item.name).length > 1;
     const suffix = (it) => (twin && it.duration ? ` (${it.duration})` : '');
     // Formule : durée en clair (« Environ 2 h ») jamais lue ; bookMin = minutes réservées, borne haute de la fourchette.
-    // shortcut: bookMin provisoire en attendant la durée de la gérante ; sa saisie dans l'admin (duration_manual) prime ensuite
+    // bookMin 120 / 240 / 330 : provisoire, à confirmer par Souade. Sa saisie dans l'admin (duration_manual) prime ensuite
     const minutes = item.bookMin ?? parseDuration(item.duration);
     return {
       slug: itemSlug(g, item),
