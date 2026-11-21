@@ -32,8 +32,8 @@ const formuleHref = (gid: string, j: number) => {
   return `/${FOLDER[lang]}/reserver${g && it ? `?soin=${itemSlug(g, it)}` : ''}`;
 };
 // Formule présentée en cartes (Future Mariée) : champs propres à ce bloc
-type Carte = { name: string; detail: string; duration: string; amount: string; was?: string; featured?: boolean; badge?: string; note?: string; sub?: string; plus?: string; small?: string; list: { t: string; extra?: boolean }[] };
-type Cartes = { id: string; cat: string; title: string; intro: string; valueLabel: string; extraLabel: string; bookLabel: string; assure: string[]; open: string; outro: string; items: Carte[] };
+type Carte = { name: string; detail: string; duration: string; amount: string; was?: string; featured?: boolean; badge?: string; note?: string; sub?: string; plus?: string; small?: string; list: { t: string }[] };
+type Cartes = { id: string; cat: string; title: string; intro: string; valueLabel: string;bookLabel: string; assure: string[]; open: string; outro: string; items: Carte[] };
 // Photo de chaque carte soin, dans l'ordre de home.soins.cards
 const CARD_IMG = ['visage', 'massage', 'epilation', 'corps', 'onglerie', 'sourire'];
 // FAQ : {hours} et {phone} viennent de site.ts, pour ne jamais diverger des horaires et du numéro affichés ailleurs
@@ -147,7 +147,7 @@ const jsonld = {
             {it.sub && <span class="fcarte__info">{it.sub}</span>}
             {it.plus && <span class="fcarte__plus">{it.plus}</span>}
             {it.small && <small>{it.small}</small>}</p>
-          <ul class="fcarte__soins">{it.list.map((x) => <li class={x.extra ? 'is-extra' : undefined}>{x.t}{x.extra && <span class="fcarte__extra">{c.extraLabel}</span>}</li>)}</ul>
+          <ul class="fcarte__soins">{it.list.map((x) => <li>{x.t}</li>)}</ul>
           <a class={it.featured ? 'btn btn--solid fcarte__btn' : 'btn btn--ghost fcarte__btn'} href={formuleHref(c.id, j)}>{c.bookLabel}<span class="visually-hidden">{lang === 'fr' ? ' : ' : ': '}{it.name}</span></a>
         </li>
       ))}</ul>

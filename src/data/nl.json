@@ -1194,7 +1194,6 @@
      "title": "Toekomstige bruid",
      "intro": "Drie momenten van schoonheid en welzijn voor de grote dag",
      "valueLabel": "Waarde los geboekt",
-     "extraLabel": "extra",
      "bookLabel": "Deze formule reserveren",
      "assure": [
       "Test de gezichtsverzorging 4 tot 6 weken voor het huwelijk",
@@ -1259,12 +1258,10 @@
        "was": "363 €",
        "badge": "Meest volledig",
        "note": "U bespaart 64 €",
-       "plus": "60 € meer dan De Elegantie",
        "small": "Waarde zonder brunch",
        "list": [
         {
-         "t": "Premium Signature-gezichtsverzorging",
-         "extra": true
+         "t": "Premium Signature-gezichtsverzorging"
         },
         {
          "t": "Ontspannende lichaamsmassage"
@@ -1279,16 +1276,13 @@
          "t": "Ontharing volledige benen"
         },
         {
-         "t": "Manicure",
-         "extra": true
+         "t": "Manicure"
         },
         {
-         "t": "Pedicure",
-         "extra": true
+         "t": "Pedicure"
         },
         {
-         "t": "Gourmetbrunch",
-         "extra": true
+         "t": "Gourmetbrunch"
         }
        ]
       }

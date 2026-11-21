@@ -1194,7 +1194,6 @@
      "title": "Bride to be",
      "intro": "Three moments of beauty and well-being before the big day",
      "valueLabel": "À la carte value",
-     "extraLabel": "extra",
      "bookLabel": "Book this package",
      "assure": [
       "Test the facial 4 to 6 weeks before the wedding",
@@ -1259,12 +1258,10 @@
        "was": "363 €",
        "badge": "Most complete",
        "note": "You save 64 €",
-       "plus": "60 € more than The Bride’s Elegance",
        "small": "Value excluding brunch",
        "list": [
         {
-         "t": "Premium Signature facial",
-         "extra": true
+         "t": "Premium Signature facial"
         },
         {
          "t": "Relaxing body massage"
@@ -1279,16 +1276,13 @@
          "t": "Full leg hair removal"
         },
         {
-         "t": "Manicure",
-         "extra": true
+         "t": "Manicure"
         },
         {
-         "t": "Pedicure",
-         "extra": true
+         "t": "Pedicure"
         },
         {
-         "t": "Gourmet brunch",
-         "extra": true
+         "t": "Gourmet brunch"
         }
        ]
       }

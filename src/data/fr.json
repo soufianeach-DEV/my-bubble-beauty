@@ -1194,7 +1194,6 @@
      "title": "Future Mariée",
      "intro": "Trois parenthèses de beauté et de bien-être avant le grand jour",
      "valueLabel": "Valeur à la carte",
-     "extraLabel": "en plus",
      "bookLabel": "Réserver cette formule",
      "assure": [
       "Soin du visage à tester 4 à 6 semaines avant le mariage",
@@ -1259,12 +1258,10 @@
        "was": "363 €",
        "badge": "La plus complète",
        "note": "Vous économisez 64 €",
-       "plus": "60 € de plus que L’Élégance",
        "small": "Valeur hors brunch",
        "list": [
         {
-         "t": "Soin du visage Premium Signature",
-         "extra": true
+         "t": "Soin du visage Premium Signature"
         },
         {
          "t": "Massage relaxant du corps"
@@ -1279,16 +1276,13 @@
          "t": "Épilation jambes complètes"
         },
         {
-         "t": "Manucure",
-         "extra": true
+         "t": "Manucure"
         },
         {
-         "t": "Pédicure",
-         "extra": true
+         "t": "Pédicure"
         },
         {
-         "t": "Brunch gourmand",
-         "extra": true
+         "t": "Brunch gourmand"
         }
        ]
       }
