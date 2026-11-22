@@ -12,7 +12,7 @@ import type { Identity } from './oidc.ts';
 import { badEmail } from './password.ts';
 import { blocked, hit } from './rate.ts';
 import { isAdminEmail, openSession, revokeOthers, type SessionUser } from './session.ts';
-import { confirmTotp, totpState } from './staff.ts';
+import { ENROL_DAYS, confirmTotp, totpState } from './staff.ts';
 
 export type PasswordProblem = 'short' | 'long' | 'pwned';
 
@@ -135,14 +135,16 @@ export async function requestReset(email: string, lang: Lang, ip: string): Promi
     log('reset_mail_limited', { ip });
     return;
   }
-  // Équipe dont l'application TOTP n'est pas encore confirmée : pas de lien (le secret affiché à l'enrôlement pourrait être relevé
-  // par qui lit sa boîte mail). Elle demande à l'admin de relancer son enrôlement. Réponse identique dans tous les cas.
-  const [u] = await sql`SELECT id FROM users WHERE email = ${email} AND removed_at IS NULL AND NOT (role IS NOT NULL AND totp_confirmed_at IS NULL)`;
+  // Équipe dont l'application TOTP n'est pas encore confirmée : le lien part aussi. resetPassword efface alors le secret en attente
+  // et referme l'enrôlement : qui ne lit que la boîte mail ne peut pas s'enrôler un code ; l'admin le relance (« Relancer l'application »).
+  const [u] = await sql`SELECT id FROM users WHERE email = ${email} AND removed_at IS NULL`;
   log('reset_requested', { user_id: u?.id ?? null, ip });
   if (u) mailWithToken(u.id, email, 'reset', 30, (t) => resetMail(lang, t));
 }
 
 // Jeton de 30 min à usage unique ; succès = adresse vérifiée, toutes les sessions et tous les liens en cours révoqués, compteurs remis à zéro.
+// Équipe au TOTP pas encore confirmé : secret en attente effacé et enrôlement refermé (role_at reculé hors des ENROL_DAYS jours),
+// seule l'admin le rouvre. Un TOTP confirmé n'est jamais touché.
 // Pas de connexion automatique : la page renvoie vers la connexion.
 export async function resetPassword(token: string, password: string): Promise<'ok' | 'invalid' | PasswordProblem> {
   const [t] = await sql`SELECT 1 FROM email_tokens WHERE token_hash = ${hashToken(token)} AND purpose = 'reset' AND used_at IS NULL AND expires_at > now()`;
@@ -157,7 +159,10 @@ export async function resetPassword(token: string, password: string): Promise<'o
     await tx`UPDATE email_tokens SET used_at = now() WHERE user_id = ${used.user_id} AND used_at IS NULL`;
     await tx`DELETE FROM sessions WHERE user_id = ${used.user_id}`;
     const [row] = await tx<{ id: number; email: string; locale: Lang }[]>`
-      UPDATE users SET password_hash = ${hash}, email_verified_at = coalesce(email_verified_at, now()), updated_at = now()
+      UPDATE users SET password_hash = ${hash}, email_verified_at = coalesce(email_verified_at, now()), updated_at = now(),
+        totp_secret = CASE WHEN totp_confirmed_at IS NULL THEN NULL ELSE totp_secret END,
+        totp_last_step = CASE WHEN totp_confirmed_at IS NULL THEN 0 ELSE totp_last_step END,
+        role_at = CASE WHEN role IS NOT NULL AND totp_confirmed_at IS NULL THEN now() - make_interval(days => ${ENROL_DAYS} + 1) ELSE role_at END
       WHERE id = ${used.user_id} RETURNING id, email, locale`;
     return row;
   });

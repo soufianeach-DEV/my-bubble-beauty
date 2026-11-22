@@ -421,6 +421,23 @@ test('comptes, réservations et sécurité sur une vraie base', { skip: !url && 
       assert.ok(!Buffer.from(row.totp_secret).includes(Buffer.from(secret)));
       assert.ok((await readSession(tok(jar)))!.session.mfaAt);
 
+      // Mot de passe oublié avec un TOTP confirmé : secret gardé tel quel (HIBP simulé : pas d'appel réseau)
+      const resetWith = async (id: number) => {
+        const tk = newToken();
+        await sql`INSERT INTO email_tokens (token_hash, user_id, purpose, expires_at) VALUES (${hashToken(tk)}, ${id}, 'reset', now() + interval '30 minutes')`;
+        const real = globalThis.fetch;
+        globalThis.fetch = (async () => new Response('', { status: 200 })) as typeof fetch;
+        try {
+          return await accounts.resetPassword(tk, password);
+        } finally {
+          globalThis.fetch = real;
+        }
+      };
+      assert.equal(await resetWith(g.id), 'ok');
+      const [kept] = await sql`SELECT totp_secret, totp_confirmed_at FROM users WHERE id = ${g.id}`;
+      assert.deepEqual(Buffer.from(kept.totp_secret), Buffer.from(row.totp_secret), 'TOTP confirmé : secret gardé');
+      assert.ok(kept.totp_confirmed_at);
+
       // La gestionnaire n'est pas une cliente ; elle écrit les notes mais n'agit pas sur un compte
       assert.equal(await clientDetail(g.id), null);
       assert.equal((await listClients(g.email, 'toutes', 1)).rows.length, 0);
@@ -459,6 +476,23 @@ test('comptes, réservations et sécurité sur une vraie base', { skip: !url && 
       assert.equal((await totpState({ id: g.id, email: g.email, role: 'admin' }, new Date()))?.kind, 'expired');
       assert.ok(await ok(boss.id, { action: 'reset_totp', id: String(g.id) }));
       assert.equal((await totpState({ id: g.id, email: g.email, role: 'admin' }, new Date(Date.now() + 1000)))?.kind, 'enrol');
+
+      // TOTP pas encore confirmé : le lien de réinitialisation part, et la réinitialisation efface le secret en attente
+      const links = async () => (await sql`SELECT count(*)::int AS n FROM email_tokens WHERE user_id = ${g.id} AND purpose = 'reset'`)[0].n as number;
+      const n0 = await links();
+      await accounts.requestReset(g.email, 'fr', '10.0.0.6');
+      for (let i = 0; i < 50 && (await links()) === n0; i++) await new Promise((r) => setTimeout(r, 20));
+      assert.equal(await links(), n0 + 1, 'lien envoyé malgré le TOTP non confirmé');
+      assert.ok((await sql`SELECT totp_secret FROM users WHERE id = ${g.id}`)[0].totp_secret, 'secret en attente avant');
+      assert.equal(await resetWith(g.id), 'ok');
+      const [wiped] = await sql`SELECT totp_secret, totp_last_step, totp_confirmed_at FROM users WHERE id = ${g.id}`;
+      assert.deepEqual([wiped.totp_secret, Number(wiped.totp_last_step), wiped.totp_confirmed_at], [null, 0, null], 'secret en attente effacé');
+      // Enrôlement refermé : une session ouverte après le reset (boîte mail lue par un tiers) ne peut pas s'enrôler un code
+      assert.equal((await totpState({ id: g.id, email: g.email, role: 'admin' }, new Date(Date.now() + 1000)))?.kind, 'expired', 'pas d\'auto-enrôlement');
+      assert.equal((await sql`SELECT totp_secret FROM users WHERE id = ${g.id}`)[0].totp_secret, null, 'aucun secret généré');
+      // Seule l'admin le rouvre (« Relancer l'application »)
+      assert.ok(await ok(boss.id, { action: 'reset_totp', id: String(g.id) }));
+      assert.equal((await totpState({ id: g.id, email: g.email, role: 'admin' }, new Date(Date.now() + 2000)))?.kind, 'enrol');
       // Une personne de l'équipe ne supprime pas son compte elle-même, et l'effacement par la fiche la refuse
       assert.equal(await rgpd.deleteAccount(cookies(), g, password, '127.0.0.1'), 'admin');
 
