@@ -167,6 +167,16 @@ export const totpForm = z.object({ code: z.string({ error: 'Code à 6 chiffres.'
 // Équipe (/admin/utilisateurs) : rôle donné à un compte existant par son adresse, puis actions sur la ligne de la personne
 const role = z.enum(['admin', 'gestionnaire'], { error: 'Choisissez Admin ou Gestionnaire.' });
 const email = str('Adresse e-mail invalide.').toLowerCase().max(254, 'Adresse e-mail invalide.').email('Adresse e-mail invalide.');
+// Nouvelle cliente saisie au cabinet (/admin/clientes) : nom ≤ 100 ; téléphone comme pour un rendez-vous saisi par l'admin
+export const newClientForm = z.object({
+  name: text(100, 'Prénom et nom : 100 caractères au plus.'),
+  email,
+  phone: str('Téléphone : chiffres, espaces et + ( ) . / - seulement, 30 caractères au plus.')
+    .max(30, 'Téléphone : 30 caractères au plus.')
+    .regex(/^[0-9+()./ -]*$/, 'Téléphone : chiffres, espaces et + ( ) . / - seulement.')
+    .default(''),
+  locale: z.enum(['fr', 'nl', 'en'], { error: 'Choisissez la langue des e-mails.' }).default('fr'),
+});
 export const staffForm = z.discriminatedUnion('action', [
   z.object({ action: z.literal('grant'), email, role, confirm }),
   z.object({ action: z.literal('role'), id, role, confirm }),

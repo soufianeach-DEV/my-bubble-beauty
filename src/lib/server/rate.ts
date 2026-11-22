@@ -16,6 +16,7 @@ export const RULES = {
   promo: { max: 10, ms: HOUR, keys: 10_000 }, // codes promo invalides par cliente
   promoIp: { max: 30, ms: HOUR, keys: 10_000 }, // mêmes essais par IP : plusieurs comptes ne multiplient pas les essais depuis une connexion
   booking: { max: 4, ms: HOUR, keys: 10_000 }, // réservations créées par IP : plusieurs comptes ne bloquent pas l'agenda depuis une seule connexion
+  clientCreate: { max: 50, ms: HOUR, keys: 100 }, // comptes créés par l'équipe depuis l'admin, par membre de l'équipe
   loginDevice: { max: 10, ms: 15 * MIN, keys: 10_000 }, // essais sous cookie d'appareil, par e-mail : au-delà, le cookie ne dispense plus de loginEmail
 } as const;
 export type Rule = keyof typeof RULES;

@@ -8,7 +8,7 @@ export const prerender = false;
 // cliente dans une pop-up (?fiche=id : seule cette fiche est déchiffrée), enregistrée par saveProfile comme sur la page de la cliente.
 import Admin from './_layout.astro';
 import { adminId, staffId, fmtDateTime, readForm } from '../../lib/server/admin.ts';
-import { CLIENT_SORTS, clientAction, clientCounts, listClients, type ClientFilter, type ClientSort } from '../../lib/server/admin-clientes.ts';
+import { CLIENT_SORTS, clientAction, clientCounts, createClient, listClients, type ClientFilter, type ClientSort } from '../../lib/server/admin-clientes.ts';
 import { euros } from '../../lib/server/pricing.ts';
 import { alertsOf, readProfile, saveProfile, sheetsFor, withDraft } from '../../lib/server/profil.ts';
 import FicheForm from './_fiche-form.astro';
@@ -20,9 +20,18 @@ const sp = Astro.url.searchParams;
 let error = '';
 let errorId: number | null = null;
 let sheetDraft: FormData | null = null;
+let newDraft: Record<string, string> | null = null;
 if (Astro.request.method === 'POST') {
   const form = await readForm(Astro.request);
   if (!form) return new Response(null, { status: 413 });
+  // Nouvelle cliente venue au cabinet : admin et gestionnaire (même règle que les fiches) ; la page repart vers sa fiche
+  if (form.get('action') === 'create') {
+    const r = await createClient(me, form);
+    if (r.ok) return Astro.redirect(`/admin/clientes/${r.id}?ok=${r.key}`, 303);
+    newDraft = Object.fromEntries(['name', 'email', 'phone', 'locale'].map((k) => [k, String(form.get(k) ?? '').slice(0, 254)]));
+    error = r.error;
+    Astro.response.status = 400;
+  } else {
   // Fiche de soin : admin et gestionnaire, comme sur la page de la cliente ; les actions sur le compte : admin seulement
   const sheet = form.get('scope') === 'profil';
   if (!sheet && !manage) return new Response(null, { status: 404 });
@@ -42,6 +51,7 @@ if (Astro.request.method === 'POST') {
   errorId = Number(form.get('id')) || null;
   if (sheet) sheetDraft = form;
   Astro.response.status = 400;
+  }
 }
 const q = (sp.get('q') ?? '').slice(0, 100);
 const FILTERS: Record<ClientFilter, string> = { actives: 'Actives', suppression: 'En suppression (30 jours)', bloquees: 'Désactivées', toutes: 'Toutes', supprimees: 'Supprimées' };
@@ -84,6 +94,22 @@ const ficheLink = (id: number) => `${link(page)}&fiche=${id}`;
   <div class="field"><label for="tri">Trier par</label><select id="tri" name="tri">{(Object.keys(SORTS) as ClientSort[]).map((k) => <option value={k} selected={k === sort}>{SORTS[k]}</option>)}</select></div>
   <button class="btn btn--ghost" type="submit">Afficher</button>
 </form>
+<details class="add-box" open={newDraft !== null}>
+<summary>Nouvelle cliente</summary>
+<section aria-labelledby="h-new">
+  <h2 id="h-new" class="visually-hidden">Créer le compte d'une cliente venue au cabinet</h2>
+  <p class="hint">Pour une cliente venue au cabinet. Elle reçoit un e-mail pour choisir son mot de passe (lien valable 24 heures).</p>
+  <form class="form new-client" method="post">
+    <input type="hidden" name="action" value="create">
+    <div class="field"><label for="nc-name">Prénom et nom</label><input id="nc-name" name="name" type="text" value={newDraft?.name} maxlength="100" autocomplete="off" required></div>
+    <div class="field"><label for="nc-email">E-mail</label><input id="nc-email" name="email" type="email" value={newDraft?.email} maxlength="254" autocomplete="off" required></div>
+    <div class="field"><label for="nc-phone">Téléphone <small>(facultatif)</small></label><input id="nc-phone" name="phone" type="tel" value={newDraft?.phone} maxlength="30" autocomplete="off"></div>
+    <div class="field"><label for="nc-locale">Langue des e-mails</label>
+      <select id="nc-locale" name="locale">{Object.entries({ fr: 'Français', nl: 'Nederlands', en: 'English' }).map(([v, l]) => <option value={v} selected={(newDraft?.locale ?? 'fr') === v}>{l}</option>)}</select></div>
+    <button class="btn btn--solid" type="submit">Créer le compte et envoyer l'e-mail</button>
+  </form>
+</section>
+</details>
 <p class="hint">Seuls les comptes dont l'adresse est confirmée apparaissent. Les rendez-vous saisis pour une personne sans compte restent dans l'agenda.</p>
 {rows.length === 0 ? <p>Aucune cliente ne correspond.</p> : (
 <div class="table-wrap"><table class="data-table dash">
@@ -182,6 +208,11 @@ const ficheLink = (id: number) => `${link(page)}&fiche=${id}`;
   .sheet-dlg .modal-in{padding-bottom:0}
   .sheet-dlg :global(.form){max-width:none}
   .dlg-alerts{display:flex;flex-wrap:wrap;gap:.4rem;margin:0 0 1rem}
+  .add-box{margin:0 0 1.25rem}
+  .add-box > summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:500}
+  .new-client{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.75rem 1rem;align-items:end;max-width:none}
+  .new-client .field{margin:0}
+  .new-client .btn{grid-column:1/-1;justify-self:start}
   .row-error{outline:2px solid var(--accent);outline-offset:-2px}
   /* Tableau de bord : en-têtes triables, montants alignés à droite, badges compacts */
   .dash th a{color:inherit;text-decoration:none}

@@ -3,9 +3,15 @@
 // lit la fiche et écrit les notes. Les comptes de l'équipe n'apparaissent pas ici : ils se gèrent dans /admin/utilisateurs.
 import { ADMIN_EMAIL } from 'astro:env/server';
 import { audit, type Result } from './admin.ts';
-import { clientForm } from './admin-form.ts';
+import { clientForm, newClientForm } from './admin-form.ts';
+import { hashPassword } from './auth.ts';
+import { hashToken, newToken } from './cookie.ts';
 import { sql } from './db.ts';
+import { journal } from './journal.ts';
+import { accountCreatedMail, sendMailNow } from './mail.ts';
+import { badEmail } from './password.ts';
 import { openNote, sealNote } from './profil.ts';
+import { hit } from './rate.ts';
 import { readSettings } from './reglages.ts';
 import { eraseUser, GRACE_DAYS } from './rgpd.ts';
 import { isAdminEmail } from './session.ts';
@@ -157,6 +163,34 @@ export async function clientAction(adminUser: number, form: FormData, manage = t
   // Effacement à la demande de la cliente (téléphone, e-mail) : mêmes effets que depuis son compte
   const gone = await eraseUser(f.id, adminUser, null, 'admin');
   return gone ? { ok: true, id: f.id, key: 'efface' } : { ok: false, error: 'Cliente introuvable.' };
+}
+
+// Cliente venue au cabinet, créée par l'équipe (admin ou gestionnaire). Adresse tenue pour vérifiée : la gérante a vu la personne,
+// la fiche apparaît tout de suite dans les listes et la réservation, et la purge des comptes non confirmés (7 jours) ne la touche pas.
+// Mot de passe aléatoire jamais communiqué ; la cliente choisit le sien par un lien reset de 24 h (resetPassword).
+// Adresse déjà prise : refus dit tel quel, aucun mail (écran de l'équipe, pas d'énumération à craindre).
+// key 'cree' ou 'cree-sans-mail' : l'échec d'envoi est dit, jamais de faux succès.
+export async function createClient(actor: number, form: FormData): Promise<Result> {
+  const p = newClientForm.safeParse(Object.fromEntries(form));
+  if (!p.success) return { ok: false, error: p.error.issues[0]?.message ?? 'Saisie invalide.' };
+  const f = p.data;
+  if (badEmail(f.email) || isAdminEmail(f.email)) return { ok: false, error: 'Adresse e-mail invalide.' };
+  if (hit('clientCreate', String(actor))) return { ok: false, error: "Trop de comptes créés en une heure. Réessayez plus tard." };
+  const token = newToken();
+  const hash = await hashPassword(newToken());
+  const id = await sql.begin(async (tx) => {
+    const [u] = await tx<{ id: number }[]>`
+      INSERT INTO users (email, password_hash, name, phone, locale, email_verified_at)
+      VALUES (${f.email}, ${hash}, ${f.name}, ${f.phone || null}, ${f.locale}, now())
+      ON CONFLICT (email) DO NOTHING RETURNING id`;
+    if (!u) return null;
+    await tx`INSERT INTO email_tokens (token_hash, user_id, purpose, expires_at) VALUES (${hashToken(token)}, ${u.id}, 'reset', now() + interval '24 hours')`;
+    return u.id;
+  });
+  if (!id) return { ok: false, error: 'Cette adresse a déjà un compte.' };
+  journal('client_created', { actor, client: id });
+  const sent = await sendMailNow(f.email, accountCreatedMail(f.locale, token));
+  return { ok: true, id, key: sent ? 'cree' : 'cree-sans-mail' };
 }
 
 // Écran Journal : 100 lignes par page, filtres par action et par cliente

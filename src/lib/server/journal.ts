@@ -23,6 +23,7 @@ export const ACTION_LABELS: Record<string, string> = {
   login_failed: 'Connexion refusée',
   login_blocked: "Connexion d'un compte bloqué",
   register: 'Inscription',
+  client_created: "Compte créé par l'équipe",
   email_verified: 'Adresse confirmée',
   password_reset: 'Mot de passe réinitialisé',
   password_changed: 'Mot de passe changé',
