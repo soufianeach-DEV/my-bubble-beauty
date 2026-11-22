@@ -2,11 +2,11 @@
 // Aucun montant ne vient du formulaire ; l'exclusion bookings_no_overlap (23P01) tranche les courses entre deux clientes.
 import type { Sql } from 'postgres';
 import { STRIPE_WEBHOOK_SECRET } from 'astro:env/server';
-import type { Lang } from '../site.ts';
+import { CONTACT, type Lang } from '../site.ts';
 import { sql } from './db.ts';
 import { journal } from './journal.ts';
 import { log } from './log.ts';
-import { bookingCancelledMail, bookingConfirmedMail, bookingMovedMail, bookingReminderMail, aftercareMail, sendMail, sendMailNow, type BookingMail, type Mail } from './mail.ts';
+import { bookingAdminMail, bookingCancelledMail, bookingConfirmedMail, bookingMovedMail, bookingReminderMail, aftercareMail, sendMail, sendMailNow, type BookingMail, type Mail } from './mail.ts';
 import { amounts, isDay, promoProblem, type Promo, type PromoProblem } from './pricing.ts';
 import { blocked, hit, promoDone, promoTry } from './rate.ts';
 import { checkGift, GIFT_CODE } from './cadeaux.ts';
@@ -37,13 +37,18 @@ const expireAtStripe = (ids: string[]) => {
   for (const id of ids) expireSession(id).catch((e) => log('stripe_expire_failed', { session: id, error: String(e) }));
 };
 
-// E-mail dans la langue de la cliente (envoyé hors requête : webhook, annulation par l'admin) ; rien pour une invitée
+// E-mail dans la langue de la cliente (envoyé hors requête : webhook, annulation par l'admin) ; rien pour une invitée.
+// Réservation confirmée : copie en français à la gérante (seuls les deux chemins en ligne l'appellent avec 'confirmed')
 function notify(bookingId: number, kind: 'confirmed' | 'cancelled' | 'moved', refundCents = 0) {
-  sql<{ email: string; locale: Lang; service: string; starts_at: Date; price_cents: number; discount_cents: number; deposit_cents: number }[]>`
-    SELECT u.email, u.locale, CASE u.locale WHEN 'nl' THEN s.name_nl WHEN 'en' THEN s.name_en ELSE s.name_fr END AS service,
-      b.starts_at, b.price_cents, b.discount_cents, b.deposit_cents
+  sql<{ email: string; name: string | null; locale: Lang; service: string; service_fr: string; starts_at: Date; price_cents: number; discount_cents: number; deposit_cents: number }[]>`
+    SELECT u.email, u.name, u.locale, CASE u.locale WHEN 'nl' THEN s.name_nl WHEN 'en' THEN s.name_en ELSE s.name_fr END AS service,
+      s.name_fr AS service_fr, b.starts_at, b.price_cents, b.discount_cents, b.deposit_cents
     FROM bookings b JOIN users u ON u.id = b.user_id JOIN services s ON s.id = b.service_id WHERE b.id = ${bookingId}`
-    .then(([b]) => b && sendMail(b.email, kind === 'confirmed' ? bookingConfirmedMail(b.locale, b) : kind === 'moved' ? bookingMovedMail(b.locale, b) : bookingCancelledMail(b.locale, b, refundCents)))
+    .then(([b]) => {
+      if (!b) return;
+      sendMail(b.email, kind === 'confirmed' ? bookingConfirmedMail(b.locale, b) : kind === 'moved' ? bookingMovedMail(b.locale, b) : bookingCancelledMail(b.locale, b, refundCents));
+      if (kind === 'confirmed') sendMail(CONTACT.email, bookingAdminMail({ ...b, service: b.service_fr }));
+    })
     .catch((e) => log('mail_failed', { kind, booking_id: bookingId, error: String(e) }));
 }
 

@@ -43,3 +43,16 @@ test('présélection : chaque ligne des tarifs vise une prestation de la synchro
   for (const g of groups) for (const it of g.items) { assert.ok(seed.has(itemSlug(g, it)), `${g.id} / ${it.name}`); n++; }
   assert.equal(n, seed.size);
 });
+
+test('mail à la gérante : objet daté (heure de Bruxelles), e-mail de la cliente, lien vers l\'admin', async () => {
+  const { bookingAdminMail } = await import('./mail.ts');
+  const b = { service: 'Visage, Hydrafacial', starts_at: new Date('2026-11-20T09:30:00.000Z'), price_cents: 9000, discount_cents: 1000, deposit_cents: 2000, email: 'cliente@test.local' };
+  const m = bookingAdminMail(b);
+  assert.equal(m.subject, 'Nouvelle réservation : Visage, Hydrafacial le vendredi 20 novembre 2026 à 10:30');
+  for (const part of [m.text, m.html]) {
+    assert.ok(part.includes('cliente@test.local'), 'e-mail de la cliente');
+    assert.ok(part.includes(`${SITE}/admin`), "lien vers l'admin");
+  }
+  assert.ok(!m.text.includes('Cliente :'), 'pas de nom sans nom renseigné');
+  assert.ok(bookingAdminMail({ ...b, name: 'Amina' }).text.includes('Cliente : Amina'));
+});
