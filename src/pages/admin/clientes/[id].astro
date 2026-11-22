@@ -73,13 +73,13 @@ const sheetRows = ([
   ['Odeurs', prof.care.scents ? [prof.care.scents] : [], false],
 ] as [string, (string | undefined)[], boolean][]).map(([t, v, a]) => [t, v.filter(Boolean) as string[], a] as const).filter(([, v]) => v.length > 0);
 const DONE: Record<string, string> = {
-  cree: 'Compte créé. La cliente a reçu un e-mail pour choisir son mot de passe (lien valable 24 heures).',
-  'cree-sans-mail': "Compte créé, mais l'e-mail n'est pas parti. La cliente peut utiliser « Mot de passe oublié ? » sur la page de connexion.",
   notes: 'Fiche de soin enregistrée.', supprime: 'Rendez-vous supprimé.', sante: 'Date de naissance et antécédents enregistrés.', 'fidelite-remise': 'Remise de fidélité appliquée au rendez-vous.', 'fidelite-offert': 'Soin offert appliqué au rendez-vous : la carte repart à zéro.', seance: 'Séance mise à jour.', block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte réactivé.',
   remove: "Compte supprimé : il n'apparaît plus dans les listes et ne peut plus se connecter. Ses rendez-vous restent.", unremove: 'Compte restauré : la cliente peut de nouveau se connecter.', restore: 'Suppression annulée : le compte est de nouveau actif. Les rendez-vous annulés le restent.',
   absente: 'Rendez-vous marqué « absente ».', venue: 'Absence retirée.', retard: 'Retard noté.', aheure: 'Retard retiré.', encaisse: 'Encaissement noté.', nonencaisse: 'Encaissement retiré.', 'forfait-vendu': 'Forfait vendu : les séances de ce soin seront prises dessus à la réservation.', 'forfait-arrete': 'Forfait arrêté : plus aucune séance ne sera prise dessus. Le remboursement éventuel se fait à l’institut.', horsforfait: 'Rendez-vous retiré du forfait : la séance est rendue, le prix de la carte s’applique.', rendu: 'Acompte noté comme remboursé hors du site.',
 };
 const done = !error && DONE[Astro.url.searchParams.get('ok') ?? ''];
+// Compte créé au cabinet : l'adresse revient en gros pour qu'une faute de frappe se voie avant que la cliente parte
+const created = !error && ['cree', 'cree-sans-mail'].includes(Astro.url.searchParams.get('ok') ?? '') ? Astro.url.searchParams.get('ok') : null;
 const day = new Intl.DateTimeFormat('fr-BE', { timeZone: 'Europe/Brussels', dateStyle: 'long' }).format;
 const STATUS: Record<string, string> = { confirmed: 'Confirmé', pending_payment: 'Paiement en cours', cancelled: 'Annulé', expired: 'Payé après expiration' };
 const REASON: Record<string, string> = { client: 'par la cliente', admin: "par l'institut", account_deleted: 'compte supprimé' };
@@ -94,6 +94,11 @@ const canSell = manage && !u.blocked_at && !u.removed_at && !u.deleted_at;
 ---
 <Admin title={u.name || u.email}>
 {done && <p class="notice" role="status">{done}</p>}
+{created && <div class:list={['notice', 'created', { 'notice--error': created === 'cree-sans-mail' }]} role="status">
+  <p>Compte créé pour</p>
+  <p class="created-email">{u.email}</p>
+  <p>{created === 'cree' ? "E-mail envoyé : la cliente choisit son mot de passe avec le lien (valable 24 heures). Vérifiez l'adresse avec elle." : "L'e-mail n'est pas parti. Vérifiez l'adresse avec elle. Elle peut utiliser « Mot de passe oublié ? » sur la page de connexion."}</p>
+</div>}
 {error && <p class="notice notice--error" role="alert">{error}</p>}
 <p class="fiche-top"><a href="/admin/clientes">← Toutes les clientes</a>{!u.blocked_at && !u.removed_at && !u.deleted_at && <a class="btn btn--solid" href={`/admin/reservations/nouvelle?cliente=${u.id}`}>Nouveau rendez-vous pour elle</a>}</p>
 {careAlerts.length > 0 && <p class="care-alerts" role="note">{careAlerts.map((a) => <span class="badge badge--alert">{a}</span>)}</p>}
@@ -375,6 +380,8 @@ const canSell = manage && !u.blocked_at && !u.removed_at && !u.deleted_at;
 </Admin>
 
 <style>
+  .created p{margin:0}
+  .created-email{margin:.35rem 0 .5rem !important;font-size:1.5rem;font-weight:600;overflow-wrap:anywhere}
   /* Fiche sans long défilement : 3 colonnes dès 1600 px ; 2 dès 1200 px (rendez-vous à droite) ; 2 dès 960 px (rendez-vous dessous) */
   .cl-grid{display:grid;gap:0 2rem;align-items:start}
   .cl-col{min-width:0}
