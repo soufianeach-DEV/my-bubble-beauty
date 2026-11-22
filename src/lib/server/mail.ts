@@ -263,7 +263,8 @@ export function bookingAdminMail(b: BookingAdminMail): Mail {
     ...(b.name?.trim() ? [['Cliente', b.name.trim()] as [string, string]] : []),
     ['E-mail de la cliente', b.email],
     ['Prix', euros(final, 'fr') + (b.discount_cents ? ` (remise de ${euros(b.discount_cents, 'fr')})` : '')],
-    ['Acompte', b.deposit_cents > 0 ? `${euros(b.deposit_cents, 'fr')} payé en ligne, reste ${euros(final - b.deposit_cents, 'fr')}` : 'Sans acompte'],
+    // Ligne affichée seulement s'il y a un acompte, comme dans les mails de la cliente
+    ...(b.deposit_cents > 0 ? [['Acompte', `${euros(b.deposit_cents, 'fr')} payé en ligne, reste ${euros(final - b.deposit_cents, 'fr')}`] as [string, string]] : []),
   ];
   return build('booking_admin', 'fr', subject, ['Une cliente vient de réserver sur le site. Le rendez-vous est confirmé.'], ["Ouvrir l'admin", `${SITE_URL}/admin`],
     undefined, `${b.service} · ${day} à ${hour}`, { title: 'Nouvelle réservation', recap });

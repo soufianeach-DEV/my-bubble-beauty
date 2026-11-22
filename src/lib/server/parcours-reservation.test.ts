@@ -55,4 +55,6 @@ test('mail à la gérante : objet daté (heure de Bruxelles), e-mail de la clien
   }
   assert.ok(!m.text.includes('Cliente :'), 'pas de nom sans nom renseigné');
   assert.ok(bookingAdminMail({ ...b, name: 'Amina' }).text.includes('Cliente : Amina'));
+  assert.match(m.text, /Acompte : 20\s€ payé en ligne, reste 60\s€/);
+  assert.ok(!bookingAdminMail({ ...b, deposit_cents: 0 }).text.includes('Acompte'), 'sans acompte : pas de ligne');
 });
