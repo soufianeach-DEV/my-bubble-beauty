@@ -98,6 +98,7 @@ const canSell = manage && !u.blocked_at && !u.removed_at && !u.deleted_at;
   <p>Compte créé pour</p>
   <p class="created-email">{u.email}</p>
   <p>{created === 'cree' ? "E-mail envoyé : la cliente choisit son mot de passe avec le lien (valable 24 heures). Vérifiez l'adresse avec elle." : "L'e-mail n'est pas parti. Vérifiez l'adresse avec elle. Elle peut utiliser « Mot de passe oublié ? » sur la page de connexion."}</p>
+  <p>Étape 2 : la fiche de soin est ouverte ci-dessous, remplissez-la avec elle. <a href="#h-notes">Aller à la fiche</a></p>
 </div>}
 {error && <p class="notice notice--error" role="alert">{error}</p>}
 <p class="fiche-top"><a href="/admin/clientes">← Toutes les clientes</a>{!u.blocked_at && !u.removed_at && !u.deleted_at && <a class="btn btn--solid" href={`/admin/reservations/nouvelle?cliente=${u.id}`}>Nouveau rendez-vous pour elle</a>}</p>
@@ -195,14 +196,14 @@ const canSell = manage && !u.blocked_at && !u.removed_at && !u.deleted_at;
 <h2 id="h-notes">Fiche de soin</h2>
 {prof.filledAt && <p class="hint">Remplie par la cliente le {day(prof.filledAt)}. Vous pouvez la corriger ci-dessous.</p>}
 {prof.clientNote && <p class="client-note"><strong>Mot de la cliente :</strong> {prof.clientNote}</p>}
-{/* Lecture d'abord : badges compacts ; le formulaire complet se déplie sous « Modifier la fiche » */}
+{/* Lecture d'abord : badges compacts ; le formulaire complet se déplie sous « Modifier la fiche ». Compte tout juste créé : déjà déplié, la fiche se remplit avec la cliente */}
 {sheetRows.length === 0 && !prof.notes ? <p class="hint">Fiche vide pour l'instant.</p> : (
 <dl class="recap sheet-read">
   {sheetRows.map(([t, vals, alert]) => <><dt>{t}</dt><dd class="tags">{vals.map((v) => <span class={`badge${alert ? ' badge--alert' : ''}`}>{v}</span>)}</dd></>)}
   {prof.notes && <><dt>Notes</dt><dd class="note-text">{prof.notes}</dd></>}
 </dl>)}
 {!prof.consent && <p class="hint">Pas d'accord pour les données de santé : allergies, peau et contre-indications ne sont pas notées.</p>}
-<details class="sheet-edit" open={!!profDraft}>
+<details class="sheet-edit" open={!!profDraft || !!created}>
 <summary class="btn btn--ghost">Modifier la fiche</summary>
 <FicheForm prof={prof} action={`${self}#h-notes`} />
 </details>
