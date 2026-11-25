@@ -280,11 +280,11 @@ const gauges = card
 <h2 id="h-history">{ta.history}</h2>
 {history.length ? (<>
 <ul class="dense">{history.slice(0, 5).map((b) => (
-<li><strong>{when(b.starts_at, lang, 'medium')}</strong><span>{b.service} · {price(b)}</span><span class="h-state">{histState(b)}</span></li>
+<li><strong>{when(b.starts_at, lang, 'medium')}</strong><span>{b.service} · {price(b)}</span><span class="h-state">{histState(b)}</span>{b.reviewable && <a class="h-review" href={`${self}/avis?id=${b.id}`}>{b.reviewed ? ta.reviewSeen : ta.review}<span class="visually-hidden"> {ta.reviewHidden} {when(b.starts_at, lang)}</span></a>}</li>
 ))}</ul>
 {history.length > 5 && <details class="more"><summary>{ta.showAll(history.length - 5)}</summary>
 <ul class="dense">{history.slice(5).map((b) => (
-<li><strong>{when(b.starts_at, lang, 'medium')}</strong><span>{b.service} · {price(b)}</span><span class="h-state">{histState(b)}</span></li>
+<li><strong>{when(b.starts_at, lang, 'medium')}</strong><span>{b.service} · {price(b)}</span><span class="h-state">{histState(b)}</span>{b.reviewable && <a class="h-review" href={`${self}/avis?id=${b.id}`}>{b.reviewed ? ta.reviewSeen : ta.review}<span class="visually-hidden"> {ta.reviewHidden} {when(b.starts_at, lang)}</span></a>}</li>
 ))}</ul>
 </details>}
 </>) : <p>{ta.noHistory}</p>}

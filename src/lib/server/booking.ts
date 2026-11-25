@@ -343,9 +343,11 @@ export async function createAdminBooking(input: { serviceId: number; startsAt: D
 
 // Compte de la cliente : toujours filtré par user_id (pas d'accès à la réservation d'une autre en changeant l'identifiant)
 export function clientBookings(userId: number, lang: Lang) {
-  return sql<{ id: number; service: string; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled'; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; upcoming: boolean; cancellable: boolean; no_show: boolean; package: boolean }[]>`
+  return sql<{ id: number; service: string; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled'; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; upcoming: boolean; cancellable: boolean; no_show: boolean; package: boolean; reviewable: boolean; reviewed: boolean }[]>`
     SELECT b.id, CASE ${lang} WHEN 'nl' THEN s.name_nl WHEN 'en' THEN s.name_en ELSE s.name_fr END AS service, b.starts_at, b.ends_at, b.status,
       b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.starts_at > now() AS upcoming, b.no_show, b.package_id IS NOT NULL AS package,
+      -- Avis sur le site : rendez-vous passé et honoré ; reviewed = avis déjà déposé (lien vers la page de merci)
+      b.status = 'confirmed' AND b.starts_at < now() AND NOT b.no_show AS reviewable, EXISTS (SELECT 1 FROM site_reviews r WHERE r.booking_id = b.id) AS reviewed,
       -- Même délai pour annuler et pour déplacer : 24 h avant au plus tard
       b.status = 'confirmed' AND b.starts_at >= now() + interval '24 hours' AS cancellable
     FROM bookings b JOIN services s ON s.id = b.service_id
