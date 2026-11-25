@@ -31,15 +31,16 @@ test('numéro au format wa.me', async () => {
 test('message et lien wa.me, dans la langue de la cliente', async () => {
   const { reviewMessage, waLink } = await import('./avis-whatsapp.ts');
   const fr = reviewMessage('fr', 'Sophie Martin', URL_AVIS);
-  assert.ok(fr.startsWith('Bonjour Sophie 🌸'), 'prénom seul');
-  assert.ok(fr.includes('*My Bubble Beauty*') && fr.includes('*Laisser un avis* ✨'), 'gras WhatsApp');
-  assert.ok(fr.includes(`\n${URL_AVIS}\n`), 'lien seul sur sa ligne');
-  assert.ok(fr.endsWith('\nSouade'), 'signé Souade');
+  assert.equal(fr, 'Coucou ma chère Sophie ❤️\n\nJ’espère que tu vas bien ! 🥰\n\n'
+    + 'Si tu as quelques petites minutes, cela me ferait énormément plaisir que tu puisses laisser un petit avis sur Google concernant ton expérience chez moi. '
+    + 'Ton retour compte beaucoup pour moi et m’aide énormément à faire connaître mon travail.\n\n'
+    + 'Un grand merci pour ta confiance et ta gentillesse ! ❤️\n\nÀ très bientôt 😘\n' + URL_AVIS, 'modèle de Souade mot pour mot, prénom seul, lien en dernière ligne');
   assert.ok(!/ma douce|offert|cadeau|réduction/i.test(fr), 'ni « ma douce » ni contrepartie');
   assert.ok(reviewMessage('nl', 'Els', URL_AVIS).startsWith('Hallo Els') && reviewMessage('en', 'Jo', URL_AVIS).startsWith('Hello Jo'));
-  assert.ok(reviewMessage('fr', null, URL_AVIS).startsWith('Bonjour 🌸'), 'sans nom');
+  assert.ok(reviewMessage('fr', null, URL_AVIS).startsWith('Coucou ma chère ❤️\n'), 'sans prénom : pas de trou');
   const link = waLink('32484118395', fr);
-  assert.ok(link.startsWith('https://wa.me/32484118395?text='));
+  assert.ok(link.startsWith('https://wa.me/32484118395?text=Coucou%20ma%20ch%C3%A8re%20Sophie%20%E2%9D%A4%EF%B8%8F'), 'cœur encodé');
+  assert.ok(link.includes('J%E2%80%99esp%C3%A8re') && link.includes('%F0%9F%A5%B0') && link.includes('%F0%9F%98%98'), 'apostrophe typographique et emojis encodés');
   assert.equal(decodeURIComponent(link.split('?text=')[1]), fr, 'texte encodé sans perte');
   assert.ok(!/[\s]/.test(link), 'aucun espace ni saut de ligne brut');
 });

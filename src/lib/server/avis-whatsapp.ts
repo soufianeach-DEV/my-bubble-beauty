@@ -16,12 +16,23 @@ export function waDigits(phone: string | null | undefined): string | null {
 
 const firstName = (name: string | null | undefined) => name?.trim().split(/\s+/)[0] ?? '';
 
-// Mise en forme WhatsApp : *gras*, sauts de ligne, lien seul sur sa ligne pour rester cliquable
+// Français : modèle de Souade mot pour mot (tutoiement, emojis, apostrophes typographiques), lien Google seul sur la dernière ligne
+const FR = (n: string, url: string) => `Coucou ma chère${n ? ` ${n}` : ''} ❤️
+
+J’espère que tu vas bien ! 🥰
+
+Si tu as quelques petites minutes, cela me ferait énormément plaisir que tu puisses laisser un petit avis sur Google concernant ton expérience chez moi. Ton retour compte beaucoup pour moi et m’aide énormément à faire connaître mon travail.
+
+Un grand merci pour ta confiance et ta gentillesse ! ❤️
+
+À très bientôt 😘
+${url}`;
+
+// Néerlandais et anglais : mise en forme WhatsApp, *gras*, lien seul sur sa ligne pour rester cliquable
 export function reviewMessage(lang: Lang, name: string | null | undefined, url: string): string {
   const n = firstName(name);
+  if (lang === 'fr') return FR(n, url);
   const T = {
-    fr: [`Bonjour${n ? ` ${n}` : ''} 🌸`, 'Merci pour votre visite chez *My Bubble Beauty*. Ce fut un plaisir de prendre soin de vous.',
-      'Si vous avez une minute, votre avis sur Google nous aide vraiment à faire connaître l’institut.', '*Laisser un avis* ✨', 'À très bientôt,'],
     nl: [`Hallo${n ? ` ${n}` : ''} 🌸`, 'Bedankt voor uw bezoek aan *My Bubble Beauty*. Het was een plezier om voor u te zorgen.',
       'Hebt u even tijd? Uw beoordeling op Google helpt ons echt om het instituut bekend te maken.', '*Laat een beoordeling achter* ✨', 'Tot binnenkort,'],
     en: [`Hello${n ? ` ${n}` : ''} 🌸`, 'Thank you for visiting *My Bubble Beauty*. It was a pleasure to take care of you.',
