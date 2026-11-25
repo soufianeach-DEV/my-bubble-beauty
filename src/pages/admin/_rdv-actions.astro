@@ -8,6 +8,8 @@ import { fmtDateTime, fmtTime } from '../../lib/server/admin.ts';
 import { centsInput } from '../../lib/server/admin-form.ts';
 import { PAY_METHODS, type PayMethod, type adminAgenda } from '../../lib/server/booking.ts';
 import { euros, todayBrussels } from '../../lib/server/pricing.ts';
+import { GOOGLE_REVIEW_URL } from 'astro:env/server';
+import { canAskReview } from '../../lib/server/avis-whatsapp.ts';
 interface Props { r: Awaited<ReturnType<typeof adminAgenda>>[number]; admin: boolean }
 const { r, admin } = Astro.props;
 // Acompte encaissé et pas encore rendu
@@ -81,9 +83,28 @@ const due = r.paid ? r.deposit_cents - r.refunded_cents : 0;
       </form>
     </details>
   ))}
+  {canAskReview(r, GOOGLE_REVIEW_URL) && (r.review_asked_at ? (
+    <p class="wa-asked">
+      <svg class="wa-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3Zm4.4 12.6c-.2.5-1.1 1-1.6 1-.4.1-.9.1-2.8-.6-2.4-1-3.9-3.4-4-3.6-.1-.2-1-1.3-1-2.5s.6-1.8.9-2c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.5.1.3.7 1.1 1.4 1.8 1 .9 1.8 1.1 2 1.2.3.1.4.1.6-.1l.8-.9c.2-.2.4-.2.6-.1l1.8.9c.3.1.4.2.5.3.1.2.1.6-.1 1Z"/></svg>
+      Avis demandé le {r.review_asked_at.toLocaleDateString('fr-BE', { timeZone: 'Europe/Brussels' })}
+    </p>
+  ) : (
+    <form class="cell-form" method="post" action="/admin/avis-whatsapp" target="_blank" data-wa-ask>
+      <input type="hidden" name="id" value={r.id}>
+      <button class="btn btn-wa" type="submit">
+        <svg class="wa-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3Zm4.4 12.6c-.2.5-1.1 1-1.6 1-.4.1-.9.1-2.8-.6-2.4-1-3.9-3.4-4-3.6-.1-.2-1-1.3-1-2.5s.6-1.8.9-2c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.5.1.3.7 1.1 1.4 1.8 1 .9 1.8 1.1 2 1.2.3.1.4.1.6-.1l.8-.9c.2-.2.4-.2.6-.1l1.8.9c.3.1.4.2.5.3.1.2.1.6-.1 1Z"/></svg>
+        Demander un avis<span class="visually-hidden"> Google par WhatsApp à {r.name ?? 'la cliente'}</span>
+      </button>
+    </form>
+  ))}
   {admin && <Supprimer id={r.id} label={`le rendez-vous de ${fmtTime(r.starts_at)}, ${r.name ?? r.service}`} />}
 
 <style>
   .cell-form{display:grid;gap:.5rem;justify-items:start}
   .cell-form .btn{min-height:44px;padding:.55rem 1rem;white-space:normal;text-align:left;line-height:1.3}
+  /* Demande d'avis : bouton plein de la charte, icône bulle ; une fois faite, mention grisée et datée */
+  .btn-wa{background:var(--accent);color:var(--accent-ink)}
+  .btn-wa:hover,.btn-wa:focus-visible{background:var(--link);border-color:var(--link);color:var(--accent-ink)}
+  .wa-ico{width:1.15em;height:1.15em;flex:none;fill:currentColor}
+  .wa-asked{display:inline-flex;align-items:center;gap:.45em;margin:0;min-height:44px;padding:.55rem 1rem;border:1px dashed var(--line-soft);border-radius:999px;color:var(--text);opacity:.72;font-size:.9rem}
 </style>

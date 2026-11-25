@@ -6,6 +6,7 @@ import { addClosure, adminId, closuresBetween, deleteClosure, staffId, agendaAct
 import '../../styles/agenda-grille.css';
 import { gridBounds, placeSpans } from '../../lib/server/agenda-grille.ts';
 import RdvActions from './_rdv-actions.astro';
+import { JS_VERSION } from '../../lib/site.ts';
 import DayPicker from '../../components/DayPicker.astro';
 import { alertsFor } from '../../lib/server/profil.ts';
 import { addDays, monday } from '../../lib/server/admin-form.ts';
@@ -245,6 +246,7 @@ const alertsOf = (r: Row) => (r.user_id ? careAlerts.get(r.user_id) ?? [] : []);
     )}
   </section>
 ))}
+<script is:inline src={`/assets/js/avis-whatsapp.js?v=${JS_VERSION}`} defer></script>
 </Admin>
 
 <style>

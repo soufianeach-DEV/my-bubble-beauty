@@ -343,9 +343,11 @@ export async function createAdminBooking(input: { serviceId: number; startsAt: D
 
 // Compte de la cliente : toujours filtré par user_id (pas d'accès à la réservation d'une autre en changeant l'identifiant)
 export function clientBookings(userId: number, lang: Lang) {
-  return sql<{ id: number; service: string; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled'; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; upcoming: boolean; cancellable: boolean; no_show: boolean; package: boolean }[]>`
+  return sql<{ id: number; service: string; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled'; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; upcoming: boolean; cancellable: boolean; no_show: boolean; package: boolean; reviewable: boolean; reviewed: boolean }[]>`
     SELECT b.id, CASE ${lang} WHEN 'nl' THEN s.name_nl WHEN 'en' THEN s.name_en ELSE s.name_fr END AS service, b.starts_at, b.ends_at, b.status,
       b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents, b.starts_at > now() AS upcoming, b.no_show, b.package_id IS NOT NULL AS package,
+      -- Avis sur le site : rendez-vous passé et honoré ; reviewed = avis déjà déposé (lien vers la page de merci)
+      b.status = 'confirmed' AND b.starts_at < now() AND NOT b.no_show AS reviewable, EXISTS (SELECT 1 FROM site_reviews r WHERE r.booking_id = b.id) AS reviewed,
       -- Même délai pour annuler et pour déplacer : 24 h avant au plus tard
       b.status = 'confirmed' AND b.starts_at >= now() + interval '24 hours' AS cancellable
     FROM bookings b JOIN services s ON s.id = b.service_id
@@ -358,8 +360,10 @@ export function clientBookings(userId: number, lang: Lang) {
 // sur une annulée = acompte gardé ou remboursement échoué, sur une expirée = paiement tardif non remboursé (à relancer par cancelByAdmin).
 export function adminAgenda(from: string, days = 7) {
   if (!isDay(from)) return Promise.resolve([]);
-  return sql<{ id: number; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled' | 'expired'; service: string; name: string | null; phone: string | null; email: string | null; user_id: number | null; guest: boolean; erased: boolean; deleting: boolean; past: boolean; no_show: boolean; late_minutes: number | null; paid_method: string | null; paid_cents: number | null; cancel_reason: string | null; refunded_manually: boolean; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; promo: string | null; package: string | null; arrived_at: Date | null; ended: boolean }[]>`
+  return sql<{ id: number; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled' | 'expired'; service: string; name: string | null; phone: string | null; email: string | null; user_id: number | null; guest: boolean; erased: boolean; deleting: boolean; past: boolean; no_show: boolean; late_minutes: number | null; paid_method: string | null; paid_cents: number | null; cancel_reason: string | null; refunded_manually: boolean; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; promo: string | null; package: string | null; arrived_at: Date | null; ended: boolean; review_asked_at: Date | null }[]>`
     SELECT b.id, b.starts_at, b.ends_at, b.status, s.name_fr AS service, coalesce(u.name, b.guest_name) AS name, coalesce(u.phone, b.guest_phone) AS phone,
+      -- Demande d'avis WhatsApp déjà faite à cette cliente (compte ou numéro), même pour un autre rendez-vous
+      (SELECT min(a.asked_at) FROM review_asks a WHERE a.phone = wa_digits(coalesce(u.phone, b.guest_phone)) OR a.user_id = b.user_id) AS review_asked_at,
       u.email, b.user_id, b.user_id IS NULL AND NOT b.client_erased AS guest, b.client_erased AS erased, u.deleted_at IS NOT NULL AS deleting,
       b.starts_at < now() AS past, b.no_show, b.late_minutes, b.paid_method, b.paid_cents, b.cancel_reason, b.refunded_manually_at IS NOT NULL AS refunded_manually,
       b.arrived_at, b.ends_at < now() AS ended,

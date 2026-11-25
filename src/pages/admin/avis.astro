@@ -1,0 +1,42 @@
+---
+export const prerender = false;
+// Avis privés déposés par les clientes (espace cliente), jamais publiés ; lecture seule : ni réponse ni modération.
+// L'affichage marque les avis vus : le badge du menu ne compte que ceux arrivés depuis.
+import Admin from './_layout.astro';
+import { adminId, fmtDateTime } from '../../lib/server/admin.ts';
+import { adminSiteReviews, markSiteReviewsSeen } from '../../lib/server/avis-site.ts';
+
+const me = adminId(Astro.locals);
+if (!me) return new Response(null, { status: 404 });
+const page = Math.min(Math.max(Number.parseInt(Astro.url.searchParams.get('page') ?? '1', 10) || 1, 1), 1000);
+const { rows, more } = await adminSiteReviews(page);
+if (page === 1 && rows.some((r) => !r.seen)) await markSiteReviewsSeen(rows[0].id);
+const link = (p: number) => `/admin/avis?page=${p}`;
+---
+<Admin title="Avis privés">
+<p>Avis déposés en privé par les clientes depuis leur espace, après un rendez-vous honoré. Ils ne sont pas publiés : seule l'équipe les lit. Après l'envoi, chaque cliente se voit proposer de publier aussi son avis sur Google, quelle que soit la note.</p>
+{rows.length === 0 ? <p>Aucun avis pour l'instant.</p> : (
+<div class="table-wrap"><table class="data-table reviews">
+  <thead><tr><th scope="col">Date</th><th scope="col">Cliente</th><th scope="col">Prestation</th><th scope="col">Note</th><th scope="col">Avis</th></tr></thead>
+  <tbody>{rows.map((r) => (
+    <tr>
+      <td>{fmtDateTime(r.created_at)}{!r.seen && <> <span class="badge badge--due">Nouveau</span></>}</td>
+      <td><a href={`/admin/clientes/${r.client_id}`}>{r.client ?? `n° ${r.client_id}`}</a></td>
+      <td>{r.service}<br><small>rendez-vous du {fmtDateTime(r.starts_at)}</small></td>
+      <td class="note"><span aria-hidden="true">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span><span class="visually-hidden">{r.rating} sur 5</span></td>
+      <td class="text">{r.comment}</td>
+    </tr>
+  ))}</tbody>
+</table></div>
+)}
+<nav class="actions bar" aria-label="Pages">
+  {page > 1 && <a class="btn btn--ghost" href={link(page - 1)}>Plus récents</a>}
+  {more && <a class="btn btn--ghost" href={link(page + 1)}>Plus anciens</a>}
+</nav>
+</Admin>
+
+<style>
+  .bar{margin:1.25rem 0 0}
+  .reviews .note{color:var(--accent);white-space:nowrap;letter-spacing:.08em}
+  .reviews .text{white-space:pre-line;min-width:16rem;max-width:36rem}
+</style>
