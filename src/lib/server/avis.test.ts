@@ -194,8 +194,39 @@ test('avis sur une vraie base', { skip: !url && 'TEST_DATABASE_URL absente' }, a
     // Google en panne : la copie précédente reste
     assert.equal(await avis.refreshGoogleReviews((async () => new Response('', { status: 503 })) as typeof fetch), null);
     assert.equal((await sql`SELECT count(*)::int AS n FROM google_reviews`)[0].n, 1);
+
+    // Anti-doublon : une demande par cliente tous les 6 mois (mail et WhatsApp confondus), jamais après la case Google ou un clic
+    const D = 24 * H;
+    const sentOn = async (u: number, daysAgo: number, extra: 'mail' | 'clic') => {
+      const b = await book(u, daysAgo * D);
+      if (extra === 'mail') await sql`UPDATE bookings SET review_request_sent_at = now() - make_interval(days => ${daysAgo - 1}) WHERE id = ${b}`;
+      else await sql`UPDATE bookings SET review_request_sent_at = now() - make_interval(days => ${daysAgo - 1}), review_clicked_at = now() - make_interval(days => ${daysAgo - 1}) WHERE id = ${b}`;
+    };
+    const recent = await mk('mail-3-mois'); await sentOn(recent, 90, 'mail'); await book(recent, 28 * H);
+    const ancien = await mk('mail-7-mois'); await sentOn(ancien, 210, 'mail'); await book(ancien, 28.5 * H);
+    const wa = await mk('whatsapp-1-mois'); await book(wa, 29 * H);
+    await sql`INSERT INTO review_asks (user_id, phone, asked_at) VALUES (${wa}, ${tag + 'wa1'}, now() - interval '30 days')`;
+    const waOld = await mk('whatsapp-7-mois'); await book(waOld, 29.5 * H);
+    await sql`INSERT INTO review_asks (user_id, phone, asked_at) VALUES (${waOld}, ${tag + 'wa2'}, now() - interval '210 days')`;
+    const clic = await mk('clic-ancien'); await sentOn(clic, 300, 'clic'); await book(clic, 30 * H);
+    const laisse = await mk('avis-google'); await book(laisse, 30.5 * H);
+    await sql`UPDATE users SET google_review_at = now() WHERE id = ${laisse}`;
+    const dedup: string[] = [];
+    await avis.sendReviewRequests(URL_AVIS, async (to) => (dedup.push(to), true));
+    const six = ['mail-3-mois', 'mail-7-mois', 'whatsapp-1-mois', 'whatsapp-7-mois', 'clic-ancien', 'avis-google'].map((n) => `${tag}${n}@test.local`);
+    assert.deepEqual(dedup.filter((to) => six.includes(to)).sort(), [`${tag}mail-7-mois@test.local`, `${tag}whatsapp-7-mois@test.local`],
+      'mail ou WhatsApp de moins de 6 mois, lien déjà ouvert, case Google : pas de mail ; au-delà de 6 mois : mail');
+    // Relance coupée par la case Google, même si la demande est partie
+    const relGoogle = await mk('relance-google');
+    const br = await book(relGoogle, 54 * H);
+    await sql`UPDATE bookings SET review_request_sent_at = now() - interval '22 hours' WHERE id = ${br}`;
+    await sql`UPDATE users SET google_review_at = now() WHERE id = ${relGoogle}`;
+    const relances: string[] = [];
+    await avis.sendReviewRequests(URL_AVIS, async (to) => (relances.push(to), true));
+    assert.ok(!relances.includes(`${tag}relance-google@test.local`), 'case Google : pas de relance');
   } finally {
     await wipe();
+    await sql`DELETE FROM review_asks WHERE phone LIKE ${tag + '%'}`;
     await sql`DELETE FROM bookings WHERE user_id IN (SELECT id FROM users WHERE email LIKE ${tag + '%'})`;
     await sql`DELETE FROM users WHERE email LIKE ${tag + '%'}`;
     await sql`DELETE FROM services WHERE slug = ${`soin-${tag}`}`;

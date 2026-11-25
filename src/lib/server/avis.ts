@@ -52,9 +52,16 @@ export async function optOutReviews(userId: number): Promise<void> {
 // Toutes les clientes reçoivent le même mail, sans filtre sur la satisfaction (Google interdit de ne solliciter que les avis positifs).
 // Désinscription : coupe la demande et la relance. Plusieurs rendez-vous à moins de 24 h d'écart : un seul mail (et une relance).
 // Pas de relance si la cliente a cliqué sur le lien du mail, ou si un avis à son nom a été trouvé (matchReviews).
+// Anti-doublon, par cliente et non par rendez-vous : une seule demande d'avis tous les 6 mois, mail et WhatsApp confondus.
+// Jamais plus de demande si la fiche dit « A laissé un avis Google », ou si elle a déjà ouvert un lien d'avis d'un mail.
+export const ASK_EVERY = '6 months';
 export async function sendReviewRequests(reviewUrl: string | undefined, send: Sender = sendMailNow): Promise<number> {
   if (!reviewUrl) return 0;
   type Row = { id: number; user_id: number; email: string; locale: Lang; name: string | null };
+  // Signaux communs à la demande et à la relance : case de la fiche, clic sur n'importe quel lien d'avis, WhatsApp récent
+  const asked = sql`u.google_review_at IS NULL
+      AND NOT EXISTS (SELECT 1 FROM bookings c WHERE c.user_id = b.user_id AND c.review_clicked_at IS NOT NULL)
+      AND NOT EXISTS (SELECT 1 FROM review_asks a WHERE (a.user_id = b.user_id OR a.phone = wa_digits(u.phone)) AND a.asked_at > now() - ${ASK_EVERY}::interval)`;
   const first = await sql<Row[]>`
     SELECT DISTINCT ON (b.user_id) b.id, b.user_id, u.email, u.locale, u.name
     FROM bookings b JOIN users u ON u.id = b.user_id
@@ -63,6 +70,9 @@ export async function sendReviewRequests(reviewUrl: string | undefined, send: Se
       AND b.ends_at <= now() - interval '24 hours' AND b.ends_at > now() - interval '48 hours'
       AND NOT EXISTS (SELECT 1 FROM bookings o WHERE o.user_id = b.user_id AND o.id <> b.id AND o.review_request_sent_at IS NOT NULL
         AND o.ends_at > b.ends_at - interval '24 hours' AND o.ends_at < b.ends_at + interval '24 hours')
+      -- Mail de demande déjà parti à cette cliente depuis moins de 6 mois, pour un autre rendez-vous
+      AND NOT EXISTS (SELECT 1 FROM bookings o WHERE o.user_id = b.user_id AND o.id <> b.id AND o.review_request_sent_at > now() - ${ASK_EVERY}::interval)
+      AND ${asked}
     ORDER BY b.user_id, b.ends_at DESC`;
   const again = await sql<Row[]>`
     SELECT b.id, b.user_id, u.email, u.locale, u.name
@@ -70,7 +80,8 @@ export async function sendReviewRequests(reviewUrl: string | undefined, send: Se
     WHERE b.status = 'confirmed' AND NOT b.no_show AND b.review_reminder_sent_at IS NULL
       AND b.review_request_sent_at <= now() - interval '20 hours' AND b.review_clicked_at IS NULL AND b.review_found_at IS NULL
       AND u.blocked_at IS NULL AND u.removed_at IS NULL AND u.deleted_at IS NULL AND u.review_mail_optout_at IS NULL
-      AND b.ends_at <= now() - interval '48 hours' AND b.ends_at > now() - interval '5 days'`;
+      AND b.ends_at <= now() - interval '48 hours' AND b.ends_at > now() - interval '5 days'
+      AND ${asked}`;
   return (await deliver(first.map((r) => ({ id: r.id, email: r.email, mail: reviewRequestMail(r.locale, clickUrl(r.id), unsubscribeUrl(r.locale, r.user_id), r.name) })), 'review_request_sent_at', send))
     + (await deliver(again.map((r) => ({ id: r.id, email: r.email, mail: reviewReminderMail(r.locale, clickUrl(r.id), unsubscribeUrl(r.locale, r.user_id), r.name) })), 'review_reminder_sent_at', send));
 }

@@ -90,11 +90,28 @@ test('une seule demande par cliente, sur une vraie base', { skip: !url && 'TEST_
     const rows = (await adminAgenda(day, 4)).filter((x) => [b1, b2, guest].includes(x.id));
     assert.equal(rows.length, 3);
     assert.ok(rows.every((x) => x.review_asked_at), 'agenda : mention grisée sur tous ses rendez-vous');
+
+    // Règle commune avec le mail : pas de WhatsApp après un mail de demande de moins de 6 mois, ni après la case « avis Google laissé »
+    const other = async (n: string, phoneEnd: string, google = false) => (await sql`INSERT INTO users (email, password_hash, name, phone, locale, google_review_at)
+      VALUES (${`${tag}-${n}@test.local`}, 'x', 'Mia Test', ${`0472${phoneEnd}`}, 'fr', ${google ? new Date() : null}) RETURNING id`)[0].id as number;
+    const visit = async (user: number, hoursAgo: number, mailedDaysAgo?: number) => {
+      const end = new Date(Date.now() - hoursAgo * 3_600_000);
+      return (await sql`INSERT INTO bookings (user_id, service_id, starts_at, ends_at, status, price_cents, review_request_sent_at)
+        VALUES (${user}, ${svc.id}, ${new Date(end.getTime() - 600_000)}, ${end}, 'confirmed', 5000,
+          ${mailedDaysAgo === undefined ? null : new Date(Date.now() - mailedDaysAgo * 86_400_000)}) RETURNING id`)[0].id as number;
+    };
+    const mailed = await other('mail', local.slice(-6));
+    await visit(mailed, 240, 9);
+    const rMail = await askReview(await visit(mailed, 60), staff, URL_AVIS);
+    assert.ok(!rMail.ok && rMail.error.includes('par mail'), 'mail de moins de 6 mois : WhatsApp refusé');
+    const left = await other('google', String(Number(local.slice(-6)) + 1).padStart(6, '0'), true);
+    const rGoogle = await askReview(await visit(left, 70), staff, URL_AVIS);
+    assert.ok(!rGoogle.ok && rGoogle.error.includes('avis Google'), 'case « avis Google laissé » : WhatsApp refusé');
   } finally {
     await sql`DELETE FROM review_asks WHERE phone = ${intl}`;
     await sql`DELETE FROM bookings WHERE service_id IN (SELECT id FROM services WHERE slug = ${`soin-${tag}`})`;
     await sql`DELETE FROM services WHERE slug = ${`soin-${tag}`}`;
-    await sql`DELETE FROM users WHERE email = ${`${tag}@test.local`}`;
+    await sql`DELETE FROM users WHERE email = ${`${tag}@test.local`} OR email LIKE ${`${tag}-%`}`;
     await sql.end();
   }
 });

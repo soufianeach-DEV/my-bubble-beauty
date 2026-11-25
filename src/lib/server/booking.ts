@@ -360,10 +360,14 @@ export function clientBookings(userId: number, lang: Lang) {
 // sur une annulée = acompte gardé ou remboursement échoué, sur une expirée = paiement tardif non remboursé (à relancer par cancelByAdmin).
 export function adminAgenda(from: string, days = 7) {
   if (!isDay(from)) return Promise.resolve([]);
-  return sql<{ id: number; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled' | 'expired'; service: string; name: string | null; phone: string | null; email: string | null; user_id: number | null; guest: boolean; erased: boolean; deleting: boolean; past: boolean; no_show: boolean; late_minutes: number | null; paid_method: string | null; paid_cents: number | null; cancel_reason: string | null; refunded_manually: boolean; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; promo: string | null; package: string | null; arrived_at: Date | null; ended: boolean; review_asked_at: Date | null }[]>`
+  return sql<{ id: number; starts_at: Date; ends_at: Date; status: 'pending_payment' | 'confirmed' | 'cancelled' | 'expired'; service: string; name: string | null; phone: string | null; email: string | null; user_id: number | null; guest: boolean; erased: boolean; deleting: boolean; past: boolean; no_show: boolean; late_minutes: number | null; paid_method: string | null; paid_cents: number | null; cancel_reason: string | null; refunded_manually: boolean; price_cents: number; discount_cents: number; deposit_cents: number; refunded_cents: number; paid: boolean; promo: string | null; package: string | null; arrived_at: Date | null; ended: boolean; review_asked_at: Date | null; review_block: 'google' | 'clic' | null; review_mailed_at: Date | null }[]>`
     SELECT b.id, b.starts_at, b.ends_at, b.status, s.name_fr AS service, coalesce(u.name, b.guest_name) AS name, coalesce(u.phone, b.guest_phone) AS phone,
       -- Demande d'avis WhatsApp déjà faite à cette cliente (compte ou numéro), même pour un autre rendez-vous
       (SELECT min(a.asked_at) FROM review_asks a WHERE a.phone = wa_digits(coalesce(u.phone, b.guest_phone)) OR a.user_id = b.user_id) AS review_asked_at,
+      -- Mêmes freins que le mail (avis.ts) : case « A laissé un avis Google », lien d'avis déjà ouvert, mail de moins de 6 mois
+      CASE WHEN u.google_review_at IS NOT NULL THEN 'google'
+        WHEN EXISTS (SELECT 1 FROM bookings c WHERE c.user_id = b.user_id AND c.review_clicked_at IS NOT NULL) THEN 'clic' END AS review_block,
+      (SELECT max(o.review_request_sent_at) FROM bookings o WHERE o.user_id = b.user_id AND o.review_request_sent_at > now() - interval '6 months') AS review_mailed_at,
       u.email, b.user_id, b.user_id IS NULL AND NOT b.client_erased AS guest, b.client_erased AS erased, u.deleted_at IS NOT NULL AS deleting,
       b.starts_at < now() AS past, b.no_show, b.late_minutes, b.paid_method, b.paid_cents, b.cancel_reason, b.refunded_manually_at IS NOT NULL AS refunded_manually,
       b.arrived_at, b.ends_at < now() AS ended,

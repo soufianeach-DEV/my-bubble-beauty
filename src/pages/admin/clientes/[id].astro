@@ -73,6 +73,7 @@ const sheetRows = ([
   ['Odeurs', prof.care.scents ? [prof.care.scents] : [], false],
 ] as [string, (string | undefined)[], boolean][]).map(([t, v, a]) => [t, v.filter(Boolean) as string[], a] as const).filter(([, v]) => v.length > 0);
 const DONE: Record<string, string> = {
+  'avis-google': 'Noté : cette cliente a laissé un avis Google. Plus aucune demande d’avis ne lui sera envoyée.', 'avis-google-retire': 'Case retirée : les demandes d’avis reprennent selon la règle des 6 mois.',
   notes: 'Fiche de soin enregistrée.', supprime: 'Rendez-vous supprimé.', sante: 'Date de naissance et antécédents enregistrés.', 'fidelite-remise': 'Remise de fidélité appliquée au rendez-vous.', 'fidelite-offert': 'Soin offert appliqué au rendez-vous : la carte repart à zéro.', seance: 'Séance mise à jour.', block: 'Compte désactivé : la cliente est déconnectée et ne peut plus se connecter.', unblock: 'Compte réactivé.',
   remove: "Compte supprimé : il n'apparaît plus dans les listes et ne peut plus se connecter. Ses rendez-vous restent.", unremove: 'Compte restauré : la cliente peut de nouveau se connecter.', restore: 'Suppression annulée : le compte est de nouveau actif. Les rendez-vous annulés le restent.',
   absente: 'Rendez-vous marqué « absente ».', venue: 'Absence retirée.', retard: 'Retard noté.', aheure: 'Retard retiré.', encaisse: 'Encaissement noté.', nonencaisse: 'Encaissement retiré.', 'forfait-vendu': 'Forfait vendu : les séances de ce soin seront prises dessus à la réservation.', 'forfait-arrete': 'Forfait arrêté : plus aucune séance ne sera prise dessus. Le remboursement éventuel se fait à l’institut.', horsforfait: 'Rendez-vous retiré du forfait : la séance est rendue, le prix de la carte s’applique.', rendu: 'Acompte noté comme remboursé hors du site.',
@@ -117,12 +118,21 @@ const canSell = manage && !u.blocked_at && !u.removed_at && !u.deleted_at;
   <dt>Téléphone</dt><dd>{u.phone ? <a href={tel(u.phone)}>{u.phone}</a> : '—'}</dd>
   <dt>Langue</dt><dd>{LANGS[u.locale] ?? u.locale}</dd>
   <dt>Cliente depuis</dt><dd>{day(u.created_at)}</dd>
+  <dt>Avis Google</dt><dd>{u.google_review_at ? `Laissé (noté le ${day(u.google_review_at)})` : 'Pas noté'}</dd>
   <dt>Rendez-vous honorés</dt><dd>{stats.done}</dd>
   <dt>Absences</dt><dd>{stats.no_shows}</dd>
   <dt>Retards</dt><dd>{stats.lates}{stats.late_minutes > 0 && ` (${stats.late_minutes} min en tout)`}</dd>
   <dt>Annulations</dt><dd>{stats.cancelled}</dd>
   <dt>Total des soins honorés</dt><dd>{euros(stats.spent_cents)}</dd>
 </dl>
+{/* Case « A laissé un avis Google » : cochée, plus aucune demande d'avis (mail, relance, WhatsApp) */}
+<form class="cell-form" method="post" action={self}>
+  <input type="hidden" name="action" value="google_review"><input type="hidden" name="id" value={u.id}>
+  {u.google_review_at
+    ? <button class="btn btn--ghost" type="submit" name="on" value="0">Retirer « A laissé un avis Google »</button>
+    : <button class="btn btn--ghost" type="submit" name="on" value="1">Noter « A laissé un avis Google »</button>}
+  <p class="hint">Cochée, la cliente ne reçoit plus aucune demande d’avis (mail, relance ou WhatsApp).</p>
+</form>
 </section>
 <section aria-labelledby="h-consent">
 <h2 id="h-consent">Consentements</h2>

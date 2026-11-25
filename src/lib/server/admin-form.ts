@@ -137,6 +137,8 @@ export const deleteBookingForm = z.object({ action: z.literal('delete'), id, not
 const confirm = z.literal('on', { error: 'Cochez la case pour confirmer.' });
 export const clientForm = z.discriminatedUnion('action', [
   z.object({ action: z.literal('notes'), id, notes: z.string({ error: 'Notes : 4000 caractères au plus.' }).max(4000, 'Notes : 4000 caractères au plus.').default('') }),
+  // Case « A laissé un avis Google » : plus aucune demande d'avis (mail, relance, WhatsApp) ; on = 1 la pose, 0 la retire
+  z.object({ action: z.literal('google_review'), id, on: z.enum(['0', '1']) }),
   z.object({ action: z.literal('block'), id, confirm }),
   z.object({ action: z.literal('unblock'), id, confirm }),
   z.object({ action: z.literal('restore'), id, confirm }),

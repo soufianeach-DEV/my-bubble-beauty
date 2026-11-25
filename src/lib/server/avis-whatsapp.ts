@@ -3,6 +3,7 @@
 // Une seule demande par cliente (compte ou numéro), même si elle revient.
 import { sql } from './db.ts';
 import { journal } from './journal.ts';
+import { ASK_EVERY } from './avis.ts';
 import type { Lang } from '../site.ts';
 
 // Numéro international sans « + » ni espaces ; même règle que wa_digits() en base (migration 030)
@@ -53,11 +54,17 @@ export type AskResult = { ok: true; url: string } | { ok: false; error: string }
 // Note la demande (une seule par compte et par numéro) puis rend le lien wa.me
 export async function askReview(bookingId: number, staffId: number, reviewUrl: string | undefined): Promise<AskResult> {
   if (!reviewUrl) return { ok: false, error: 'Lien Google des avis non réglé (GOOGLE_REVIEW_URL).' };
-  const [b] = await sql<{ user_id: number | null; status: string; past: boolean; no_show: boolean; phone: string | null; name: string | null; locale: Lang | null }[]>`
+  const [b] = await sql<{ user_id: number | null; status: string; past: boolean; no_show: boolean; phone: string | null; name: string | null; locale: Lang | null; left_google: boolean; clicked: boolean; mailed: boolean }[]>`
     SELECT b.user_id, b.status, b.starts_at < now() AS past, b.no_show, coalesce(u.phone, b.guest_phone) AS phone,
-      coalesce(u.name, b.guest_name) AS name, u.locale
+      coalesce(u.name, b.guest_name) AS name, u.locale, u.google_review_at IS NOT NULL AS left_google,
+      -- Même règle que le mail (avis.ts) : clic sur un lien d'avis, ou mail de demande de moins de 6 mois
+      EXISTS (SELECT 1 FROM bookings c WHERE c.user_id = b.user_id AND c.review_clicked_at IS NOT NULL) AS clicked,
+      EXISTS (SELECT 1 FROM bookings o WHERE o.user_id = b.user_id AND o.review_request_sent_at > now() - ${ASK_EVERY}::interval) AS mailed
     FROM bookings b LEFT JOIN users u ON u.id = b.user_id WHERE b.id = ${bookingId}`;
   if (!b || !canAskReview(b, reviewUrl)) return { ok: false, error: 'Avis demandable seulement après un rendez-vous confirmé et honoré, avec un numéro de téléphone.' };
+  if (b.left_google) return { ok: false, error: 'La fiche indique que cette cliente a déjà laissé un avis Google.' };
+  if (b.clicked) return { ok: false, error: 'Cette cliente a déjà ouvert le lien d’avis Google reçu par mail.' };
+  if (b.mailed) return { ok: false, error: 'Avis déjà demandé par mail à cette cliente il y a moins de 6 mois.' };
   const digits = waDigits(b.phone)!;
   const rows = await sql`
     INSERT INTO review_asks (user_id, phone, booking_id, asked_by)
