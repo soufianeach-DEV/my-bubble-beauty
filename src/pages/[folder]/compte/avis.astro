@@ -15,7 +15,8 @@ const lang = langOfFolder(Astro.params.folder!);
 const d = FOLDER[lang];
 const self = `/${d}/compte/avis`;
 const user = Astro.locals.user;
-if (!user) return Astro.redirect(`/${d}/compte/connexion`);
+// Venue du lien du mail sans être connectée : la connexion ramène à ce rendez-vous (retour vérifié par safeReturn)
+if (!user) return Astro.redirect(`/${d}/compte/connexion?retour=${encodeURIComponent(self + Astro.url.search)}`);
 const T = {
   fr: { title: 'Votre avis', description: 'Donnez votre avis sur votre rendez-vous.', about: 'Rendez-vous : ', rating: 'Votre note', of: (n: number) => `${n} sur 5`, text: 'Votre avis', textHint: 'Ce qui vous a plu, ce qui pourrait être mieux. 2000 caractères au plus.', submit: 'Envoyer mon avis', check: 'Choisissez une note et écrivez quelques mots.', notFound: 'Ce rendez-vous est introuvable ou ne peut pas encore recevoir d’avis. Pour toute question : ', thanks: 'Merci pour votre avis !', yours: 'Votre avis', google: 'Publier aussi sur Google', copied: 'Votre avis est copié, il suffit de le coller sur Google.', back: 'Retour à mon compte' },
   nl: { title: 'Uw review', description: 'Geef uw mening over uw afspraak.', about: 'Afspraak: ', rating: 'Uw score', of: (n: number) => `${n} op 5`, text: 'Uw review', textHint: 'Wat u goed vond, wat beter kan. Maximaal 2000 tekens.', submit: 'Mijn review versturen', check: 'Kies een score en schrijf een paar woorden.', notFound: 'Deze afspraak is niet gevonden of kan nog geen review krijgen. Vragen? ', thanks: 'Bedankt voor uw review!', yours: 'Uw review', google: 'Ook op Google plaatsen', copied: 'Uw review is gekopieerd, u hoeft hem alleen op Google te plakken.', back: 'Terug naar mijn account' },

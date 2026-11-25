@@ -116,9 +116,9 @@ const T = {
       ["l'eau et les boissons transparentes sont les seules boissons autorisées ;", 'le thé, le café, les tisanes, le sirop coloré, le vin, les sodas et les boissons acides sont déconseillés (ou à la paille) ;', 'évitez les aliments colorés comme les épices (curry, safran) ou les sauces (ketchup, andalouse…), mais aussi les fraises, betteraves, épinards ;', 'les pâtes à tartiner, la confiture et le chocolat sont également à éviter ;', "les fumeurs doivent effectuer un brossage de dents léger obligatoirement après chaque cigarette. Si vous êtes à l'extérieur, un bon rinçage suffira ;", 'pas de bains de bouche colorés ;', 'nous conseillons un dentifrice blanc (sans lignes de couleur), par exemple Sensodyne ou Elmex.'],
       'Revoir les recommandations'] as const,
     create: "Créer un compte",
-    reviewPre: 'Votre avis sur Google aide d’autres personnes à nous découvrir.',
-    reviewAgain: ['Deux minutes pour votre avis ?', 'Nous vous avons récemment proposé de donner votre avis sur votre visite chez My Bubble Beauty.', 'Si vous ne l’avez pas encore fait, cela prend deux minutes sur Google. Très bon ou moins bon, chaque avis sincère compte pour nous.', 'Si c’est déjà fait : merci beaucoup, et ignorez simplement ce message.', 'Si c’est déjà fait, merci et ignorez ce message.'],
-    review: ['Comment s’est passé votre soin ?', 'Merci pour votre visite chez My Bubble Beauty.', 'Votre avis aide d’autres personnes à nous découvrir et nous aide à progresser. Si vous avez deux minutes, vous pouvez noter votre soin sur Google.', 'Qu’il soit très bon ou moins bon, chaque avis sincère compte pour nous.', 'Laisser un avis Google', 'Ne plus recevoir de demande d’avis'],
+    reviewPre: 'Votre avis aide d’autres personnes à nous découvrir.',
+    reviewAgain: ['Deux minutes pour votre avis ?', 'Nous vous avons récemment proposé de donner votre avis sur votre visite chez My Bubble Beauty.', 'Si vous ne l’avez pas encore fait, cela prend deux minutes. Très bon ou moins bon, chaque avis sincère compte pour nous.', 'Si c’est déjà fait : merci beaucoup, et ignorez simplement ce message.', 'Si c’est déjà fait, merci et ignorez ce message.'],
+    review: ['Comment s’est passé votre soin ?', 'Merci pour votre visite chez My Bubble Beauty.', 'Votre avis aide d’autres personnes à nous découvrir et nous aide à progresser. Si vous avez deux minutes, vous pouvez noter votre soin et nous dire ce que vous en avez pensé.', 'Qu’il soit très bon ou moins bon, chaque avis sincère compte pour nous.', 'Laisser mon avis', 'Ne plus recevoir de demande d’avis'],
   },
   nl: {
     hello: 'Hallo,',
@@ -159,9 +159,9 @@ const T = {
       ['water en kleurloze dranken zijn de enige toegestane dranken;', 'thee, koffie, kruidenthee, gekleurde siroop, wijn, frisdrank en zure dranken worden afgeraden (of drink ze met een rietje);', 'vermijd gekleurde voeding zoals kruiden (curry, saffraan) of sauzen (ketchup, andalouse…), maar ook aardbeien, rode biet en spinazie;', "vermijd ook smeerpasta's, confituur en chocolade;", 'rokers poetsen na elke sigaret verplicht licht hun tanden. Bent u buitenshuis, dan volstaat goed spoelen;', 'geen gekleurd mondwater;', 'wij raden een witte tandpasta aan (zonder gekleurde strepen), bijvoorbeeld Sensodyne of Elmex.'],
       'De aanbevelingen herlezen'] as const,
     create: "Een account aanmaken",
-    reviewPre: 'Uw review op Google helpt anderen om ons te ontdekken.',
-    reviewAgain: ['Twee minuten voor uw review?', 'We vroegen u onlangs om een review over uw bezoek aan My Bubble Beauty.', 'Hebt u dat nog niet gedaan? Het kost twee minuten op Google. Heel goed of minder goed: elke eerlijke review telt voor ons.', 'Al gedaan? Hartelijk dank, dan mag u dit bericht negeren.', 'Al gedaan? Dank u, dan mag u dit bericht negeren.'],
-    review: ['Hoe was uw behandeling?', 'Dank u voor uw bezoek aan My Bubble Beauty.', 'Uw review helpt anderen om ons te ontdekken en helpt ons om beter te worden. Hebt u twee minuten? Dan kunt u uw behandeling beoordelen op Google.', 'Of uw ervaring nu heel goed of minder goed was: elke eerlijke review telt voor ons.', 'Een Google-review schrijven', 'Geen vragen om een review meer ontvangen'],
+    reviewPre: 'Uw review helpt anderen om ons te ontdekken.',
+    reviewAgain: ['Twee minuten voor uw review?', 'We vroegen u onlangs om een review over uw bezoek aan My Bubble Beauty.', 'Hebt u dat nog niet gedaan? Het kost twee minuten. Heel goed of minder goed: elke eerlijke review telt voor ons.', 'Al gedaan? Hartelijk dank, dan mag u dit bericht negeren.', 'Al gedaan? Dank u, dan mag u dit bericht negeren.'],
+    review: ['Hoe was uw behandeling?', 'Dank u voor uw bezoek aan My Bubble Beauty.', 'Uw review helpt anderen om ons te ontdekken en helpt ons om beter te worden. Hebt u twee minuten? Dan kunt u uw behandeling beoordelen en ons vertellen wat u ervan vond.', 'Of uw ervaring nu heel goed of minder goed was: elke eerlijke review telt voor ons.', 'Mijn review geven', 'Geen vragen om een review meer ontvangen'],
   },
   en: {
     hello: 'Hello,',
@@ -202,9 +202,9 @@ const T = {
       ['water and clear drinks are the only drinks allowed;', 'tea, coffee, herbal tea, coloured syrup, wine, soft drinks and acidic drinks are not recommended (or drink them through a straw);', 'avoid coloured foods such as spices (curry, saffron) or sauces (ketchup, andalouse…), as well as strawberries, beetroot and spinach;', 'spreads, jam and chocolate should also be avoided;', 'smokers must brush their teeth gently after every cigarette. If you are outside, a good rinse will do;', 'no coloured mouthwash;', 'we recommend a white toothpaste (without coloured stripes), for example Sensodyne or Elmex.'],
       'Read the recommendations again'] as const,
     create: "Create an account",
-    reviewPre: 'Your Google review helps other people discover us.',
-    reviewAgain: ['Two minutes for your review?', 'We recently asked you to share your thoughts on your visit to My Bubble Beauty.', 'If you have not done so yet, it takes two minutes on Google. Great or less so, every honest review matters to us.', 'Already done? Thank you very much, and please ignore this message.', 'Already done? Thank you, and please ignore this message.'],
-    review: ['How was your treatment?', 'Thank you for visiting My Bubble Beauty.', 'Your review helps other people discover us and helps us improve. If you have two minutes, you can rate your treatment on Google.', 'Whether your experience was great or less so, every honest review matters to us.', 'Leave a Google review', 'Stop receiving review requests'],
+    reviewPre: 'Your review helps other people discover us.',
+    reviewAgain: ['Two minutes for your review?', 'We recently asked you to share your thoughts on your visit to My Bubble Beauty.', 'If you have not done so yet, it only takes two minutes. Great or less so, every honest review matters to us.', 'Already done? Thank you very much, and please ignore this message.', 'Already done? Thank you, and please ignore this message.'],
+    review: ['How was your treatment?', 'Thank you for visiting My Bubble Beauty.', 'Your review helps other people discover us and helps us improve. If you have two minutes, you can rate your treatment and tell us what you thought.', 'Whether your experience was great or less so, every honest review matters to us.', 'Leave my review', 'Stop receiving review requests'],
   },
 } as const;
 
@@ -315,14 +315,14 @@ export function aftercareMail(lang: Lang): Mail {
 }
 
 // Après tout rendez-vous honoré : la même demande à toutes les clientes, sans question préalable sur leur satisfaction
-// (Google interdit de ne solliciter que les avis positifs). reviewUrl : lien « Demander des avis » copié depuis la fiche.
+// (Google interdit de ne solliciter que les avis positifs). reviewUrl : lien suivi /avis/<jeton>, qui mène au formulaire d'avis du site.
 export function reviewRequestMail(lang: Lang, reviewUrl: string, unsubscribeUrl: string, name?: string | null): Mail {
   // Le remerciement passe dans le titre de la carte
   const [subject, , ask, honest, label, unsub] = T[lang].review;
   return build('review_request', lang, subject, [hi(lang, name), ask, honest], [label, reviewUrl], [unsub, unsubscribeUrl], T[lang].reviewPre, { title: T[lang].reviewTitle });
 }
 
-// Relance un jour plus tard. Le site ne sait pas si la cliente a déjà laissé son avis (Google ne donne pas son e-mail) : le texte le dit
+// Relance un jour plus tard, sauf avis déposé sur le site. Un avis laissé directement sur Google reste inconnu (pas d'e-mail chez Google) : le texte le dit
 export function reviewReminderMail(lang: Lang, reviewUrl: string, unsubscribeUrl: string, name?: string | null): Mail {
   const [subject, recall, ask, done, pre] = T[lang].reviewAgain;
   const [, , , , label, unsub] = T[lang].review;

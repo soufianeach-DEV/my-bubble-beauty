@@ -21,8 +21,8 @@ export function checkUnsubscribe(u: string | null, s: string | null): number | n
   return got.length === want.length && timingSafeEqual(got, want) ? id : null;
 }
 
-// Lien « Laisser un avis » du mail : passe par /avis/<jeton> (un jeton signé par rendez-vous) qui note le clic puis renvoie vers
-// Google. Un clic évite la relance. Limite : un antivirus de messagerie qui ouvre les liens compte comme un clic.
+// Lien « Laisser mon avis » du mail : passe par /avis/<jeton> (un jeton signé par rendez-vous) qui note le clic puis renvoie vers
+// le formulaire d'avis du site pour ce rendez-vous (page de merci si l'avis est déjà déposé), qui propose ensuite Google. Un clic évite la relance. Limite : un antivirus de messagerie qui ouvre les liens compte comme un clic.
 const signClick = (bookingId: number) => createHmac('sha256', PASSWORD_PEPPER).update(`avis-clic:${bookingId}`).digest('base64url').slice(0, 22);
 export const reviewToken = (bookingId: number) => `${bookingId}.${signClick(bookingId)}`;
 export const clickUrl = (bookingId: number) => `${SITE_URL}/avis/${reviewToken(bookingId)}`;
@@ -43,6 +43,12 @@ export async function recordClick(token: string | undefined): Promise<boolean> {
   return true;
 }
 
+// Formulaire d'avis du rendez-vous, dans la langue de la cliente ; le jeton n'ouvre aucune session : connexion demandée si besoin
+export async function reviewFormPath(bookingId: number): Promise<string> {
+  const [b] = await sql<{ locale: Lang | null }[]>`SELECT u.locale FROM bookings b LEFT JOIN users u ON u.id = b.user_id WHERE b.id = ${bookingId}`;
+  return `/${FOLDER[b?.locale ?? 'fr']}/compte/avis?id=${bookingId}`;
+}
+
 export async function optOutReviews(userId: number): Promise<void> {
   await sql`UPDATE users SET review_mail_optout_at = now() WHERE id = ${userId} AND review_mail_optout_at IS NULL`;
   log('review_mail_optout', { user_id: userId });
@@ -51,7 +57,7 @@ export async function optOutReviews(userId: number): Promise<void> {
 // Rendez-vous honoré (confirmé, non absente) : demande 24 h après la fin, relance 48 h après si la demande est partie.
 // Toutes les clientes reçoivent le même mail, sans filtre sur la satisfaction (Google interdit de ne solliciter que les avis positifs).
 // Désinscription : coupe la demande et la relance. Plusieurs rendez-vous à moins de 24 h d'écart : un seul mail (et une relance).
-// Pas de relance si la cliente a cliqué sur le lien du mail, ou si un avis à son nom a été trouvé (matchReviews).
+// Pas de relance si la cliente a cliqué sur le lien du mail, a déposé son avis sur le site, ou si un avis à son nom a été trouvé (matchReviews).
 export async function sendReviewRequests(reviewUrl: string | undefined, send: Sender = sendMailNow): Promise<number> {
   if (!reviewUrl) return 0;
   type Row = { id: number; user_id: number; email: string; locale: Lang; name: string | null };
@@ -69,6 +75,7 @@ export async function sendReviewRequests(reviewUrl: string | undefined, send: Se
     FROM bookings b JOIN users u ON u.id = b.user_id
     WHERE b.status = 'confirmed' AND NOT b.no_show AND b.review_reminder_sent_at IS NULL
       AND b.review_request_sent_at <= now() - interval '20 hours' AND b.review_clicked_at IS NULL AND b.review_found_at IS NULL
+      AND NOT EXISTS (SELECT 1 FROM site_reviews r WHERE r.booking_id = b.id)
       AND u.blocked_at IS NULL AND u.removed_at IS NULL AND u.deleted_at IS NULL AND u.review_mail_optout_at IS NULL
       AND b.ends_at <= now() - interval '48 hours' AND b.ends_at > now() - interval '5 days'`;
   return (await deliver(first.map((r) => ({ id: r.id, email: r.email, mail: reviewRequestMail(r.locale, clickUrl(r.id), unsubscribeUrl(r.locale, r.user_id), r.name) })), 'review_request_sent_at', send))

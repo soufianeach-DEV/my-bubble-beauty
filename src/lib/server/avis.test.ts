@@ -17,11 +17,13 @@ registerHooks({
   load: (u, ctx, next) => next(u, u.endsWith('.json') ? { ...ctx, importAttributes: { type: 'json' } } : ctx),
 });
 
-test('mail d’avis : lien Google et lien de désinscription', async () => {
+test('mail d’avis : lien suivi vers le formulaire du site et lien de désinscription', async () => {
   const { reviewRequestMail } = await import('./mail.ts');
   for (const lang of ['fr', 'nl', 'en'] as const) {
     const m = reviewRequestMail(lang, 'https://g.page/r/abc/review', 'https://test.local/fr/compte/avis-desinscription?u=1&s=x');
     assert.ok(m.text.includes('https://g.page/r/abc/review'));
+    assert.ok(m.html.includes({ fr: 'Laisser mon avis', nl: 'Mijn review geven', en: 'Leave my review' }[lang]), 'bouton « Laisser mon avis »');
+    assert.ok(!m.text.includes('Google'), 'le mail ne renvoie plus vers Google');
     assert.equal(m.unsubscribe, 'https://test.local/fr/compte/avis-desinscription?u=1&s=x');
     assert.ok(m.html.includes('avis-desinscription?u=1&#38;s=x'), 'lien échappé dans le HTML');
   }
@@ -116,14 +118,19 @@ test('avis sur une vraie base', { skip: !url && 'TEST_DATABASE_URL absente' }, a
     const bc = await book(coupee, 50 * H);
     await sql`UPDATE bookings SET review_request_sent_at = now() - interval '22 hours' WHERE id = ${bc}`;
     await sql`UPDATE users SET review_mail_optout_at = now() WHERE id = ${coupee}`;
+    // Avis déjà déposé sur le site pour ce rendez-vous : pas de relance
+    const deposee = await mk('avis-site');
+    const bd = await book(deposee, 50.5 * H);
+    await sql`UPDATE bookings SET review_request_sent_at = now() - interval '22 hours' WHERE id = ${bd}`;
+    await sql`INSERT INTO site_reviews (user_id, booking_id, rating, comment) VALUES (${deposee}, ${bd}, 4, 'Très bien')`;
     const relance: { to: string; subject: string }[] = [];
     await avis.sendReviewRequests(URL_AVIS, async (to, m) => (relance.push({ to, subject: m.subject }), true));
-    assert.deepEqual(relance.filter((r) => mine(r.to)), [{ to: `${tag}contente@test.local`, subject: 'Twee minuten voor uw review?' }], 'relance une fois, pas pour une désinscrite ni sans première demande');
+    assert.deepEqual(relance.filter((r) => mine(r.to)), [{ to: `${tag}contente@test.local`, subject: 'Twee minuten voor uw review?' }], 'relance une fois, pas pour une désinscrite, sans première demande ni avis déjà déposé sur le site');
     const encore: string[] = [];
     await avis.sendReviewRequests(URL_AVIS, async (to) => (encore.push(to), true));
     assert.deepEqual(encore.filter(mine), [], 'deux mails au plus par rendez-vous');
 
-    // Clic sur le lien suivi : redirection vers Google, clic noté une fois, pas de relance
+    // Clic sur le lien suivi : formulaire d'avis du site pour ce rendez-vous, dans la langue de la cliente ; clic noté une fois, pas de relance
     const { GET } = await import('../../pages/avis/[jeton].ts');
     const L = tag.replace(/\d/g, (d) => 'bcdfghjklm'[Number(d)]);
     const sentDaysAgo = async (n: string, endedH: number, name?: string) => {
@@ -136,13 +143,15 @@ test('avis sur une vraie base', { skip: !url && 'TEST_DATABASE_URL absente' }, a
     const bClic = await sentDaysAgo('clic', 51);
     const res = await GET({ params: { jeton: avis.reviewToken(bClic) } } as never);
     assert.equal(res.status, 302);
-    assert.equal(res.headers.get('location'), 'https://g.page/r/abc/review');
+    const [{ locale }] = await sql`SELECT u.locale FROM bookings b JOIN users u ON u.id = b.user_id WHERE b.id = ${bClic}`;
+    assert.equal(res.headers.get('location'), `/${({ fr: 'fr', nl: 'nl', en: 'eng' } as Record<string, string>)[locale]}/compte/avis?id=${bClic}`, 'formulaire du site, plus Google');
     const [{ review_clicked_at: firstClick }] = await sql`SELECT review_clicked_at FROM bookings WHERE id = ${bClic}`;
     assert.ok(firstClick, 'clic noté');
     await GET({ params: { jeton: avis.reviewToken(bClic) } } as never);
     assert.deepEqual((await sql`SELECT review_clicked_at FROM bookings WHERE id = ${bClic}`)[0].review_clicked_at, firstClick, 'premier clic gardé');
     const faux = await GET({ params: { jeton: `${bClic}.${'A'.repeat(22)}` } } as never);
-    assert.equal(faux.status, 302, 'jeton faux : la cliente arrive quand même sur Google');
+    assert.equal(faux.status, 302);
+    assert.equal(faux.headers.get('location'), '/fr/compte', 'jeton faux : espace cliente, rien de noté');
 
     // Avis Google au nom de la cliente, publié après le rendez-vous : marqué, pas de relance. Homonymes : rien
     const bTrouvee = await sentDaysAgo('trouvee', 52, `Zoé Lettres${L}`);
