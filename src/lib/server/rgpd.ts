@@ -118,7 +118,7 @@ export async function setConsent(userId: number, give: boolean, ip: string, lang
 
 // Accès et portabilité (art. 15 et 20) : tout ce que le site garde sur la cliente, notes de l'institut comprises
 export async function exportData(userId: number, ip: string) {
-  const [[account], bookings, sessions, events, linked, consents, loyalty, gifts, packages] = await Promise.all([
+  const [[account], bookings, sessions, events, linked, consents, loyalty, gifts, packages, reviews] = await Promise.all([
     sql`SELECT email, name, phone, locale, created_at, email_verified_at, health_consent_at, health_consent_text, notes AS institute_notes, client_note, care_filled_at, care_skipped_at, birth_date::text, medical_history, care_profile, health_profile FROM users WHERE id = ${userId}`,
     sql`SELECT s.name_fr AS service, b.starts_at, b.ends_at, b.status, b.no_show, b.late_minutes, b.price_cents, b.discount_cents, b.deposit_cents, b.refunded_cents,
           b.refunded_manually_at, b.paid_method, b.paid_cents, b.paid_at, b.arrived_at, b.cancel_reason,
@@ -143,6 +143,9 @@ export async function exportData(userId: number, ip: string) {
     // Forfaits achetés à l'institut
     sql`SELECT p.label, s.name_fr AS service, p.sessions_total, p.price_cents, p.sold_at, p.expires_on::text, p.cancelled_at
         FROM packages p JOIN services s ON s.id = p.service_id WHERE p.user_id = ${userId} ORDER BY p.sold_at`,
+    // Avis laissés sur le site : date, rendez-vous concerné, note et texte
+    sql`SELECT r.created_at, s.name_fr AS service, b.starts_at AS booking_starts_at, r.rating, r.comment
+        FROM site_reviews r JOIN bookings b ON b.id = r.booking_id JOIN services s ON s.id = b.service_id WHERE r.user_id = ${userId} ORDER BY r.created_at`,
   ]);
   journal('data_exported', { actor: userId, client: userId, ip });
   // Antécédents médicaux : déchiffrés pour la cliente elle-même
@@ -158,5 +161,5 @@ export async function exportData(userId: number, ip: string) {
     delete account.care_profile;
     delete account.health_profile;
   }
-  return { exported_at: new Date().toISOString(), controller: 'My Bubble Beauty', account, linked_accounts: linked, bookings, consents, loyalty_rewards: loyalty, gift_cards: gifts, packages, sessions, security_log: events };
+  return { exported_at: new Date().toISOString(), controller: 'My Bubble Beauty', account, linked_accounts: linked, bookings, consents, loyalty_rewards: loyalty, gift_cards: gifts, packages, site_reviews: reviews, sessions, security_log: events };
 }

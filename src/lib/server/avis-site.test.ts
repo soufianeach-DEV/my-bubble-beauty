@@ -51,6 +51,29 @@ test('un avis par rendez-vous honoré de la cliente', { skip: !url && 'TEST_DATA
     assert.equal(await saveSiteReview(u.id, past, 2, 'Accueil sympa,\nattente trop longue.'), true);
     assert.equal(await saveSiteReview(u.id, past, 5, 'double envoi'), false, 'un seul avis par rendez-vous');
     assert.deepEqual((await reviewableBooking(u.id, past, 'fr'))?.review, { rating: 2, comment: 'Accueil sympa,\nattente trop longue.' }, 'note basse gardée telle quelle');
+
+    // Admin « Avis du site » : lecture seule, plus récent d'abord, badge des avis pas encore vus
+    const { adminSiteReviews, unseenSiteReviews, markSiteReviewsSeen } = await import('./avis-site.ts');
+    const before = await unseenSiteReviews();
+    assert.ok(before >= 1, 'avis nouveau compté');
+    const { rows } = await adminSiteReviews(1);
+    const mine = rows.find((r) => r.client_id === u.id);
+    assert.ok(mine && mine.client === 'Els' && mine.rating === 2 && mine.service === 'Soin test' && !mine.seen, 'cliente, prestation, note, pas encore vu');
+    assert.ok(rows.every((r, i) => i === 0 || rows[i - 1].created_at >= r.created_at), 'plus récents d’abord');
+    await markSiteReviewsSeen(rows[0].id);
+    assert.equal(await unseenSiteReviews(), 0, 'vus après affichage');
+
+    // Export RGPD : l'avis y figure (date, rendez-vous, note, texte)
+    const rgpd = await import('./rgpd.ts');
+    const data = await rgpd.exportData(u.id, '127.0.0.1');
+    assert.equal(data.site_reviews.length, 1);
+    const [e] = data.site_reviews;
+    assert.ok(e.created_at && e.booking_starts_at && e.service === 'Soin test' && e.rating === 2 && e.comment === 'Accueil sympa,\nattente trop longue.');
+
+    // Effacement RGPD : la suppression du compte emporte l'avis (clé étrangère ON DELETE CASCADE), le rendez-vous reste anonyme
+    assert.ok(await rgpd.eraseUser(u.id, null, null, 'admin'));
+    assert.equal((await sql`SELECT count(*)::int AS n FROM site_reviews WHERE booking_id = ${past}`)[0].n, 0, 'avis effacé avec la cliente');
+    assert.equal((await sql`SELECT count(*)::int AS n FROM bookings WHERE id = ${past}`)[0].n, 1, 'rendez-vous gardé, détaché');
   } finally {
     await sql`DELETE FROM bookings WHERE service_id IN (SELECT id FROM services WHERE slug = ${`soin-${tag}`})`;
     await sql`DELETE FROM services WHERE slug = ${`soin-${tag}`}`;

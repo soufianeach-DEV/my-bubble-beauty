@@ -5,6 +5,7 @@ import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import { EXTRA } from '../../lib/site';
 import { ROLE_LABELS } from '../../lib/server/staff.ts';
+import { unseenSiteReviews } from '../../lib/server/avis-site.ts';
 import '../../styles/forms.css';
 
 interface Props {
@@ -20,6 +21,7 @@ const LINKS = [
   ['/admin', 'Accueil', 'M4 11l8-7 8 7M6 9.5V20h4v-5h4v5h4V9.5'],
   ['/admin/agenda', 'Agenda', 'M7 3v3M17 3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z'],
   ['/admin/clientes', 'Clientes', 'M16 20v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9.5 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM21 20v-1a4 4 0 0 0-3-3.9M16 4.1a3.5 3.5 0 0 1 0 6.8'],
+  ['/admin/avis', 'Avis du site', 'M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12zM12 8.5l1 2 2.2.3-1.6 1.5.4 2.2-2-1-2 1 .4-2.2-1.6-1.5 2.2-.3z'],
   ['/admin/prestations', 'Prestations', 'M12 3l2.4 5.2 5.6.6-4.2 3.8 1.2 5.6L12 15.4 7 18.2l1.2-5.6L4 8.8l5.6-.6z'],
   ['/admin/horaires', 'Horaires', 'M12 7v5l3 2M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z'],
   ['/admin/codes-promo', 'Codes promo', 'M20 12l-8 8-9-9V3h8zM7.5 7.5h.01'],
@@ -32,6 +34,8 @@ const LINKS = [
 // La gestionnaire ne voit que ses pages (staffId) ; les autres lui répondent 404 de toute façon
 const STAFF = new Set(['/admin', '/admin/agenda', '/admin/reservations/nouvelle', '/admin/clientes', '/admin/prestations', '/admin/horaires']);
 const links = Astro.locals.user?.role === 'gestionnaire' ? LINKS.filter(([href]) => STAFF.has(href)) : LINKS;
+// Avis du site pas encore vus : une requête comptée sur un index partiel, admin seulement, après le code
+const unseen = nav && Astro.locals.session?.mfaAt && (Astro.locals.user?.role === 'super' || Astro.locals.user?.role === 'admin') ? await unseenSiteReviews() : 0;
 // Bouton profil : initiales du nom (sinon de l'adresse), nom et rôle ; avant le code, le menu ne garde que le thème et la déconnexion
 const me = Astro.locals.user;
 const who = me?.name?.trim() || me?.email || '';
@@ -52,7 +56,7 @@ const PROFILE = [
   {nav && <a class="admin-new" href="/admin/reservations/nouvelle" aria-current={section === '/admin/reservations/nouvelle' ? 'page' : undefined}><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>Nouveau rendez-vous</a>}
   {nav && <nav aria-label="Administration"><ul>{links.map(([href, label, d]) => (
     <li><a href={href} aria-current={href === section ? 'page' : undefined}>
-      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d={d} /></svg>{label}
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d={d} /></svg>{label}{href === '/admin/avis' && unseen > 0 && <span class="nav-count">{unseen}<span class="visually-hidden"> nouveau{unseen > 1 ? 'x' : ''}</span></span>}
     </a></li>
   ))}</ul></nav>}
 </aside>
@@ -97,6 +101,8 @@ const PROFILE = [
   .admin-side a{display:flex;align-items:center;gap:.75rem;min-height:44px;padding:.5rem .75rem;border-radius:12px;color:rgb(255 251 249 / .82);text-decoration:none;transition:background var(--dur-ui),color var(--dur-ui)}
   .admin-side a:hover,.admin-side a:focus-visible{background:rgb(255 251 249 / .08);color:var(--side-ink)}
   .admin-side a[aria-current="page"]{background:var(--side-ink);color:var(--side);font-weight:500}
+  /* Compteur des avis du site pas encore vus */
+  .nav-count{margin-left:auto;min-width:1.5rem;padding:.05rem .45rem;border-radius:999px;background:var(--side-cta);color:var(--side-cta-ink);font-size:.8125rem;font-weight:600;text-align:center;line-height:1.4}
   .admin-side svg{flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
   .admin-top{display:flex;justify-content:flex-end;margin:0 0 .75rem}
   .admin-main{min-width:0;padding:clamp(1.25rem,2.5vw,3rem) clamp(1.25rem,3vw,3.5rem)}
