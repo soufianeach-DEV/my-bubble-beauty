@@ -287,6 +287,7 @@ const gauges = card
 <li><strong>{when(b.starts_at, lang, 'medium')}</strong><span>{b.service} · {price(b)}</span><span class="h-state">{histState(b)}</span>{b.reviewable && <a class="h-review" href={`${self}/avis?id=${b.id}`}>{b.reviewed ? ta.reviewSeen : ta.review}<span class="visually-hidden"> {ta.reviewHidden} {when(b.starts_at, lang)}</span></a>}</li>
 ))}</ul>
 </details>}
+{history.some((b) => b.reviewable) && <p class="hint">{ta.reviewNote}</p>}
 </>) : <p>{ta.noHistory}</p>}
 </section>
 </div>

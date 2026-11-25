@@ -22,6 +22,7 @@ test('page de merci : bouton Google sans condition sur la note (pas de tri des a
   assert.ok(block.length > 0 && block.includes('data-copy-review="avis-texte"'), 'bouton présent, lié au texte de l’avis');
   assert.ok(!/rating\s*[<>=]/.test(page), 'aucune condition sur la note');
   assert.ok(page.includes('Votre avis est copié, il suffit de le coller sur Google.'));
+  assert.ok(page.includes('Cet avis n’est lu que par l’institut : il n’est pas publié.'), 'canal privé annoncé sur le formulaire');
 });
 
 test('un avis par rendez-vous honoré de la cliente', { skip: !url && 'TEST_DATABASE_URL absente' }, async () => {

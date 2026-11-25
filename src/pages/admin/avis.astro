@@ -1,6 +1,6 @@
 ---
 export const prerender = false;
-// Avis déposés sur le site par les clientes (espace cliente), en lecture seule : ni réponse ni modération.
+// Avis privés déposés par les clientes (espace cliente), jamais publiés ; lecture seule : ni réponse ni modération.
 // L'affichage marque les avis vus : le badge du menu ne compte que ceux arrivés depuis.
 import Admin from './_layout.astro';
 import { adminId, fmtDateTime } from '../../lib/server/admin.ts';
@@ -13,8 +13,8 @@ const { rows, more } = await adminSiteReviews(page);
 if (page === 1 && rows.some((r) => !r.seen)) await markSiteReviewsSeen(rows[0].id);
 const link = (p: number) => `/admin/avis?page=${p}`;
 ---
-<Admin title="Avis du site">
-<p>Avis laissés par les clientes depuis leur espace, après un rendez-vous honoré. Après l'envoi, elles se voient toutes proposer de le publier aussi sur Google, quelle que soit la note.</p>
+<Admin title="Avis privés">
+<p>Avis déposés en privé par les clientes depuis leur espace, après un rendez-vous honoré. Ils ne sont pas publiés : seule l'équipe les lit. Après l'envoi, chaque cliente se voit proposer de publier aussi son avis sur Google, quelle que soit la note.</p>
 {rows.length === 0 ? <p>Aucun avis pour l'instant.</p> : (
 <div class="table-wrap"><table class="data-table reviews">
   <thead><tr><th scope="col">Date</th><th scope="col">Cliente</th><th scope="col">Prestation</th><th scope="col">Note</th><th scope="col">Avis</th></tr></thead>

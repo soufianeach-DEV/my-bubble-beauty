@@ -1,5 +1,5 @@
 ---
-// Avis sur un rendez-vous honoré (note et texte), puis page de merci. Rendez-vous relu par identifiant ET cliente connectée.
+// Avis privé sur un rendez-vous honoré (note et texte, lu par l'institut seulement, jamais publié), puis page de merci. Rendez-vous relu par identifiant ET cliente connectée.
 // Merci : « Publier aussi sur Google » copie le texte et ouvre la fiche, pour TOUTES les clientes quelle que soit la note
 // (pas de tri des avis, interdit par Google) ; absent si GOOGLE_REVIEW_URL n'est pas réglé.
 export const prerender = false;
@@ -17,9 +17,9 @@ const self = `/${d}/compte/avis`;
 const user = Astro.locals.user;
 if (!user) return Astro.redirect(`/${d}/compte/connexion`);
 const T = {
-  fr: { title: 'Votre avis', description: 'Donnez votre avis sur votre rendez-vous.', about: 'Rendez-vous : ', rating: 'Votre note', of: (n: number) => `${n} sur 5`, text: 'Votre avis', textHint: 'Ce qui vous a plu, ce qui pourrait être mieux. 2000 caractères au plus.', submit: 'Envoyer mon avis', check: 'Choisissez une note et écrivez quelques mots.', notFound: 'Ce rendez-vous est introuvable ou ne peut pas encore recevoir d’avis. Pour toute question : ', thanks: 'Merci pour votre avis !', yours: 'Votre avis', google: 'Publier aussi sur Google', copied: 'Votre avis est copié, il suffit de le coller sur Google.', back: 'Retour à mon compte' },
-  nl: { title: 'Uw review', description: 'Geef uw mening over uw afspraak.', about: 'Afspraak: ', rating: 'Uw score', of: (n: number) => `${n} op 5`, text: 'Uw review', textHint: 'Wat u goed vond, wat beter kan. Maximaal 2000 tekens.', submit: 'Mijn review versturen', check: 'Kies een score en schrijf een paar woorden.', notFound: 'Deze afspraak is niet gevonden of kan nog geen review krijgen. Vragen? ', thanks: 'Bedankt voor uw review!', yours: 'Uw review', google: 'Ook op Google plaatsen', copied: 'Uw review is gekopieerd, u hoeft hem alleen op Google te plakken.', back: 'Terug naar mijn account' },
-  en: { title: 'Your review', description: 'Tell us about your appointment.', about: 'Appointment: ', rating: 'Your rating', of: (n: number) => `${n} out of 5`, text: 'Your review', textHint: 'What you liked, what could be better. 2000 characters at most.', submit: 'Send my review', check: 'Choose a rating and write a few words.', notFound: 'This appointment was not found or cannot be reviewed yet. Any question: ', thanks: 'Thank you for your review!', yours: 'Your review', google: 'Also post on Google', copied: 'Your review is copied, just paste it on Google.', back: 'Back to my account' },
+  fr: { title: 'Votre avis privé', private: 'Cet avis n’est lu que par l’institut : il n’est pas publié.', description: 'Donnez votre avis en privé sur votre rendez-vous.', about: 'Rendez-vous : ', rating: 'Votre note', of: (n: number) => `${n} sur 5`, text: 'Votre avis', textHint: 'Ce qui vous a plu, ce qui pourrait être mieux. 2000 caractères au plus.', submit: 'Envoyer mon avis', check: 'Choisissez une note et écrivez quelques mots.', notFound: 'Ce rendez-vous est introuvable ou ne peut pas encore recevoir d’avis. Pour toute question : ', thanks: 'Merci pour votre avis !', yours: 'Votre avis', google: 'Publier aussi sur Google', copied: 'Votre avis est copié, il suffit de le coller sur Google.', back: 'Retour à mon compte' },
+  nl: { title: 'Uw privé-feedback', private: 'Deze feedback wordt alleen door het instituut gelezen en niet gepubliceerd.', description: 'Geef privé uw mening over uw afspraak.', about: 'Afspraak: ', rating: 'Uw score', of: (n: number) => `${n} op 5`, text: 'Uw review', textHint: 'Wat u goed vond, wat beter kan. Maximaal 2000 tekens.', submit: 'Mijn review versturen', check: 'Kies een score en schrijf een paar woorden.', notFound: 'Deze afspraak is niet gevonden of kan nog geen review krijgen. Vragen? ', thanks: 'Bedankt voor uw review!', yours: 'Uw review', google: 'Ook op Google plaatsen', copied: 'Uw review is gekopieerd, u hoeft hem alleen op Google te plakken.', back: 'Terug naar mijn account' },
+  en: { title: 'Your private feedback', private: 'Only the salon reads this feedback: it is not published.', description: 'Tell us privately about your appointment.', about: 'Appointment: ', rating: 'Your rating', of: (n: number) => `${n} out of 5`, text: 'Your review', textHint: 'What you liked, what could be better. 2000 characters at most.', submit: 'Send my review', check: 'Choose a rating and write a few words.', notFound: 'This appointment was not found or cannot be reviewed yet. Any question: ', thanks: 'Thank you for your review!', yours: 'Your review', google: 'Also post on Google', copied: 'Your review is copied, just paste it on Google.', back: 'Back to my account' },
 }[lang];
 
 const Id = z.string().regex(/^\d{1,18}$/).transform(Number);
@@ -65,6 +65,7 @@ const b = id ? await reviewableBooking(user.id, id, lang) : null;
 </> : <>
 <h1>{T.title}</h1>
 <p><strong>{T.about}</strong>{b.service}, {when(b.starts_at, lang)}</p>
+<p class="notice">{T.private}</p>
 {error && <p class="notice notice--error" role="alert">{T.check}</p>}
 <form class="form" method="post" action={self}>
 <input type="hidden" name="id" value={b.id}>
