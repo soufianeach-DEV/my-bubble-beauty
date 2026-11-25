@@ -7,6 +7,7 @@ import { migrate } from './db/migrate.mjs';
 import { purge } from './db/purge.mjs';
 import { isCountable, recordVisit } from './db/visits.mjs';
 import { seasonMode, seasonOn, winterDirect, winterHome } from './db/saison.mjs';
+import { securityHeaders } from './db/securite.mjs';
 
 // site.ts lit public/ en chemin relatif : le serveur travaille dans son propre dossier, d'où qu'on le lance
 process.chdir(fileURLToPath(new URL('.', import.meta.url)));
@@ -28,19 +29,6 @@ log('migrations', { applied: await migrate(sql) });
 // Import dynamique : un import statique serait évalué avant cette ligne et Astro lancerait son propre serveur
 process.env.ASTRO_NODE_AUTOSTART = 'disabled';
 const { handler } = await import('./dist/server/entry.mjs');
-
-// CSP du site ; form-action autorise la redirection 303 vers Stripe Checkout après le formulaire de réservation
-const SECURITY = {
-  'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://*.goatcounter.com; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' https://checkout.stripe.com; frame-ancestors 'none'; upgrade-insecure-requests",
-  // Sans includeSubDomains : mail. (CNAME OVH, inventaire DNS du 22/10/2026) n'a pas de certificat à son nom, le navigateur le bloquerait un an
-  'Strict-Transport-Security': 'max-age=31536000',
-  'X-Content-Type-Options': 'nosniff',
-  'Referrer-Policy': 'strict-origin-when-cross-origin',
-  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
-  'Cross-Origin-Opener-Policy': 'same-origin',
-  'Cross-Origin-Resource-Policy': 'same-origin',
-  'X-Frame-Options': 'DENY',
-};
 
 // Fichiers statiques (ils portent un ETag) : JS versionné par ?v= et polices un an, images 30 jours, HTML revalidé.
 // /_astro/ (CSS haché) est déjà réglé « immutable » par l'adaptateur.
@@ -93,7 +81,7 @@ const server = http.createServer((req, res) => {
   const path = (req.url ?? '/').split('?')[0];
   const writeHead = res.writeHead;
   res.writeHead = function (status, ...rest) {
-    for (const [k, v] of Object.entries(SECURITY)) this.setHeader(k, v);
+    for (const [k, v] of Object.entries(securityHeaders(path))) this.setHeader(k, v);
     if (NOINDEX.test(path)) this.setHeader('X-Robots-Tag', 'noindex');
     // Visite comptée une fois la page envoyée, jamais avant (aucun délai pour le visiteur)
     if (isCountable(req, path, status)) res.once('finish', () => recordVisit(sql, req, log));
