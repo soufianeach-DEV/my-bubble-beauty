@@ -1032,6 +1032,11 @@ dialog.lightbox::backdrop{background:rgb(24 14 16 / .92)}
 @media (prefers-color-scheme:dark){:where(:root:not([data-theme="light"])) :is(.frame,.about__tile,.soin__media) img{filter:brightness(.88)}}
 :where(:root[data-theme="dark"]) :is(.frame,.about__tile,.soin__media) img{filter:brightness(.88)}
 /* Ruban « Promo d'hiver » en écharpe sur Souade (épaule puis buste, jamais le visage), couleurs de l'offre ; visible par le script de Promo.astro */
-.hero__ruban{position:absolute;z-index:2;left:29%;top:66%;width:200vmax;margin-left:-100vmax;padding:2rem 0;transform:rotate(45deg);text-align:center;font:600 1.5rem/1 var(--f-text);letter-spacing:.2em;text-transform:uppercase;color:#FFF8EE;background:#7A2935;box-shadow:0 8px 22px rgb(72 46 50 / .35);pointer-events:none}
+.hero__ruban{position:absolute;z-index:2;left:29%;top:66%;width:200vmax;margin-left:-100vmax;padding:2.75rem 0;transform:rotate(45deg);text-align:center;font:600 1.75rem/1 var(--f-text);letter-spacing:.2em;text-transform:uppercase;color:#FFF8EE;background:#7A2935;box-shadow:0 8px 22px rgb(72 46 50 / .35);pointer-events:none}
+.hero__ruban{display:flex;align-items:center;justify-content:center;gap:.9rem;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F2C9CF' stroke-opacity='.38' stroke-width='1.3' stroke-linecap='round'%3E%3Cpath d='M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4'/%3E%3C/svg%3E");background-size:56px 56px;background-repeat:repeat;background-position:center}
+.ruban__ico{width:34px;height:34px;color:#F2C9CF;flex:none;filter:drop-shadow(0 1px 2px rgb(0 0 0 / .25))}
+.ruban__txt{text-shadow:0 1px 2px rgb(0 0 0 / .25)}
+.hero__ruban::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgb(122 41 53 / .55),transparent 35%,transparent 65%,rgb(122 41 53 / .55));pointer-events:none}
+.hero__ruban>*{position:relative;z-index:1}
 .hero__ruban[hidden]{display:none}
-@media (max-width:767px){.hero__ruban{left:0;top:36%;width:100%;margin-left:0;font-size:1rem;padding:1.1rem 0;transform:none}}
+@media (max-width:767px){.hero__ruban{left:0;top:36%;width:100%;margin-left:0;font-size:1.0625rem;letter-spacing:.12em;padding:1.5rem 0;transform:none;gap:.6rem}.hero__ruban .ruban__ico{width:26px;height:26px}.hero__ruban .ruban__txt{white-space:nowrap}}
