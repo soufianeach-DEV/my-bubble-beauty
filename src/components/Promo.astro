@@ -35,17 +35,19 @@ const L = T[lang];
 <script is:inline>
 (()=>{
   const p=document.querySelector('.promo');if(!p)return;
+  // Le ruban du hero vient plus bas dans la page : on le cherche à chaque fois et on rejoue après le chargement
+  const show=v=>{p.hidden=!v;const r=document.querySelector('.hero__ruban');if(r)r.hidden=!v;};
   const force=new URLSearchParams(location.search).has('promo');
   try{if(!force&&sessionStorage.getItem('promo-hydra')==='1')return;}catch{}
   const start=Date.parse(p.dataset.start),end=Date.parse(p.dataset.end);
   const D=p.querySelector('[data-d]'),H=p.querySelector('[data-h]'),M=p.querySelector('[data-m]');
   const tick=()=>{
     const now=Date.now();
-    if(!force&&(now<start||now>end)){p.hidden=true;return;}
+    if(!force&&(now<start||now>end)){show(false);return;}
     const ms=Math.max(0,end-now);
-    D.textContent=String(Math.floor(ms/864e5));H.textContent=String(Math.floor(ms%864e5/36e5));M.textContent=String(Math.floor(ms%36e5/6e4));p.hidden=false;
+    D.textContent=String(Math.floor(ms/864e5));H.textContent=String(Math.floor(ms%864e5/36e5));M.textContent=String(Math.floor(ms%36e5/6e4));show(true);
   };
-  tick();setInterval(tick,3e4);
+  tick();document.addEventListener('DOMContentLoaded',tick);setInterval(tick,3e4);
   p.querySelector('.promo__close').addEventListener('click',()=>{p.hidden=true;try{sessionStorage.setItem('promo-hydra','1')}catch{}});
 })();
 </script>

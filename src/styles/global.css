@@ -1031,3 +1031,10 @@ dialog.lightbox::backdrop{background:rgb(24 14 16 / .92)}
 /* Thème sombre : vraies photos un peu atténuées, pour ne pas éblouir sur le fond rosé */
 @media (prefers-color-scheme:dark){:where(:root:not([data-theme="light"])) :is(.frame,.about__tile,.soin__media) img{filter:brightness(.88)}}
 :where(:root[data-theme="dark"]) :is(.frame,.about__tile,.soin__media) img{filter:brightness(.88)}
+
+/* Ruban « Promo d'hiver » en travers du coin du hero, couleurs de l'offre (rose rouge, rose pâle, crème) ; visible par le script de Promo.astro */
+.hero__ruban{position:absolute;top:0;left:0;z-index:2;width:300px;padding:.55rem 0;transform:translate(-78px,52px) rotate(-45deg);transform-origin:center;text-align:center;font:600 .9375rem/1 var(--f-text);letter-spacing:.18em;text-transform:uppercase;color:#FFF8EE;background:#7A2935;box-shadow:0 6px 18px rgb(72 46 50 / .35);border-top:2px solid #F2C9CF;border-bottom:2px solid #F2C9CF;pointer-events:none}
+.hero__ruban::before,.hero__ruban::after{content:"";position:absolute;left:0;right:0;height:1px;background:rgb(242 201 207 / .6)}
+.hero__ruban::before{top:4px}.hero__ruban::after{bottom:4px}
+.hero__ruban[hidden]{display:none}
+@media (max-width:767px){.hero__ruban{width:240px;font-size:.8125rem;padding:.45rem 0;transform:translate(-66px,38px) rotate(-45deg)}}

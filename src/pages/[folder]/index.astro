@@ -59,6 +59,8 @@ const jsonld = {
 
 <section class="hero" data-loop aria-labelledby="h-hero">
 <div class="hero__media"><img class="hero__img px-far" src={`/assets/img/${heroImg}-1200.webp?v=7`} srcset={heroSet} sizes="100vw" width="1536" height="768" alt={hiver ? SAISON[lang].heroAlt : h.hero.imgAlt} fetchpriority="high" decoding="async"></div>
+{/* Ruban de l'offre d'hiver : affiché par le script du bandeau Promo pendant l'offre seulement */}
+<span class="hero__ruban" aria-hidden="true" hidden>{({ fr: "Promo d'hiver", nl: 'Winterpromo', en: 'Winter offer' })[lang]}</span>
 <div class="wrap hero__wrap">
 <div class="hero__panel">
 <p class="hero__eyebrow">{h.hero.eyebrow}</p>
