@@ -1,8 +1,8 @@
 ---
 import '../styles/global.css';
 import Icon from '../components/Icon.astro';
-import { t, GALERIE_VISIBLE, LANGS, LANG_META, CONTACT, SITE, JS_VERSION, GOATCOUNTER_ENDPOINT, EXTRA, FOLDER, SAISON, initialsOf, pagePath, alternates, type Lang, type PageKey } from '../lib/site';
-import { COMPTE } from '../data/i18n/compte.ts';
+import Promo from '../components/Promo.astro';
+{!bare && <header class="site-header" data-acct-known={known ? '' : undefined}>
 
 interface Props {
   lang: Lang;
@@ -107,6 +107,7 @@ const year = new Date().getFullYear();
 </head>
 <body>
 <a class="skip" href="#main">{ui.skip}</a>
+{!bare && <Promo lang={lang} />}
 {!bare && <header class="site-header" data-acct-known={known ? '' : undefined}>
 <div class="wrap">
 <a class="brand" href={home}><img src="/assets/img/logo-my-bubble-200.webp?v=3" srcset="/assets/img/logo-my-bubble-200.webp?v=3 200w, /assets/img/logo-my-bubble-400.webp?v=3 400w" sizes="(max-width: 767px) 85px, 119px" width="955" height="673" alt={ui.brandAlt}></a>

@@ -1,0 +1,79 @@
+---
+// Bandeau de l'offre Hydra Signature, du 30/11 au 11/12/2026. Les pages sont pré-rendues : les dates se vérifient dans le navigateur,
+// le bandeau reste caché sans JavaScript. ?promo dans l'URL force l'affichage (captures, relecture).
+// Un soin réservé, un second offert : ni « gratuit » ni pourcentage, sinon le prix de référence devient obligatoire (CDE art. VI.18).
+import { FOLDER, type Lang } from '../lib/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+// Bruxelles est à UTC+1 en décembre : 30/11 0 h 00 et 11/12 23 h 59, heure de Bruxelles
+const START_UTC = '2026-11-29T23:00:00Z';
+const END_UTC = '2026-12-11T22:59:59Z';
+
+const T: Record<Lang, { title: string; offer: string; left: string; days: string; hours: string; minutes: string; book: string; close: string }> = {
+  fr: { title: 'Un soin réservé, un second offert', offer: "Hydra Signature, jusqu'au 11 décembre", left: 'Il reste', days: 'jours', hours: 'heures', minutes: 'min', book: 'Réserver mon soin', close: "Fermer l'annonce" },
+  nl: { title: 'Eén behandeling geboekt, een tweede cadeau', offer: 'Hydra Signature, tot 11 december', left: 'Nog', days: 'dagen', hours: 'uur', minutes: 'min', book: 'Mijn behandeling boeken', close: 'Melding sluiten' },
+  en: { title: 'Book one treatment, receive a second', offer: 'Hydra Signature, until 11 December', left: 'Time left', days: 'days', hours: 'hours', minutes: 'min', book: 'Book my treatment', close: 'Close notice' },
+};
+const L = T[lang];
+---
+<aside class="promo" data-start={START_UTC} data-end={END_UTC} aria-label={`${L.title}. ${L.offer}`} hidden>
+  <div class="wrap">
+    <div class="promo__text">
+      <p class="promo__title">{L.title}</p>
+      <p class="promo__offer">{L.offer}</p>
+    </div>
+    <p class="promo__left"><span class="promo__lbl">{L.left}</span>
+      <span class="promo__chip"><b data-d>0</b><small>{L.days}</small></span>
+      <span class="promo__chip"><b data-h>0</b><small>{L.hours}</small></span>
+      <span class="promo__chip"><b data-m>0</b><small>{L.minutes}</small></span>
+    </p>
+    <a class="btn promo__btn" href={`/${FOLDER[lang]}/reserver`}>{L.book}</a>
+    <button class="promo__close" type="button" aria-label={L.close}>×</button>
+  </div>
+</aside>
+<script is:inline>
+(()=>{
+  const p=document.querySelector('.promo');if(!p)return;
+  const force=new URLSearchParams(location.search).has('promo');
+  try{if(!force&&sessionStorage.getItem('promo-hydra')==='1')return;}catch{}
+  const start=Date.parse(p.dataset.start),end=Date.parse(p.dataset.end);
+  const D=p.querySelector('[data-d]'),H=p.querySelector('[data-h]'),M=p.querySelector('[data-m]');
+  const tick=()=>{
+    const now=Date.now();
+    if(!force&&(now<start||now>end)){p.hidden=true;return;}
+    const ms=Math.max(0,end-now);
+    D.textContent=String(Math.floor(ms/864e5));H.textContent=String(Math.floor(ms%864e5/36e5));M.textContent=String(Math.floor(ms%36e5/6e4));p.hidden=false;
+  };
+  tick();setInterval(tick,3e4);
+  p.querySelector('.promo__close').addEventListener('click',()=>{p.hidden=true;try{sessionStorage.setItem('promo-hydra','1')}catch{}});
+})();
+</script>
+
+<style>
+  /* Couleurs de la marque : rose rouge, rose pâle, crème */
+  .promo{--p-bg:#7A2935;--p-ink:#FFF8EE;--p-chip:#F2C9CF;--p-chip-ink:#7A2935;background:var(--p-bg);color:var(--p-ink);position:relative;overflow:hidden}
+  .promo::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 140% at 85% 50%,rgb(242 201 207 / .22),transparent 70%);pointer-events:none}
+  .promo[hidden]{display:none}
+  .promo .wrap{position:relative;display:flex;align-items:center;gap:1.25rem 2rem;padding:.8rem 0;min-height:64px}
+  .promo__text{flex:1;min-width:0}
+  .promo__title{margin:0;font:600 1.25rem/1.15 var(--f-title);letter-spacing:.01em}
+  .promo__offer{margin:.15rem 0 0;font-size:.9375rem;opacity:.92}
+  .promo__left{margin:0;display:flex;align-items:center;gap:.5rem;flex:none}
+  .promo__lbl{font-size:.8125rem;letter-spacing:.08em;text-transform:uppercase;opacity:.85;margin-right:.25rem}
+  .promo__chip{display:inline-grid;justify-items:center;min-width:52px;padding:.3rem .45rem;border-radius:12px;background:var(--p-chip);color:var(--p-chip-ink);line-height:1}
+  .promo__chip b{font:600 1.25rem/1 var(--f-title);font-variant-numeric:tabular-nums}
+  .promo__chip small{font-size:.625rem;letter-spacing:.06em;text-transform:uppercase;margin-top:.2rem}
+  .promo__btn{flex:none;min-height:44px;padding:.6rem 1.25rem;background:var(--p-ink);color:var(--p-bg);border-color:var(--p-ink);box-shadow:0 6px 18px rgb(0 0 0 / .18)}
+  .promo__btn:hover,.promo__btn:focus-visible{background:var(--p-chip);border-color:var(--p-chip);transform:translateY(-1px)}
+  .promo__close{flex:none;min-width:44px;min-height:44px;background:none;border:0;color:inherit;font-size:1.75rem;line-height:1;cursor:pointer;opacity:.8}
+  .promo__close:hover,.promo__close:focus-visible{opacity:1}
+  @media (max-width:767px){
+    .promo .wrap{flex-wrap:wrap;gap:.75rem 1rem;padding:.9rem 0 1rem}
+    .promo__text{flex:1 1 calc(100% - 60px);order:0}
+    .promo__title{font-size:1.125rem}
+    .promo__close{order:1}
+    .promo__left{order:2;flex:1 1 100%;justify-content:flex-start}
+    .promo__btn{order:3;flex:1 1 100%;justify-content:center}
+  }
+</style>
