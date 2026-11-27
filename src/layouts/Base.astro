@@ -2,7 +2,8 @@
 import '../styles/global.css';
 import Icon from '../components/Icon.astro';
 import Promo from '../components/Promo.astro';
-{!bare && <header class="site-header" data-acct-known={known ? '' : undefined}>
+import { t, GALERIE_VISIBLE, LANGS, LANG_META, CONTACT, SITE, JS_VERSION, GOATCOUNTER_ENDPOINT, EXTRA, FOLDER, SAISON, initialsOf, pagePath, alternates, type Lang, type PageKey } from '../lib/site';
+import { COMPTE } from '../data/i18n/compte.ts';
 
 interface Props {
   lang: Lang;
