@@ -1032,6 +1032,6 @@ dialog.lightbox::backdrop{background:rgb(24 14 16 / .92)}
 @media (prefers-color-scheme:dark){:where(:root:not([data-theme="light"])) :is(.frame,.about__tile,.soin__media) img{filter:brightness(.88)}}
 :where(:root[data-theme="dark"]) :is(.frame,.about__tile,.soin__media) img{filter:brightness(.88)}
 /* Ruban « Promo d'hiver » en écharpe sur Souade (épaule puis buste, jamais le visage), couleurs de l'offre ; visible par le script de Promo.astro */
-.hero__ruban{position:absolute;z-index:2;left:29%;top:66%;width:200vmax;margin-left:-100vmax;padding:1.3rem 0;transform:rotate(45deg);text-align:center;font:600 1.5rem/1 var(--f-text);letter-spacing:.2em;text-transform:uppercase;color:#FFF8EE;background:#7A2935;box-shadow:0 8px 22px rgb(72 46 50 / .35);pointer-events:none}
+.hero__ruban{position:absolute;z-index:2;left:29%;top:66%;width:200vmax;margin-left:-100vmax;padding:2rem 0;transform:rotate(45deg);text-align:center;font:600 1.5rem/1 var(--f-text);letter-spacing:.2em;text-transform:uppercase;color:#FFF8EE;background:#7A2935;box-shadow:0 8px 22px rgb(72 46 50 / .35);pointer-events:none}
 .hero__ruban[hidden]{display:none}
-@media (max-width:767px){.hero__ruban{left:40%;top:27%;width:200vmax;margin-left:-100vmax;font-size:.9375rem;padding:.75rem 0;transform:rotate(32deg)}}
+@media (max-width:767px){.hero__ruban{left:0;top:36%;width:100%;margin-left:0;font-size:1rem;padding:1.1rem 0;transform:none}}
